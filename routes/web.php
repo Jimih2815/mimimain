@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,20 +12,27 @@ use App\Http\Controllers\ProductController;
 |--------------------------------------------------------------------------
 */
 
-// Test header
-Route::get('/header-demo', fn() => view('header-demo'))->name('header.demo');
+// Trang chủ
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Danh sách sản phẩm
+// Tìm kiếm
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+// --- Categories flow ---
+// 1) Danh mục gốc
+Route::get('/categories', [CategoryController::class, 'index'])
+     ->name('categories.index');
+// 2) Category → nếu có children: show children; else: show products
+Route::get('/categories/{id}', [CategoryController::class, 'show'])
+     ->name('categories.show');
+
+// --- Products flow ---
+// 3) TẤT CẢ SẢN PHẨM
 Route::get('/products', [ProductController::class, 'index'])
      ->name('products.index');
-
-// Trang chủ
-Route::get('/', [HomeController::class, 'index'])
-     ->name('home');
-use App\Http\Controllers\SearchController;
-
-Route::get('/search', [SearchController::class, 'index'])
-          ->name('search');
-
-Route::get('/product/{id}', [ProductController::class, 'show'])
-               ->name('product.show');
+// 4) Product Detail (chọn màu variants)
+Route::get('/product/{id}', [ProductController::class, 'showProduct'])
+     ->name('product.show');
+// 5) Classification Detail (chọn size)
+Route::get('/products/{id}', [ProductController::class, 'show'])
+     ->name('products.show');

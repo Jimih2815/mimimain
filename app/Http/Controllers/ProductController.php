@@ -2,36 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Classification;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    /**
+     * (3) Index: show toàn bộ variants (classification) dưới dạng card
+     */
+    public function index()
+    {
+        $items = Classification::with(['product','options'])->get();
+        return view('products.index', compact('items'));
+    }
+
+    /**
+     * (4) Product Detail: chọn màu (variant)
+     */
+    public function showProduct($id)
+    {
+        $product = Product::with('classifications')->findOrFail($id);
+        return view('products.detail', compact('product'));
+    }
+
+    /**
+     * (5) Classification Detail: chọn size
+     */
     public function show($id)
     {
-        // Lấy classification (màu/variant) theo id
         $classification = Classification::with([
-            'product',               // quan hệ product
-            'product.classifications', // lấy hết các variant để làm sub‑images
-            'options'                // lấy các option (size) của variant này
+            'product',
+            'product.classifications',
+            'options'
         ])->findOrFail($id);
 
-        $product = $classification->product;
-
-        // Sub‑images = img của mỗi variant
-        $subImages = $product->classifications->pluck('img')->filter()->toArray();
-
-        // Main image = img của chính classification này
-        $mainImage = $classification->img;
-
-        // Color variants (ô chọn màu)
+        $product       = $classification->product;
+        $subImages     = $product->classifications->pluck('img')->filter()->toArray();
+        $mainImage     = $classification->img;
         $colorVariants = $product->classifications;
-
-        // Size options
-        $sizeOptions = $classification->options;
+        $sizeOptions   = $classification->options;
 
         return view('products.show', compact(
             'product','classification','subImages','mainImage','colorVariants','sizeOptions'
-          ));
+        ));
     }
 }
