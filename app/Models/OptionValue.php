@@ -3,19 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OptionValue extends Model
 {
-    protected $fillable = ['option_type_id', 'value', 'extra_price'];
+    use HasFactory;
 
-    public function type(): BelongsTo
+    protected $fillable = [
+        'option_type_id',
+        'value',
+        'extra_price',
+    ];
+
+    public function type()
     {
-        return $this->belongsTo(OptionType::class);
+        return $this->belongsTo(OptionType::class, 'option_type_id');
     }
 
-    public function products(): BelongsToMany
+    public function products()
     {
         return $this->belongsToMany(Product::class, 'product_option');
     }

@@ -5,7 +5,7 @@
       <img src="{{ asset('images/logo.png') }}" alt="Logo" height="50">
     </a>
 
-    <form action="{{ route('search') }}" method="GET" class="input-group mx-4 flex-grow-1">
+    <form action="{{ route('products.index') }}" method="GET" class="input-group mx-4 flex-grow-1">
         <input 
             type="text" 
             name="q" 

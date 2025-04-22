@@ -3,18 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\OptionType;         // ← import đây
+use App\Models\OptionType;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
-     * Hiển thị danh sách sản phẩm
+     * Hiển thị danh sách sản phẩm và search
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy toàn bộ product kèm optionValues → type
-        $products = Product::with('optionValues.type')->get();
+        $q = $request->input('q');
+
+        $query = Product::with('optionValues.type');
+
+        if ($q) {
+            $query->where('name', 'like', "%{$q}%")
+                  ->orWhere('description', 'like', "%{$q}%");
+        }
+
+        $products = $query->get();
+
         return view('products.index', compact('products'));
     }
 
