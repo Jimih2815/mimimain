@@ -15,4 +15,8 @@ class Category extends Model
     {
         return $this->belongsToMany(Product::class, 'category_product');
     }
+    public function headers()
+    {
+        return $this->hasMany(CategoryHeader::class)->orderBy('sort_order');
+    }
 }

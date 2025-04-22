@@ -20,5 +20,8 @@ class Product extends Model {
     {
         return $this->belongsToMany(Category::class, 'category_product');
     }
-
+    public function headerBoxes()
+  {
+      return $this->belongsToMany(CategoryHeader::class, 'category_header_product');
+  }
   }
