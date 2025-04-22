@@ -16,4 +16,9 @@ class Product extends Model {
       $extra = OptionValue::whereIn('id',$valueIds)->sum('extra_price');
       return $this->base_price + $extra;
     }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_product');
+    }
+
   }

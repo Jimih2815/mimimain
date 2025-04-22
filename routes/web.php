@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 
 // 1) Trang chủ: trả về view resources/views/home.blade.php
 Route::view('/', 'home')->name('home');
@@ -19,3 +20,6 @@ Route::get('/products/{slug}', [ProductController::class, 'show'])
 Route::get('/cart',    [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{id}',    [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+// Trang Danh mục sản phẩm
+Route::get('/categories', [CategoryController::class, 'index'])
+     ->name('categories.index');
