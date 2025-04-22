@@ -53,7 +53,12 @@
       <p id="price" class="h4 text-primary">{{ number_format($initial,0,',','.') }}₫</p>
 
       {{-- Nút Thêm giỏ hàng --}}
-      <button class="btn btn-primary w-100 mb-2">Thêm giỏ hàng</button>
+      <form action="{{ route('cart.add', ['id' => $product->id]) }}" method="POST">
+          @csrf
+          <button type="submit" class="btn btn-primary w-100 mb-2">
+              Thêm vào giỏ hàng
+          </button>
+      </form>
 
       {{-- Nút Yêu thích --}}
       <button class="btn btn-outline-secondary w-100">

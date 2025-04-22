@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,11 @@ Route::get('/product/{id}', [ProductController::class, 'showProduct'])
 // 5) Classification Detail (chọn size)
 Route::get('/products/{id}', [ProductController::class, 'show'])
      ->name('products.show');
+// Trang hiển thị giỏ hàng
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+// Thêm sản phẩm vào giỏ
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+
+// Xóa sản phẩm khỏi giỏ (tuỳ chọn)
+Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
