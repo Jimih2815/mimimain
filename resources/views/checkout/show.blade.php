@@ -1,3 +1,4 @@
+{{-- resources/views/checkout/show.blade.php --}}
 @extends('layouts.app')
 
 @section('title','Thanh Toán')
@@ -6,7 +7,7 @@
 <div class="container py-4">
   <h2 class="mb-4">Thanh toán đơn hàng</h2>
 
-  {{-- Tầng 1: Sản phẩm --}}
+  {{-- 1) Danh sách sản phẩm --}}
   <div class="mb-5">
     <h4>Sản phẩm của bạn</h4>
     <table class="table">
@@ -28,8 +29,8 @@
           @endphp
           <tr>
             <td>
-              @if($item['image'])
-                <img src="{{ $item['image'] }}" width="60" alt="">
+              @if(!empty($item['image']))
+                <img src="{{ $item['image'] }}" width="60" alt="Ảnh sản phẩm">
               @endif
             </td>
             <td>{{ $item['name'] }}</td>
@@ -45,16 +46,15 @@
     </div>
   </div>
 
-  {{-- Tầng 2 & 3: Form thông tin + chọn phương thức --}}
-  <form id="checkoutForm" action="{{ route('checkout.process') }}" method="POST">
+  {{-- 2) Form thông tin + phương thức thanh toán --}}
+  <form id="checkoutForm" action="{{ route('checkout.confirm') }}" method="POST">
     @csrf
 
-    {{-- Thông tin người nhận --}}
     <h4 class="mb-3">Thông tin người nhận</h4>
     <div class="row mb-4">
       <div class="col-md-6 mb-3">
         <label class="form-label">Họ tên</label>
-        <input type="text" name="name" class="form-control" required>
+        <input type="text" name="fullname" class="form-control" required>
       </div>
       <div class="col-md-6 mb-3">
         <label class="form-label">Số điện thoại</label>
@@ -70,38 +70,33 @@
       </div>
     </div>
 
-    {{-- Chọn phương thức thanh toán --}}
+    {{-- Phương thức thanh toán --}}
     <h4 class="mb-3">Phương thức thanh toán</h4>
     <div class="form-check mb-2">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="payment"
-        id="cod"
-        value="cod"
-        checked
-      >
-      <label class="form-check-label" for="cod">COD (Thanh toán khi nhận hàng)</label>
+      <input class="form-check-input" type="radio"
+             name="payment" id="cod" value="cod" checked>
+      <label class="form-check-label" for="cod">
+        Thanh toán khi nhận hàng (COD)
+      </label>
     </div>
     <div class="form-check mb-4">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="payment"
-        id="bank"
-        value="bank"
-      >
-      <label class="form-check-label" for="bank">Chuyển khoản ngân hàng</label>
+      <input class="form-check-input" type="radio"
+             name="payment" id="bank" value="bank">
+      <label class="form-check-label" for="bank">
+        Chuyển khoản ngân hàng
+      </label>
     </div>
 
-    {{-- Nút submit COD --}}
-    <button type="submit" class="btn btn-success mb-4" id="confirmCod">Xác nhận thanh toán</button>
+    {{-- Nút COD (submit form) --}}
+    <button type="submit" class="btn btn-success mb-4" id="confirmCod">
+      Xác nhận thanh toán
+    </button>
 
-    {{-- Phần QR khi chọn chuyển khoản --}}
+    {{-- Box CK, ẩn mặc định --}}
     <div id="bankSection" style="display:none;">
       <h5>Chuyển khoản ngân hàng</h5>
 
-      {{-- QR Code EMVCo --}}
+      {{-- QR compact từ VietQR.io --}}
       <img src="{{ $qrUrl }}" alt="QR Code" class="mb-3">
 
       <p>
@@ -110,14 +105,23 @@
         Ngân hàng: <strong>Techcombank</strong><br>
         Số tiền: <strong>{{ number_format($grand,0,',','.') }}₫</strong>
       </p>
-      <p class="text-warning">
-        Bạn chuyển khoản thành công sau đó ấn 
-        <strong>"Xác nhận đã chuyển khoản"</strong> nha
+
+      <p class="mb-3">
+        Nội dung CK: <code>{{ $bankRef }}</code>
       </p>
-      <button type="button" id="confirmBank" class="btn btn-primary">
+
+      <p class="text-warning mb-3">
+        Sau khi chuyển khoản xong, ấn “Xác nhận đã chuyển khoản” nhé!
+      </p>
+
+      {{-- Nút CK (gọi JS submit form) --}}
+      <button type="button" id="confirmBank" class="btn btn-primary mb-4">
         Xác nhận đã chuyển khoản
       </button>
     </div>
+
+    {{-- Hidden để gửi lên confirm --}}
+    <input type="hidden" name="bank_ref" value="{{ $bankRef }}">
   </form>
 </div>
 @endsection
@@ -132,17 +136,16 @@
     const confirmBank = document.getElementById('confirmBank');
     const form        = document.getElementById('checkoutForm');
 
-    // Toggle giữa COD và Bank
     codRadio.addEventListener('change', () => {
       bankSection.style.display = 'none';
-      confirmCod.style.display   = 'inline-block';
+      confirmCod.style.display  = 'inline-block';
     });
     bankRadio.addEventListener('change', () => {
       bankSection.style.display = 'block';
-      confirmCod.style.display   = 'none';
+      confirmCod.style.display  = 'none';
     });
 
-    // Khi bấm “Xác nhận đã chuyển khoản” thì submit form
+    // Khi bấm Xác nhận đã chuyển khoản → submit form
     confirmBank.addEventListener('click', () => form.submit());
   });
 </script>

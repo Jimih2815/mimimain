@@ -13,8 +13,8 @@
     @endif
 
     {{-- ==== FORM THANH TOÁN (DUY NHẤT) ==== --}}
-    <form id="checkout-form" action="{{ route('checkout.show') }}" method="POST">
-        @csrf {{-- hidden _token cho *mọi* submit của form --}}
+    <form id="checkout-form" action="{{ route('checkout.show') }}" method="GET">
+    @csrf {{-- hidden _token cho *mọi* submit của form --}}
 
         @if (count($cart))
             <table class="table align-middle">
@@ -81,9 +81,8 @@
                     {{ number_format($total, 0, ',', '.') }}₫
                 </h4>
 
-                <button type="submit" class="btn btn-primary">
-                    Thanh toán
-                </button>
+                <button type="submit" class="btn btn-primary">Thanh toán</button>
+
             </div>
         @else
             <p>Giỏ hàng trống!</p>
