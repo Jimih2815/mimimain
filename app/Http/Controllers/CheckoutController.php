@@ -10,8 +10,8 @@ use App\Models\OptionValue;
 
 class CheckoutController extends Controller
 {
-    /** 
-     * GET  /checkout 
+    /**
+     * GET /checkout
      */
     public function show(Request $request)
     {
@@ -26,9 +26,10 @@ class CheckoutController extends Controller
                 $grand += $cart[$key]['price'] * $cart[$key]['quantity'];
             }
         }
+
         if (empty($items)) {
             return redirect()->route('cart.index')
-                             ->with('error','Bạn chưa chọn sản phẩm nào để thanh toán.');
+                             ->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
         }
 
         $bankRef = $this->uniqueBankRef();
@@ -72,9 +73,9 @@ class CheckoutController extends Controller
             'phone'          => $r->phone,
             'address'        => $r->address,
             'note'           => $r->note,
-            'payment_method' => $r->payment,                  
-            'bank_ref'       => $r->payment==='bank' ? $bankRef : null,
-            'total'          => $total,                        
+            'payment_method' => $r->payment,
+            'bank_ref'       => $r->payment === 'bank' ? $bankRef : null,
+            'total'          => $total,
         ]);
 
         foreach ($cart as $key => $item) {
@@ -86,8 +87,16 @@ class CheckoutController extends Controller
             ]);
         }
 
-        session()->forget(['cart','pending_bank_ref']);
+        session()->forget(['cart', 'pending_bank_ref']);
 
+        return redirect()->route('checkout.success', $order->id);
+    }
+
+    /**
+     * GET /checkout/success/{order}
+     */
+    public function success(Order $order)
+    {
         return view('checkout.thankyou', compact('order'));
     }
 
@@ -96,23 +105,24 @@ class CheckoutController extends Controller
      */
     public function ajaxBankRef(Request $r)
     {
-        $r->validate(['amount'=>'required|integer']);
+        $r->validate(['amount' => 'required|integer']);
         $amount = $r->amount;
         $ref    = $this->uniqueBankRef();
 
         $payload = $this->vietQRPayloadRaw($amount, $ref);
         $svg     = QrCode::size(260)->generate($payload);
 
-        session(['pending_bank_ref'=>$ref]);
+        session(['pending_bank_ref' => $ref]);
 
-        return response()->json(['ref'=>$ref,'qr'=>$svg]);
+        return response()->json(['ref' => $ref, 'qr' => $svg]);
     }
 
     private function uniqueBankRef(): string
     {
         do {
             $ref = Str::upper(Str::random(10));
-        } while (Order::where('bank_ref',$ref)->exists());
+        } while (Order::where('bank_ref', $ref)->exists());
+
         return $ref;
     }
 
