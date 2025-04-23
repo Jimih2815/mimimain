@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\HeaderController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\Admin\MenuController;
 // Trang chủ
 Route::view('/', 'home')->name('home');
 // Auth – Đăng ký
@@ -46,15 +46,6 @@ Route::post('/cart/remove/{id}',     [CartController::class, 'remove'])  ->name(
 Route::post('/checkout',             [CheckoutController::class, 'show'])    ->name('checkout.show');
 Route::post('/checkout/process',     [CheckoutController::class, 'process']) ->name('checkout.process');
 
-// Quản lý Mega‑Menu Header (Admin, tạm chưa auth)
-Route::prefix('admin')->name('admin.')->group(function(){
-    Route::get(   'headers',                       [HeaderController::class,'index'])         ->name('headers.index');
-    Route::post(  'headers',                       [HeaderController::class,'store'])         ->name('headers.store');
-    Route::put(   'headers/{header}',              [HeaderController::class,'update'])        ->name('headers.update');
-    Route::delete('headers/{header}',              [HeaderController::class,'destroy'])       ->name('headers.destroy');
-    Route::post(  'headers/{header}/product',      [HeaderController::class,'addProduct'])    ->name('headers.product.add');
-    Route::delete('headers/{header}/product/{pid}',[HeaderController::class,'removeProduct']) ->name('headers.product.remove');
-});
 // Chỉ cho phép user đã đăng nhập truy cập Profile
 Route::middleware('auth')->group(function () {
      // Show form sửa profile
@@ -64,5 +55,18 @@ Route::middleware('auth')->group(function () {
      // Xử lý submit form update profile
      Route::put('/profile', [ProfileController::class, 'update'])
           ->name('profile.update');
+ });
+ Route::prefix('admin')->name('admin.')->group(function () {
+     Route::get('menu',              [MenuController::class,'index'])->name('menu.index');
+ 
+     /* Section */
+     Route::post('menu/section',             [MenuController::class,'storeSection'])->name('menu.section.store');
+     Route::put ('menu/section/{section}',   [MenuController::class,'updateSection'])->name('menu.section.update');
+     Route::delete('menu/section/{section}', [MenuController::class,'destroySection'])->name('menu.section.destroy');
+ 
+     /* Item */
+     Route::post('menu/section/{section}/item',          [MenuController::class,'storeItem'])->name('menu.item.store');
+     Route::put ('menu/item/{item}',                     [MenuController::class,'updateItem'])->name('menu.item.update');
+     Route::delete('menu/item/{item}',                   [MenuController::class,'destroyItem'])->name('menu.item.destroy');
  });
 require __DIR__ . '/auth.php';

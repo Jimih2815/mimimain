@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Category;
-
+use App\Models\MenuSection;
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,12 +14,12 @@ class AppServiceProvider extends ServiceProvider
     }
 
     public function boot(): void
-    {
-        // Lấy menuCategories 1 lần, share cho tất cả view
-        $menuCategories = Category::with(['headers.products'])
-                                  ->orderBy('name')
-                                  ->get();
+{
+    // Lấy menu section mới (MenuSection -> items)
+    $menuSections = MenuSection::with('items')
+                    ->orderBy('sort_order')
+                    ->get();
 
-        View::share('menuCategories', $menuCategories);
-    }
+    View::share('menuSections', $menuSections);
+}
 }

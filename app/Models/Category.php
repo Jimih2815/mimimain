@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\CategoryHeader;  // import relation
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -12,18 +10,11 @@ class Category extends Model
 
     protected $fillable = ['name','slug'];
 
-    /**
-     * Quan hệ đến bảng category_headers (Mega-menu headers).
-     */
-    public function headers()
-    {
-        return $this->hasMany(CategoryHeader::class, 'category_id')
-                    ->orderBy('sort_order');
-    }
+    /* === XOÁ 2 DÒNG DƯỚI === */
+    // use App\Models\CategoryHeader;
+    // public function headers() { /* … */ }
 
-    /**
-     * Quan hệ many-to-many đến products (pivot category_product).
-     */
+    /* giữ lại quan hệ products nếu bạn vẫn cần */
     public function products()
     {
         return $this->belongsToMany(Product::class, 'category_product');
