@@ -15,7 +15,7 @@ class RegisterController extends Controller
     /**
      * Nơi redirect sau khi đăng ký thành công.
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     public function __construct()
     {
