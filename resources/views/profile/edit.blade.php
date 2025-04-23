@@ -1,29 +1,44 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('title','Hồ sơ của tôi')
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+@section('content')
+<div class="container py-5">
+  <h2 class="mb-4">Chỉnh sửa hồ sơ</h2>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
+  @if(session('status'))
+    <div class="alert alert-success">{{ session('status') }}</div>
+  @endif
+
+  <form method="POST" action="{{ route('profile.update') }}">
+    @csrf
+    @method('PUT')
+
+    {{-- Name --}}
+    <div class="mb-3">
+      <label class="form-label" for="name">Họ & Tên</label>
+      <input id="name" name="name" type="text"
+             class="form-control @error('name') is-invalid @enderror"
+             value="{{ old('name', $user->name) }}" required>
+      @error('name')
+        <div class="invalid-feedback">{{ $message }}</div>
+      @enderror
     </div>
-</x-app-layout>
+
+    {{-- Email --}}
+    <div class="mb-3">
+      <label class="form-label" for="email">Email</label>
+      <input id="email" name="email" type="email"
+             class="form-control @error('email') is-invalid @enderror"
+             value="{{ old('email', $user->email) }}" required>
+      @error('email')
+        <div class="invalid-feedback">{{ $message }}</div>
+      @enderror
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      Cập nhật
+    </button>
+  </form>
+</div>
+@endsection
