@@ -4,16 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\OptionValue;
 
 class OptionType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    /**
+     * Các trường được phép mass-assign
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+    ];
 
-    // Các giá trị (value) thuộc type này
+    /**
+     * Quan hệ 1-n tới OptionValue
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function values()
     {
-        return $this->hasMany(OptionValue::class);
+        return $this->hasMany(OptionValue::class, 'option_type_id');
     }
 }
