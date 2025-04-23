@@ -68,7 +68,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/profile', [ProfileController::class, 'edit'])   ->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update']) ->name('profile.update');
 });
-
+Route::get('/collections/{slug}', [App\Http\Controllers\CollectionController::class,'show'])
+     ->name('collections.show');
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
@@ -102,6 +103,6 @@ Route::prefix('admin')
      Route::post  ('users/{user}/reset-password', [AdminUserController::class,'resetPassword'])   ->name('users.resetPassword');
      Route::get   ('users/{user}',                [AdminUserController::class,'show'])            ->name('users.show');
      Route::delete('users/{user}',                [AdminUserController::class,'destroy'])         ->name('users.destroy');
- 
+     Route::resource('collections', App\Http\Controllers\Admin\CollectionController::class);
      // ... có thể tiếp tục các resource khác ...
 });

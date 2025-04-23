@@ -71,4 +71,9 @@ class Product extends Model
             'category_header_product'
         );
     }
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class, 'collection_product');
+    }
+
 }
