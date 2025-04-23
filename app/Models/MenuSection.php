@@ -13,4 +13,9 @@ class MenuSection extends Model
     {
         return $this->hasMany(MenuItem::class)->orderBy('sort_order');
     }
+    public function groups()
+    {
+        return $this->hasMany(MenuGroup::class)->orderBy('sort_order');
+    }
+
 }

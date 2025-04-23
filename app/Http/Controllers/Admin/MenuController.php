@@ -3,74 +3,92 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\MenuSection;
-use App\Models\MenuItem;
 use Illuminate\Http\Request;
-use App\Models\Product; 
-use Illuminate\Support\Str; 
+use Illuminate\Support\Str;
+use App\Models\{MenuSection, MenuGroup, Product};
+
 class MenuController extends Controller
 {
+    /* ========== VIEW ========== */
     public function index()
-{
-    $sections = MenuSection::with('items')->orderBy('sort_order')->get();
-    $products = Product::orderBy('name')->get();        // 🔑
-    return view('admin.menu.index', compact('sections','products'));
-}
+    {
+        $sections = MenuSection::with('groups.products')
+                    ->orderBy('sort_order')->get();
+        $products = Product::orderBy('name')->get();
 
-    /* --------- SECTION CRUD --------- */
+        return view('admin.menu.index', compact('sections','products'));
+    }
+
+    /* ========== SECTION CRUD ========== */
     public function storeSection(Request $r)
-{
-    $r->validate(['name'=>'required|string']);
-    MenuSection::create([
-        'name'       => $r->name,
-        'slug'       => Str::slug($r->name),   // 🔑 auto slug
-        'sort_order' => MenuSection::max('sort_order') + 1,
-    ]);
-    return back()->with('success','Đã tạo Section');
-}
+    {
+        $r->validate(['name'=>'required']);
+        MenuSection::create([
+            'name'       => $r->name,
+            'slug'       => Str::slug($r->name),
+            'sort_order' => MenuSection::max('sort_order') + 1,
+        ]);
+        return back();
+    }
 
-public function updateSection(Request $r, MenuSection $section)
-{
-    $r->validate(['name'=>'required']);
-    $section->update([
-        'name'       => $r->name,
-        'slug'       => Str::slug($r->name),   // 🔑 regenerate slug
-        'sort_order' => $r->sort_order,
-    ]);
-    return back()->with('success','Đã cập nhật Section');
-}
+    public function updateSection(Request $r, MenuSection $section)
+    {
+        $r->validate(['name'=>'required','sort_order'=>'integer']);
+        $section->update([
+            'name'       => $r->name,
+            'slug'       => Str::slug($r->name),
+            'sort_order' => $r->sort_order,
+        ]);
+        return back();
+    }
 
     public function destroySection(MenuSection $section)
     {
-        $section->delete();
-        return back()->with('success','Đã xoá Section');
+        $section->delete(); return back();
     }
 
-    /* --------- ITEM CRUD --------- */
-    public function storeItem(Request $r, MenuSection $section)
-{
-    $r->validate([
-        'label' => 'required',
-        'url'   => 'required',
-    ]);
-    $section->items()->create([
-        'label'      => $r->label,
-        'url'        => $r->url,
-        'sort_order' => $section->items()->max('sort_order') + 1,
-    ]);
-    return back()->with('success','Đã thêm Item');
-}
-
-    public function updateItem(Request $r, MenuItem $item)
+    /* ========== GROUP CRUD ========== */
+    public function storeGroup(Request $r, MenuSection $section)
     {
-        $r->validate(['label'=>'required','url'=>'required']);
-        $item->update($r->only('label','url','sort_order'));
-        return back()->with('success','Đã cập nhật Item');
+        $r->validate(['title'=>'required']);
+        $section->groups()->create([
+            'title'      => $r->title,
+            'sort_order' => $section->groups()->max('sort_order') + 1,
+        ]);
+        return back();
     }
 
-    public function destroyItem(MenuItem $item)
+    public function updateGroup(Request $r, MenuGroup $group)
     {
-        $item->delete();
-        return back()->with('success','Đã xoá Item');
+        $r->validate(['title'=>'required','sort_order'=>'integer']);
+        $group->update($r->only('title','sort_order'));
+        return back();
+    }
+
+    public function destroyGroup(MenuGroup $group)
+    {
+        $group->delete(); return back();
+    }
+
+    /* ========== PRODUCT PIVOT ========== */
+    public function addProductToGroup(Request $r, MenuGroup $group)
+    {
+        $r->validate(['product_id'=>'required|exists:products,id']);
+
+        if (!$group->products->contains($r->product_id)) {
+
+            // lấy sort lớn nhất (ở pivot) rồi +1
+            $next = \DB::table('menu_group_product')
+                    ->where('menu_group_id', $group->id)
+                    ->max('sort_order') + 1;
+
+            $group->products()->attach($r->product_id, ['sort_order' => $next]);
+        }
+        return back();
+    }
+
+    public function removeProductFromGroup(MenuGroup $group, $pid)
+    {
+        $group->products()->detach($pid); return back();
     }
 }

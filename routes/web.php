@@ -57,16 +57,21 @@ Route::middleware('auth')->group(function () {
           ->name('profile.update');
  });
  Route::prefix('admin')->name('admin.')->group(function () {
-     Route::get('menu',              [MenuController::class,'index'])->name('menu.index');
+     Route::get ('menu',                           [MenuController::class,'index'])->name('menu.index');
  
-     /* Section */
-     Route::post('menu/section',             [MenuController::class,'storeSection'])->name('menu.section.store');
-     Route::put ('menu/section/{section}',   [MenuController::class,'updateSection'])->name('menu.section.update');
-     Route::delete('menu/section/{section}', [MenuController::class,'destroySection'])->name('menu.section.destroy');
+     // Section
+     Route::post   ('menu/section',                [MenuController::class,'storeSection'])->name('menu.section.store');
+     Route::put    ('menu/section/{section}',      [MenuController::class,'updateSection'])->name('menu.section.update');
+     Route::delete ('menu/section/{section}',      [MenuController::class,'destroySection'])->name('menu.section.destroy');
  
-     /* Item */
-     Route::post('menu/section/{section}/item',          [MenuController::class,'storeItem'])->name('menu.item.store');
-     Route::put ('menu/item/{item}',                     [MenuController::class,'updateItem'])->name('menu.item.update');
-     Route::delete('menu/item/{item}',                   [MenuController::class,'destroyItem'])->name('menu.item.destroy');
+     // Group
+     Route::post   ('menu/section/{section}/group',[MenuController::class,'storeGroup'])->name('menu.group.store');
+     Route::put    ('menu/group/{group}',          [MenuController::class,'updateGroup'])->name('menu.group.update');
+     Route::delete ('menu/group/{group}',          [MenuController::class,'destroyGroup'])->name('menu.group.destroy');
+ 
+     // Product pivot
+     Route::post   ('menu/group/{group}/product',             [MenuController::class,'addProductToGroup'])->name('menu.group.product.add');
+     Route::delete ('menu/group/{group}/product/{pid}',       [MenuController::class,'removeProductFromGroup'])->name('menu.group.product.remove');
  });
+ 
 require __DIR__ . '/auth.php';
