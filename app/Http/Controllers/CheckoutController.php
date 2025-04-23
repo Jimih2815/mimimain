@@ -6,24 +6,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Order;
+use App\Models\OptionValue;
 
 class CheckoutController extends Controller
 {
     /** 
      * GET  /checkout 
-     * Hiển thị form + QR tĩnh VietQR.io (compact, với mã đã sinh sẵn).
      */
     public function show(Request $request)
     {
         $selected = $request->input('selected_ids', []);
         $cart     = session('cart', []);
 
-        // Lọc và tính tổng
-        $items = []; $grand = 0;
-        foreach ($selected as $id) {
-            if (isset($cart[$id])) {
-                $items[$id] = $cart[$id];
-                $grand    += $cart[$id]['price'] * $cart[$id]['quantity'];
+        $items = [];
+        $grand = 0;
+        foreach ($selected as $key) {
+            if (isset($cart[$key])) {
+                $items[$key] = $cart[$key];
+                $grand += $cart[$key]['price'] * $cart[$key]['quantity'];
             }
         }
         if (empty($items)) {
@@ -31,11 +31,9 @@ class CheckoutController extends Controller
                              ->with('error','Bạn chưa chọn sản phẩm nào để thanh toán.');
         }
 
-        // Sinh mã CK duy nhất và lưu tạm
         $bankRef = $this->uniqueBankRef();
-        session(['pending_bank_ref'=>$bankRef]);
+        session(['pending_bank_ref' => $bankRef]);
 
-        // Build QR tĩnh từ VietQR.io
         $bankCode    = 'TCB';
         $accountNo   = '19032724004016';
         $accountName = 'PHAN THAO NGUYEN';
@@ -49,18 +47,16 @@ class CheckoutController extends Controller
 
     /**
      * POST /checkout/confirm
-     * Xử lý lưu đơn COD hoặc Bank
      */
     public function confirm(Request $r)
     {
-        \Log::debug('⚡️ in confirm(), payload:', $r->all());
         $r->validate([
-            'fullname' => 'required|string',
-            'phone'    => 'required|string',
-            'address'  => 'required|string',
-            'note'     => 'nullable|string',
-            'payment'  => 'required|in:cod,bank',
-            'bank_ref' => 'nullable|string',
+            'fullname'       => 'required|string',
+            'phone'          => 'required|string',
+            'address'        => 'required|string',
+            'note'           => 'nullable|string',
+            'payment'        => 'required|in:cod,bank',
+            'bank_ref'       => 'nullable|string',
         ]);
 
         $cart = session('cart', []);
@@ -68,9 +64,7 @@ class CheckoutController extends Controller
             return back()->withErrors('Giỏ hàng trống!');
         }
 
-        $total = array_sum(array_map(fn($i)=> $i['price'] * $i['quantity'], $cart));
-
-        // Lấy bank_ref từ hidden hoặc session
+        $total = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
         $bankRef = $r->input('bank_ref') ?: session('pending_bank_ref');
 
         $order = Order::create([
@@ -83,16 +77,15 @@ class CheckoutController extends Controller
             'total'          => $total,                        
         ]);
 
-        // Lưu items
-        foreach ($cart as $pid => $item) {
+        foreach ($cart as $key => $item) {
             $order->items()->create([
-                'product_id' => $pid,
+                'product_id' => $item['product_id'] ?? $key,
                 'quantity'   => $item['quantity'],
                 'price'      => $item['price'],
+                'options'    => $item['options'] ?? [],
             ]);
         }
 
-        // Xóa session
         session()->forget(['cart','pending_bank_ref']);
 
         return view('checkout.thankyou', compact('order'));
@@ -100,7 +93,6 @@ class CheckoutController extends Controller
 
     /**
      * POST /checkout/bank-ref
-     * Sinh mã CK + QR SVG ngay khi khách chọn chuyển khoản.
      */
     public function ajaxBankRef(Request $r)
     {
@@ -108,7 +100,6 @@ class CheckoutController extends Controller
         $amount = $r->amount;
         $ref    = $this->uniqueBankRef();
 
-        // Payload nội bộ (EMVCo kiểu đơn giản)
         $payload = $this->vietQRPayloadRaw($amount, $ref);
         $svg     = QrCode::size(260)->generate($payload);
 
@@ -117,12 +108,11 @@ class CheckoutController extends Controller
         return response()->json(['ref'=>$ref,'qr'=>$svg]);
     }
 
-    // ========== Helpers ===========
     private function uniqueBankRef(): string
     {
         do {
             $ref = Str::upper(Str::random(10));
-        } while (\App\Models\Order::where('bank_ref',$ref)->exists());
+        } while (Order::where('bank_ref',$ref)->exists());
         return $ref;
     }
 

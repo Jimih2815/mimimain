@@ -1,9 +1,8 @@
-@extends('layouts.app')
-@section('title','Đơn hàng')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container py-4">
-  <h2 class="mb-4">Danh sách đơn hàng</h2>
+  <h2 class="mb-4">Danh sách Đơn hàng</h2>
 
   <table class="table table-bordered align-middle">
     <thead class="table-light">
@@ -33,7 +32,19 @@
           <td colspan="7">
             <ul class="mb-0">
               @foreach($o->items as $it)
-                <li>{{ $it->product->name }} × {{ $it->quantity }}</li>
+                <li>
+                  {{ $it->product->name }} × {{ $it->quantity }}
+                  @if($it->options)
+                    <ul>
+                      @php
+                        $vals = \App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get();
+                      @endphp
+                      @foreach($vals as $v)
+                        <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                      @endforeach
+                    </ul>
+                  @endif
+                </li>
               @endforeach
             </ul>
           </td>

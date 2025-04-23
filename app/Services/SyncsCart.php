@@ -1,58 +1,76 @@
 <?php
-// app/Services/SyncsCart.php
+
 namespace App\Services;
 
-use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CartItem;
+use App\Models\OptionValue;
 
 trait SyncsCart
 {
-    /** Lưu session cart xuống DB */
+    /**
+     * Lưu session cart xuống DB (kèm options)
+     */
     protected function syncCartToDB(array $cart): void
     {
-        if (!Auth::check()) return;
+        if (! Auth::check()) {
+            return;
+        }
 
-        $userId    = Auth::id();
-        $productId = array_keys($cart);
+        $userId     = Auth::id();
+        $productIds = array_map(fn($row) => $row['product_id'], $cart);
 
-        // xoá sản phẩm không còn trong session
+        // Xóa những item đã bị remove khỏi session
         CartItem::where('user_id', $userId)
-                ->whereNotIn('product_id', $productId)
-                ->delete();
+            ->whereNotIn('product_id', $productIds)
+            ->delete();
 
-        foreach ($cart as $pid => $row) {
+        // Cập nhật hoặc tạo mới (chưa lưu price ở đây là ok, chúng ta recalc khi merge)
+        foreach ($cart as $row) {
             CartItem::updateOrCreate(
-                ['user_id' => $userId, 'product_id' => $pid],
-                ['quantity' => $row['quantity'], 'options' => $row['options'] ?? null]
+                [
+                    'user_id'    => $userId,
+                    'product_id' => $row['product_id'],
+                ],
+                [
+                    'quantity' => $row['quantity'],
+                    'options'  => $row['options'] ?? null,
+                ]
             );
         }
     }
 
-    /** Lấy DB cart + gộp với session (+) */
+    /**
+     * Merge DB cart vào session khi user đã login
+     * — recalc price = base_price + extra_price(options)
+     */
     protected function mergeDBCartIntoSession(): void
     {
-        if (!Auth::check()) return;
+        if (! Auth::check()) {
+            return;
+        }
 
         $session = session('cart', []);
         $dbItems = CartItem::with('product')
-                    ->where('user_id', Auth::id())->get();
+            ->where('user_id', Auth::id())
+            ->get();
 
-        foreach ($dbItems as $item) {
-            $pid = $item->product_id;
+        foreach ($dbItems as $it) {
+            $optIds = $it->options ?? [];
+            // tính extra_price từ OptionValue
+            $extra = OptionValue::whereIn('id', $optIds)->sum('extra_price');
 
-            // ----- dữ liệu bảo đảm đồng nhất -----
-            $row = [
-                'name'     => $item->product->name,
-                'price'    => $item->product->base_price,
-                'quantity' => $item->quantity,
-                'image'    => $item->product->img,
+            $price = $it->product->base_price + $extra;
+            $key   = md5($it->product_id . '|' . json_encode($optIds));
+
+            $session[$key] = [
+                'product_id' => $it->product_id,
+                'quantity'   => $it->quantity,
+                'price'      => $price,
+                'options'    => $optIds,
+                'name'       => $it->product->name,
+                'image'      => $it->product->img,
             ];
-
-            /* Nếu bạn muốn "lấy lớn nhất" thì:
-            $row['quantity'] = max($item->quantity, $session[$pid]['quantity'] ?? 0);
-            */
-
-            $session[$pid] = $row;      // ✨ GHI ĐÈ, không còn cộng dồn
         }
 
         session(['cart' => $session]);

@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\OptionValue;
 use Illuminate\Http\Request;
 use App\Services\SyncsCart;
 
@@ -9,48 +11,66 @@ class CartController extends Controller
 {
     use SyncsCart;
 
-    /* ------------ hiển thị giỏ ------------ */
+    /**
+     * Hiển thị giỏ hàng
+     */
     public function index()
     {
-        $this->mergeDBCartIntoSession();          // tự khôi phục nếu đã login
+        $this->mergeDBCartIntoSession();
         $cart  = session('cart', []);
-
-        $total = array_reduce($cart, fn ($s, $i) =>
-            $s + $i['price'] * $i['quantity'], 0);
-
+        $total = array_reduce(
+            $cart,
+            fn($sum, $item) => $sum + $item['price'] * $item['quantity'],
+            0
+        );
         return view('cart.index', compact('cart', 'total'));
     }
 
-    /* ------------ thêm ------------ */
+    /**
+     * Thêm sản phẩm vào giỏ (có options & tính giá base+extra)
+     */
     public function add(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $cart    = session('cart', []);
+        $product = Product::with('optionValues')->findOrFail($id);
+        $chosen  = $request->input('options', []);
+        $extra   = OptionValue::whereIn('id', array_values($chosen))
+                              ->sum('extra_price');
+        $price   = $product->base_price + $extra;
 
-        // ----- gán mặc định rồi tăng -----
-        $cart[$id]['quantity'] ??= 0;
-        $cart[$id]['quantity']++;
+        $cart = session('cart', []);
+        $key  = md5($id . '|' . json_encode($chosen));
 
-        // ----- các field còn lại chỉ gán 1 lần -----
-        $cart[$id]['name']   ??= $product->name;
-        $cart[$id]['price']  ??= $product->base_price;
-        $cart[$id]['image']  ??= $product->img;
+        if (isset($cart[$key])) {
+            $cart[$key]['quantity']++;
+        } else {
+            $cart[$key] = [
+                'product_id' => $id,
+                'quantity'   => 1,
+                'price'      => $price,
+                'options'    => $chosen,
+                'name'       => $product->name,
+                'image'      => $product->img,
+            ];
+        }
 
         session(['cart' => $cart]);
         $this->syncCartToDB($cart);
 
-        return back()->with('success', "Đã thêm “{$product->name}” vào giỏ!");
+        return back()->with('success', "Đã thêm “{$product->name}” vào giỏ hàng!");
     }
 
-    /* ------------ xoá ------------ */
-    public function remove(Request $request, $id)
+    /**
+     * Xóa mục khỏi giỏ (key là MD5 hash)
+     */
+    public function remove(Request $request, $key)
     {
         $cart = session('cart', []);
-        unset($cart[$id]);
-
-        session(['cart' => $cart]);
-        $this->syncCartToDB($cart);
-
-        return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
+        if (isset($cart[$key])) {
+            unset($cart[$key]);
+            session(['cart' => $cart]);
+            $this->syncCartToDB($cart);
+            return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
+        }
+        return back()->with('error', 'Mục không tồn tại trong giỏ hàng.');
     }
 }
