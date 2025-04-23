@@ -104,5 +104,6 @@ Route::prefix('admin')
      Route::get   ('users/{user}',                [AdminUserController::class,'show'])            ->name('users.show');
      Route::delete('users/{user}',                [AdminUserController::class,'destroy'])         ->name('users.destroy');
      Route::resource('collections', App\Http\Controllers\Admin\CollectionController::class);
-     // ... có thể tiếp tục các resource khác ...
+     Route::resource('widgets', App\Http\Controllers\Admin\WidgetController::class);
+     Route::resource('placements', App\Http\Controllers\Admin\WidgetPlacementController::class);
 });

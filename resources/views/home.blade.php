@@ -34,11 +34,36 @@
       </div>
     </div>
 
-    {{-- 5) H2 + nút Show Now --}}
+    {{-- 5) H2 + nút Show Now (dynamic widget) --}}
     <div class="text-center mb-5">
       <h2 class="mb-3">Khám phá bộ sưu tập của chúng tôi</h2>
-      <button class="btn btn-primary">Show Now</button>
+
+      @php
+        // Lấy widget cho region 'show-now-button'
+        $w = widget_for('show-now-button');
+      @endphp
+
+      @if($w && $w->collection)
+        @if($w->type==='button')
+          <a href="{{ route('collections.show',$w->collection->slug) }}"
+            class="btn btn-lg btn-primary">
+            {{ $w->button_text }}
+          </a>
+        @elseif($w->type==='banner')
+          <a href="{{ route('collections.show',$w->collection->slug) }}">
+            <img src="{{ asset($w->image) }}"
+                alt="{{ $w->name }}"
+                class="img-fluid rounded">
+          </a>
+        @else
+          {!! $w->html !!}
+        @endif
+      @else
+        {{-- Fallback nếu admin chưa gán widget --}}
+        <button class="btn btn-primary">Show Now</button>
+      @endif
     </div>
+
 
     {{-- 6) Slide bộ sưu tập (3×4) --}}
     <div class="mb-5">
