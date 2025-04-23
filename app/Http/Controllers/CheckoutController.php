@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;        
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Order;
 use App\Models\OptionValue;
@@ -69,6 +70,7 @@ class CheckoutController extends Controller
         $bankRef = $r->input('bank_ref') ?: session('pending_bank_ref');
 
         $order = Order::create([
+            'user_id'        => Auth::id(),   
             'fullname'       => $r->fullname,
             'phone'          => $r->phone,
             'address'        => $r->address,

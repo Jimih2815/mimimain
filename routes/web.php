@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,4 +97,11 @@ Route::prefix('admin')
 
     // Products CRUD
     Route::resource('products', AdminProductController::class);
+     // Quản lý Users
+     Route::get   ('users',                       [AdminUserController::class,'index'])           ->name('users.index');
+     Route::post  ('users/{user}/reset-password', [AdminUserController::class,'resetPassword'])   ->name('users.resetPassword');
+     Route::get   ('users/{user}',                [AdminUserController::class,'show'])            ->name('users.show');
+     Route::delete('users/{user}',                [AdminUserController::class,'destroy'])         ->name('users.destroy');
+ 
+     // ... có thể tiếp tục các resource khác ...
 });
