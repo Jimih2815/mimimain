@@ -1,40 +1,52 @@
+/* 1) Reset & base styles của Tailwind */
+@tailwind base;
+
+/* 2) CSS bên thứ ba (Bootstrap, FontAwesome, Swiper…) */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 
-@import "bootstrap/dist/css/bootstrap.min.css";
-@import "bootstrap-icons/font/bootstrap-icons.css";
-@import "@fortawesome/fontawesome-free/css/all.min.css";
+/* 3) Components utilities của Tailwind */
+@tailwind components;
 
-/* Override Swiper để nó chắc chắn xếp ngang */
+/* 4) CSS riêng override/extension */
+
+/* Ép swiper-wrapper luôn flex row */
 .swiper-wrapper {
   display: flex !important;
 }
 .swiper-slide {
   flex-shrink: 0;
 }
-/* Ép vuông 1:1, crop và center */
+
+/* Vuông 1:1, ảnh cover + center */
 .product-swiper .swiper-slide {
-    /* đảm bảo mỗi slide là 1 block vuông */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .product-img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    object-position: center;
-  }
-  .map-container {
-    width: 100%;
-    height: 150px;       /* Ép toàn khối cao 300px */
-    overflow: hidden;    /* Ẩn phần thừa */
-    border-radius: .25rem;
-  }
-  .map-container iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.product-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Container Google Map nhỏ */
+.map-container {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: .25rem;
+}
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* 5) Utilities tùy chỉnh (nếu cần) */
+@tailwind utilities;

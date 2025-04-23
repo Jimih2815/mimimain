@@ -14,6 +14,8 @@ Route::view('/', 'home')->name('home');
 Route::get('/products', [ProductController::class, 'index'])
      ->name('products.index');
 
+     Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])
+     ->name('categories.show');
 // Chi tiết sản phẩm theo slug
 Route::get('/products/{slug}', [ProductController::class, 'show'])
      ->name('products.show');
@@ -40,3 +42,5 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::post(  'headers/{header}/product',      [HeaderController::class,'addProduct'])    ->name('headers.product.add');
     Route::delete('headers/{header}/product/{pid}',[HeaderController::class,'removeProduct']) ->name('headers.product.remove');
 });
+
+require __DIR__ . '/auth.php';

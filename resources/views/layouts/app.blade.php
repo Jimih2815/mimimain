@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <title>@yield('title','MimiMain')</title>
 
-  {{-- Chỉ load CSS ở head --}}
+  {{-- Chỉ load CSS 1 lần --}}
   @vite([
-    'resources/css/app.css',
-    'resources/css/header.css',
+      'resources/css/app.css',
+      'resources/css/header.css',
   ])
+
+  {{-- Bootstrap JS (cho dropdown, modal…) --}}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="antialiased">
 
@@ -21,12 +23,10 @@
     @yield('content')
   </main>
 
-  {{-- Load JS ở cuối body để chắc chắn DOM đã có --}}
+  {{-- Load JS cuối body --}}
   @vite('resources/js/app.js')
   @stack('scripts')
-  @include('partials.footer')
-  {{-- rồi mới tới các script --}}
-  @vite('resources/js/app.js')
 
+  @include('partials.footer')
 </body>
 </html>

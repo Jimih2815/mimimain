@@ -19,6 +19,9 @@ header {
 .header-top .dropdown-menu {
   z-index: 1200 !important;
 }
+.navbar-nav .nav-link {
+  letter-spacing: .15em; /* spacing như trước */
+}
 
 .header-top {
   background: #fff;
