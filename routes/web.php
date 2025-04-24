@@ -81,6 +81,7 @@ Route::get('/collections/{slug}', [App\Http\Controllers\CollectionController::cl
 |--------------------------------------------------------------------------
 */
 
+
 Route::prefix('admin')
      // ->middleware(['auth'])
      ->name('admin.')

@@ -8,36 +8,31 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\OptionType;
 use App\Models\OptionValue;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Hiển thị danh sách sản phẩm (15/trang)
-     */
     public function index()
     {
         $products = Product::paginate(15);
         return view('admin.products.index', compact('products'));
     }
 
-    /**
-     * Form thêm mới sản phẩm
-     */
     public function create()
     {
         return view('admin.products.create');
     }
 
-    /**
-     * Lưu sản phẩm + options mới
-     */
     public function store(Request $r)
     {
-        $r->validate([
-            'name'                         => 'required|string',
+        // 1. Validate tất cả, bao gồm image chính + phụ
+        $validated = $r->validate([
+            'name'                         => 'required|string|max:255',
             'slug'                         => 'required|string|unique:products,slug',
             'description'                  => 'nullable|string',
             'base_price'                   => 'required|numeric',
+            'img'                          => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'sub_img.*'                    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'options'                      => 'array',
             'options.*.name'               => 'required|string',
             'options.*.values'             => 'array',
@@ -45,12 +40,32 @@ class ProductController extends Controller
             'options.*.values.*.extra_price'=> 'required|numeric',
         ]);
 
-        DB::transaction(function() use($r){
-            // 1) Tạo product
-            $p = Product::create($r->only(['name','slug','description','base_price']));
+        // 2. Lưu file lên storage/public
+        //  - ảnh chính
+        $validated['img'] = $r->file('img')->store('products/main', 'public');
 
-            // 2) Tạo OptionType → OptionValue → attach pivot
-            foreach ($r->options ?? [] as $optData) {
+        //  - ảnh phụ (mảng)
+        $subArr = [];
+        if ($r->hasFile('sub_img')) {
+            foreach ($r->file('sub_img') as $file) {
+                $subArr[] = $file->store('products/sub', 'public');
+            }
+        }
+        $validated['sub_img'] = $subArr;
+
+        // 3. Tạo product + options trong transaction
+        DB::transaction(function() use($validated) {
+            $p = Product::create([
+                'name'        => $validated['name'],
+                'slug'        => $validated['slug'],
+                'description' => $validated['description'] ?? null,
+                'base_price'  => $validated['base_price'],
+                'img'         => $validated['img'],
+                'sub_img'     => $validated['sub_img'],
+            ]);
+
+            // Options
+            foreach ($validated['options'] ?? [] as $optData) {
                 $optType = OptionType::create([
                     'name' => $optData['name'],
                 ]);
@@ -61,36 +76,30 @@ class ProductController extends Controller
                         'value'          => $val['value'],
                         'extra_price'    => $val['extra_price'],
                     ]);
-
                     $p->optionValues()->attach($optVal->id);
                 }
             }
         });
 
         return redirect()->route('admin.products.index')
-                         ->with('success','Đã tạo product + options thành công!');
+                         ->with('success', 'Tạo sản phẩm thành công!');
     }
 
-    /**
-     * Form sửa sản phẩm
-     */
     public function edit(Product $product)
     {
-        // Load luôn optionValues cùng type để show trong form
         $product->load('optionValues.type');
         return view('admin.products.edit', compact('product'));
     }
 
-    /**
-     * Cập nhật sản phẩm + options
-     */
     public function update(Request $r, Product $product)
     {
-        $r->validate([
-            'name'                         => 'required|string',
+        $validated = $r->validate([
+            'name'                         => 'required|string|max:255',
             'slug'                         => "required|string|unique:products,slug,{$product->id}",
             'description'                  => 'nullable|string',
             'base_price'                   => 'required|numeric',
+            'img'                          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'sub_img.*'                    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'options'                      => 'array',
             'options.*.name'               => 'required|string',
             'options.*.values'             => 'array',
@@ -98,51 +107,61 @@ class ProductController extends Controller
             'options.*.values.*.extra_price'=> 'required|numeric',
         ]);
 
-        DB::transaction(function() use($r, $product){
-            // 1) Cập nhật các trường cơ bản
-            $product->update($r->only(['name','slug','description','base_price']));
+        // Nếu thay ảnh chính
+        if ($r->hasFile('img')) {
+            $validated['img'] = $r->file('img')->store('products/main', 'public');
+        }
 
-            // 2) Xoá toàn bộ options cũ khỏi product + xoá luôn bản ghi OptionValue & OptionType
-            $oldValueIds = $product->optionValues()->pluck('option_values.id')->toArray();
-            $oldTypeIds  = OptionValue::whereIn('id', $oldValueIds)
-                                      ->pluck('option_type_id')
-                                      ->toArray();
+        // Nếu upload mới ảnh phụ thì ghi đè
+        if ($r->hasFile('sub_img')) {
+            $subArr = [];
+            foreach ($r->file('sub_img') as $file) {
+                $subArr[] = $file->store('products/sub', 'public');
+            }
+            $validated['sub_img'] = $subArr;
+        }
 
-            // detach pivot
+        DB::transaction(function() use($validated, $product) {
+            // 1. Cập nhật product
+            $product->update([
+                'name'        => $validated['name'],
+                'slug'        => $validated['slug'],
+                'description' => $validated['description'] ?? null,
+                'base_price'  => $validated['base_price'],
+                'img'         => $validated['img'] ?? $product->img,
+                'sub_img'     => $validated['sub_img'] ?? $product->sub_img,
+            ]);
+
+            // 2. Xoá options cũ
+            $oldIds = $product->optionValues()->pluck('option_values.id')->toArray();
+            $oldTypeIds = OptionValue::whereIn('id', $oldIds)
+                                     ->pluck('option_type_id')
+                                     ->toArray();
             $product->optionValues()->detach();
-
-            // xoá OptionValue + OptionType cũ
-            OptionValue::whereIn('id', $oldValueIds)->delete();
+            OptionValue::whereIn('id', $oldIds)->delete();
             OptionType::whereIn('id', $oldTypeIds)->delete();
 
-            // 3) Tạo lại OptionType → OptionValue → attach pivot
-            foreach ($r->options ?? [] as $optData) {
-                $optType = OptionType::create([
-                    'name' => $optData['name'],
-                ]);
-
+            // 3. Thêm lại options mới
+            foreach ($validated['options'] ?? [] as $optData) {
+                $optType = OptionType::create(['name' => $optData['name']]);
                 foreach ($optData['values'] as $val) {
                     $optVal = OptionValue::create([
                         'option_type_id' => $optType->id,
                         'value'          => $val['value'],
                         'extra_price'    => $val['extra_price'],
                     ]);
-
                     $product->optionValues()->attach($optVal->id);
                 }
             }
         });
 
         return redirect()->route('admin.products.index')
-                         ->with('success','Đã cập nhật sản phẩm thành công!');
+                         ->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
-    /**
-     * Xoá sản phẩm (và pivot tự cascadeOnDelete)
-     */
     public function destroy(Product $product)
     {
         $product->delete();
-        return back()->with('success','Đã xoá product.');
+        return back()->with('success', 'Đã xóa sản phẩm.');
     }
 }
