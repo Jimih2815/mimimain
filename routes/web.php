@@ -24,7 +24,12 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
-
+Route::middleware('guest')->group(function () {
+     Route::get('register', [RegisterController::class, 'showRegistrationForm'])
+          ->name('register');
+ 
+     Route::post('register', [RegisterController::class, 'store']);
+ });
 // Home
 Route::view('/', 'home')->name('home');
 
