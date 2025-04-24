@@ -43,9 +43,11 @@
                                        class="rowCheck">
                             </td>
                             <td>
-                                @if ($item['image'])
-                                    <img src="{{ $item['image'] }}" width="60" alt="{{ $item['name'] }}">
-                                @endif
+                            @if ($item['image'])
+                                <img src="{{ asset('storage/'.$item['image']) }}"
+                                    width="60"
+                                    alt="{{ $item['name'] }}">
+                            @endif
                             </td>
                             <td>{{ $item['name'] }}</td>
                             <td>

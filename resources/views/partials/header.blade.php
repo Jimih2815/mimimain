@@ -33,9 +33,12 @@
         <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="cartDropdown" style="min-width:300px; z-index:1200;">
           @forelse($cart as $id => $item)
             <li class="d-flex align-items-center mb-2">
-              @if(!empty($item['image']))
-                <img src="{{ $item['image'] }}" width="50" class="me-2 rounded">
-              @endif
+            @if(!empty($item['image']))
+              <img src="{{ asset('storage/'.$item['image']) }}"
+                  width="50"
+                  class="me-2 rounded"
+                  alt="{{ $item['name'] }}">
+            @endif
               <div class="flex-grow-1">
                 <div class="fw-semibold">{{ $item['name'] }}</div>
                 <small class="text-muted">{{ number_format($item['price'],0,',','.') }}₫ × {{ $item['quantity'] }}</small>
