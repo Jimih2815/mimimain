@@ -82,7 +82,7 @@ Route::get('/collections/{slug}', [App\Http\Controllers\CollectionController::cl
 */
 
 Route::prefix('admin')
-     ->middleware(['auth'])
+     // ->middleware(['auth'])
      ->name('admin.')
      ->group(function(){
 
