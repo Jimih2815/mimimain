@@ -34,12 +34,7 @@
       </div>
     @endif
 
-
-
-
-    {{-- 2) Tiêu đề giới thiệu --}}
-    <h1 style="margin-top:15rem;     text-align: center;"> CHỈNH SỬA PHẦN GIỚI THIỆU Ở CUỐI TRANG</h1>
-    
+    {{-- 2) Tiêu đề Giới thiệu --}}
     <div class="mb-3">
       <label class="form-label">Tiêu đề Giới thiệu</label>
       <input type="text"
@@ -51,13 +46,45 @@
       @enderror
     </div>
 
-    {{-- 3) Nội dung giới thiệu --}}
+    {{-- 3) Nội dung Giới thiệu --}}
     <div class="mb-3">
       <label class="form-label">Nội dung Giới thiệu</label>
       <textarea name="about_text"
                 class="form-control"
                 rows="4">{{ old('about_text', $home->about_text) }}</textarea>
       @error('about_text')
+        <div class="text-danger">{{ $message }}</div>
+      @enderror
+    </div>
+
+    {{-- 4) Button Control --}}
+    <div class="mb-3 form-check">
+      <input type="checkbox"
+             name="show_button"
+             id="show_button"
+             class="form-check-input"
+             @checked(old('show_button', $home->show_button))>
+      <label for="show_button" class="form-check-label">
+        Hiển thị nút điều khiển ở Home
+      </label>
+    </div>
+
+    <div class="mb-3">
+      <label for="button_collection_id" class="form-label">
+        Chọn Collection cho nút
+      </label>
+      <select name="button_collection_id"
+              id="button_collection_id"
+              class="form-select">
+        <option value="">-- Không chọn --</option>
+        @foreach($collections as $id => $name)
+          <option value="{{ $id }}"
+            @selected(old('button_collection_id', $home->button_collection_id)==$id)>
+            {{ $name }}
+          </option>
+        @endforeach
+      </select>
+      @error('button_collection_id')
         <div class="text-danger">{{ $message }}</div>
       @enderror
     </div>

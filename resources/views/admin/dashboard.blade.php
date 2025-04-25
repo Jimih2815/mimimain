@@ -1,4 +1,5 @@
-@extends('layouts.admin') 
+{{-- resources/views/admin/dashboard.blade.php --}}
+@extends('layouts.admin')
 
 @section('content')
 <div class="container py-4">
@@ -15,7 +16,7 @@
       </a>
     </div>
 
-    {{-- Nhóm danh mục (vào chung trang Categories) --}}
+    {{-- Nhóm danh mục --}}
     <div class="col-md-3">
       <a href="{{ route('admin.categories.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">
@@ -65,11 +66,13 @@
       </a>
     </div>
 
-    {{-- Menu / Mega‐menu --}}
+    {{-- Mega‐menu --}}
     <div class="col-md-3">
       <a href="{{ route('admin.menu.index') }}" class="card h-100 text-center text-decoration-none">
-      <i class="bi bi-menu-button-wide fs-1"></i>
-        <h5 class="mt-2">Menu Sections</h5>
+        <div class="card-body">
+          <i class="bi bi-menu-button-wide fs-1"></i>
+          <h5 class="mt-2">Menu Sections</h5>
+        </div>
       </a>
     </div>
 
@@ -113,7 +116,7 @@
       </a>
     </div>
 
-    {{-- Widget --}}
+    {{-- Widgets --}}
     <div class="col-md-3">
       <a href="{{ route('admin.widgets.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">
@@ -125,7 +128,7 @@
 
     {{-- Widget Placements --}}
     <div class="col-md-3">
-      <a href="{{ route('admin.widget-placements.index') }}" class="card h-100 text-center text-decoration-none">
+      <a href="{{ route('admin.placements.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">
           <i class="bi bi-pin-angle fs-1"></i>
           <h5 class="mt-2">Widget Placements</h5>

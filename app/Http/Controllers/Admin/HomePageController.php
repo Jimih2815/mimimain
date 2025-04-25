@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HomePage;
+use App\Models\Collection;
 
 class HomePageController extends Controller
 {
@@ -12,30 +14,35 @@ class HomePageController extends Controller
      */
     public function edit()
     {
-        $home = HomePage::first();
-        return view('admin.home.edit', compact('home'));
+        $home        = HomePage::first();
+        $collections = Collection::pluck('name','id');
+        return view('admin.home.edit', compact('home','collections'));
     }
 
     /**
-     * Xử lý lưu banner và phần giới thiệu
+     * Xử lý lưu banner, giới thiệu và button control
      */
     public function update(Request $r)
     {
         $data = $r->validate([
-            'banner_image' => 'nullable|image|max:4096',
-            'about_title'  => 'nullable|string|max:255',
-            'about_text'   => 'nullable|string',
+            'banner_image'          => 'nullable|image|max:4096',
+            'about_title'           => 'nullable|string|max:255',
+            'about_text'            => 'nullable|string',
+            'show_button'           => 'sometimes|boolean',
+            'button_collection_id'  => 'nullable|exists:collections,id',
         ]);
 
-        $home = HomePage::first();
+        // Checkbox chỉ có key khi checked
+        $data['show_button'] = $r->has('show_button');
 
-        // Nếu có file banner mới thì lưu
+        // Xử lý banner image
         if ($r->hasFile('banner_image')) {
-            $path = $r->file('banner_image')->store('home', 'public');
-            $data['banner_image'] = $path;
+            $data['banner_image'] = $r
+                ->file('banner_image')
+                ->store('home','public');
         }
 
-        $home->update($data);
+        HomePage::first()->update($data);
 
         return redirect()
             ->route('admin.home.edit')
