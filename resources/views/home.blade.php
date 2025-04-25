@@ -60,24 +60,41 @@
       </div>
     </div>
 
-    {{-- 5) Show-Now widget --}}
+    {{-- 5) H2 + nút Shop Now (dynamic widget) --}}
     <div class="text-center mb-5">
       <h2 class="mb-3">Khám phá bộ sưu tập của chúng tôi</h2>
-      @php $w = widget_for('show-now-button'); @endphp
-      @if($w && $w->collection)
-        @if($w->type==='button')
-          <a href="{{ route('collections.show',$w->collection->slug) }}"
-             class="btn btn-lg btn-primary">{{ $w->button_text }}</a>
-        @elseif($w->type==='banner')
-          <a href="{{ route('collections.show',$w->collection->slug) }}">
-            <img src="{{ asset($w->image) }}"
-                 class="img-fluid rounded" alt="{{ $w->name }}">
-          </a>
-        @else
-          {!! $w->html !!}
-        @endif
+
+      @php
+        // Lấy widget đã đặt vào region 'nut-bosuutap'
+        $btn = widget_for('nut-bosuutap');
+      @endphp
+
+      @if($btn && $btn->type === 'button')
+        <a href="{{ $btn->collection
+                      ? route('collections.show', $btn->collection->slug)
+                      : '#' }}"
+          class="btn btn-lg btn-primary nut-bosuutap">
+          {{ $btn->button_text }}
+        </a>
+
+      @elseif($btn && $btn->type === 'banner')
+        <a href="{{ $btn->collection
+                      ? route('collections.show', $btn->collection->slug)
+                      : '#' }}"
+          class="nut-bosuutap">
+          <img src="{{ asset($btn->image) }}"
+              alt="{{ $btn->name }}"
+              class="img-fluid rounded">
+        </a>
+
+      @elseif($btn && $btn->type === 'html')
+        {!! $btn->html !!}
+
       @else
-        <button class="btn btn-primary">Show Now</button>
+        {{-- fallback nếu chưa gán widget --}}
+        <a href="#" class="btn btn-lg btn-primary nut-bosuutap">
+          Shop Now
+        </a>
       @endif
     </div>
 
