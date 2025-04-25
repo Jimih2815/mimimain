@@ -57,22 +57,24 @@
           @foreach($menuSections as $section)
             <li class="nav-item dropdown position-static">
               <a class="nav-link px-3 fw-semibold text-dark"
-                 href="#"
-                 id="sec-{{ $section->id }}"
-                 data-bs-toggle="dropdown">
+                href="#"
+                id="sec-{{ $section->id }}"
+                data-bs-toggle="dropdown">
                 {{ $section->name }}
               </a>
 
-              <div class="dropdown-menu w-100 p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
+              {{-- Dropdown full-width --}}
+              <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
                 <div class="row">
                   @forelse($section->groups as $group)
-                    <div class="col-6 col-md-3 mb-3">
+                    {{-- Thêm class group-block để áp CSS flex --}}
+                    <div class="group-block">
                       <h6 class="fw-bold text-primary mb-2">{{ $group->title }}</h6>
                       <ul class="list-unstyled">
                         @forelse($group->products as $p)
                           <li>
                             <a class="dropdown-item px-0"
-                               href="{{ route('products.show', $p->slug ?? $p->id) }}">
+                              href="{{ route('products.show', $p->slug ?? $p->id) }}">
                               {{ $p->name }}
                             </a>
                           </li>
@@ -82,7 +84,7 @@
                       </ul>
                     </div>
                   @empty
-                    <div class="col-12">
+                    <div class="group-block">
                       <small class="text-muted">Chưa có mục nào</small>
                     </div>
                   @endforelse
@@ -92,6 +94,7 @@
           @endforeach
         </ul>
       </nav>
+
 
       {{-- Mini cart & wish --}}
       <div class="ms-auto d-flex align-items-center gap-3">

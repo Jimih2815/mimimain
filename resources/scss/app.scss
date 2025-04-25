@@ -15,20 +15,53 @@
 @tailwind components;
 
 /* 4) Custom overrides & extensions */
+/* –––––– Sửa header/menu –––––– */
+@layer components {
+  /* 4.1 Mega‐menu full-width */
+  .mega-menu {
+    /* full width viewport */
+    width: 100vw !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    right: auto !important;
+    overflow-x: hidden;
+    padding: 1.5rem; /* nếu muốn thêm khoảng padding */
+    background: #fff; /* đảm bảo nền trắng */
+
+    /* Flex layout cho các nhóm */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center; /* căn giữa ngang */
+      gap: 1.5rem;
+    }
+
+    /* Mỗi block group */
+    .group-block {
+      flex: 0 1 200px;   /* min-width 200px, grow auto */
+      text-align: center;
+    }
+  }
+}
+
+/* Nếu còn overrides cho header.scss, home.scss… thì import ở đây */
 @import "./header.scss";
 @import "./home.scss";
 @import "./swiper.scss";
 @import "./home-section-images.scss";
+
+/* giữ nguyên partial components nếu có */
 @layer components {
-  /* giữ nguyên xuống dòng, gộp nhiều space thành 1 */
   .about-text {
     white-space: pre-line;
   }
 }
+
 /* 5) Tailwind utilities */
 @tailwind utilities;
 
-/*–– 1) Slider full-width hack ––*/
+/*–– 6) Slider full-width hack ––*/
 .slider-full-width {
   position: relative;
   left: 52%;
@@ -42,23 +75,28 @@
 body {
   overflow-x: hidden;
 }
+
+/* collection-swiper overrides */
 .collection-swiper {
   .swiper-wrapper {
-    width: max-content !important; 
+    width: max-content !important;
     height: auto !important;
   }
   .swiper-slide {
     flex-shrink: 0 !important;
     flex-grow: 0 !important;
-    width: auto !important;        
+    width: auto !important;
     height: auto !important;
-    margin-right: 1.25rem;         
+    margin-right: 1.25rem;
   }
 }
+
+/* reset container */
 .container {
   margin: 0;
   max-width: 100%;
 }
+
 .collection-swiper,
 .collection-swiper .swiper-wrapper,
 .collection-swiper .swiper-slide,
