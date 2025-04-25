@@ -77,7 +77,14 @@
 body {
   overflow-x: hidden;
 }
-
+.py-4 {
+  padding-top: 0 !important ;
+  
+}
+.container-trang-chu-truoc-banner {
+  padding-top: 1.5rem !important;
+  padding-bottom :1.5rem !important;
+}
 /* collection-swiper overrides */
 .collection-swiper {
   .swiper-wrapper {
@@ -117,5 +124,24 @@ body {
       background-color: darken(#d1a029, 5%);
       border-color: darken(#d1a029, 5%);
     }
+  }
+}
+.btn-trang-chu-truoc-banner {
+  text-decoration: underline;
+  margin-top: 0 !important;
+  font-weight: 700;
+  color: #4ab3af;
+  background-color: initial;
+  border: 0px solid black;
+  padding: 0;
+  margin: 0;
+  &:hover {
+    text-decoration: underline;
+    margin-top: 0 !important;
+    font-weight: 700;
+    color: darken(#4ab3af, 10%);
+    background-color: initial;
+    border: 0px solid black;
+    padding: 0;
   }
 }

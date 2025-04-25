@@ -4,6 +4,18 @@
 @section('title','Trang Chủ')
 
 @section('content')
+  {{-- Phần trước banner --}}
+    @if($home->pre_banner_title)
+      <div class="text-center py-4 bg-light container-trang-chu-truoc-banner">
+        <h5>{{ $home->pre_banner_title }}</h5>
+        @if($home->preBannerCollection)
+          <a href="{{ route('collections.show',$home->preBannerCollection->slug) }}"
+            class="btn btn-primary mt-2 btn-trang-chu-truoc-banner">
+            {{ $home->pre_banner_button_text }}
+          </a>
+        @endif
+      </div>
+    @endif
   {{-- 1) Banner động full-screen --}}
   <div class="position-relative" style="width:100%; height:100vh; overflow:hidden;">
     <img src="{{ asset('storage/'.$home->banner_image) }}"
