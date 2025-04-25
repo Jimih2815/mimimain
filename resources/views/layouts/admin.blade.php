@@ -109,7 +109,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.widget-placements.index') }}">
+            <a class="nav-link" href="{{ route('admin.placements.index') }}">
               <i class="bi bi-pin-angle"></i> Widget Placements
             </a>
           </li>
