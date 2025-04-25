@@ -8,7 +8,9 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Helpers\\SlugHelper' => $baseDir . '/app/Helpers/SlugHelper.php',
     'App\\Http\\Controllers\\Admin\\CategoryController' => $baseDir . '/app/Http/Controllers/Admin/CategoryController.php',
+    'App\\Http\\Controllers\\Admin\\CategoryGroupController' => $baseDir . '/app/Http/Controllers/Admin/CategoryGroupController.php',
     'App\\Http\\Controllers\\Admin\\CollectionController' => $baseDir . '/app/Http/Controllers/Admin/CollectionController.php',
     'App\\Http\\Controllers\\Admin\\CollectionSliderController' => $baseDir . '/app/Http/Controllers/Admin/CollectionSliderController.php',
     'App\\Http\\Controllers\\Admin\\HomePageController' => $baseDir . '/app/Http/Controllers/Admin/HomePageController.php',
@@ -60,6 +62,7 @@ return array(
     'App\\Listeners\\MergeCartAfterLogin' => $baseDir . '/app/Listeners/MergeCartAfterLogin.php',
     'App\\Models\\CartItem' => $baseDir . '/app/Models/CartItem.php',
     'App\\Models\\Category' => $baseDir . '/app/Models/Category.php',
+    'App\\Models\\CategoryGroup' => $baseDir . '/app/Models/CategoryGroup.php',
     'App\\Models\\Collection' => $baseDir . '/app/Models/Collection.php',
     'App\\Models\\CollectionSlider' => $baseDir . '/app/Models/CollectionSlider.php',
     'App\\Models\\HomePage' => $baseDir . '/app/Models/HomePage.php',

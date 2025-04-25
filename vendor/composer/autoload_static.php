@@ -178,6 +178,7 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
         ),
         'A' => 
         array (
+            'App\\Helpers\\' => 12,
             'App\\' => 4,
         ),
     );
@@ -538,6 +539,10 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
+        'App\\Helpers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Helpers',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -548,7 +553,9 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Helpers\\SlugHelper' => __DIR__ . '/../..' . '/app/Helpers/SlugHelper.php',
         'App\\Http\\Controllers\\Admin\\CategoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CategoryController.php',
+        'App\\Http\\Controllers\\Admin\\CategoryGroupController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CategoryGroupController.php',
         'App\\Http\\Controllers\\Admin\\CollectionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CollectionController.php',
         'App\\Http\\Controllers\\Admin\\CollectionSliderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CollectionSliderController.php',
         'App\\Http\\Controllers\\Admin\\HomePageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/HomePageController.php',
@@ -600,6 +607,7 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
         'App\\Listeners\\MergeCartAfterLogin' => __DIR__ . '/../..' . '/app/Listeners/MergeCartAfterLogin.php',
         'App\\Models\\CartItem' => __DIR__ . '/../..' . '/app/Models/CartItem.php',
         'App\\Models\\Category' => __DIR__ . '/../..' . '/app/Models/Category.php',
+        'App\\Models\\CategoryGroup' => __DIR__ . '/../..' . '/app/Models/CategoryGroup.php',
         'App\\Models\\Collection' => __DIR__ . '/../..' . '/app/Models/Collection.php',
         'App\\Models\\CollectionSlider' => __DIR__ . '/../..' . '/app/Models/CollectionSlider.php',
         'App\\Models\\HomePage' => __DIR__ . '/../..' . '/app/Models/HomePage.php',

@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MenuItem extends Model
 {
     protected $fillable = ['menu_section_id','label','url','sort_order'];
+    public $timestamps = false;
 
-    public function section(): BelongsTo
+    public function products()
     {
-        return $this->belongsTo(MenuSection::class,'menu_section_id');
+        return $this->belongsToMany(Product::class, 'menu_group_product')
+                    ->withPivot('sort_order')
+                    ->orderBy('menu_group_product.sort_order');
     }
 }
