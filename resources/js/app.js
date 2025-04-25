@@ -1,13 +1,20 @@
-import '../scss/app.scss';
-import 'bootstrap';
-import Swiper from 'swiper/bundle';
-import 'swiper/css/bundle';
+// resources/js/app.js
+
+// 1) Import SCSS chính (Tailwind + Bootstrap + Icon + custom)
+import '../scss/app.scss'
+
+// 2) Bootstrap JS (dropdown, modal, tab…)
+import 'bootstrap'
+
+// 3) Swiper bundle + styles
+import Swiper from 'swiper/bundle'
+import 'swiper/css/bundle'
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Collection slider (free‐mode, auto width)
+  // Collection slider (free-mode, auto width)
   new Swiper('.collection-swiper', {
     slidesPerView: 'auto',
-    spaceBetween: 0,     // use CSS margin-right on slides instead
+    spaceBetween: 0,     // margin-right sẽ xử lý bằng CSS
     freeMode: true,
     grabCursor: true,
     navigation: {
@@ -18,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
       el: '.collection-swiper .swiper-pagination',
       clickable: true,
     },
-  });
+  })
 
-  // Product slider (fixed slidesPerView with breakpoints)
+  // Product slider (fixed slidesPerView với breakpoints)
   new Swiper('.product-swiper', {
     slidesPerView: 4,
     spaceBetween: 15,
@@ -35,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
       clickable: true,
     },
     breakpoints: {
-      640: { slidesPerView: 2 },
+      640:  { slidesPerView: 2 },
       1024: { slidesPerView: 4 },
     },
-  });
-});
+  })
+})

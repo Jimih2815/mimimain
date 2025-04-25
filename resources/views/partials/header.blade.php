@@ -42,7 +42,7 @@
       
       {{-- Logo trái --}}
       <a href="{{ route('home') }}" class="me-4">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo MiMi" height="50">
+        <img src="https://tiemhoamimi.com/image/mimi-logo.webp" alt="Logo MiMi" height="50">
       </a>
 
       {{-- Nav chính: position absolute để luôn đúng giữa --}}
@@ -96,8 +96,11 @@
           </div>
         </form>
 
-        <a href="https://www.google.com" class="text-dark me-4 fs-5" title="Yêu thích" target="_blank">
-          <i class="bi bi-heart"></i>
+        <a href="https://www.google.com"
+            class="me-4 fs-5 wishlist-icon"
+            title="Yêu thích"
+            target="_blank">
+            <i class="bi bi-heart-fill text-danger"></i>
         </a>
 
         <div class="dropdown">

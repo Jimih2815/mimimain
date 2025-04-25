@@ -1,3 +1,4 @@
+{{-- resources/views/layouts/app.blade.php --}}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,44 +7,27 @@
 
   <title>@yield('title','MimiMain')</title>
 
-  {{-- 1) Vite build: đúng đường dẫn SCSS & JS chỉ một lần--}}
+  {{-- 1) Vite bundle SCSS + JS --}}
   @vite([
     'resources/scss/app.scss',
     'resources/js/app.js',
   ])
 
-  {{-- 2) Bootstrap CSS gốc (sau Tailwind để override nếu cần) --}}
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-  />
-
-  {{-- 3) Bootstrap Icons CDN (nếu muốn chắc cú) --}}
+  {{-- 2) (tùy chọn) Bootstrap Icons CDN để “chống cháy” --}}
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
   />
 </head>
-
 <body class="antialiased">
-
-  {{-- Header --}}
   @include('partials.header')
-
-  <main class="py-4">
-    @yield('content')
-  </main>
-
-  {{-- Footer --}}
+  <main class="py-4">@yield('content')</main>
   @include('partials.footer')
 
-  {{-- Bootstrap JS (tab, dropdown, modal…) --}}
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    defer
-  ></script>
+  {{-- Vite JS --}}
+  @vite('resources/js/app.js')
 
-  {{-- Nơi để @push('scripts') --}}
+  {{-- @push('scripts') --}}
   @stack('scripts')
 </body>
 </html>

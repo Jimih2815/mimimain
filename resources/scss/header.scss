@@ -1,17 +1,36 @@
-/* Chung cho toàn header */
+/* resources/scss/header.scss */
+
+/* 1) Định nghĩa màu thương hiệu */
+$brand-teal : #4ab3af;  // chủ đạo 1
+$brand-red  : #fe3b27;  // chủ đạo 2
+$brand-gold : #d1a029;  // chủ đạo 3
+
+// Màu phụ trợ nếu cần (ví dụ)
+// $gray-dark   : #333333;
+// $gray-medium : #555555;
+// $off-white   : #faf7f2;
+// …
+
+/* 2) Global header */
 header {
   font-family: "Poppins", sans-serif;
-  
+  .bi-heart-fill {
+    color: #b83232 !important;
+  }
+  .text-danger {
+    counter-reset: #b83232 !important;
+    font-size: 2rem;
+
+  }
+  /* --- Top bar --- */
   .header-top {
-    background: none;
-    box-shadow: none;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     padding: 0.5rem 0;
-    padding-left: 5rem;
-    padding-right: 5rem;
 
     .container {
-      background-color: white;
-      box-shadow: none;
+      padding-left: 5rem;
+      padding-right: 5rem;
       display: flex;
       justify-content: flex-end;
       gap: 1.5rem;
@@ -22,57 +41,73 @@ header {
       font-size: 1.2rem;
       text-decoration: none;
       transition: color .2s;
+
       &:hover {
-        color: #0d6efd !important;
+        color: $brand-teal !important;
       }
     }
   }
 
+  /* --- Main header --- */
   .header-main {
-    background: none;
+    background: #fff;
     padding: 1rem 0;
-    box-shadow: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     padding-left: 5rem;
     padding-right: 5rem;
 
+    .bi-bag-fill {
+      color: $brand-gold;
+      font-size: 2rem;
+
+    }
+    
     .container {
+      padding: 0;
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
     }
-
+    .start-100 {
+      left: 150% !important;
+    }
+    
     /* Logo */
-    .logo img {
+    a[href="{{ route('home') }}"] img {
       height: 50px;
       object-fit: contain;
     }
 
-    /* Mega-menu */
+    /* Nav: absolute center */
     nav {
-      flex: 1;
-      ul {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+
+      ul.nav {
         list-style: none;
         display: flex;
         gap: 2rem;
         margin: 0;
         padding: 0;
-        justify-content: center;
 
         .nav-item {
           position: relative;
+
           .nav-link {
             color: #333;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             transition: color .2s;
+
             &:hover {
-              color: #0d6efd;
+              color: $brand-teal;
             }
           }
 
-          .dropdown-menu {
+          .dropdown-menu.mega-menu {
             display: none;
             position: absolute !important;
             top: 100%;
@@ -81,82 +116,80 @@ header {
             background: #fff;
             border: none;
             padding: 2rem;
+            border-top: 4px solid $brand-gold; /* màu vàng chủ đạo 3 */
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 
             .row {
               display: flex;
               flex-wrap: wrap;
               gap: 1rem;
+            }
 
-              .col-6 {
-                flex: 1 1 calc(25% - 1rem);
-                min-width: 150px;
+            h6 {
+              color: $brand-red; /* tiêu đề nhóm dùng đỏ chủ đạo 2 */
+            }
+            .dropdown-item {
+              color: #333;
+              transition: color .2s;
 
-                h6 {
-                  font-weight: 700;
-                  color: #0d6efd;
-                  margin-bottom: .5rem;
-                }
-
-                ul {
-                  list-style: none;
-                  padding: 0;
-                  li {
-                    margin-bottom: .5rem;
-                    a {
-                      color: #333;
-                      text-decoration: none;
-                      transition: color .2s;
-                      &:hover {
-                        color: #0d6efd;
-                      }
-                    }
-                  }
-                }
+              &:hover {
+                color: $brand-teal;
               }
             }
           }
 
-          &:hover .dropdown-menu {
+          &:hover .dropdown-menu.mega-menu {
             display: block !important;
           }
         }
       }
     }
 
-    /* Search */
+    /* Search box */
     .input-group {
-      width: 250px;
+      width: 220px;
+      input {
+        border: 1px solid $brand-teal;
+      }
       .form-control {
         border-radius: 30px 0 0 30px;
         padding-left: 1rem;
+
         &:focus {
-          border-color: #0d6efd;
+          border-color: $brand-teal;
           box-shadow: none;
         }
       }
       .btn {
         border-radius: 0 30px 30px 0;
+        border-color: $brand-teal;
+        transition: background .2s, color .2s;
+
+        &:hover {
+          background: $brand-teal;
+          color: #fff;
+        }
       }
     }
 
-    /* Icons */
+    /* Wishlist + Cart */
     .d-flex.align-items-center {
+      margin-left: auto;
       gap: 1.5rem;
+
       a {
-        position: relative;
         font-size: 1.25rem;
         color: #333;
+        position: relative;
         transition: color .2s;
+
         &:hover {
-          color: #0d6efd;
+          color: $brand-teal !important;
         }
 
         .badge {
-          position: absolute;
-          top: -6px;
-          right: -10px;
-          font-size: 0.7rem;
+          background-color: #b83232 !important; 
+          color: #fff;
         }
       }
     }
