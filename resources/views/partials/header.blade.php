@@ -1,11 +1,7 @@
-{{-- resources/views/partials/header.blade.php --}}
 @php
-    // Lấy toàn bộ Section + Group + Products để dựng mega-menu
     $menuSections = \App\Models\MenuSection::with('groups.products')
-                       ->orderBy('sort_order')
-                       ->get();
-
-    // Cart mini
+                      ->orderBy('sort_order')
+                      ->get();
     $cart      = session('cart', []);
     $cartCount = array_sum(array_column($cart, 'quantity'));
 @endphp
@@ -51,30 +47,27 @@
         <img src="https://tiemhoamimi.com/image/mimi-logo.webp" alt="Logo MiMi" height="50">
       </a>
 
-      {{-- NAV – Mega menu (căng giữa) --}}
+      {{-- NAV – Mega menu --}}
       <nav class="position-absolute start-50 translate-middle-x">
         <ul class="nav">
           @foreach($menuSections as $section)
             <li class="nav-item dropdown position-static">
               <a class="nav-link px-3 fw-semibold text-dark"
-                href="#"
-                id="sec-{{ $section->id }}"
-                data-bs-toggle="dropdown">
+                 href="#"
+                 id="sec-{{ $section->id }}"
+                 data-bs-toggle="dropdown">
                 {{ $section->name }}
               </a>
-
-              {{-- Dropdown full-width --}}
               <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
                 <div class="row">
                   @forelse($section->groups as $group)
-                    {{-- Thêm class group-block để áp CSS flex --}}
-                    <div class="group-block">
+                    <div class="group-block col-6 col-md-3 mb-3">
                       <h6 class="fw-bold text-primary mb-2">{{ $group->title }}</h6>
                       <ul class="list-unstyled">
                         @forelse($group->products as $p)
                           <li>
                             <a class="dropdown-item px-0"
-                              href="{{ route('products.show', $p->slug ?? $p->id) }}">
+                               href="{{ route('products.show', $p->slug ?? $p->id) }}">
                               {{ $p->name }}
                             </a>
                           </li>
@@ -84,24 +77,34 @@
                       </ul>
                     </div>
                   @empty
-                    <div class="group-block">
-                      <small class="text-muted">Chưa có mục nào</small>
-                    </div>
+                    <div class="col-12"><small class="text-muted">Chưa có mục nào</small></div>
                   @endforelse
                 </div>
               </div>
             </li>
           @endforeach
+          <li class="nav-item">
+            <a class="nav-link px-3 text-dark" href="{{ route('products.index') }}">TOÀN BỘ</a>
+          </li>
         </ul>
       </nav>
 
-
-      {{-- Mini cart & wish --}}
+      {{-- Search + Wishlist + Cart --}}
       <div class="ms-auto d-flex align-items-center gap-3">
-        <a href="#" class="text-dark fs-5 position-relative">
+        {{-- Tìm kiếm --}}
+        <form action="{{ route('products.index') }}" method="GET" class="d-flex me-2" style="max-width:200px;">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Tìm kiếm..." value="{{ request('q') }}">
+            <button class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+
+        {{-- Yêu thích --}}
+        <a href="#" class="text-dark fs-5 position-relative" title="Yêu thích">
           <i class="bi bi-heart-fill text-danger"></i>
         </a>
 
+        {{-- Giỏ hàng --}}
         <div class="dropdown">
           <a href="#"
              class="text-dark position-relative fs-5"
