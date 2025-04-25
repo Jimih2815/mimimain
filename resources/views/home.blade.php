@@ -124,15 +124,15 @@
     </div>
 
     {{-- 7a) Hai ảnh chữ nhật xếp cạnh nhau --}}
-    <div class="section-images mb-5">
+    <div class="section-images mb-5 d-flex gap-3">
       @foreach($sectionImages as $img)
-        <div class="section-images__item">
+        <div class="section-images__item flex-fill">
           <a href="{{ $img->collection
                         ? route('collections.show', $img->collection->slug)
                         : '#' }}">
             <img src="{{ asset('storage/'.$img->image) }}"
-                alt=""
-                class="section-images__img">
+                alt="Section Image {{ $loop->iteration }}"
+                class="section-images__img img-fluid rounded">
           </a>
         </div>
       @endforeach
