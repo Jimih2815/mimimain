@@ -7,17 +7,18 @@ use App\Models\Collection;
 
 class HomePage extends Model
 {
-    // Cho phép cập nhật hàng loạt
+    // Copy 100% file này vào app/Models/HomePage.php
     protected $fillable = [
         'banner_image',
         'about_title',
         'about_text',
-        'show_button',           // bật/tắt button
-        'button_collection_id',  // gán Collection cho button
+        'show_button',
+        'button_collection_id',
+        'button_text',           // <-- mới thêm
     ];
 
     /**
-     * Quan hệ tới Collection mà button sẽ điều hướng
+     * Quan hệ tới Collection được chọn cho nút trung tâm
      */
     public function buttonCollection()
     {

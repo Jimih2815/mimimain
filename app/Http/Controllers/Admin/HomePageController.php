@@ -15,8 +15,9 @@ class HomePageController extends Controller
     public function edit()
     {
         $home        = HomePage::first();
-        $collections = Collection::pluck('name','id');
-        return view('admin.home.edit', compact('home','collections'));
+        $collections = Collection::pluck('name', 'id');
+
+        return view('admin.home.edit', compact('home', 'collections'));
     }
 
     /**
@@ -28,24 +29,24 @@ class HomePageController extends Controller
             'banner_image'          => 'nullable|image|max:4096',
             'about_title'           => 'nullable|string|max:255',
             'about_text'            => 'nullable|string',
-            'show_button'           => 'sometimes|boolean',
+            'show_button'           => 'sometimes',
             'button_collection_id'  => 'nullable|exists:collections,id',
+            'button_text'           => 'nullable|string|max:50',  // <-- mới thêm
         ]);
 
         // Checkbox chỉ có key khi checked
         $data['show_button'] = $r->has('show_button');
 
-        // Xử lý banner image
+        // Xử lý file banner nếu có
         if ($r->hasFile('banner_image')) {
-            $data['banner_image'] = $r
-                ->file('banner_image')
-                ->store('home','public');
+            $data['banner_image'] = $r->file('banner_image')
+                                     ->store('home', 'public');
         }
 
         HomePage::first()->update($data);
 
         return redirect()
             ->route('admin.home.edit')
-            ->with('success','Cập nhật Home Page thành công');
+            ->with('success', 'Cập nhật Home Page thành công');
     }
 }

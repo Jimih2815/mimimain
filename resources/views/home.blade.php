@@ -11,11 +11,11 @@
          style="width:100vw; height:100vh; object-fit:cover; object-position:center;">
 
     {{-- 1.a) Central button, chỉ hiển thị khi admin bật và chọn Collection --}}
-    <div class="position-absolute top-50 start-50 translate-middle">
+    <div class="position-absolute top-80 start-50 translate-middle">
       @if($home->show_button && $home->buttonCollection)
         <a href="{{ route('collections.show', $home->buttonCollection->slug) }}"
            class="btn btn-lg btn-primary nut-banner">
-          {{ $home->buttonCollection->name }}
+          {{ $home->button_text }}
         </a>
       @endif
     </div>

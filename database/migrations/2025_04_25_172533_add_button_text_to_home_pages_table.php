@@ -8,23 +8,16 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('home_pages', function (Blueprint $table) {
-            $table->boolean('show_button')
-                  ->default(false)
-                  ->after('about_text');
-
-            $table->foreignId('button_collection_id')
+            $table->string('button_text', 50)
                   ->nullable()
-                  ->constrained('collections')
-                  ->nullOnDelete()
-                  ->after('show_button');
+                  ->after('button_collection_id');
         });
     }
 
     public function down()
     {
         Schema::table('home_pages', function (Blueprint $table) {
-            $table->dropForeign(['button_collection_id']);
-            $table->dropColumn(['button_collection_id','show_button']);
+            $table->dropColumn('button_text');
         });
     }
 };
