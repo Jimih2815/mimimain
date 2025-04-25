@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>@yield('title','MimiMain')</title>
 
-  {{-- CSS build bởi Vite (Tailwind + style riêng) --}}
+  {{-- 1) Vite build: đúng đường dẫn SCSS & JS chỉ một lần--}}
   @vite([
-      'resources/css/app.css',
-      'resources/css/header.css',
+    'resources/scss/app.scss',
+    'resources/js/app.js',
   ])
 
-  {{-- ️🛡️ Chốt hạ: Bootstrap CSS gốc – đặt SAU Tailwind để khỏi bị ghi đè --}}
+  {{-- 2) Bootstrap CSS gốc (sau Tailwind để override nếu cần) --}}
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-  >
+  />
+
+  {{-- 3) Bootstrap Icons CDN (nếu muốn chắc cú) --}}
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
 </head>
+
 <body class="antialiased">
 
   {{-- Header --}}
@@ -27,19 +34,16 @@
     @yield('content')
   </main>
 
-  {{-- JS build bởi Vite (Swiper, script riêng, …) --}}
-  @vite('resources/js/app.js')
+  {{-- Footer --}}
+  @include('partials.footer')
 
-  {{-- Bootstrap JS (tab, dropdown, modal…) – defer để chắc chắn DOM đã sẵn sàng --}}
+  {{-- Bootstrap JS (tab, dropdown, modal…) --}}
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     defer
   ></script>
 
-  {{-- Chỗ để view con @push('scripts') --}}
+  {{-- Nơi để @push('scripts') --}}
   @stack('scripts')
-
-  {{-- Footer --}}
-  @include('partials.footer')
 </body>
 </html>

@@ -15,10 +15,10 @@
 @tailwind components;
 
 /* 4) Custom overrides & extensions */
-@import "header.scss";
-@import "home.scss";
-@import "swiper.scss";
-@import "home-section-images.scss";
+@import "./header.scss";
+@import "./home.scss";
+@import "./swiper.scss";
+@import "./home-section-images.scss";
 @layer components {
   /* giữ nguyên xuống dòng, gộp nhiều space thành 1 */
   .about-text {
