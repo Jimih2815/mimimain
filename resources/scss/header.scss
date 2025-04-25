@@ -1,0 +1,96 @@
+/* Custom overrides cho header */
+header {
+  font-family: "Poppins", sans-serif;
+}
+
+/* Tab panes */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* header-top */
+.header-top {
+  position: relative;
+  z-index: 1100;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.header-top .contact-info { font-weight: 600; }
+
+/* cart dropdown */
+.header-top .dropdown-menu {
+  z-index: 1200 !important;
+}
+
+/* navbar */
+.navbar-nav .nav-link {
+  letter-spacing: .15em;
+}
+.header-nav {
+  position: relative;
+  z-index: 1000;
+}
+.header-nav .nav-link {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.header-nav .nav-item:hover .nav-link {
+  color: #0d6efd;
+  animation: pulse 1s infinite;
+}
+
+/* Mega-menu */
+.mega-menu {
+  background: #fff;
+  border-top: 4px solid #0d6efd;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 2rem;
+}
+.header-nav .dropdown-menu {
+  position: absolute !important;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: none;
+  border: none;
+  background-color: #fff !important;
+  padding: 0;
+}
+.header-nav .nav-item:hover > .dropdown-menu {
+  display: block !important;
+}
+
+/* Mega header boxes */
+.mega-header-box {
+  background: #f1f5ff;
+  border: 1px solid #d6e0ff;
+  font-weight: 600;
+  width: 200px;
+  text-align: center;
+  margin: 0 1rem;
+}
+
+/* Mega list */
+.mega-list li {
+  margin-bottom: .5rem;
+}
+.mega-list li a {
+  color: #333;
+  text-decoration: none;
+}
+.mega-list li a:hover {
+  color: #0d6efd;
+}
+
+/* Container nhỏ cho map */
+.map-container {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: .25rem;
+}
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
