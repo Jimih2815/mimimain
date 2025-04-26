@@ -6,7 +6,7 @@
     $cartCount = array_sum(array_column($cart, 'quantity'));
 @endphp
 
-<header class="shadow-sm">
+<header>
   {{-- 1) Top bar --}}
   <div class="header-top bg-light py-1">
     <div class="container d-flex justify-content-end small">

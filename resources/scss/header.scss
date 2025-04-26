@@ -13,6 +13,9 @@ $brand-gold : #d1a029;  // chủ đạo 3
 
 /* 2) Global header */
 header {
+  box-shadow: none ;
+
+
   .bi-heart-fill {
     color: #b83232 !important;
   }
@@ -23,8 +26,8 @@ header {
   }
   /* --- Top bar --- */
   .header-top {
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: #f4f6f8;
+    box-shadow: none;
     padding: 0.5rem 0;
 
     .container {
@@ -55,7 +58,7 @@ header {
   .header-main {
     background: #fff;
     padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: none;
     padding-left: 5rem;
     padding-right: 5rem;
 
