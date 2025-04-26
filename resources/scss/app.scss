@@ -201,3 +201,34 @@ body {
     padding: 0;
   }
 }
+.slider-full-width {
+  .swiper-button-prev,
+  .swiper-button-next {
+    &::after {
+      content: none !important;
+    }
+    background-image: none !important;
+  }
+}
+/* Gộp luôn cả override */  
+.slider-full-width > .d-flex .swiper-button-prev,
+.slider-full-width > .d-flex .swiper-button-next {
+  position: static    !important;
+  top:      auto      !important;
+  margin:   0         !important;
+  transform:none      !important;
+
+  display:      flex      !important;
+  justify-content: center     !important;
+  align-items:  center     !important;
+  width:         3rem      !important;
+  height:        3rem      !important;
+  background-color: #d1a029  !important;
+  border:         1px solid #d1a029 !important;
+  border-radius: 50%       !important;
+  color:         white     !important;
+}
+
+.slider-full-width > .d-flex .swiper-button-prev {
+  margin-right: 1rem !important;
+}

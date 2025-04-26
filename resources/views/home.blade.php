@@ -59,13 +59,13 @@
 
   {{-- Tiêu đề + Prev/Next ở cùng hàng --}}
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">{{ $home->collection_slider_title ?? 'Tiêu đề Slide' }}</h5>
+    <h3 class="mb-0">{{ $home->collection_slider_title ?? 'Tiêu đề Slide' }}</h3>
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-outline-secondary me-2 swiper-button-prev">
-        <i class="bi bi-chevron-left fs-4"></i>
+        <i class="fa-solid fa-chevron-left fs-4"></i>
       </button>
       <button type="button" class="btn btn-outline-secondary swiper-button-next">
-        <i class="bi bi-chevron-right fs-4"></i>
+        <i class="fa-solid fa-chevron-right fs-4"></i>
       </button>
     </div>
   </div>
@@ -90,6 +90,7 @@
     </div>
   </div>
 </div>
+
 
 
 

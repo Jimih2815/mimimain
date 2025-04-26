@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{-- CSRF token cho AJAX, Forms --}}
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <script src="https://kit.fontawesome.com/1081860f2a.js" crossorigin="anonymous"></script>
 
   <title>@yield('title', 'MimiMain')</title>
 
