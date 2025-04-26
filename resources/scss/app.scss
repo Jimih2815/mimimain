@@ -262,8 +262,8 @@ body {
       align-items:     center !important;
       width:           3rem  !important;
       height:          3rem  !important;
-      background-color: #d1a029  !important;
-      border:          1px solid #d1a029 !important;
+      background-color: #4ab3af  !important;
+      border:          1px solid #4ab3af !important;
       border-radius:   50%   !important;
       color:           white !important;
     }
@@ -272,10 +272,4 @@ body {
       margin-right: 1rem !important;
     }
   }
-
-  /* nếu cần hack full-width giống slider-full-width thì copy đoạn sau và đổi tên:
-  position: relative;
-  left: 52%;
-  margin-left: -50vw;
-  … v.v. */
 }
