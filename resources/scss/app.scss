@@ -79,6 +79,31 @@ html, body {
   margin-right: -50vw;
   width: 100%;
   overflow: hidden;
+  > .d-flex {
+    .swiper-button-prev,
+    .swiper-button-next {
+      position: static !important;   // bỏ absolute
+      top: auto !important;          // bỏ top:50%
+      margin: 0 !important;          // bỏ margin-top: -half
+      width: auto !important;        // trả về kích thước tự động
+      height: auto !important;
+      transform: none !important;    // bỏ mọi translate
+      /* Giờ nó sẽ đi theo flow của flexbox và nằm ở cuối d-flex */
+    }
+  }
+  .swiper-wrapper {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .swiper-wrapper::-webkit-scrollbar {
+    height: 6px;
+  }
+  .swiper-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 3px;
+  }
+  
 }
 
 body {

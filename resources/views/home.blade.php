@@ -55,27 +55,43 @@
     </div>
 
     {{-- 4) Collection Slider --}}
-    <div class="slider-full-width mb-5">
-      <div class="swiper collection-swiper">
-        <div class="swiper-wrapper">
-          @foreach($sliders as $s)
-            <div class="swiper-slide">
-              <div class="position-relative overflow-hidden" style="width:500px; aspect-ratio:3/4">
-                <a href="{{ route('collections.show', $s->collection->slug) }}">
-                  <img src="{{ asset('storage/'.$s->image) }}"
-                       alt="{{ $s->text }}"
-                       class="w-100 h-100 object-fit-cover object-position-center">
-                </a>
-              </div>
-              <p class="mt-2 text-center fw-semibold">{{ $s->text }}</p>
-            </div>
-          @endforeach
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-pagination"></div>
-      </div>
+<div class="slider-full-width mb-5">
+
+  {{-- Tiêu đề + Prev/Next ở cùng hàng --}}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">{{ $home->collection_slider_title ?? 'Tiêu đề Slide' }}</h5>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-outline-secondary me-2 swiper-button-prev">
+        <i class="bi bi-chevron-left fs-4"></i>
+      </button>
+      <button type="button" class="btn btn-outline-secondary swiper-button-next">
+        <i class="bi bi-chevron-right fs-4"></i>
+      </button>
     </div>
+  </div>
+
+  {{-- Chỉ giữ mỗi container Swiper --}}
+  <div class="swiper collection-swiper">
+    <div class="swiper-wrapper overflow-auto" style="scroll-snap-type: x mandatory;">
+      @foreach($sliders as $s)
+        <div class="swiper-slide" style="scroll-snap-align: start;">
+          <div class="position-relative overflow-hidden" style="width:500px; aspect-ratio:3/4">
+            <a href="{{ route('collections.show', $s->collection->slug) }}">
+              <img
+                src="{{ asset('storage/'.$s->image) }}"
+                alt="{{ $s->text }}"
+                class="w-100 h-100 object-fit-cover object-position-center"
+              >
+            </a>
+          </div>
+          <p class="mt-2 text-center fw-semibold">{{ $s->text }}</p>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</div>
+
+
 
     {{-- 5) H2 + nút “Shop Now” (dynamic widget vùng nut-bosuutap) --}}
     <div class="text-center mb-5">
@@ -157,29 +173,53 @@
 @endsection
 
 @push('scripts')
-  <script>
+<script type="module">
+  // 1) Import Swiper core và modules
+  import Swiper, { Navigation, Pagination } from 'swiper';
+  // 2) Import CSS của Swiper (nếu bạn chưa import ở đâu khác)
+  import 'swiper/css';
+  import 'swiper/css/navigation';
+  import 'swiper/css/pagination';
+
+  // 3) Đợi DOM ready (không bắt buộc nếu bạn chắc script load sau HTML)
+  document.addEventListener('DOMContentLoaded', () => {
+    // Kích hoạt modules
+    Swiper.use([Navigation, Pagination]);
+
+    // 4) Collection Slider — bind Prev/Next nằm ngoài .swiper
     new Swiper('.collection-swiper', {
       slidesPerView: 2,
       spaceBetween: 16,
       loop: true,
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        prevEl: '.slider-full-width .swiper-button-prev',
+        nextEl: '.slider-full-width .swiper-button-next',
       },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      breakpoints: { 640: { slidesPerView: 3 }, 1024: { slidesPerView: 4 } }
+      breakpoints: {
+        640: { slidesPerView: 3 },
+        1024: { slidesPerView: 4 },
+      },
     });
 
+    // 5) Product Slider — bình thường với pagination
     new Swiper('.product-swiper', {
       slidesPerView: 1,
       spaceBetween: 16,
       loop: true,
       navigation: {
-        nextEl: '.product-swiper .swiper-button-next',
         prevEl: '.product-swiper .swiper-button-prev',
+        nextEl: '.product-swiper .swiper-button-next',
       },
-      pagination: { el: '.product-swiper .swiper-pagination', clickable: true },
-      breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+      pagination: {
+        el: '.product-swiper .swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        640: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      },
     });
-  </script>
+  });
+</script>
 @endpush
+

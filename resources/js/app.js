@@ -5,7 +5,7 @@
 
 // 2) Bootstrap JS (dropdown, modal, tab…)
 import 'bootstrap'
-
+// import './home-swiper';
 // 3) Swiper bundle + styles
 import Swiper from 'swiper/bundle'
 import 'swiper/css/bundle'
@@ -14,17 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Collection slider (free-mode, auto width)
   new Swiper('.collection-swiper', {
     slidesPerView: 'auto',
-    spaceBetween: 0,     // margin-right sẽ xử lý bằng CSS
+    spaceBetween: 0,
     freeMode: true,
     grabCursor: true,
     navigation: {
-      nextEl: '.collection-swiper .swiper-button-next',
-      prevEl: '.collection-swiper .swiper-button-prev',
+      // selector mới trỏ ra ngoài .swiper, nằm trong .slider-full-width
+      nextEl: '.slider-full-width .swiper-button-next',
+      prevEl: '.slider-full-width .swiper-button-prev',
     },
-    pagination: {
-      el: '.collection-swiper .swiper-pagination',
-      clickable: true,
-    },
+    // bỏ pagination (dots) nếu không cần
+    // pagination: {
+    //   el: '.collection-swiper .swiper-pagination',
+    //   clickable: true,
+    // },
   })
 
   // Product slider (fixed slidesPerView với breakpoints)
