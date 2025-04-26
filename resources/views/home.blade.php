@@ -139,31 +139,44 @@
       @endforeach
     </div>
 
-    {{-- 7) Product Slider --}}
-    <div class="mb-5">
-      <div class="swiper product-swiper overflow-visible">
-        <div class="swiper-wrapper">
-          @foreach($productSliders as $ps)
-            <div class="swiper-slide" style="width:400px">
-              <a href="{{ route('products.show', $ps->product->slug) }}">
-                <div class="ratio ratio-1x1 overflow-hidden">
-                  <img src="{{ asset('storage/'.$ps->image) }}"
-                       alt="{{ $ps->product->name }}"
-                       class="w-100 h-100 object-fit-cover object-position-center">
-                </div>
-              </a>
-              <p class="mt-2 text-center fw-semibold">{{ $ps->product->name }}</p>
-              <p class="text-center">
-                {{ number_format($ps->product->base_price,0,',','.') }}₫
-              </p>
-            </div>
-          @endforeach
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-pagination"></div>
-      </div>
+    {{-- 7) Product Slider với navigation bên ngoài --}}
+<div class="slider-product mb-5">
+  {{-- Tiêu đề + Prev/Next giống Collection --}}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">{{ $home->product_slider_title ?? 'Tiêu đề Sản phẩm' }}</h3>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-outline-secondary me-2 product-slider-button-prev">
+        <i class="fa-solid fa-chevron-left fs-4"></i>
+      </button>
+      <button type="button" class="btn btn-outline-secondary product-slider-button-next">
+        <i class="fa-solid fa-chevron-right fs-4"></i>
+      </button>
     </div>
+  </div>
+
+  {{-- Swiper container --}}
+  <div class="swiper product-swiper overflow-visible">
+    <div class="swiper-wrapper">
+      @foreach($productSliders as $ps)
+        <div class="swiper-slide" style="width:400px">
+          <a href="{{ route('products.show', $ps->product->slug) }}">
+            <div class="ratio ratio-1x1 overflow-hidden">
+              <img src="{{ asset('storage/'.$ps->image) }}"
+                   alt="{{ $ps->product->name }}"
+                   class="w-100 h-100 object-fit-cover object-position-center">
+            </div>
+          </a>
+          <p class="mt-2 text-center fw-semibold">{{ $ps->product->name }}</p>
+          <p class="text-center">
+            {{ number_format($ps->product->base_price,0,',','.') }}₫
+          </p>
+        </div>
+      @endforeach
+    </div>
+    {{-- Bỏ hẳn <div class="swiper-button-prev"></div> và <div class="swiper-button-next"></div> ở đây --}}
+    <!-- <div class="swiper-pagination"></div> -->
+  </div>
+</div>
 
     {{-- 8) About section --}}
     <div class="container text-center py-5">

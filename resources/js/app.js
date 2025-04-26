@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
   new Swiper('.product-swiper', {
     slidesPerView: 4,
     spaceBetween: 15,
-    loop: true,
+    // loop: true,
     grabCursor: true,
     navigation: {
-      nextEl: '.product-swiper .swiper-button-next',
-      prevEl: '.product-swiper .swiper-button-prev',
+      prevEl: '.slider-product .product-slider-button-prev',
+      nextEl: '.slider-product .product-slider-button-next',
     },
     pagination: {
       el: '.product-swiper .swiper-pagination',

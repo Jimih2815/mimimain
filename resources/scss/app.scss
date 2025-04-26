@@ -244,3 +244,38 @@ body {
     background-color: lighten( #b83232,5%);
   }
 }
+
+
+
+/*–– Navigation styles cho Product Slider ––*/
+.slider-product {
+  > .d-flex {
+    .product-slider-button-prev,
+    .product-slider-button-next {
+      position: static    !important; // bỏ absolute
+      top:      auto      !important;
+      margin:   0         !important;
+      transform:none      !important;
+
+      display:         flex !important;
+      justify-content: center !important;
+      align-items:     center !important;
+      width:           3rem  !important;
+      height:          3rem  !important;
+      background-color: #d1a029  !important;
+      border:          1px solid #d1a029 !important;
+      border-radius:   50%   !important;
+      color:           white !important;
+    }
+
+    .product-slider-button-prev {
+      margin-right: 1rem !important;
+    }
+  }
+
+  /* nếu cần hack full-width giống slider-full-width thì copy đoạn sau và đổi tên:
+  position: relative;
+  left: 52%;
+  margin-left: -50vw;
+  … v.v. */
+}
