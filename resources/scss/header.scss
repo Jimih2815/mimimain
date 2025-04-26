@@ -223,7 +223,13 @@ header {
   border: 1px solid #d1a029;
   color: white !important;
   background-color: #d1a029; 
-
+  &:focus,
+  &:active {
+    background-color: #d1a029 !important; /* Bootstrap primary */
+    border-color:     #d1a029 !important;
+    box-shadow:       none    !important;
+    color:            white   !important; /* nếu cần */
+  }
   &:hover {
     border: 1px solid #d1a029;
     color: white !important;

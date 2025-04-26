@@ -47,6 +47,7 @@
 
 /* Nếu còn overrides cho header.scss, home.scss… thì import ở đây */
 @import "./header.scss";
+@import "./footer.scss";
 @import "./home.scss";
 @import "./swiper.scss";
 @import "./home-section-images.scss";
@@ -70,6 +71,7 @@ html, body {
 
 .top-80 {
   top: 80% !important;
+  
 }
 /*–– 6) Slider full-width hack ––*/
 .slider-full-width {
@@ -182,6 +184,13 @@ body {
       background-color: lighten(#4ab3af, 5%);
       border-color: darken(#4ab3af, 5%);
     }
+    &:focus,
+    &:active {
+      background-color: #4ab3af !important;
+      border-color:     #4ab3af !important;
+      box-shadow:       none     !important;
+      color:            white    !important;
+    }
   }
 }
 .btn-trang-chu-truoc-banner {
@@ -242,6 +251,13 @@ body {
   &:hover {
     border: 1px solid #b83232;
     background-color: lighten( #b83232,5%);
+  }
+  &:focus,
+  &:active {
+    background-color: #b83232 !important;
+    border-color:     #b83232 !important;
+    box-shadow:       none     !important;
+    color:            white    !important;
   }
 }
 
