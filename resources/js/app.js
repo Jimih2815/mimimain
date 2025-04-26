@@ -1,7 +1,7 @@
 // resources/js/app.js
 
 // 1) Import SCSS chính (Tailwind + Bootstrap + Icon + custom)
-import '../scss/app.scss'
+// import '../scss/app.scss'
 
 // 2) Bootstrap JS (dropdown, modal, tab…)
 import 'bootstrap'

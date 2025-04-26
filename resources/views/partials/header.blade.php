@@ -43,7 +43,7 @@
     <div class="container position-relative d-flex align-items-center">
 
       {{-- Logo trái --}}
-      <a href="{{ route('home') }}" class="me-4">
+      <a href="{{ route('home') }}" class="me-4 logo-cong-ty">
         <img src="https://tiemhoamimi.com/image/mimi-logo.webp" alt="Logo MiMi" height="50">
       </a>
 
@@ -90,7 +90,7 @@
       </nav>
 
       {{-- Search + Wishlist + Cart --}}
-      <div class="ms-auto d-flex align-items-center gap-3">
+      <div class="ms-auto d-flex align-items-center gap-3 gio-hang-tim-kiem">
         {{-- Tìm kiếm --}}
         <form action="{{ route('products.index') }}" method="GET" class="d-flex me-2" style="max-width:200px;">
           <div class="input-group">
@@ -138,9 +138,15 @@
 
             @if ($cartCount)
               <li class="text-center mt-2">
-                <a href="{{ route('cart.index') }}" class="btn btn-primary btn-sm w-100">
+              <a 
+                  href="{{ route('cart.index') }}"
+                  class="btn btn-primary btn-sm w-100 nut-dropdown-gio-hang"
+                  style="color: white;"
+                  onmouseover="this.style.setProperty('color', 'white', 'important')"
+                  onmouseout="this.style.setProperty('color', 'white', 'important')"
+                >
                   Xem toàn bộ giỏ hàng
-                </a>
+              </a>
               </li>
             @endif
           </ul>

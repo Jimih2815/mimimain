@@ -13,7 +13,6 @@ $brand-gold : #d1a029;  // chủ đạo 3
 
 /* 2) Global header */
 header {
-  font-family: "Poppins", sans-serif;
   .bi-heart-fill {
     color: #b83232 !important;
   }
@@ -34,6 +33,10 @@ header {
       display: flex;
       justify-content: flex-end;
       gap: 1.5rem;
+
+      .position-absolute {
+        z-index: 1;
+      }
     }
 
     a {
@@ -57,7 +60,7 @@ header {
     padding-right: 5rem;
 
     .bi-bag-fill {
-      color: $brand-gold;
+      color: #d1a029;
       font-size: 1.5rem;
 
     }
@@ -114,7 +117,10 @@ header {
           }
 
           .dropdown-menu.mega-menu {
-            display: none;
+            display: block !important;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-40px);
             position: absolute !important;
             top: 100%;
             left: 0;
@@ -122,8 +128,9 @@ header {
             background: #fff;
             border: none;
             padding: 2rem;
-            border-top: 4px solid $brand-gold; /* màu vàng chủ đạo 3 */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid $brand-gold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
 
             .row {
               display: flex;
@@ -145,7 +152,9 @@ header {
           }
 
           &:hover .dropdown-menu.mega-menu {
-            display: block !important;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
           }
         }
       }
@@ -184,19 +193,60 @@ header {
       gap: 1.5rem;
 
       a {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
         color: #333;
         position: relative;
         transition: color .2s;
 
         &:hover {
-          color: $brand-teal !important;
+          color: $brand-teal;
         }
 
         .badge {
           background-color: #b83232 !important; 
           color: #fff;
         }
+      }
+    }
+  }
+}
+.gio-hang-tim-kiem {
+  z-index: 2;
+}
+.logo-cong-ty {
+  z-index: 2;
+}
+.nut-dropdown-gio-hang {
+  border: 1px solid #d1a029;
+  color: white !important;
+  background-color: #d1a029; 
+
+  &:hover {
+    border: 1px solid #d1a029;
+    color: white !important;
+    background-color: darken(#d1a029,5%); 
+  }
+}
+.input-group {
+  .form-control::placeholder {
+    color: #4ab3af;
+    opacity: 1;
+  }
+
+  .btn.btn-outline-secondary {
+    border-color: #4ab3af;
+    color: #4ab3af;
+
+    i {
+      color: #4ab3af;
+    }
+
+    &:hover {
+      background-color: #4ab3af;
+      color: white;
+
+      i {
+        color: white;
       }
     }
   }

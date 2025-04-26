@@ -39,7 +39,7 @@
     <p class="lead text-center mb-2">“Khám phá thế giới quà tặng đầy màu sắc!”</p>
     {{-- 2.2) Link detail --}}
     <div class="text-center mb-5">
-      <a href="#" class="text-decoration-none fw-semibold">Xem chi tiết →</a>
+      <a href="#" class="nut-xem-chi-tiet-trang-chu fw-semibold">Xem chi tiết →</a>
     </div>
 
     {{-- 3) Hai ảnh chữ nhật cạnh nhau --}}
