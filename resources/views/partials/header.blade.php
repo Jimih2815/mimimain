@@ -62,7 +62,7 @@
                 <div class="row">
                   @forelse($section->groups as $group)
                     <div class="group-block col-6 col-md-3 mb-3">
-                      <h6 class="fw-bold text-primary mb-2">{{ $group->title }}</h6>
+                      <h6 class="fw-bold danh-muc-drop-down-header mb-2">{{ $group->title }}</h6>
                       <ul class="list-unstyled">
                         @forelse($group->products as $p)
                           <li>

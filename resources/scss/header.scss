@@ -133,7 +133,7 @@ header {
             padding: 2rem;
             border-top: 4px solid $brand-gold;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s ease;
+            transition: all 0.2s ease;
 
             .row {
               display: flex;
@@ -150,6 +150,14 @@ header {
 
               &:hover {
                 color: $brand-teal;
+                background-color: transparent !important;
+              }
+              &:active {
+                outline: none !important;
+                background-color: transparent !important;
+                box-shadow: none !important;
+                border-color: inherit !important; /* giữ nguyên viền nếu có */
+                color: inherit !important; /* giữ nguyên màu chữ */
               }
             }
           }
@@ -223,6 +231,8 @@ header {
   border: 1px solid #d1a029;
   color: white !important;
   background-color: #d1a029; 
+  border-radius: 50px;
+  margin-top: 1rem;
   &:focus,
   &:active {
     background-color: #d1a029 !important; /* Bootstrap primary */
@@ -259,4 +269,10 @@ header {
       }
     }
   }
+  
+}
+.danh-muc-drop-down-header {
+  color: #4ab3af !important;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
