@@ -116,5 +116,8 @@
         color: white;
         border-radius: 100px;
         font-weight: 600;
+        &:hover {
+            background-color: lighten(#d1a029,20%);
+        }
     }
 }
