@@ -24,12 +24,35 @@ class SidebarItemController extends Controller
 
     public function store(Request $r)
     {
-        SidebarItem::create($r->validate([
-            'name'          => 'required|string',
-            'parent_id'     => 'nullable|exists:sidebar_items,id',
-            'collection_id' => 'nullable|exists:collections,id',
-            'sort_order'    => 'integer',
-        ]));
+        // Validate cha + array children
+        $data = $r->validate([
+        'name'          => 'required|string',
+        'sort_order'    => 'integer',
+        'children'      => 'nullable|array',
+        'children.*.name'          => 'required_with:children|string',
+        'children.*.collection_id' => 'required_with:children|exists:collections,id',
+        ]);
+
+        // Tạo mục cha
+        $parent = SidebarItem::create([
+        'name'       => $data['name'],
+        'sort_order' => $data['sort_order'] ?? 0,
+        'parent_id'  => null,
+        'collection_id' => null,
+        ]);
+
+        // Tạo từng mục con, nếu có
+        if (!empty($data['children'])) {
+        foreach ($data['children'] as $idx => $child) {
+            SidebarItem::create([
+            'name'          => $child['name'],
+            'collection_id'=> $child['collection_id'],
+            'parent_id'    => $parent->id,
+            'sort_order'   => $idx,      // hoặc dùng một trường sort_order riêng nếu cần
+            ]);
+        }
+        }
+
         return redirect()->route('admin.sidebar-items.index');
     }
 
@@ -41,15 +64,60 @@ class SidebarItemController extends Controller
     }
 
     public function update(Request $r, SidebarItem $sidebarItem)
-    {
-        $sidebarItem->update($r->validate([
-            'name'          => 'required|string',
-            'parent_id'     => 'nullable|exists:sidebar_items,id',
-            'collection_id' => 'nullable|exists:collections,id',
-            'sort_order'    => 'integer',
-        ]));
-        return redirect()->route('admin.sidebar-items.index');
+{
+    // 1. Validate input parent + children
+    $data = $r->validate([
+        'name'                  => 'required|string',
+        'sort_order'            => 'integer',
+        'children'              => 'nullable|array',
+        'children.*.id'         => 'nullable|integer|exists:sidebar_items,id',
+        'children.*.name'       => 'required_with:children|string',
+        'children.*.collection_id' => 'required_with:children|exists:collections,id',
+    ]);
+
+    // 2. Cập nhật mục cha
+    $sidebarItem->update([
+        'name'       => $data['name'],
+        'sort_order' => $data['sort_order'] ?? 0,
+    ]);
+
+    // 3. Xử lý mục con
+    $existingIds = $sidebarItem->children()->pluck('id')->toArray();
+    $submitted  = [];
+    
+    if (!empty($data['children'])) {
+        foreach ($data['children'] as $index => $childData) {
+            if (!empty($childData['id']) && in_array($childData['id'], $existingIds)) {
+                // a) Update mục con cũ
+                $child = SidebarItem::find($childData['id']);
+                $child->update([
+                    'name'          => $childData['name'],
+                    'collection_id' => $childData['collection_id'],
+                    'sort_order'    => $index,
+                ]);
+                $submitted[] = $childData['id'];
+            } else {
+                // b) Tạo mới mục con
+                $newChild = SidebarItem::create([
+                    'name'          => $childData['name'],
+                    'collection_id' => $childData['collection_id'],
+                    'parent_id'     => $sidebarItem->id,
+                    'sort_order'    => $index,
+                ]);
+                $submitted[] = $newChild->id;
+            }
+        }
     }
+
+    // 4. Xóa các mục con đã bị remove (có trong DB nhưng không có trong request)
+    $toDelete = array_diff($existingIds, $submitted);
+    if (!empty($toDelete)) {
+        SidebarItem::whereIn('id', $toDelete)->delete();
+    }
+
+    return redirect()->route('admin.sidebar-items.index')
+                     ->with('success','Cập nhật sidebar thành công');
+}
 
     public function destroy(SidebarItem $sidebarItem)
     {

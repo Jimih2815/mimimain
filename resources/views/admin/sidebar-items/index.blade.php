@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- hoặc layouts.admin nếu bạn có layout riêng admin --}}
+@extends('layouts.app')
 
 @section('content')
 <div class="container py-4">
@@ -22,10 +22,7 @@
               @csrf @method('DELETE')
               <button class="btn btn-sm btn-danger">Xóa</button>
             </form>
-            <a href="{{ route('admin.sidebar-items.create', ['parent_id'=>$item->id]) }}"
-               class="btn btn-sm btn-success">
-              Thêm Mục Con
-            </a>
+            {{-- nút Thêm Mục Con đã bỏ --}}
           </span>
         </div>
 
