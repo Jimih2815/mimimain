@@ -4,95 +4,163 @@
 @section('title', 'Giỏ hàng')
 
 @section('content')
-    <h2 class="mb-3">Giỏ hàng</h2>
+<div class="container trang-gio-hang">
+  @if (count($cart))
+    <div class="row">
+      {{-- ===== Cột trái: Bag ===== --}}
+      <div class="col-md-8">
+        <h3 class="mb-4">Sản Phẩm</h3>
 
-    @if (session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @elseif (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <form id="checkout-form" action="{{ route('checkout.show') }}" method="GET">
-        @csrf
-
-        @if (count($cart))
-            <table class="table align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th><input type="checkbox" id="checkAll"></th>
-                        <th>Ảnh</th>
-                        <th>Sản phẩm</th>
-                        <th>Tuỳ chọn</th>
-                        <th class="text-end">Đơn giá</th>
-                        <th class="text-center">Số lượng</th>
-                        <th class="text-end">Thành tiền</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cart as $key => $item)
-                        @php
-                            $vals = \App\Models\OptionValue::whereIn('id', $item['options'] ?? [])
-                                        ->with('type')->get();
-                        @endphp
-                        <tr>
-                            <td>
-                                <input type="checkbox"
-                                       name="selected_ids[]"
-                                       value="{{ $key }}"
-                                       class="rowCheck">
-                            </td>
-                            <td>
-                            @if ($item['image'])
-                                <img src="{{ asset('storage/'.$item['image']) }}"
-                                    width="60"
-                                    alt="{{ $item['name'] }}">
-                            @endif
-                            </td>
-                            <td>{{ $item['name'] }}</td>
-                            <td>
-                                @foreach($vals as $val)
-                                    <div>
-                                        <strong>{{ $val->type->name }}:</strong>
-                                        {{ $val->value }}
-                                        @if($val->extra_price)
-                                            (+{{ number_format($val->extra_price,0,',','.') }}₫)
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </td>
-                            <td class="text-end">{{ number_format($item['price'], 0, ',', '.') }}₫</td>
-                            <td class="text-center">{{ $item['quantity'] }}</td>
-                            <td class="text-end">{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}₫</td>
-                            <td>
-                                <button type="submit"
-                                        class="btn btn-danger btn-sm"
-                                        formaction="{{ route('cart.remove', $key) }}"
-                                        formmethod="POST"
-                                        onclick="return confirm('Xóa {{ $item['name'] }}?')">
-                                    Xóa
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <div class="text-end mb-3">
-                <h4>Tổng cộng: {{ number_format($total, 0, ',', '.') }}₫</h4>
-                <button type="submit" class="btn btn-primary">Thanh toán</button>
+        @foreach($cart as $key => $item)
+          <div class="d-flex align-items-start mb-4">
+            {{-- Checkbox chọn sản phẩm, liên kết tới form thanh toán --}}
+            <div class="me-3">
+              <input type="checkbox"
+                     name="selected_ids[]"
+                     value="{{ $key }}"
+                     form="checkout-form"
+                     class="rowCheck">
             </div>
-        @else
-            <p>Giỏ hàng trống!</p>
-        @endif
-    </form>
 
-    @push('scripts')
-        <script>
-            document.getElementById('checkAll')
-                ?.addEventListener('change', e =>
-                    document.querySelectorAll('.rowCheck')
-                            .forEach(c => c.checked = e.target.checked));
-        </script>
-    @endpush
+            {{-- Ảnh + nút tăng/giảm --}}
+            <div class="text-center">
+              <img src="{{ asset('storage/'.$item['image']) }}"
+                   class="img-fluid rounded anh-san-pham"
+                   alt="{{ $item['name'] }}">
+
+              <div class="d-flex tang-giam-va-tim">
+                {{-- Giảm hoặc xóa --}}
+                <div class="tang-giam-cont">
+                    <form action="{{ route('cart.update', $key) }}"
+                        method="POST"
+                        class="d-inline-block xoa-border">
+                    @csrf
+                    <button type="submit"
+                            name="action" value="dec"
+                            class="btn btn-outline-secondary btn-sm xoa-border">
+                        @if($item['quantity'] > 1)
+                        &minus;
+                        @else
+                        <i class="fa fa-trash xoa-border"></i>
+                        @endif
+                    </button>
+                    </form>
+
+                    {{-- Số lượng --}}
+                    <span class="btn btn-outline-secondary btn-sm mx-1 disabled xoa-border">
+                    {{ $item['quantity'] }}
+                    </span>
+
+                    {{-- Tăng --}}
+                    <form action="{{ route('cart.update', $key) }}"
+                        method="POST"
+                        class="d-inline-block xoa-border">
+                    @csrf
+                    <button type="submit"
+                            name="action" value="inc"
+                            class="btn btn-outline-secondary btn-sm  xoa-border">
+                        +
+                    </button>
+                    </form>
+                </div>
+                {{-- Yêu thích --}}
+                <button type="button"
+                        class="trai-tim">
+                <i class="fa fa-heart"></i>
+                </button>
+              </div>            
+            </div>
+
+            {{-- Thông tin sản phẩm --}}
+            <div class="ms-4 flex-grow-1">
+              <div class="d-flex justify-content-between">
+                <h5 class="mb-1">{{ $item['name'] }}</h5>
+                <span class="fw-bold">
+                  {{ number_format($item['price'],0,',','.') }}₫
+                </span>
+              </div>
+
+              @php
+                $vals = \App\Models\OptionValue::whereIn('id', $item['options'] ?? [])
+                          ->with('type')->get();
+              @endphp
+              @foreach($vals as $val)
+                <div class="text-muted">
+                  <strong>{{ $val->type->name }}:</strong>
+                  {{ $val->value }}
+                  @if($val->extra_price)
+                    (+{{ number_format($val->extra_price,0,',','.') }}₫)
+                  @endif
+                </div>
+              @endforeach
+            </div>         
+          </div>
+          <hr>
+        @endforeach
+      </div>
+
+      {{-- ===== Cột phải: Summary + form thanh toán ===== --}}
+        <div class="col-md-4">
+            <h3 class="mb-4">Thanh Toán</h3>
+            <form id="checkout-form"
+                    action="{{ route('checkout.show') }}"
+                    method="GET">
+                @csrf
+                <div class="card">
+                <div class="card-body">
+                    <p class="d-flex justify-content-between">
+                    <span>Thành Tiền</span>
+                    <span>{{ number_format($total,0,',','.') }}₫</span>
+                    </p>
+                    <p class="d-flex justify-content-between">
+                    <span>Phí Ship</span>
+                    <span>Free</span>
+                    </p>
+                    <hr>
+                    <p class="d-flex justify-content-between fw-bold">
+                    <span>Tổng Cộng</span>
+                    <span>{{ number_format($total,0,',','.') }}₫</span>
+                    </p>
+
+                    {{-- Hộp cảnh báo ẩn --}}
+                    <p id="checkout-warning"
+                    style="display:none; color:#b83232; margin-bottom:8px;">
+                    Bạn vui lòng chọn sản phẩm trước khi thanh toán nha
+                    </p>
+
+                    {{-- Nút Thanh toán --}}
+                    <button type="submit"
+                            id="checkout-button"
+                            class="btn w-100 nut-thanh-toan">
+                    Thanh toán
+                    </button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+  @else
+    <p class="text-center">Giỏ hàng trống!</p>
+  @endif
+</div>
 @endsection
+
+@push('scripts')
+<script>
+  const form   = document.getElementById('checkout-form');
+  const btn    = document.getElementById('checkout-button');
+  const warnEl = document.getElementById('checkout-warning');
+
+  form.addEventListener('submit', e => {
+    // đếm số checkbox đã check
+    const checked = document.querySelectorAll('input.rowCheck:checked').length;
+    if (checked === 0) {
+      e.preventDefault();
+      // show warning
+      warnEl.style.display = 'block';
+      // viền đỏ cho nút
+      btn.style.border = '1px solid #3a9b98';
+    }
+  });
+</script>
+@endpush

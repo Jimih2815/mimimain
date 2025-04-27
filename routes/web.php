@@ -60,9 +60,10 @@ Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->
 
 // 2.2 Cart & Checkout
 Route::prefix('cart')->name('cart.')->group(function () {
-    Route::get  ('/',          [CartController::class,'index'])->name('index');
-    Route::post ('add/{id}',   [CartController::class,'add'])->name('add');
-    Route::post ('remove/{k}', [CartController::class,'remove'])->name('remove');
+    Route::get  ('/',            [CartController::class,'index'])->name('index');
+    Route::post ('add/{id}',     [CartController::class,'add'])->name('add');
+    Route::post ('remove/{k}',   [CartController::class,'remove'])->name('remove');
+    Route::post ('update/{key}', [CartController::class,'update'])->name('update');
 });
 
 Route::prefix('checkout')->name('checkout.')->group(function () {

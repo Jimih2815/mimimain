@@ -63,14 +63,50 @@ class CartController extends Controller
      * Xóa mục khỏi giỏ (key là MD5 hash)
      */
     public function remove(Request $request, $key)
-    {
-        $cart = session('cart', []);
-        if (isset($cart[$key])) {
-            unset($cart[$key]);
-            session(['cart' => $cart]);
-            $this->syncCartToDB($cart);
-            return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
-        }
+{
+    $cart = session('cart', []);
+
+    if (! isset($cart[$key])) {
         return back()->with('error', 'Mục không tồn tại trong giỏ hàng.');
     }
+
+    // Nếu còn >1 thì giảm 1, ngược lại xóa hẳn
+    if ($cart[$key]['quantity'] > 1) {
+        $cart[$key]['quantity']--;
+    } else {
+        unset($cart[$key]);
+    }
+
+    session(['cart' => $cart]);
+    $this->syncCartToDB($cart);
+
+    return back()->with('success', 'Cập nhật giỏ hàng thành công.');
+}
+
+public function update(Request $request, $key)
+{
+   $cart = session('cart', []);
+
+   if (! isset($cart[$key])) {
+       return back()->with('error', 'Mục không tồn tại trong giỏ hàng.');
+   }
+
+   // Lấy action từ form: 'inc' hoặc 'dec'
+   $action = $request->input('action');
+
+   if ($action === 'inc') {
+       $cart[$key]['quantity']++;
+   } elseif ($action === 'dec') {
+       if ($cart[$key]['quantity'] > 1) {
+           $cart[$key]['quantity']--;
+       } else {
+           unset($cart[$key]);
+       }
+   }
+
+   session(['cart' => $cart]);
+   $this->syncCartToDB($cart);
+
+   return back()->with('success', 'Cập nhật giỏ hàng thành công.');
+}
 }
