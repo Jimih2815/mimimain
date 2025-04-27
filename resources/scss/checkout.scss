@@ -92,3 +92,29 @@
         font-weight: 600;
     }
 }
+
+.trang-cam-on {
+
+    margin-right: auto;
+    margin-left: auto;
+    width: 30%;
+    >h2 {
+        color: #4ab3af;
+    }
+    .box-phuong-thuc {
+        border-radius: 10px;
+        border: 2px solid #b83232;
+    }
+    p {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+    }
+    .nut-tiep-tuc {
+        font-size: 1.3rem;
+        padding: 0.8rem 2rem;
+        background-color: #d1a029;
+        color: white;
+        border-radius: 100px;
+        font-weight: 600;
+    }
+}
