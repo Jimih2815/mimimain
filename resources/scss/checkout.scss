@@ -1,0 +1,94 @@
+.trang-checkout {
+    padding: 4rem 25rem;
+    .row {
+        flex-wrap: nowrap !important;
+    }
+    .checkout-cont {
+        display: flex;
+        gap: 4rem;
+    }
+    .form-checkout {
+        border-bottom: 2px solid #d1a029;
+        border-left: 0px;
+        border-right: 0px;
+        border-top: 0px;
+        border-radius: 0px;
+        background-color: #f4f6f8;
+        width: 100%;
+        &:focus {
+            outline: none; /* Xoá cái viền đen xấu xí */
+            border-color: #4ab3af; /* Thay bằng màu đẹp nhẹ nhàng */
+            box-shadow: 0 0 0 3px rgba(74, 179, 175, 0.25); /* Thêm glow nhẹ nếu thích */
+        }
+    }
+    .form-checkout-input {
+        width: 20px;
+        height: 20px;
+        appearance: none;
+        border: 2px solid #4ab3af;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+ 
+        &:hover {
+            box-shadow: 0 0 5px rgba(74, 179, 175, 0.6);
+        }
+
+        &:checked {
+            &::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 10px;
+                height: 10px;
+                background-color: #4ab3af;
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        &:checked + .form-check-label {
+            color: #4ab3af;
+            font-weight: 600;
+        }
+
+    }
+    
+    .form-checkout-thanh-toan {
+        justify-content: flex-start;
+        display: flex;
+        align-items: center;
+        .form-check-label {
+            height: 100%;
+            margin-left: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    .nut-thanh-toan {
+        width: 50%;
+        margin: 0 auto; /* căn giữa ngang */
+        display: block; /* để margin auto ăn được */
+        border-radius: 50px;
+        border-color: #3a9b98;
+        background-color: #4ab3af;
+        font-size: 1.2rem;
+        color: white;
+        &:hover {
+            background-color: lighten(#4ab3af,20%)
+        }
+    }
+    .text-canh-bao {
+        color: #b83232;
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+    .text-luu-y {
+        color: #4ab3af;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+}
