@@ -7,7 +7,7 @@
 {{-- ▲ KẾT THÚC CHÈN SIDEBAR --}}
 
 @section('content')
-<div class="container py-4">
+<div class="py-4 all-sp-cont">
   <h1 class="mb-4">Danh sách Sản phẩm</h1>
 
   {{-- Search --}}

@@ -49,6 +49,7 @@
 @import "./header.scss";
 @import "./footer.scss";
 @import "./cart.scss";
+@import "./products.scss";
 @import "./checkout.scss";
 @import "./sidebar.scss";
 @import "./home.scss";
@@ -75,6 +76,9 @@ html, body {
 .top-80 {
   top: 80% !important;
   
+}
+.col-md-9-oh {
+  width: calc(100% - 260px);
 }
 /*–– 6) Slider full-width hack ––*/
 .slider-full-width {
@@ -114,10 +118,6 @@ html, body {
 
 body {
   overflow-x: hidden;
-}
-.py-4 {
-  padding-top: 0 !important ;
-  
 }
 .container-trang-chu-truoc-banner {
   padding-top: 1.5rem !important;
@@ -291,4 +291,9 @@ body {
       margin-right: 1rem !important;
     }
   }
+}
+.col-md-3 {
+  width: auto;
+  padding: 0 !important;
+  margin: 0 !important;
 }

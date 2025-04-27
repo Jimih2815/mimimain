@@ -34,7 +34,7 @@
   @include('partials.header')
 
   {{-- Nội dung chính --}}
-  <main class="py-4 container mx-auto">
+  <main class="container mx-auto">
     @hasSection('sidebar')
       <div class="row">
         {{-- Cột Sidebar --}}
@@ -43,7 +43,7 @@
         </aside>
 
         {{-- Cột Content --}}
-        <section class="col-md-9">
+        <section class="col-md-9-oh">
           @yield('content')
         </section>
       </div>
