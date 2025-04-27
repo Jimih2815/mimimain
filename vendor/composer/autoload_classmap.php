@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\BackfillMenuGroupId' => $baseDir . '/app/Console/Commands/BackfillMenuGroupId.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Helpers\\SlugHelper' => $baseDir . '/app/Helpers/SlugHelper.php',
@@ -19,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\Admin\\OrderController' => $baseDir . '/app/Http/Controllers/Admin/OrderController.php',
     'App\\Http\\Controllers\\Admin\\ProductController' => $baseDir . '/app/Http/Controllers/Admin/ProductController.php',
     'App\\Http\\Controllers\\Admin\\ProductSliderController' => $baseDir . '/app/Http/Controllers/Admin/ProductSliderController.php',
+    'App\\Http\\Controllers\\Admin\\SidebarItemController' => $baseDir . '/app/Http/Controllers/Admin/SidebarItemController.php',
     'App\\Http\\Controllers\\Admin\\UserController' => $baseDir . '/app/Http/Controllers/Admin/UserController.php',
     'App\\Http\\Controllers\\Admin\\WidgetController' => $baseDir . '/app/Http/Controllers/Admin/WidgetController.php',
     'App\\Http\\Controllers\\Admin\\WidgetPlacementController' => $baseDir . '/app/Http/Controllers/Admin/WidgetPlacementController.php',
@@ -76,6 +78,7 @@ return array(
     'App\\Models\\OrderItem' => $baseDir . '/app/Models/OrderItem.php',
     'App\\Models\\Product' => $baseDir . '/app/Models/Product.php',
     'App\\Models\\ProductSlider' => $baseDir . '/app/Models/ProductSlider.php',
+    'App\\Models\\SidebarItem' => $baseDir . '/app/Models/SidebarItem.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\Widget' => $baseDir . '/app/Models/Widget.php',
     'App\\Models\\WidgetPlacement' => $baseDir . '/app/Models/WidgetPlacement.php',

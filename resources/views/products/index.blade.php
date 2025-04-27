@@ -1,5 +1,10 @@
-{{-- resources/views/products/index.blade.php --}}
 @extends('layouts.app')
+
+{{-- ▼ BẮT ĐẦU CHÈN SIDEBAR: ngay sau @extends --}}
+@section('sidebar')
+  @include('components.sidebar')
+@endsection
+{{-- ▲ KẾT THÚC CHÈN SIDEBAR --}}
 
 @section('content')
 <div class="container py-4">

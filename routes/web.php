@@ -43,6 +43,8 @@ use App\Http\Controllers\Admin\HomeSectionImageController;
 use App\Http\Controllers\Admin\ProductSliderController;
 use App\Http\Controllers\Admin\WidgetController;
 use App\Http\Controllers\Admin\WidgetPlacementController;
+use App\Http\Controllers\Admin\SidebarItemController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -172,6 +174,9 @@ Route::prefix('admin')
     // 4.10 Widgets & Widget Placements
     Route::resource('widgets',           WidgetController::class);
     Route::resource('placements', WidgetPlacementController::class);
+    Route::resource('sidebar-items', SidebarItemController::class);
+
+    
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL

@@ -35,7 +35,22 @@
 
   {{-- Nội dung chính --}}
   <main class="py-4 container mx-auto">
-    @yield('content')
+    @hasSection('sidebar')
+      <div class="row">
+        {{-- Cột Sidebar --}}
+        <aside class="col-md-3 mb-4">
+          @yield('sidebar')
+        </aside>
+
+        {{-- Cột Content --}}
+        <section class="col-md-9">
+          @yield('content')
+        </section>
+      </div>
+    @else
+      {{-- Nếu view con không khai báo sidebar, content full width --}}
+      @yield('content')
+    @endif
   </main>
 
   {{-- Footer chung --}}

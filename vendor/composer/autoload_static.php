@@ -551,6 +551,7 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\BackfillMenuGroupId' => __DIR__ . '/../..' . '/app/Console/Commands/BackfillMenuGroupId.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Helpers\\SlugHelper' => __DIR__ . '/../..' . '/app/Helpers/SlugHelper.php',
@@ -564,6 +565,7 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
         'App\\Http\\Controllers\\Admin\\OrderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/OrderController.php',
         'App\\Http\\Controllers\\Admin\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProductController.php',
         'App\\Http\\Controllers\\Admin\\ProductSliderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProductSliderController.php',
+        'App\\Http\\Controllers\\Admin\\SidebarItemController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SidebarItemController.php',
         'App\\Http\\Controllers\\Admin\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UserController.php',
         'App\\Http\\Controllers\\Admin\\WidgetController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/WidgetController.php',
         'App\\Http\\Controllers\\Admin\\WidgetPlacementController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/WidgetPlacementController.php',
@@ -621,6 +623,7 @@ class ComposerStaticInitbadff43126dc85401f999429306b8f12
         'App\\Models\\OrderItem' => __DIR__ . '/../..' . '/app/Models/OrderItem.php',
         'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
         'App\\Models\\ProductSlider' => __DIR__ . '/../..' . '/app/Models/ProductSlider.php',
+        'App\\Models\\SidebarItem' => __DIR__ . '/../..' . '/app/Models/SidebarItem.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\Widget' => __DIR__ . '/../..' . '/app/Models/Widget.php',
         'App\\Models\\WidgetPlacement' => __DIR__ . '/../..' . '/app/Models/WidgetPlacement.php',
