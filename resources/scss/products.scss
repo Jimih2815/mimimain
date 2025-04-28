@@ -134,11 +134,14 @@
     gap: .5rem;
     padding-bottom: 8px;
     margin-bottom: -8px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(74, 179, 175, 0.8) #F4F6F8; 
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    // overflow-x: auto;
+    // overflow-y: hidden;
+    // white-space: nowrap;
+    // scrollbar-width: thin;
+    // scrollbar-color: rgba(74, 179, 175, 0.8) #F4F6F8; 
 
     &::-webkit-scrollbar {
         height: 8px; /* vì là cuộn ngang nên chỉnh height */
@@ -181,12 +184,16 @@
   }
   
   .option-item-show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: .4rem .8rem;
     border: 1px solid #4ab3af;
     border-radius: .25rem;
     cursor: pointer;
     white-space: nowrap;
     transition: background .2s, color .2s;
+    width: 30%;
   }
   
   .option-item-show.selected {

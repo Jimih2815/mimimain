@@ -119,7 +119,7 @@
             @endif
           </a>
 
-          <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="cartDropdown" style="min-width:300px; z-index:1200;">
+          <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="cartDropdown" style="min-width:300px; z-index:1200; border-color: #d1a029;">
             @forelse ($cart as $item)
               <li class="d-flex align-items-center mb-2">
                 @if (!empty($item['image']))

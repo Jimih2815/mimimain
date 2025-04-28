@@ -59,7 +59,7 @@
           @forelse($optionTypes as $type)
             <div class="mb-4">
               <label class="form-label">{{ $type->name }}</label>
-              <div class="d-flex flex-row flex-nowrap option-items-show mb-2"
+              <div class="d-flex flex-row option-items-show mb-2"
               data-first-group="{{ $loop->first ? 1 : 0 }}">
               @foreach($type->values as $val)
                 <div class="option-item-show"
@@ -68,9 +68,6 @@
                     data-extra="{{ $val->extra_price }}"
                     data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
                   {{ $val->value }}
-                  @if($val->extra_price)
-                    (+{{ number_format($val->extra_price,0,',','.') }}₫)
-                  @endif
                 </div>
               @endforeach
               </div>

@@ -3,7 +3,11 @@
 @section('content')
 <div class="container">
   <h1 class="mb-4">Sửa sản phẩm #{{ $product->id }}</h1>
-
+  @if(session('success'))
+  <div class="alert alert-success">
+    {{ session('success') }}
+  </div>
+  @endif
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul class="mb-0">
@@ -46,11 +50,15 @@
 
     <div class="mb-3">
       <label class="form-label">Base Price</label>
-      <input name="base_price"
-             type="number"
-             class="form-control"
-             value="{{ old('base_price', $product->base_price) }}"
-             required>
+      <input
+        name="base_price"
+        type="number"
+        class="form-control"
+        value="{{ old('base_price', $product->base_price) }}"
+        step="any"    {{-- cho phép nhập bất kỳ số thập phân hay nguyên nào --}}
+        min="0"        {{-- ngăn nhập số âm nếu bạn cần --}}
+        required
+      >
     </div>
 
     <hr>
@@ -169,7 +177,7 @@
       + Thêm Option
     </button>
 
-    <button class="btn btn-primary">Cập nhật</button>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
   </form>
 
   {{-- Templates ẩn --}}

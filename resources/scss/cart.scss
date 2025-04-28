@@ -5,6 +5,11 @@
         position: sticky;
         top: 10px;        
         align-self: flex-start;  
+        .text-free-ship {
+            color: #fe3b27;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
       }
 
 
@@ -92,7 +97,9 @@
         border-radius: 50%;
         transform: translate(-50%, -50%);
     }
-    
+    .card {
+        border-color: #4ab3af !important;
+    }
 
 
 

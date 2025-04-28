@@ -76,8 +76,9 @@ class ProductController extends Controller
         }
     }
 
-    return redirect()->route('admin.products.index')
-                     ->with('success', 'Tạo sản phẩm thành công!');
+    return redirect()
+    ->route('admin.products.edit', $product)
+    ->with('success','Cập nhật sản phẩm thành công!');
 }
 
 
@@ -170,8 +171,8 @@ class ProductController extends Controller
     });
 
     return redirect()
-           ->route('admin.products.index')
-           ->with('success', 'Cập nhật sản phẩm thành công!');
+         ->route('admin.products.edit', $product)
+         ->with('success','Cập nhật sản phẩm thành công!');
 }
 
     public function destroy(Product $product)
