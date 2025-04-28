@@ -191,7 +191,7 @@
         text-decoration: none;
   
         &:hover {
-          color: lighten(#4ab3af, 10%);
+          color: lighten(#4ab3af, 10%) !important;
         }
       }
     }
