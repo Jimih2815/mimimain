@@ -17,47 +17,81 @@ class CartController extends Controller
     public function index()
     {
         $this->mergeDBCartIntoSession();
-        $cart  = session('cart', []);
+    
+        // 1) Lấy cart từ session
+        $cart = session('cart', []);
+    
+        // 2) Với mỗi item, bổ sung slug nếu chưa có
+        foreach ($cart as $key => $item) {
+            if (! isset($item['slug'])) {
+                // Lấy model Product để đọc slug
+                $prod = Product::find($item['product_id']);
+                $cart[$key]['slug'] = $prod->slug;
+            }
+        }
+        // Viết lại cart vào session (tuỳ chọn, để giữ persist)
+        session(['cart' => $cart]);
+    
+        // 3) Tính tổng như cũ
         $total = array_reduce(
             $cart,
             fn($sum, $item) => $sum + $item['price'] * $item['quantity'],
             0
         );
-        return view('cart.index', compact('cart', 'total'));
+    
+        return view('cart.index', compact('cart','total'));
     }
 
     /**
      * Thêm sản phẩm vào giỏ (có options & tính giá base+extra)
      */
     public function add(Request $request, $id)
-    {
-        $product = Product::with('optionValues')->findOrFail($id);
-        $chosen  = $request->input('options', []);
-        $extra   = OptionValue::whereIn('id', array_values($chosen))
-                              ->sum('extra_price');
-        $price   = $product->base_price + $extra;
+{
+    $product = Product::with('optionValues')->findOrFail($id);
+    $chosen  = $request->input('options', []);
+    // Tính tổng extra price từ các option đã chọn
+    $extra = OptionValue::whereIn('id', array_values($chosen))
+                        ->sum('extra_price');
+    $price = $product->base_price + $extra;
 
-        $cart = session('cart', []);
-        $key  = md5($id . '|' . json_encode($chosen));
-
-        if (isset($cart[$key])) {
-            $cart[$key]['quantity']++;
-        } else {
-            $cart[$key] = [
-                'product_id' => $id,
-                'quantity'   => 1,
-                'price'      => $price,
-                'options'    => $chosen,
-                'name'       => $product->name,
-                'image'      => $product->img,
-            ];
+    // --- Xác định image cho cart item ---
+    // Mặc định dùng ảnh chính
+    $imagePath = $product->img;
+    if (!empty($chosen)) {
+        // Lấy option đầu tiên trong mảng chosen
+        $firstValId = array_values($chosen)[0];
+        $optVal = OptionValue::find($firstValId);
+        // Nếu option có ảnh tùy chọn, dùng nó
+        if ($optVal && $optVal->option_img) {
+            $imagePath = $optVal->option_img;
         }
-
-        session(['cart' => $cart]);
-        $this->syncCartToDB($cart);
-
-        return back()->with('success', "Đã thêm “{$product->name}” vào giỏ hàng!");
     }
+
+    // --- Thêm vào session cart ---
+    $cart = session('cart', []);
+    $key  = md5($id . '|' . json_encode($chosen));
+
+    if (isset($cart[$key])) {
+        $cart[$key]['quantity']++;
+    } else {
+        $cart[$key] = [
+            'product_id' => $id,
+            'quantity'   => 1,
+            'price'      => $price,
+            'options'    => $chosen,
+            'name'       => $product->name,
+            'image'      => $imagePath,  
+            'slug'       => $product->slug,
+
+        ];
+    }
+
+    session(['cart' => $cart]);
+    $this->syncCartToDB($cart);
+
+    return back()->with('success', "Đã thêm “{$product->name}” vào giỏ hàng!");
+}
+
 
     /**
      * Xóa mục khỏi giỏ (key là MD5 hash)

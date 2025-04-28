@@ -34,7 +34,7 @@
   </div>
 
   {{-- 2) Container chính của nội dung --}}
-  <div class="container py-5">
+  <div class="container">
     {{-- 2.1) Đoạn text khởi đầu --}}
     <p class="lead text-center mb-2">“Khám phá thế giới quà tặng đầy màu sắc!”</p>
     {{-- 2.2) Link detail --}}

@@ -100,7 +100,12 @@
     .card {
         border-color: #4ab3af !important;
     }
-
+    .ten-san-pham-an-duoc {
+        color: #333;
+        &:hover {
+            color: #4ab3af;
+        }
+    }
 
 
 

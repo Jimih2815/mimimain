@@ -27,9 +27,11 @@
 
             {{-- Ảnh + nút tăng/giảm --}}
             <div class="text-center">
+            <a href="{{ route('products.show', $item['slug']) }}">
               <img src="{{ asset('storage/'.$item['image']) }}"
-                   class="img-fluid rounded anh-san-pham"
-                   alt="{{ $item['name'] }}">
+                  class="img-fluid rounded anh-san-pham"
+                  alt="{{ $item['name'] }}">
+            </a>
 
               <div class="d-flex tang-giam-va-tim">
                 <div class="tang-giam-cont">
@@ -73,7 +75,12 @@
             {{-- Thông tin sản phẩm --}}
             <div class="ms-4 flex-grow-1">
               <div class="d-flex justify-content-between">
-                <h5 class="mb-1">{{ $item['name'] }}</h5>
+              <h5 class="mb-1">
+              <a href="{{ route('products.show', $item['slug']) }}"
+                class="text-decoration-none ten-san-pham-an-duoc">
+                {{ $item['name'] }}
+              </a>
+              </h5>
                 <span class="fw-bold">
                   {{ number_format($item['price'],0,',','.') }}₫
                 </span>
