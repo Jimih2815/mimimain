@@ -2,9 +2,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5 chi-tiet-san-pham-cont">
 
-  <div class="row">
+<div class="chi-tiet-san-pham-cont">
+
+  <div class="thong-tin-chi-tiet-cont">
     {{-- Cột thumbnails --}}
     @php
       // Lấy sub_img: nếu lưu dưới dạng JSON string, decode; nếu đã là array thì dùng luôn
@@ -30,7 +31,7 @@
     @endif
 
     {{-- Cột ảnh chính --}}
-    <div class="{{ $hasThumbs ? 'col-md-4' : 'col-md-6' }} main-img-container">
+    <div class=" main-img-container">
       <img
         id="main-product-img"
         src="{{ asset('storage/'.$product->img) }}"
@@ -39,7 +40,7 @@
     </div>
 
     {{-- Thông tin & chọn Option --}}
-    <div class="{{ $hasThumbs ? 'col-md-6' : 'col-md-6' }}">
+    <div class="option-san-pham">
       <h2>{{ $product->name }}</h2>
       <p class="text-muted">{{ $product->description }}</p>
 
@@ -58,7 +59,7 @@
         @forelse($optionTypes as $type)
           <div class="mb-4">
             <label class="form-label">{{ $type->name }}</label>
-            <div class="d-flex flex-row flex-nowrap overflow-auto option-items-show mb-2">
+            <div class="d-flex flex-row flex-nowrap option-items-show mb-2">
               @foreach($type->values as $val)
                 <div class="option-item-show"
                      data-type-id="{{ $type->id }}"
@@ -77,10 +78,13 @@
                    required>
           </div>
         @empty
-          <p class="text-warning">Sản phẩm này không có tuỳ chọn bổ sung.</p>
+          <p class="text-warning"></p>
         @endforelse
-
-        <button type="submit" class="btn btn-them-gio-trang-chi-tiet">
+        {{-- Thông báo lỗi chọn option --}}
+        <div id="option-error" class="text-danger small mb-2" style="display:none;">
+          Vui lòng chọn các tuỳ chọn.
+        </div>
+        <button type="submit" class="btn-them-gio-trang-chi-tiet">
           Thêm vào giỏ hàng
         </button>
       </form>
@@ -121,6 +125,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const items     = document.querySelectorAll('.option-item-show');
   const selected  = {};
 
+  //  Bắt buộc chọn hết
+  const form     = document.getElementById('add-to-cart-form');
+  const errorEl  = document.getElementById('option-error');
+
+  form.addEventListener('submit', (e) => {
+    const inputs = form.querySelectorAll('input[id^="option-input-"]');
+    let missing = Array.from(inputs).some(inp => !inp.value);
+    if (missing) {
+      e.preventDefault();
+      errorEl.style.display = 'block';
+    }
+  });
+
   function updateTotal() {
     const sumExtra = Object.values(selected).reduce((a, b) => a + b, 0);
     const total    = basePrice + sumExtra;
@@ -141,11 +158,11 @@ document.addEventListener('DOMContentLoaded', () => {
       selected[typeId] = extra;
       document.getElementById(`option-input-${typeId}`).value = valId;
       updateTotal();
+      errorEl.style.display = 'none'; // ẩn lỗi khi chọn
+      updateTotal();
     });
   });
 
-  // Chọn mặc định giá trị đầu tiên (nếu muốn)
-  // items.forEach((el,idx) => idx===0 && el.click());
 });
 </script>
 @endpush
