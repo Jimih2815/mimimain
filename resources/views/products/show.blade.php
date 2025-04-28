@@ -77,9 +77,53 @@
                    id="option-input-{{ $type->id }}"
                    required>
           </div>
+          
         @empty
           <p class="text-warning"></p>
         @endforelse
+        <h3 class="h3-cam-ket">MiMi Cam Kết</h3>
+        <div class="product-guarantees d-flex flex-wrap gap-3 mt-4">
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-truck-fast guarantee-icon"></i>
+            <span>Giao hàng toàn quốc — Nhanh chóng - An toàn - Đúng hẹn</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-arrow-rotate-left guarantee-icon"></i>
+            <span>Đổi trả miễn phí 7 ngày — Dù bất kỳ lý do gì</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-shield guarantee-icon"></i>
+            <span>Bảo hành chính hãng 12 tháng — 1 đổi 1 nếu lỗi do nhà sản xuất</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-certificate guarantee-icon"></i>
+            <span>Cam kết hàng chính hãng 100% — Phát hiện fake hoàn tiền 10 lần</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-credit-card guarantee-icon"></i>
+            <span>Thanh toán linh hoạt — Nhận hàng trả tiền hoặc chuyển khoản</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-headset guarantee-icon"></i>
+            <span>Hỗ trợ khách hàng 24/7 — Chat, gọi điện trực tiếp</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-gift guarantee-icon"></i>
+            <span>Ưu đãi quà tặng kèm đơn hàng mỗi tuần</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-leaf guarantee-icon"></i>
+            <span>Bao bì thân thiện môi trường — Hướng tới tiêu dùng bền vững</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-star guarantee-icon"></i>
+            <span>Đánh giá 5⭐ từ 95% khách hàng — Hơn 10.000 lượt mua</span>
+          </div>
+          <div class="guarantee-item d-flex align-items-center">
+            <i class="fas fa-plane guarantee-icon"></i>
+            <span>Ship nhanh 1-2 ngày toàn quốc</span>
+          </div>
+        </div>
         {{-- Thông báo lỗi chọn option --}}
         <div id="option-error" class="text-danger small mb-2" style="display:none;">
           Vui lòng chọn các tuỳ chọn.

@@ -82,16 +82,31 @@
   display: flex;
   justify-content: center;
   padding: 3rem 0;
+  #total-price {
+    color: #b83232;
+    font-size: 2rem;
+  }
   .thong-tin-chi-tiet-cont {
     display: flex;
+    align-items: flex-start;
 
 
     .option-san-pham {
       width: 380px;
       margin-left: 2rem;
+
+
+      .h3-cam-ket {
+        color: #4ab3af;
+      font-weight: 800;
+      font-size: 2rem !important;
+      }
     }
     .main-img-container {
       width: 600px;
+      position: sticky;
+      top: 2rem;              
+      align-self: flex-start;
     }
   }
   .option-items-show {
@@ -174,7 +189,33 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(74, 179, 175, 0.8) #F4F6F8;
     height: 100% !important;
+     
+  }
+
+  .thumb-item {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    cursor: pointer;
+    margin-bottom: .5rem;
+    border: 2px solid transparent;
+    transition: border .2s;
+  }
+  .thumb-item.selected {
+    border-color: #4ab3af;
+  }
   
+  
+  
+  .cot-anh-phu {
+    width: 100px;
+    height: auto;
+    position: sticky;
+    top: 2rem;              
+    align-self: flex-start; 
+    max-height: 600px;
+    overflow-y: auto;
+
     &::-webkit-scrollbar {
       width: 8px;
     }
@@ -212,23 +253,41 @@
     }
   }
 
-  .thumb-item {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    cursor: pointer;
-    margin-bottom: .5rem;
-    border: 2px solid transparent;
-    transition: border .2s;
-  }
-  .thumb-item.selected {
-    border-color: #4ab3af;
+
+  .product-guarantees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  
+    .guarantee-item {
+      display: flex;
+      align-items: center;
+      background: #f4f6f8;
+      padding-bottom: 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #333;
+      min-width: 260px;
+      flex: 1 1 45%;
+      transition: background 0.3s;
+  
+      &:hover {
+        background: #e2f3f3;
+      }
+  
+      .guarantee-icon {
+        font-size: 1.5rem;
+        color: #4ab3af;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+  
+      span {
+        flex-grow: 1;
+      }
+    }
   }
   
-  
-  
-  .cot-anh-phu {
-    width: 100px;
-    height: 600px;
-  }
 }

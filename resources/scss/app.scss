@@ -77,6 +77,10 @@ html, body {
   top: 80% !important;
   
 }
+.flex-can-giua {
+  display: flex;
+  justify-content: center;
+}
 .col-md-9-oh {
   width: calc(100% - 260px);
 }
@@ -143,8 +147,7 @@ body {
 .container {
   margin: 0;
   max-width: 100%;
-  display: flex;
-  justify-content: center;
+
 
   .nut-xem-chi-tiet-trang-chu {
     position: relative; // Phải relative để pseudo-element căn theo
