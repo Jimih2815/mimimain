@@ -100,7 +100,7 @@
       </div>
 
       {{-- ===== Cột phải: Summary + form thanh toán ===== --}}
-        <div class="col-md-4">
+        <div class="col-md-4 order-summary">
             <h3 class="mb-4">Thanh Toán</h3>
             <form id="checkout-form"
                     action="{{ route('checkout.show') }}"

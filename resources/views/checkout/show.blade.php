@@ -4,10 +4,10 @@
 @section('title','Thanh Toán')
 
 @section('content')
-<div class="trang-checkout">
-  <div class="checkout-cont row">
+<div class="trang-checkout flex-can-giua">
+  <div class="checkout-cont row flex-can-giua">
     {{-- ==== Cột trái: Sản phẩm của bạn ==== --}}
-    <div class="col-md-6">
+    <div class="col-md-6 danh-sach-san-pham">
       <h4 class="mb-3">Sản phẩm của bạn</h4>
       @php $grand = 0; @endphp
 
@@ -67,7 +67,7 @@
     </div>
 
     {{-- ==== Cột phải: Thông tin người nhận + Phương thức thanh toán ==== --}}
-    <div class="col-md-6">
+    <div class="col-md-6 thong-tin-nguoi-nhan">
       <h4 class="mb-3">Thông tin người nhận</h4>
       <form id="checkoutForm" action="{{ route('checkout.confirm') }}" method="POST">
         @csrf

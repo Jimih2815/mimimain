@@ -34,7 +34,7 @@
   @include('partials.header')
 
   {{-- Nội dung chính --}}
-  <main class="container mx-auto flex-can-giua">
+  <main class="container mx-auto">
     @hasSection('sidebar')
       <div class="row">
         {{-- Cột Sidebar --}}

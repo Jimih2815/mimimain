@@ -69,7 +69,7 @@
         }
     }
     .nut-thanh-toan {
-        width: 50%;
+        width: 80%;
         margin: 0 auto; /* căn giữa ngang */
         display: block; /* để margin auto ăn được */
         border-radius: 50px;
@@ -90,6 +90,18 @@
         color: #4ab3af;
         font-size: 1rem;
         font-weight: 600;
+    }
+    .danh-sach-san-pham {
+        width: 550px !important;
+
+    }
+    .thong-tin-nguoi-nhan {
+        width: 350px !important;
+    }
+    #bankSection {
+        img {
+            width: 100%;
+        }
     }
 }
 

@@ -81,6 +81,9 @@ html, body {
   display: flex;
   justify-content: center;
 }
+.bat-col {
+  flex-direction: column;
+}
 .col-md-9-oh {
   width: calc(100% - 260px);
 }

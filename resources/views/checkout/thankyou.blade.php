@@ -3,13 +3,15 @@
 @section('title','Đặt hàng thành công')
 
 @section('content')
-<div class="anh-cam-on-mua-hang-cont">
-  <img src="{{ asset('hinhanh/anh-cam-on.png') }}" 
-          alt="Cảm ơn bạn đã mua hàng" 
-          class="img-cam-on mb-4" 
-          style="max-width: 100%; height: auto;">
-</div>
-<div class="py-5 text-center trang-cam-on">
+<div class="fex-can-giua bat-col">
+  <div class="anh-cam-on-mua-hang-cont">
+    <img src="{{ asset('hinhanh/anh-cam-on.png') }}" 
+            alt="Cảm ơn bạn đã mua hàng" 
+            class="img-cam-on mb-4" 
+            style="max-width: 100%; height: auto;">
+  </div>
+  <div class="py-5 text-center trang-cam-on">
+
 
   <!-- <h2 class="mb-3">Cảm ơn bạn đã đặt hàng!</h2> -->
   <p>Mã đơn: <strong>#{{ $order->id }}</strong></p>
@@ -29,5 +31,6 @@
   <a href="{{ route('home') }}" class="btn mt-4 nut-tiep-tuc">
     Tiếp tục mua hàng
   </a>
+</div>
 </div>
 @endsection

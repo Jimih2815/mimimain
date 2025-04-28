@@ -1,7 +1,11 @@
 .trang-gio-hang {
     padding: 4rem 25rem;
 
-
+    .order-summary {
+        position: sticky;
+        top: 10px;        
+        align-self: flex-start;  
+      }
 
 
 
