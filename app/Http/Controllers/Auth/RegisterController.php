@@ -7,12 +7,11 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
     /**
-     * Form đăng ký  ─ GET /register
+     * Hiển thị form đăng ký — GET /register
      */
     public function showRegistrationForm()
     {
@@ -20,36 +19,31 @@ class RegisterController extends Controller
     }
 
     /**
-     * Xử lý đăng ký ─ POST /register
-     * ⚠ Hàm tên **register** đúng như route gốc của Laravel.
+     * Xử lý đăng ký — POST /register
      */
     public function register(Request $request)
     {
-        /* 1. Validate */
+        // 1. Validate chỉ yêu cầu và confirmed
         $data = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => [
-                'required',
-                Password::min(8)->letters()->mixedCase()->numbers(), // tuỳ chỉnh rule
-                'confirmed',                                         // cần field password_confirmation
-            ],
+            'password' => ['required', 'confirmed'],
         ]);
 
-        /* 2. Tạo user */
+        // 2. Tạo user
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
-        /* 3. Bắn event Registered (nếu dùng verify email, listener…) */
+        // 3. Event nếu có verify
         event(new Registered($user));
 
-        /* 4. Tự đăng nhập */
+        // 4. Tự động đăng nhập
         auth()->login($user);
 
-        /* 5. Redirect */
+        // 5. Redirect
         return redirect('/')->with('status', 'Đăng ký thành công!');
     }
 }

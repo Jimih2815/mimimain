@@ -146,22 +146,7 @@ header {
             h6 {
               color: $brand-red; /* tiêu đề nhóm dùng đỏ chủ đạo 2 */
             }
-            .dropdown-item {
-              color: #333;
-              transition: color .2s;
-
-              &:hover {
-                color: $brand-teal;
-                background-color: transparent !important;
-              }
-              &:active {
-                outline: none !important;
-                background-color: transparent !important;
-                box-shadow: none !important;
-                border-color: inherit !important; /* giữ nguyên viền nếu có */
-                color: inherit !important; /* giữ nguyên màu chữ */
-              }
-            }
+            
           }
 
           &:hover .dropdown-menu.mega-menu {
@@ -277,4 +262,21 @@ header {
   color: #4ab3af !important;
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+.dropdown-item {
+  color: #333;
+  transition: color .2s;
+
+  &:hover {
+    color: $brand-teal;
+    background-color: transparent !important;
+  }
+  &:active {
+    outline: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border-color: inherit !important; /* giữ nguyên viền nếu có */
+    color: inherit !important; /* giữ nguyên màu chữ */
+  }
 }

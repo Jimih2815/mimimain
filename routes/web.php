@@ -26,6 +26,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 //
 // ADMIN CONTROLLERS
@@ -92,9 +94,26 @@ Route::middleware('guest')->group(function () {
 // 3.2 Cho user đã login – profile, logout
 Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-    Route::get  ('profile', [ProfileController::class,'edit'])->name('profile.edit');
-    Route::put  ('profile', [ProfileController::class,'update'])->name('profile.update');
+    Route::get('profile', [ProfileController::class,'edit'])->name('profile.edit');
+    Route::put('profile', [ProfileController::class,'update'])->name('profile.update');
+    Route::put('profile/password', [ProfileController::class, 'updatePassword'])
+         ->name('password.update');
 });
+// Hiển thị form nhập email để gửi link
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])
+     ->name('password.request');
+
+// Xử lý gửi email
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+     ->name('password.email');
+
+// Hiển thị form nhập mật khẩu mới (sau khi click link trong email)
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
+     ->name('password.reset');
+
+// Xử lý lưu mật khẩu mới
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])
+     ->name('password.update');
 
 /*
 |--------------------------------------------------------------------------
