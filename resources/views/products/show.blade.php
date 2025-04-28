@@ -160,13 +160,18 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', adjustThumbsHeight);
   if (mainImg.complete) adjustThumbsHeight();
 
-  // Click vào thumbnail -> đổi ảnh main
+  // Hàm chung để đổi ảnh chính + highlight thumb
+  function swapThumb(thumb) {
+    thumbs.forEach(t => t.classList.remove('selected'));
+    thumb.classList.add('selected');
+    mainImg.src = thumb.dataset.src;
+    adjustThumbsHeight();
+  }
+
+  // Gán cả click và hover (mouseenter) cho mỗi thumbnail
   thumbs.forEach(thumb => {
-    thumb.addEventListener('click', () => {
-      thumbs.forEach(t => t.classList.remove('selected'));
-      thumb.classList.add('selected');
-      mainImg.src = thumb.dataset.src;
-    });
+    thumb.addEventListener('click', () => swapThumb(thumb));
+    thumb.addEventListener('mouseenter', () => swapThumb(thumb));
   });
 
   // --- Logic chọn Option và cập nhật giá + ảnh ---
@@ -231,4 +236,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
+
 
