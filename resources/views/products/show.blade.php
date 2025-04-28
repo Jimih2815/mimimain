@@ -40,46 +40,44 @@
       </div>
 
       {{-- Thông tin & chọn Option --}}
-      <div class="option-san-pham">
-        <h2>{{ $product->name }}</h2>
-        <p class="text-muted">{{ $product->description }}</p>
+    <div class="option-san-pham">
+      <h2>{{ $product->name }}</h2>
+      <p class="text-muted">{{ $product->description }}</p>
 
-        {{-- Tổng giá cập nhật --}}
-        <p class="fs-4">
-          Price:
-          <strong id="total-price">{{ number_format($product->base_price,0,',','.') }}₫</strong>
-        </p>
+      <p class="fs-4">
+        Price:
+        <strong id="total-price">{{ number_format($product->base_price,0,',','.') }}₫</strong>
+      </p>
 
-        <form action="{{ route('cart.add', $product->id) }}"
-              method="POST"
-              id="add-to-cart-form">
-          @csrf
+      <form action="{{ route('cart.add', $product->id) }}"
+            method="POST"
+            id="add-to-cart-form">
+        @csrf
 
-          {{-- Loop qua từng OptionType --}}
-          @forelse($optionTypes as $type)
-            <div class="mb-4">
-              <label class="form-label">{{ $type->name }}</label>
-              <div class="d-flex flex-row option-items-show mb-2"
-              data-first-group="{{ $loop->first ? 1 : 0 }}">
+        {{-- Loop qua từng OptionType --}}
+        @forelse($optionTypes as $type)
+          <div class="mb-4">
+            <label class="form-label">{{ $type->name }}</label>
+            <div class="d-flex flex-row option-items-show mb-2"
+                 data-first-group="{{ $loop->first ? 1 : 0 }}">
               @foreach($type->values as $val)
                 <div class="option-item-show"
-                    data-type-id="{{ $type->id }}"
-                    data-val-id="{{ $val->id }}"
-                    data-extra="{{ $val->extra_price }}"
-                    data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
+                     data-type-id="{{ $type->id }}"
+                     data-val-id="{{ $val->id }}"
+                     data-extra="{{ $val->extra_price }}"
+                     data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
                   {{ $val->value }}
                 </div>
               @endforeach
-              </div>
-              <input type="hidden"
-                    name="options[{{ $type->id }}]"
-                    id="option-input-{{ $type->id }}"
-                    required>
             </div>
-            
-          @empty
-            <p class="text-warning"></p>
-          @endforelse
+            <input type="hidden"
+                   name="options[{{ $type->id }}]"
+                   id="option-input-{{ $type->id }}"
+                   required>
+          </div>
+        @empty
+          <p class="text-warning">Chưa có tuỳ chọn.</p>
+        @endforelse
           <h3 class="h3-cam-ket">MiMi Cam Kết</h3>
           <div class="product-guarantees d-flex flex-wrap gap-3 mt-4">
             <div class="guarantee-item d-flex align-items-center">
@@ -92,12 +90,9 @@
             </div>
             <div class="guarantee-item d-flex align-items-center">
               <i class="fas fa-shield guarantee-icon"></i>
-              <span>Bảo hành chính hãng 12 tháng — 1 đổi 1 nếu lỗi do nhà sản xuất</span>
+              <span>Lỗi 1 đổi 1 trong vòng 7 ngày</span>
             </div>
-            <div class="guarantee-item d-flex align-items-center">
-              <i class="fas fa-certificate guarantee-icon"></i>
-              <span>Cam kết hàng chính hãng 100% — Phát hiện fake hoàn tiền 10 lần</span>
-            </div>
+            
             <div class="guarantee-item d-flex align-items-center">
               <i class="fas fa-credit-card guarantee-icon"></i>
               <span>Thanh toán linh hoạt — Nhận hàng trả tiền hoặc chuyển khoản</span>
@@ -122,14 +117,39 @@
               <i class="fas fa-plane guarantee-icon"></i>
               <span>Ship nhanh 1-2 ngày toàn quốc</span>
             </div>
+            <div class="guarantee-item d-flex align-items-center">
+              <i class="fas fa-truck guarantee-icon"></i>
+              <span>Miễn phí vận chuyển với đơn hàng từ 199.000₫</span>
+            </div>
+
+            <div class="guarantee-item d-flex align-items-center">
+              <i class="fas fa-tags guarantee-icon"></i>
+              <span>Giảm giá 5% cho khách hàng thân thiết</span>
+            </div>
+
+            <div class="guarantee-item d-flex align-items-center">
+              <i class="fas fa-bolt guarantee-icon"></i>
+              <span>Giao hàng hỏa tốc Hà Nội trong vòng 2 giờ</span>
+            </div>
           </div>
           {{-- Thông báo lỗi chọn option --}}
           <div id="option-error" class="text-danger small mb-2" style="display:none;">
             Vui lòng chọn các tuỳ chọn.
           </div>
-          <button type="submit" class="btn-them-gio-trang-chi-tiet">
-            Thêm vào giỏ hàng
-          </button>
+          <div class="d-flex gap-2">
+            <!-- Nút Thêm vào giỏ hàng -->
+            <button type="submit"
+                    class="btn-them-gio-trang-chi-tiet">
+              Thêm vào giỏ hàng
+            </button>
+
+            <!-- Nút Mua Ngay -->
+            <button type="button"
+                    id="buy-now-btn"
+                    class="btn-mua-ngay">
+              Mua ngay
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -140,95 +160,94 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Khởi tạo các phần tử ảnh ---
+  // --- Khởi tạo ảnh chính và thumbnails ---
   const mainImg         = document.getElementById('main-product-img');
   const thumbs          = document.querySelectorAll('.thumb-item');
   const thumbsContainer = document.querySelector('.thumbs-container');
 
-  // Hàm điều chỉnh chiều cao thumbnails cho bằng main image
   function adjustThumbsHeight() {
     if (thumbsContainer && mainImg) {
       thumbsContainer.style.height = mainImg.clientHeight + 'px';
     }
   }
-
-  // Khi main image load xong hoặc resize, call để set chiều cao thumb
   mainImg.addEventListener('load', adjustThumbsHeight);
   window.addEventListener('resize', adjustThumbsHeight);
   if (mainImg.complete) adjustThumbsHeight();
 
-  // Hàm chung để đổi ảnh chính + highlight thumb
   function swapThumb(thumb) {
     thumbs.forEach(t => t.classList.remove('selected'));
     thumb.classList.add('selected');
     mainImg.src = thumb.dataset.src;
     adjustThumbsHeight();
   }
-
-  // Gán cả click và hover (mouseenter) cho mỗi thumbnail
   thumbs.forEach(thumb => {
     thumb.addEventListener('click', () => swapThumb(thumb));
     thumb.addEventListener('mouseenter', () => swapThumb(thumb));
   });
 
-  // --- Logic chọn Option và cập nhật giá + ảnh ---
+  // --- Logic chọn Option và cập nhật giá ---
   const basePrice = {{ $product->base_price }};
   const totalEl   = document.getElementById('total-price');
   const items     = document.querySelectorAll('.option-item-show');
   const selected  = {};
 
-  const form    = document.getElementById('add-to-cart-form');
-  const errorEl = document.getElementById('option-error');
+  const form      = document.getElementById('add-to-cart-form');
+  const errorEl   = document.getElementById('option-error');
+  const buyNowBtn = document.getElementById('buy-now-btn');
 
-  // Bắt buộc phải chọn hết các group
   form.addEventListener('submit', e => {
-    const inputs  = form.querySelectorAll('input[id^="option-input-"]');
-    const missing = Array.from(inputs).some(i => !i.value);
+    const missing = Array
+      .from(form.querySelectorAll('input[id^="option-input-"]'))
+      .some(i => !i.value);
     if (missing) {
       e.preventDefault();
       errorEl.style.display = 'block';
     }
   });
 
-  // Tính lại tổng tiền
   function updateTotal() {
     const sumExtra = Object.values(selected).reduce((a, b) => a + b, 0);
     const total    = basePrice + sumExtra;
     totalEl.textContent = total.toLocaleString('vi-VN') + '₫';
   }
 
-  // Xử lý click mỗi tuỳ chọn
   items.forEach(el => {
     el.addEventListener('click', () => {
       const typeId = el.dataset.typeId;
       const valId  = el.dataset.valId;
       const extra  = parseInt(el.dataset.extra) || 0;
 
-      // Bỏ selected cũ trong cùng nhóm rồi set selected mới
+      // Chọn option
       document
         .querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`)
         .forEach(sib => sib.classList.remove('selected'));
       el.classList.add('selected');
 
-      // Gán giá trị vào hidden input và cập nhật giá
       selected[typeId] = extra;
       document.getElementById(`option-input-${typeId}`).value = valId;
-      updateTotal();
       errorEl.style.display = 'none';
-
-      // Chỉ đổi ảnh chính nếu thuộc nhóm đầu tiên
-      const groupEl = el.closest('.option-items-show');
-      if (groupEl && groupEl.dataset.firstGroup === '1') {
-        const imgUrl = el.dataset.img;
-        if (imgUrl) {
-          mainImg.src = imgUrl;
-          adjustThumbsHeight();
-        }
-      }
-
-      // Cập nhật lại giá nữa (nếu cần)
       updateTotal();
+
+      // Đổi ảnh nếu nhóm đầu
+      const groupEl = el.closest('.option-items-show');
+      if (groupEl && groupEl.dataset.firstGroup === '1' && el.dataset.img) {
+        mainImg.src = el.dataset.img;
+        adjustThumbsHeight();
+      }
     });
+  });
+
+  // --- Nút Mua Ngay ---
+  buyNowBtn.addEventListener('click', () => {
+    const missing = Array
+      .from(form.querySelectorAll('input[id^="option-input-"]'))
+      .some(i => !i.value);
+    if (missing) {
+      errorEl.style.display = 'block';
+      return;
+    }
+    form.action = "{{ route('checkout.buyNow', $product->id) }}";
+    form.submit();
   });
 });
 </script>

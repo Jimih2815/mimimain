@@ -19,6 +19,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Models\Product;
 
 //
 // AUTH CONTROLLERS
@@ -76,7 +77,12 @@ Route::prefix('checkout')->name('checkout.')->group(function () {
     Route::post ('confirm',         [CheckoutController::class,'confirm'])->name('confirm');
     Route::get  ('success/{order}', [CheckoutController::class,'success'])->name('success');
 });
+// Trang checkout hiển thị form thanh toán
+Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
 
+// Xử lý Buy Now: thêm sản phẩm vào session rồi chuyển ngay tới checkout
+Route::post('/checkout/buy-now/{product}', [CheckoutController::class, 'buyNow'])
+     ->name('checkout.buyNow');
 /*
 |--------------------------------------------------------------------------
 | 3. AUTH ROUTES

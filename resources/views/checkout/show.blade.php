@@ -12,10 +12,12 @@
       @php $grand = 0; @endphp
 
       @foreach($items as $item)
-        @php
-          $line   = $item['price'] * $item['quantity'];
-          $grand += $line;
-        @endphp
+      @php
+        // tính đúng: gồm extra_price nếu có
+        $unitPrice = $item['price'] + ($item['extra_price'] ?? 0);
+        $line      = $unitPrice * $item['quantity'];
+        $grand    += $line;
+      @endphp
 
         <div class="d-flex align-items-start mb-4">
           {{-- Ảnh sản phẩm --}}
@@ -37,8 +39,9 @@
                   x{{ $item['quantity'] }}
                 </span>
               </h5>
+              @php /* sử dụng đơn giá đã bao extra */ @endphp
               <span class="fw-bold">
-                {{ number_format($item['price'],0,',','.') }}₫
+                {{ number_format($unitPrice,0,',','.') }}₫
               </span>
             </div>
 
