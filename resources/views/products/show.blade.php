@@ -76,8 +76,29 @@
                    required>
           </div>
         @empty
-          <p class="text-warning">Chưa có tuỳ chọn.</p>
+          <!-- <p class="text-warning">Chưa có tuỳ chọn.</p> -->
         @endforelse
+
+          {{-- Thông báo lỗi chọn option --}}
+          <div id="option-error" class="text-danger small mb-2" style="display:none; font-size:1.3rem;">
+            !!!Vui lòng chọn các tuỳ chọn.
+          </div>
+          <div class="d-flex gap-2 nut-mua-ngay-cont">
+            <!-- Nút Thêm vào giỏ hàng -->
+            <button type="submit"
+                    class="btn-them-gio-trang-chi-tiet">
+              Thêm vào giỏ hàng
+            </button>
+
+            <!-- Nút Mua Ngay -->
+            <button type="button"
+                    id="buy-now-btn"
+                    class="btn-mua-ngay">
+              Mua ngay
+            </button>
+          </div>
+
+
           <h3 class="h3-cam-ket">MiMi Cam Kết</h3>
           <div class="product-guarantees d-flex flex-wrap gap-3 mt-4">
             <div class="guarantee-item d-flex align-items-center">
@@ -132,24 +153,7 @@
               <span>Giao hàng hỏa tốc Hà Nội trong vòng 2 giờ</span>
             </div>
           </div>
-          {{-- Thông báo lỗi chọn option --}}
-          <div id="option-error" class="text-danger small mb-2" style="display:none;">
-            Vui lòng chọn các tuỳ chọn.
-          </div>
-          <div class="d-flex gap-2">
-            <!-- Nút Thêm vào giỏ hàng -->
-            <button type="submit"
-                    class="btn-them-gio-trang-chi-tiet">
-              Thêm vào giỏ hàng
-            </button>
-
-            <!-- Nút Mua Ngay -->
-            <button type="button"
-                    id="buy-now-btn"
-                    class="btn-mua-ngay">
-              Mua ngay
-            </button>
-          </div>
+          
         </form>
       </div>
     </div>

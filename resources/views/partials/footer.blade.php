@@ -71,7 +71,7 @@
       <div class="col-md-4 mb-4">
         <h5>Địa chỉ</h5>
         <p>
-          Ngõ 2 Tân Mỹ, Mỹ Đình, Nam Từ Liêm, Hà Nội<br>
+          37 TT11 Foresa 1A, KĐT Foresa Xuân Phương, Nam Từ Liêm, Hà Nội<br>
           Liên hệ: <strong>0354.235.669</strong>
         </p>
       </div>
