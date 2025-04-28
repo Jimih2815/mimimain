@@ -20,6 +20,8 @@ class OptionValue extends Model
         'option_type_id',
         'value',
         'extra_price',
+        'option_img',
+        
     ];
 
     /**

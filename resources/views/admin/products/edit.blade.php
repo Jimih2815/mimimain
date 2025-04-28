@@ -116,24 +116,42 @@
 
           <div class="values-container">
             @foreach($vals as $j => $val)
-              <div class="d-flex align-items-end mb-2 value-block" data-val-index="{{ $j }}">
-                <div class="me-2 flex-fill">
-                  <label class="form-label">Giá trị</label>
-                  <input name="options[{{ $i }}][values][{{ $j }}][value]"
-                         class="form-control"
-                         value="{{ old("options.$i.values.$j.value", $val->value) }}"
-                         required>
-                </div>
-                <div class="me-2" style="width:120px">
-                  <label class="form-label">Extra Price</label>
-                  <input name="options[{{ $i }}][values][{{ $j }}][extra_price]"
-                         type="number" step="0.01"
-                         class="form-control"
-                         value="{{ old("options.$i.values.$j.extra_price", $val->extra_price) }}"
-                         required>
-                </div>
-                <button type="button" class="btn btn-sm btn-danger remove-value">×</button>
+            <div class="d-flex align-items-end mb-2 value-block" data-val-index="{{ $j }}">
+              <div class="me-2 flex-fill">
+                <label class="form-label">Giá trị</label>
+                <input name="options[{{ $i }}][values][{{ $j }}][value]"
+                      class="form-control"
+                      value="{{ old("options.$i.values.$j.value", $val->value) }}"
+                      required>
               </div>
+              <div class="me-2" style="width:120px">
+                <label class="form-label">Extra Price</label>
+                <input name="options[{{ $i }}][values][{{ $j }}][extra_price]"
+                      type="number" step="0.01"
+                      class="form-control"
+                      value="{{ old("options.$i.values.$j.extra_price", $val->extra_price) }}"
+                      required>
+              </div>
+              <div class="me-2" style="width:150px">
+                <label class="form-label">Ảnh Option</label>
+                <input type="file"
+                      name="options[{{ $i }}][values][{{ $j }}][option_img]"
+                      accept="image/*"
+                      class="form-control">
+                @if($val->option_img)
+                  <div class="mt-1">
+                    <img src="{{ asset('storage/'.$val->option_img) }}"
+                        width="80"
+                        alt="Option img">
+                    {{-- giữ lại đường dẫn cũ nếu không đổi --}}
+                    <input type="hidden"
+                          name="options[{{ $i }}][values][{{ $j }}][existing_img]"
+                          value="{{ $val->option_img }}">
+                  </div>
+                @endif
+              </div>
+              <button type="button" class="btn btn-sm btn-danger remove-value">×</button>
+            </div>
             @endforeach
           </div>
 
@@ -175,17 +193,27 @@
   </template>
 
   <template id="tpl-value">
-    <div class="d-flex align-items-end mb-2 value-block">
+    <div class="d-flex align-items-end mb-2 value-block" data-val-index="{j}">
       <div class="me-2 flex-fill">
         <label class="form-label">Giá trị</label>
         <input name="options[{i}][values][{j}][value]"
-               class="form-control" required>
+               class="form-control"
+               required>
       </div>
       <div class="me-2" style="width:120px">
         <label class="form-label">Extra Price</label>
         <input name="options[{i}][values][{j}][extra_price]"
-               type="number" step="0.01"
-               class="form-control" required>
+               type="number"
+               step="0.01"
+               class="form-control"
+               required>
+      </div>
+      <div class="me-2" style="width:150px">
+        <label class="form-label">Ảnh Option</label>
+        <input name="options[{i}][values][{j}][option_img]"
+               type="file"
+               accept="image/*"
+               class="form-control">
       </div>
       <button type="button" class="btn btn-sm btn-danger remove-value">×</button>
     </div>

@@ -109,16 +109,23 @@
       <div class="me-2 flex-fill">
         <label class="form-label">Giá trị</label>
         <input name="options[{i}][values][{j}][value]"
-               class="form-control"
-               required>
+              class="form-control"
+              required>
       </div>
       <div class="me-2" style="width:120px">
         <label class="form-label">Extra Price</label>
         <input name="options[{i}][values][{j}][extra_price]"
-               type="number"
-               step="0.01"
-               class="form-control"
-               required>
+              type="number"
+              step="0.01"
+              class="form-control"
+              required>
+      </div>
+      <div class="me-2" style="width:150px">
+        <label class="form-label">Ảnh Option</label>
+        <input name="options[{i}][values][{j}][option_img]"
+              type="file"
+              accept="image/*"
+              class="form-control">
       </div>
       <button type="button" class="btn btn-sm btn-danger remove-value">×</button>
     </div>
