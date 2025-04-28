@@ -59,9 +59,38 @@
         <hr>
       @endforeach
 
+      @php
+        // Tính phí ship:
+        $shipping = $grand > 199000
+                    ? 0
+                    : ($grand === 0 ? 0 : 20000);
+        // Tổng cộng = thành tiền + phí ship
+        $grandTotal = $grand + $shipping;
+      @endphp
+
       <div class="text-end">
-        <h5>
-          Tổng: <strong>{{ number_format($grand,0,',','.') }}₫</strong>
+        {{-- Thành Tiền --}}
+        <p class="d-flex justify-content-between">
+          <span>Thành Tiền</span>
+          <strong>{{ number_format($grand,0,',','.') }}₫</strong>
+        </p>
+
+        {{-- Phí Ship --}}
+        <p class="d-flex justify-content-between">
+          <span>Phí Ship</span>
+          <strong>
+            {{ $shipping === 0 && $grand > 0 
+               ? 'Free' 
+               : number_format($shipping,0,',','.') . '₫' 
+            }}
+          </strong>
+        </p>
+
+        <hr>
+
+        {{-- Tổng Cộng --}}
+        <h5 class="fw-bold">
+          Tổng Cộng: {{ number_format($grandTotal,0,',','.') }}₫
         </h5>
       </div>
     </div>
@@ -126,7 +155,7 @@
             Chủ TK: <strong>PHAN THAO NGUYEN</strong><br>
             Số TK: <strong>19032724004016</strong><br>
             Ngân hàng: <strong>Techcombank</strong><br>
-            Số tiền: <strong>{{ number_format($grand,0,',','.') }}₫</strong>
+            Số tiền: <strong>{{ number_format($grandTotal,0,',','.') }}₫</strong>
           </p>
           <p class="mb-3">
             Nội dung CK: <code>{{ $bankRef }}</code>

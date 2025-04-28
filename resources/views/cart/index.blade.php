@@ -108,29 +108,31 @@
 
           <div class="card">
             <div class="card-body">
-              {{-- Thành Tiền --}}
-              <p class="d-flex justify-content-between">
-                <span>Thành Tiền</span>
-                <span id="summary-subtotal">0₫</span>
-              </p>
+            {{-- Thành Tiền --}}
+            <p class="d-flex justify-content-between">
+              <span>Thành Tiền</span>
+              <span id="summary-subtotal">0₫</span>
+            </p>
 
-              {{-- Phí Ship --}}
-              <p class="d-flex justify-content-between">
-                  <span>Phí Ship</span>
-                  <span id="summary-shipping">0₫</span>
-                </p>
-                {{-- Luôn hiển thị tin khuyến mãi --}}
-                <p class="text-free-ship mb-2">
-                  (FreeShip với đơn hàng &gt; 199.000₫)
-              </p>
+            {{-- Phí Ship --}}
+            <p class="d-flex justify-content-between">
+              <span>Phí Ship</span>
+              <span id="summary-shipping">0₫</span>
+            </p>
 
-              <hr>
+            {{-- Tin FreeShip (ẩn mặc định) --}}
+            <p id="freeship-msg"
+              class="text-free-ship mb-2">
+              (FreeShip với đơn hàng &gt; 199.000₫)
+            </p>
 
-              {{-- Tổng Cộng --}}
-              <p class="d-flex justify-content-between fw-bold">
-                <span>Tổng Cộng</span>
-                <span id="summary-grandtotal">0₫</span>
-              </p>
+            <hr>
+
+            {{-- Tổng Cộng --}}
+            <p class="d-flex justify-content-between fw-bold">
+              <span>Tổng Cộng</span>
+              <span id="summary-grandtotal">0₫</span>
+            </p>
 
               {{-- Hộp cảnh báo ẩn --}}
               <p id="checkout-warning"
@@ -164,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const boxes       = document.querySelectorAll('input.rowCheck');
   const subtotalEl  = document.getElementById('summary-subtotal');
   const shipEl      = document.getElementById('summary-shipping');
-  const freeEl      = document.getElementById('freeship-msg');
   const grandEl     = document.getElementById('summary-grandtotal');
 
   function recalcSummary() {
@@ -183,26 +184,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const grand = subtotal + shipping;
 
     subtotalEl.textContent = subtotal.toLocaleString('vi-VN') + '₫';
-
-    if (shipping === 0 && subtotal > 199000) {
-      shipEl.textContent = 'Free';
-      freeEl.style.display = 'block';
-    } else {
-      shipEl.textContent = shipping.toLocaleString('vi-VN') + '₫';
-      freeEl.style.display = 'none';
-    }
-
-    grandEl.textContent = grand.toLocaleString('vi-VN') + '₫';
+    shipEl.textContent     = (shipping === 0 && subtotal > 0)
+                             ? 'Free'
+                             : shipping.toLocaleString('vi-VN') + '₫';
+    grandEl.textContent    = grand.toLocaleString('vi-VN') + '₫';
   }
 
   // Kiểm tra khi submit
   form.addEventListener('submit', e => {
     recalcSummary();
-    const anyChecked = Array.from(boxes).some(cb => cb.checked);
-    if (!anyChecked) {
+    if (!Array.from(boxes).some(cb => cb.checked)) {
       e.preventDefault();
       warnEl.style.display = 'block';
-      btn.style.border = '1px solid #3a9b98';
+      btn.style.border     = '1px solid #3a9b98';
     }
   });
 
@@ -211,12 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cb.addEventListener('change', () => {
       recalcSummary();
       warnEl.style.display = 'none';
-      btn.style.border = '';
+      btn.style.border     = '';
     })
   );
 
-  // Khởi tạo summary ban đầu
-  recalcSummary();
 });
 </script>
 @endpush
+
+
