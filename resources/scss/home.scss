@@ -23,3 +23,22 @@
   }
   
   
+
+.trang-home {
+  .section-images {
+    .flex-fill {
+      width: 50% !important;
+      a {
+        justify-content: center;
+        height: 100%;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        overflow: hidden;
+      }
+      img {
+        
+      }
+    }
+  }
+}

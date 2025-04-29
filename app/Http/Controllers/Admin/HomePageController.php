@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Traits\HandlesWebpUpload;
 use App\Models\HomePage;
 use App\Models\Collection;
 
 class HomePageController extends Controller
 {
+    use HandlesWebpUpload;
+
     /**
      * Hiển thị form chỉnh sửa Home Page
      */
@@ -30,9 +33,11 @@ class HomePageController extends Controller
             'intro_text'                          => 'nullable|string|max:255',
             'intro_button_text'                   => 'nullable|string|max:50',
             'intro_button_collection_id'          => 'nullable|exists:collections,id',
-            'collection_slider_title'              => 'nullable|string|max:255',
+
+            // — Tiêu đề slider (Collection & Product) —
+            'collection_slider_title'             => 'nullable|string|max:255',
             'product_slider_title'                => 'nullable|string|max:255',
-            
+
             // — Phần trước Banner (pre_banner) —
             'pre_banner_title'                    => 'nullable|string|max:100',
             'pre_banner_button_text'              => 'nullable|string|max:50',
@@ -49,7 +54,7 @@ class HomePageController extends Controller
             'about_text'                          => 'nullable|string',
 
             // — Nút trung tâm —
-            'show_button'                         => 'sometimes',
+            'show_button'                         => 'sometimes|boolean',
             'button_collection_id'                => 'nullable|exists:collections,id',
             'button_text'                         => 'nullable|string|max:50',
         ]);
@@ -57,17 +62,18 @@ class HomePageController extends Controller
         // 2) Xử lý checkbox cho nút trung tâm
         $data['show_button'] = $r->has('show_button');
 
-        // 3) Xử lý upload ảnh Banner nếu có
+        // 3) Xử lý upload & convert ảnh Banner sang WebP
         if ($r->hasFile('banner_image')) {
-            $data['banner_image'] = $r
-                ->file('banner_image')
-                ->store('home', 'public');
+            $data['banner_image'] = $this->uploadAsWebp(
+                $r->file('banner_image'),
+                'home'
+            );
         }
 
         // 4) Cập nhật vào DB
         HomePage::first()->update($data);
 
-        // 5) Chuyển về form với thông báo thành công
+        // 5) Trả về với thông báo thành công
         return redirect()
             ->route('admin.home.edit')
             ->with('success', 'Cập nhật Home Page thành công');

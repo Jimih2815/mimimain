@@ -34,7 +34,7 @@
   </div>
 
   {{-- 2) Container chính của nội dung --}}
-  <div class="container">
+  <div class="container trang-home">
     {{-- PHẦN KHÁM PHÁ THẾ GIỚI QUÀ TẶNG --}}
     {{-- 2) Phần Khởi Đầu --}}
     @if($home->intro_text)
