@@ -100,7 +100,9 @@
         </form>
 
         {{-- Yêu thích --}}
-        <a href="#" class="text-dark fs-5 position-relative" title="Yêu thích">
+        <a href="{{ route('favorites.index') }}"
+          class="text-dark fs-5 position-relative"
+          title="Yêu thích">
           <i class="bi bi-heart-fill text-danger"></i>
         </a>
 
