@@ -42,10 +42,11 @@
   
   
   .option-items-show {
-    display: flex;
+    width: 103%;
     flex-wrap: wrap;
     gap: 0.5rem;
-    justify-content: space-between;
+    justify-content: flex-start;
+    margin-right: -0.7rem;
   }
 
   /* Style cho mỗi option */
