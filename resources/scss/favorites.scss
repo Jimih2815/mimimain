@@ -10,20 +10,20 @@
       overflow: hidden;
     }
   
-    .card-body {
+    .card-body-favorite {
       position: relative;
       overflow: hidden; 
-  
+      padding: 0.7rem;
       .xem-chi-tiet {
         display: block;
-        transition: opacity 0.1s ease;
+        // transition: opacity 0.1s ease;
       }
   
       form {
         max-height: 0;
         overflow: hidden;
         opacity: 0;
-        transition: max-height 0.2s ease, opacity 0.2s ease;
+        // transition: max-height 0.2s ease, opacity 0.2s ease;
       }
   
       &:hover {
@@ -32,7 +32,7 @@
         }
   
         form {
-          max-height: 1000px;
+          max-height: 100%;
           opacity: 1;
         }
       }

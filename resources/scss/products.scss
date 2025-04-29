@@ -137,7 +137,7 @@
     margin-bottom: -8px;
     flex-wrap: wrap;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
     // overflow-x: auto;
     // overflow-y: hidden;
     // white-space: nowrap;
@@ -194,7 +194,7 @@
     cursor: pointer;
     white-space: nowrap;
     transition: background .2s, color .2s;
-    width: 30%;
+    width: 31.88%;
   }
   
   .option-item-show.selected {

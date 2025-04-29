@@ -14,19 +14,14 @@ class FavoriteController extends Controller
      */
     public function index(Request $request)
     {
-        // Lấy mảng ID sản phẩm yêu thích từ session
-        $favIds = session('favorites', []);
+        $favorites = session('favorites', []);
+        
+        // Thay vì paginate(), dùng get() để lấy hết
+        $products = \App\Models\Product::whereIn('id', $favorites)
+                    ->with('optionValues.type')  // nếu bạn cần eager-load
+                    ->get();
 
-        // Lấy sản phẩm với quan hệ optionValues→type, phân trang 12/item
-        $products = Product::with('optionValues.type')
-                           ->whereIn('id', $favIds)
-                           ->paginate(12);
-
-        // Lấy danh sách tất cả OptionType cùng values để view hiển thị tuỳ chọn
-        $optionTypes = OptionType::with('values')->get();
-
-        // Trả về view cùng 2 biến products và optionTypes
-        return view('favorites.index', compact('products', 'optionTypes'));
+        return view('favorites.index', compact('products'));
     }
 
     /**

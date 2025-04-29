@@ -19,7 +19,7 @@
             </a>
           @endif
 
-          <div class="card-body d-flex flex-column noi-chua-nut-favorites-2">
+          <div class="card-body-favorite d-flex flex-column noi-chua-nut-favorites-2">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title mb-0">
                 <a href="{{ route('products.show', $product->slug) }}"
