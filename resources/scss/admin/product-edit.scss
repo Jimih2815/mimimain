@@ -1,0 +1,144 @@
+.trang-sua-san-pham {
+    .nut-them-san-pham {
+        background-color: #d1a029;
+        color: white;
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        font-size: 1.2rem;
+    }
+    .nut-sua {
+        background-color: #3f9426;
+        padding: 0.3rem;
+        color: white;
+        &:hover {
+            background-color: #64bb49;
+        }
+
+    }
+
+    .nut-xoa {
+        background-color: #b83232;
+        padding: 0.3rem;
+        color: white;
+        &:hover {
+            background-color: #d15d5d;
+        }
+    }
+    .table {
+        th {
+            background-color: #4ab3af;
+            color: white;
+            text-align: center;
+            border: 2px solid #f4f6f8;
+        }
+    }
+    .nut-sua-xoa {
+        display: table-cell !important;    // khôi phục kiểu table-cell
+        vertical-align: middle !important; // căn giữa theo chiều dọc
+        padding: 0 !important;             // loại bỏ padding thừa
+      }
+      .td-action-flex {
+        display: grid;            // hoặc flex nếu thích
+    grid-auto-flow: column;   // xếp thành hàng ngang
+    align-items: center;      // căn giữa theo dọc
+    justify-content: center;  // căn giữa theo ngang
+    gap: 0.5rem;              // khoảng cách giữa nút
+    height: 100%;             // chiếm full chiều cao của <td>
+      }
+
+      .pagination {
+        .page-item {
+          &.active .page-link {
+            background-color: #4ab3af;
+            color: #fff;
+            border-color: #4ab3af;
+          }
+          .page-link {
+            color: #4ab3af;
+            padding: 0.5rem 0.75rem;
+          }
+          &.disabled .page-link {
+            cursor: default;
+            color: #666;
+          }
+        }
+      }
+}
+
+.sua-chi-tiet-san-pham {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    .tieu-de {
+        color: #b83232;
+        font-size: 3rem;
+    }
+    
+    .ten-va-link {
+        display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+    }
+    .ten-va-link-con {
+        width: 32%;
+    }
+
+    .nut-them {
+        background-color: #3f9426;
+        color: white;
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        &:hover {
+            background-color: #74c75b;
+
+        }
+    }
+    .nut-cap-nhat {
+        background-color: #d1a029;
+        color: white;
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+            &:hover {
+                background-color: #dfbb69;
+
+            }
+    }
+
+    .btn-danger {
+        font-size: 1rem !important;
+        background-color: #b83232 !important;
+        font-weight: 800 !important;
+    }
+    .nut-them-phan-loai {
+        background-color: #4ab3af;
+        color: white;
+        font-size: 1rem;
+        border-color: #4ab3af;
+        border-radius: 50px !important;
+        &:hover {
+            background-color: #93e2e0;
+
+        }
+    }
+    label {
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+    .img-cont {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+}

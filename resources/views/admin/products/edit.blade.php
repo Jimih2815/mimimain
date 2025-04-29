@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container">
-  <h1 class="mb-4">Sửa sản phẩm #{{ $product->id }}</h1>
-  @if(session('success'))
+<div class="sua-chi-tiet-san-pham">
+  <h1 class="mb-4 tieu-de">Sửa sản phẩm #{{ $product->id }}</h1>
+  <!-- @if(session('success'))
   <div class="alert alert-success">
     {{ session('success') }}
   </div>
-  @endif
+  @endif -->
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul class="mb-0">
@@ -25,41 +25,46 @@
     @method('PUT')
 
     {{-- Thông tin cơ bản --}}
-    <div class="mb-3">
-      <label class="form-label">Name</label>
-      <input name="name"
-             class="form-control"
-             value="{{ old('name', $product->name) }}"
-             required>
+    <div class="ten-va-link">
+      <div class="mb-3  ten-va-link-con">
+        <label class="form-label">Tên Sản Phẩm</label>
+        <input name="name"
+              class="form-control"
+              value="{{ old('name', $product->name) }}"
+              required>
+      </div>
+
+      <div class="mb-3  ten-va-link-con">
+        <label class="form-label">Tạo Link</label>
+        <input name="slug"
+              class="form-control"
+              value="{{ old('slug', $product->slug) }}"
+              required>
+      </div>
+
+      <div class="mb-3 ten-va-link-con">
+        <label class="form-label">Base Price</label>
+        <input
+          name="base_price"
+          type="number"
+          class="form-control"
+          value="{{ old('base_price', $product->base_price) }}"
+          step="any"    {{-- cho phép nhập bất kỳ số thập phân hay nguyên nào --}}
+          min="0"        {{-- ngăn nhập số âm nếu bạn cần --}}
+          required
+        >
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Slug</label>
-      <input name="slug"
-             class="form-control"
-             value="{{ old('slug', $product->slug) }}"
-             required>
-    </div>
 
     <div class="mb-3">
-      <label class="form-label">Description</label>
+      <label class="form-label">Mô Tả</label>
       <textarea name="description"
                 class="form-control"
                 rows="3">{{ old('description', $product->description) }}</textarea>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Base Price</label>
-      <input
-        name="base_price"
-        type="number"
-        class="form-control"
-        value="{{ old('base_price', $product->base_price) }}"
-        step="any"    {{-- cho phép nhập bất kỳ số thập phân hay nguyên nào --}}
-        min="0"        {{-- ngăn nhập số âm nếu bạn cần --}}
-        required
-      >
-    </div>
+    
 
     <hr>
 
@@ -101,7 +106,7 @@
     </div>
 
     <hr>
-    <h4>Options</h4>
+    <h4>Các Phân Loại</h4>
     <div id="options-container">
       @php
         $groups = $product->optionValues->groupBy(fn($v)=> $v->type->id);
@@ -115,7 +120,7 @@
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Tên Option</label>
+            <label class="form-label">Tên Phân loại</label>
             <input name="options[{{ $i }}][name]"
                    class="form-control"
                    value="{{ old("options.$i.name", $vals->first()->type->name) }}"
@@ -123,8 +128,31 @@
           </div>
 
           <div class="values-container">
-            @foreach($vals as $j => $val)
+          @foreach($vals as $j => $val)
             <div class="d-flex align-items-end mb-2 value-block" data-val-index="{{ $j }}">
+              {{-- 1) Cột preview --}}
+              <div class="me-2 text-center" style="width:100px">
+                @if($val->option_img)
+                  <div class="img-cont">
+                    <img src="{{ asset('storage/'.$val->option_img) }}" alt="Option img">
+                  </div>
+                  {{-- giữ lại đường dẫn cũ --}}
+                  <input type="hidden"
+                        name="options[{{ $i }}][values][{{ $j }}][existing_img]"
+                        value="{{ $val->option_img }}">
+                @endif
+              </div>
+
+              {{-- 2) Cột input file --}}
+              <div class="me-2" style="width:150px">
+                <label class="form-label">Ảnh</label>
+                <input type="file"
+                      name="options[{{ $i }}][values][{{ $j }}][option_img]"
+                      accept="image/*"
+                      class="form-control">
+              </div>
+
+              {{-- 3) Cột Giá trị --}}
               <div class="me-2 flex-fill">
                 <label class="form-label">Giá trị</label>
                 <input name="options[{{ $i }}][values][{{ $j }}][value]"
@@ -132,6 +160,8 @@
                       value="{{ old("options.$i.values.$j.value", $val->value) }}"
                       required>
               </div>
+
+              {{-- 4) Cột Extra Price --}}
               <div class="me-2" style="width:120px">
                 <label class="form-label">Extra Price</label>
                 <input name="options[{{ $i }}][values][{{ $j }}][extra_price]"
@@ -140,31 +170,16 @@
                       value="{{ old("options.$i.values.$j.extra_price", $val->extra_price) }}"
                       required>
               </div>
-              <div class="me-2" style="width:150px">
-                <label class="form-label">Ảnh Option</label>
-                <input type="file"
-                      name="options[{{ $i }}][values][{{ $j }}][option_img]"
-                      accept="image/*"
-                      class="form-control">
-                @if($val->option_img)
-                  <div class="mt-1">
-                    <img src="{{ asset('storage/'.$val->option_img) }}"
-                        width="80"
-                        alt="Option img">
-                    {{-- giữ lại đường dẫn cũ nếu không đổi --}}
-                    <input type="hidden"
-                          name="options[{{ $i }}][values][{{ $j }}][existing_img]"
-                          value="{{ $val->option_img }}">
-                  </div>
-                @endif
-              </div>
+
+              {{-- 5) Nút xóa --}}
               <button type="button" class="btn btn-sm btn-danger remove-value">×</button>
             </div>
-            @endforeach
+          @endforeach
+
           </div>
 
           <button type="button"
-                  class="btn btn-sm btn-info add-value"
+                  class="btn btn-sm nut-them-phan-loai add-value"
                   data-opt-index="{{ $i }}">
             + Thêm Giá trị
           </button>
@@ -173,11 +188,11 @@
     </div>
     <button type="button"
             id="add-option-btn"
-            class="btn btn-success btn-sm mb-4">
+            class="btn btn-sm nut-them mb-5 me-3">
       + Thêm Option
     </button>
 
-    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <button type="submit" class="btn mb-5 nut-cap-nhat">Cập nhật</button>
   </form>
 
   {{-- Templates ẩn --}}
@@ -188,14 +203,14 @@
         <button type="button" class="btn btn-sm btn-danger remove-option">–</button>
       </div>
       <div class="mb-2">
-        <label class="form-label">Tên Option</label>
+        <label class="form-label">Tên Phân Loại</label>
         <input name="options[{i}][name]" class="form-control" required>
       </div>
       <div class="values-container"></div>
       <button type="button"
-              class="btn btn-sm btn-info add-value"
+              class="btn btn-sm add-value nut-them-phan-loai"
               data-opt-index="{i}">
-        + Thêm Giá trị
+        + Thêm Phân Loại
       </button>
     </div>
   </template>
@@ -203,7 +218,7 @@
   <template id="tpl-value">
     <div class="d-flex align-items-end mb-2 value-block" data-val-index="{j}">
       <div class="me-2 flex-fill">
-        <label class="form-label">Giá trị</label>
+        <label class="form-label">Thuộc tính Phân Loại</label>
         <input name="options[{i}][values][{j}][value]"
                class="form-control"
                required>

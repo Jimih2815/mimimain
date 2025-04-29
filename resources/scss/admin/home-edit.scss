@@ -128,3 +128,20 @@
     }
   }
 }
+
+
+// css cho trang hasd board
+
+.admin-dashboard {
+  width: 70% !important;
+  margin-left: auto;
+  margin-right: auto;
+
+  .danh-muc-cont {
+    gap: 1rem;
+    .danh-sach {
+      width: 32.1%;
+    }
+  }
+
+}
