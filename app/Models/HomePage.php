@@ -14,9 +14,15 @@ class HomePage extends Model
         'show_button',
         'button_collection_id',
         'button_text',
-        'pre_banner_title',                  // ← mới
-        'pre_banner_button_text',            // ← mới
-        'pre_banner_button_collection_id',   // ← mới
+        'pre_banner_title',                  
+        'pre_banner_button_text',            
+        'pre_banner_button_collection_id',  
+        'collection_section_title',
+        'collection_section_button_text',
+        'collection_section_button_collection_id',
+        'intro_text',
+        'intro_button_text',
+        'intro_button_collection_id',
     ];
 
     // Quan hệ nút chính giữa banner
@@ -29,5 +35,15 @@ class HomePage extends Model
     public function preBannerCollection()
     {
         return $this->belongsTo(Collection::class, 'pre_banner_button_collection_id');
+    }
+    // Quan hệ cho nút bộ sưu tập
+    public function collectionSectionCollection()
+    {
+        return $this->belongsTo(Collection::class, 'collection_section_button_collection_id');
+    }
+    // Quan hệ cho nút Khởi Đầu
+    public function introButtonCollection()
+    {
+        return $this->belongsTo(Collection::class, 'intro_button_collection_id');
     }
 }

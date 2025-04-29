@@ -262,6 +262,9 @@ body {
   border-radius: 50px;
   background-color: #b83232;
   border: 1px solid #b83232;
+  text-decoration: none;
+  color: white;
+  font-size: 1.3rem;
   &:hover {
     border: 1px solid #b83232;
     background-color: lighten( #b83232,5%);

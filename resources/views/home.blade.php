@@ -10,7 +10,7 @@
         <h5>{{ $home->pre_banner_title }}</h5>
         @if($home->preBannerCollection)
           <a href="{{ route('collections.show',$home->preBannerCollection->slug) }}"
-            class="btn btn-primary mt-2 btn-trang-chu-truoc-banner">
+            class="btn mt-2 btn-trang-chu-truoc-banner">
             {{ $home->pre_banner_button_text }}
           </a>
         @endif
@@ -35,15 +35,25 @@
 
   {{-- 2) Container chính của nội dung --}}
   <div class="container">
-    {{-- 2.1) Đoạn text khởi đầu --}}
-    <p class="lead text-center mb-2">“Khám phá thế giới quà tặng đầy màu sắc!”</p>
-    {{-- 2.2) Link detail --}}
-    <div class="text-center mb-5">
+    {{-- PHẦN KHÁM PHÁ THẾ GIỚI QUÀ TẶNG --}}
+    {{-- 2) Phần Khởi Đầu --}}
+    @if($home->intro_text)
+      <div class="lead text-center mb-4 mt-4">
+        <p class="lead text-center mb-2">{{ $home->intro_text }}</p>
+        @if($home->introButtonCollection)
+          <a href="{{ route('collections.show', $home->introButtonCollection->slug) }}"
+            class="nut-xem-chi-tiet-trang-chu fw-semibold">
+            {{ $home->intro_button_text }}
+          </a>
+        @endif
+      </div>
+    @endif
+    <!-- <div class="text-center mb-5">
       <a href="#" class="nut-xem-chi-tiet-trang-chu fw-semibold">Xem chi tiết →</a>
-    </div>
+    </div> -->
 
     {{-- 3) Hai ảnh chữ nhật cạnh nhau --}}
-    <div class="row g-0 mb-5">
+    <!-- <div class="row g-0 mb-5">
       <div class="col-6 pe-1">
         <img src="https://hoanghamobile.com/.../anh-mau-xanh-duong-42.jpg"
              class="img-fluid w-100" alt="">
@@ -52,7 +62,7 @@
         <img src="https://hoanghamobile.com/.../anh-mau-xanh-duong-42.jpg"
              class="img-fluid w-100" alt="">
       </div>
-    </div>
+    </div> -->
 
     {{-- 4) Collection Slider --}}
 <div class="slider-full-width mb-5">
@@ -84,7 +94,7 @@
               >
             </a>
           </div>
-          <p class="mt-2 text-center fw-semibold">{{ $s->text }}</p>
+          <p class="mt-4 text-center fw-semibold">{{ $s->text }}</p>
         </div>
       @endforeach
     </div>
@@ -94,35 +104,18 @@
 
 
 
-    {{-- 5) H2 + nút “Shop Now” (dynamic widget vùng nut-bosuutap) --}}
-    <div class="text-center mb-5">
-      <h2 class="mb-3">Khám phá bộ sưu tập của chúng tôi</h2>
-      @php $btn = widget_for('nut-bosuutap'); @endphp
-
-      @if($btn && $btn->type === 'button')
-        <a href="{{ $btn->collection
-                      ? route('collections.show', $btn->collection->slug)
-                      : '#' }}"
-           class="btn btn-lg btn-primary nut-bosuutap">
-          {{ $btn->button_text }}
-        </a>
-      @elseif($btn && $btn->type === 'banner')
-        <a href="{{ $btn->collection
-                      ? route('collections.show', $btn->collection->slug)
-                      : '#' }}"
-           class="nut-bosuutap">
-          <img src="{{ asset($btn->image) }}"
-               alt="{{ $btn->name }}"
-               class="img-fluid rounded">
-        </a>
-      @elseif($btn && $btn->type === 'html')
-        {!! $btn->html !!}
-      @else
-        <a href="#" class="btn btn-lg btn-primary nut-bosuutap">
-          Shop Now
-        </a>
-      @endif
-    </div>
+    {{-- PHẦN KHÁM PHÁ BỘ SƯU TẬP --}}
+    @if($home->collection_section_title)
+      <div class="text-center mb-5">
+        <h2 class="pb-4 mb-0 mt-5">{{ $home->collection_section_title }}</h2>
+        @if($home->collectionSectionCollection)
+          <a href="{{ route('collections.show', $home->collectionSectionCollection->slug) }}"
+            class="nut-bosuutap fw-semibold">
+            {{ $home->collection_section_button_text }}
+          </a>
+        @endif
+      </div>
+    @endif
 
     {{-- 6) Hai ảnh Section --}}
     <div class="section-images mb-5 d-flex gap-3">
@@ -166,7 +159,7 @@
                    class="w-100 h-100 object-fit-cover object-position-center">
             </div>
           </a>
-          <p class="mt-2 text-center fw-semibold">{{ $ps->product->name }}</p>
+          <p class="mt-3 text-center fw-semibold">{{ $ps->product->name }}</p>
           <p class="text-center">
             {{ number_format($ps->product->base_price,0,',','.') }}₫
           </p>
