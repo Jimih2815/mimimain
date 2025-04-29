@@ -204,10 +204,10 @@
 
     <!-- THÊM PREVIEW VÀ CHỈNH SỬA admin/home-section-images VÀO ĐÂY -->
     <hr>
-    <h5 class="mt-4">Preview Home Section Images</h5>
-    <div class="d-flex flex-wrap gap-3 mb-4">
+    <h1 class="margintop6rem mb-3">Preview và sửa Banner 2 ảnh</h1>
+    <div class="d-flex mb-4 banner-2-cont">
       @foreach($homeSectionImages->take(2) as $sectionImage)
-        <div class="card" style="width: 200px;">
+        <div class="card">
           <img src="{{ asset('storage/'.$sectionImage->image) }}"
                class="card-img-top"
                alt="Home Section Image">

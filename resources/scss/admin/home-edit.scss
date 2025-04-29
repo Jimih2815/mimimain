@@ -115,4 +115,16 @@
     hr {
         color: #4ab3af;
     }
+
+
+  .banner-2-cont {
+    .card {
+      width: 50%;
+      display: flex;
+      overflow: hidden;
+      justify-content: center;
+      aspect-ratio: 4 / 2.5;
+      align-items: center;
+    }
+  }
 }
