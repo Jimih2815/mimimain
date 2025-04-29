@@ -311,3 +311,51 @@ body {
 .py-4 {
   padding-top: 2.5rem !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// test
+/* resources/scss/_options.scss */
+
+/* Container cho các tuỳ chọn (nếu bạn cần) */
+.option-items-show {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Style cho mỗi option */
+.option-item-show {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  cursor: pointer;           /* cho con trỏ tay */
+  user-select: none;         /* không bôi đen được text */
+  transition: background 0.2s, border-color 0.2s;
+}
+
+/* Hover để biết đang “chạm” vào */
+.option-item-show:hover {
+  background-color: #ffe4e6; /* hồng nhạt */
+  border-color:   #ff1493;
+}
+
+/* Khi đã chọn */
+.option-item-show.selected {
+  background-color: #ff1493;
+  color:            #fff;
+  border-color:     #ff1493;
+}
