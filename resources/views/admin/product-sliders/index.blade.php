@@ -3,6 +3,28 @@
 @section('content')
 <div class="container-fluid">
   <h1 class="mb-4">Slider Sản phẩm</h1>
+  
+  {{-- Form chỉnh Tiêu đề Slider Sản phẩm --}}
+  <form action="{{ route('admin.home.update') }}" method="POST" class="mb-4">
+    @csrf
+    <div class="row g-2 align-items-end">
+      <div class="col">
+        <label class="form-label">Tiêu đề Slider Sản phẩm</label>
+        <input type="text"
+               name="product_slider_title"
+               class="form-control"
+               value="{{ old('product_slider_title', $home->product_slider_title) }}">
+        @error('product_slider_title')
+          <div class="text-danger">{{ $message }}</div>
+        @enderror
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary">Lưu tiêu đề</button>
+      </div>
+    </div>
+  </form>
+  {{-- /Form --}}
+
   <a href="{{ route('admin.product-sliders.create') }}" class="btn btn-primary mb-3">
     + Thêm slider
   </a>

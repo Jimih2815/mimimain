@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProductSlider;
 use App\Models\Product;
+use App\Models\HomePage;   // ← thêm import
 
 class ProductSliderController extends Controller
 {
-    // 1) INDEX: hiển thị danh sách slider
+    // 1) INDEX: hiển thị danh sách slider và tiêu đề từ HomePage
     public function index()
     {
         // load hết sliders kèm product để show tên và link
@@ -17,7 +18,10 @@ class ProductSliderController extends Controller
                       ->orderBy('sort_order')
                       ->get();
 
-        return view('admin.product-sliders.index', compact('sliders'));
+        // lấy HomePage để truy xuất product_slider_title
+        $home = HomePage::first();
+
+        return view('admin.product-sliders.index', compact('sliders', 'home'));
     }
 
     // 2) CREATE: form thêm mới
@@ -37,10 +41,10 @@ class ProductSliderController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('sliders','public');
+            $path = $request->file('image')->store('sliders', 'public');
         } else {
             $product = Product::findOrFail($data['product_id']);
-            $path = $product->img; 
+            $path = $product->img;
         }
 
         ProductSlider::create([
@@ -72,7 +76,7 @@ class ProductSliderController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('sliders','public');
+            $path = $request->file('image')->store('sliders', 'public');
         } else {
             $path = $product_slider->image;
         }
