@@ -51,11 +51,12 @@
       <nav class="position-absolute start-50 translate-middle-x">
         <ul class="nav">
           @foreach($menuSections as $section)
+
+
             <li class="nav-item dropdown position-static">
               <a class="nav-link px-3 fw-semibold text-dark"
-                 href="#"
-                 id="sec-{{ $section->id }}"
-                 data-bs-toggle="dropdown">
+                href="#"
+                id="sec-{{ $section->id }}">
                 {{ $section->name }}
               </a>
               <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
