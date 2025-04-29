@@ -5,15 +5,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CollectionSlider;
 use App\Models\Collection;
+use App\Models\HomePage;
+
 
 class CollectionSliderController extends Controller
 {
     public function index()
     {
-        $items = CollectionSlider::with('collection')
-                  ->orderBy('sort_order')
-                  ->get();
-        return view('admin.collection-sliders.index', compact('items'));
+      $items = CollectionSlider::with('collection')
+        ->orderBy('sort_order')
+        ->get();
+      $home  = HomePage::first();                   
+      return view('admin.collection-sliders.index', compact('items','home'));
     }
 
     public function create()

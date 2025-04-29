@@ -30,7 +30,7 @@ class HomePageController extends Controller
             'intro_text'                          => 'nullable|string|max:255',
             'intro_button_text'                   => 'nullable|string|max:50',
             'intro_button_collection_id'          => 'nullable|exists:collections,id',
-
+            'collection_slider_title'              => 'nullable|string|max:255',
             // — Phần trước Banner (pre_banner) —
             'pre_banner_title'                    => 'nullable|string|max:100',
             'pre_banner_button_text'              => 'nullable|string|max:50',

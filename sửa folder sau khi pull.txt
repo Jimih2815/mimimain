@@ -1,0 +1,5 @@
+Bước 1: Mở terminal quyền admin
+Bước 2: cd C:\xampp\htdocs\mimimain\public
+Bước 3: rmdir storage /S /Q
+Bước 4: mklink /J storage ..\storage\app\public
+

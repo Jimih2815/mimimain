@@ -3,6 +3,26 @@
 @section('content')
 <div class="container-fluid">
   <h1 class="mb-4">Collection Slider</h1>
+  {{-- Form chỉnh Tiêu đề Slider Bộ sưu tập --}}
+  <form action="{{ route('admin.home.update') }}" method="POST" class="mb-4">
+    @csrf
+    <div class="row g-2 align-items-end">
+      <div class="col">
+        <label class="form-label">Tiêu đề Slider Bộ sưu tập</label>
+        <input type="text"
+               name="collection_slider_title"
+               class="form-control"
+               value="{{ old('collection_slider_title', $home->collection_slider_title) }}">
+        @error('collection_slider_title')
+          <div class="text-danger">{{ $message }}</div>
+        @enderror
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary">Lưu tiêu đề</button>
+      </div>
+    </div>
+  </form>
+  {{-- /Form chỉnh Tiêu đề --}}
   <a href="{{ route('admin.collection-sliders.create') }}"
      class="btn btn-primary mb-3">+ Thêm Item</a>
 
