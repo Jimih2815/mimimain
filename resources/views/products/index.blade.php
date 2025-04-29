@@ -24,7 +24,18 @@
           @endif
 
           <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ $product->name }}</h5>
+            <h5 class="card-title d-flex justify-content-between align-items-center noi-chua-nut-favorites">
+              <a href="{{ route('products.show', $product->slug) }}"
+                 class="text-decoration-none text-dark">
+                {{ $product->name }}
+              </a>
+              <button type="button"
+                      class="btn-favorite"
+                      data-id="{{ $product->id }}">
+                <i class="{{ in_array($product->id, session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
+              </button>
+            </h5>
+
             <p class="card-text text-muted mb-2">
               Giá: <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
             </p>
@@ -43,6 +54,16 @@
                 </div>
               </div>
             @endforeach
+
+            <form action="{{ route('cart.add', $product->id) }}"
+                  method="POST"
+                  class="mt-auto">
+              @csrf
+              <!-- <button type="submit"
+                      class="btn btn-primary w-100">
+                Thêm vào giỏ hàng
+              </button> -->
+            </form>
           </div>
         </div>
       </div>
@@ -95,3 +116,34 @@
   @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+  document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      fetch(`/favorites/toggle/${id}`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf,
+          'Accept':       'application/json',
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(res => res.json())
+      .then(json => {
+        const icon = btn.querySelector('i.fa-heart');
+        if (json.added) {
+          icon.classList.replace('far', 'fas');
+        } else {
+          icon.classList.replace('fas', 'far');
+        }
+      });
+    });
+  });
+});
+</script>
+@endpush

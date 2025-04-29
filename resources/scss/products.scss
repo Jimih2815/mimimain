@@ -337,3 +337,32 @@
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// CSS Riêng cho nút Favorties cả trang Products và Collections
+.noi-chua-nut-favorites {
+  position: relative;
+
+  .btn-favorite {
+    border: 0px solid red;
+    background-color: initial;
+    position: absolute;
+    right: 0;
+    padding: 0;
+    font-size: 2rem;
+    color: #b83232;
+  }
+}

@@ -20,6 +20,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Models\Product;
+use App\Http\Controllers\FavoriteController;
 
 //
 // AUTH CONTROLLERS
@@ -83,6 +84,12 @@ Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.sho
 // Xử lý Buy Now: thêm sản phẩm vào session rồi chuyển ngay tới checkout
 Route::post('/checkout/buy-now/{product}', [CheckoutController::class, 'buyNow'])
      ->name('checkout.buyNow');
+
+Route::get('/favorites', [FavoriteController::class, 'index'])
+     ->name('favorites.index');
+// toggle favorite qua AJAX
+Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])
+     ->name('favorites.toggle');
 /*
 |--------------------------------------------------------------------------
 | 3. AUTH ROUTES
