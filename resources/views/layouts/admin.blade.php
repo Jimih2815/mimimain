@@ -7,17 +7,17 @@
   
   <title>Admin Dashboard – MimiMain</title>
 
-  {{-- Bootstrap CSS CDN (hoặc bạn đổi thành link tới public/css/app.css) --}}
+  {{-- Bootstrap CSS CDN --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   {{-- Bootstrap Icons --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  {{-- 1) Google Font: Baloo 2 --}}
+  {{-- Google Font: Baloo 2 --}}
   <link 
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
     rel="stylesheet"
   >
+  {{-- Vite: biên dịch SCSS + JS --}}
   @vite('resources/scss/app.scss')
-
 </head>
 <body class="bg-light">
 
@@ -40,8 +40,6 @@
               <i class="bi bi-speedometer2"></i> Bảng điều khiển
             </a>
           </li>
-
-          
           {{-- Collections --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.collections.index') }}">
@@ -53,7 +51,6 @@
               <i class="bi bi-easel"></i> Collection Sliders
             </a>
           </li>
-
           {{-- Home Page --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.home.edit') }}">
@@ -65,14 +62,12 @@
               <i class="bi bi-image-alt"></i> Home Section Images
             </a>
           </li>
-
           {{-- Mega-menu --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.menu.index') }}">
               <i class="bi bi-menu-button-wide"></i> Menu Sections
             </a>
           </li>
-
           {{-- Sản phẩm --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.products.index') }}">
@@ -84,21 +79,18 @@
               <i class="bi bi-sliders"></i> Product Sliders
             </a>
           </li>
-
           {{-- Đơn hàng --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.orders.index') }}">
               <i class="bi bi-receipt"></i> Đơn hàng
             </a>
           </li>
-
           {{-- Người dùng --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.users.index') }}">
               <i class="bi bi-people"></i> Người dùng
             </a>
           </li>
-
           {{-- Widgets --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.widgets.index') }}">
@@ -112,7 +104,7 @@
           </li>
         </ul>
 
-        {{-- Các link phụ (xem site, logout) --}}
+        {{-- Xem site & Logout --}}
         <ul class="navbar-nav">
           <li class="nav-item me-3">
             <a class="nav-link" href="{{ route('home') }}" target="_blank">
@@ -133,20 +125,46 @@
     </div>
   </nav>
 
-  <div class="container-fluid">
-    {{-- Flash message --}}
-    @if(session('success'))
-      <div class="alert alert-success">
-        {{ session('success') }}
+  {{-- Success Modal áp dụng cho tất cả trang admin --}}
+  @if(session('success'))
+    <div class="modal fade" id="globalSuccessModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="background: transparent;">
+          <div class="modal-body text-center p-4"
+               style="background: #4ab3af; color: #fff; border-radius: .5rem;">
+            <h5 class="mb-0">{{ session('success') }}</h5>
+          </div>
+        </div>
       </div>
-    @endif
+    </div>
+  @endif
 
-    {{-- Nội dung page --}}
+  <div class="container-fluid">
+    {{-- Nội dung chính của từng trang admin --}}
     @yield('content')
   </div>
 
   {{-- Bootstrap JS --}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  {{-- Script tự động show & hide popup thành công --}}
+  @if(session('success'))
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var modalEl = document.getElementById('globalSuccessModal');
+      if (!modalEl) return;
+      var bsModal = new bootstrap.Modal(modalEl, {
+        backdrop: false,
+        keyboard: false
+      });
+      bsModal.show();
+      setTimeout(function() {
+        bsModal.hide();
+      }, 1000);
+    });
+  </script>
+  @endif
+
   @stack('scripts')
 </body>
 </html>
