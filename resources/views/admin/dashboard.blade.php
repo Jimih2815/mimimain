@@ -6,26 +6,7 @@
   <h1 class="mb-4">🚀 Admin Dashboard</h1>
 
   <div class="row g-3">
-    {{-- Danh mục --}}
-    <div class="col-md-3">
-      <a href="{{ route('admin.categories.index') }}" class="card h-100 text-center text-decoration-none">
-        <div class="card-body">
-          <i class="bi bi-folder2-open fs-1"></i>
-          <h5 class="mt-2">Danh mục</h5>
-        </div>
-      </a>
-    </div>
-
-    {{-- Nhóm danh mục --}}
-    <div class="col-md-3">
-      <a href="{{ route('admin.categories.index') }}" class="card h-100 text-center text-decoration-none">
-        <div class="card-body">
-          <i class="bi bi-menu-button-wide fs-1"></i>
-          <h5 class="mt-2">Nhóm danh mục</h5>
-        </div>
-      </a>
-    </div>
-
+    
     {{-- Collections --}}
     <div class="col-md-3">
       <a href="{{ route('admin.collections.index') }}" class="card h-100 text-center text-decoration-none">

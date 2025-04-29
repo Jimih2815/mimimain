@@ -165,16 +165,7 @@ Route::prefix('admin')
     // 4.4 Quản lý sản phẩm
     Route::resource('products', AdminProductController::class);
 
-    // 4.5 Quản lý danh mục & nhóm dropdown
-    Route::resource('categories', AdminCategoryController::class)
-         ->except(['show']);
-    Route::post   ('categories/{category}/groups',       [CategoryGroupController::class,'store'])->name('categories.groups.store');
-    Route::put    ('categories/groups/{group}',          [CategoryGroupController::class,'update'])->name('categories.groups.update');
-    Route::delete ('categories/groups/{group}',          [CategoryGroupController::class,'destroy'])->name('categories.groups.destroy');
-    Route::post   ('categories/groups/{group}/product',  [CategoryGroupController::class,'attachProduct'])->name('categories.groups.product.attach');
-    Route::delete ('categories/groups/{group}/product/{id}', [CategoryGroupController::class,'detachProduct'])->name('categories.groups.product.detach');
-
-    // 4.6 Quản lý người dùng
+        // 4.6 Quản lý người dùng
     Route::controller(AdminUserController::class)->group(function () {
         Route::get   ('users',                      'index')->name('users.index');
         Route::get   ('users/{user}',               'show')->name('users.show');

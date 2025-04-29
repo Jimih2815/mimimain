@@ -33,18 +33,7 @@
             </a>
           </li>
 
-          {{-- Catalog --}}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.categories.index') }}">
-              <i class="bi bi-folder2-open"></i> Danh mục
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.categories.index') }}">
-              <i class="bi bi-menu-button-wide"></i> Nhóm danh mục
-            </a>
-          </li>
-
+          
           {{-- Collections --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.collections.index') }}">
