@@ -1,26 +1,26 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-  <h1 class="mb-4">Quản lý Home Page</h1>
+<div class="container-fluid trang-edit-home">
+ 
 
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
+  <h1 class="mb-4 tieu-de">Quản lý Trang Chủ</h1>
+
+ 
 
   <form action="{{ route('admin.home.update') }}"
         method="POST"
         enctype="multipart/form-data">
     @csrf
-
+    <button class="btn btn-luu">Lưu thay đổi</button>
     {{-- A) Phần trước Banner --}}
-    <h5 class="mt-4">Phần trước Banner</h5>
+    <h1 class="mt-4">Phần trước Banner</h1>
     <div class="mb-3">
       <label class="form-label">Tiêu đề (H3)</label>
       <input type="text"
              name="pre_banner_title"
              value="{{ old('pre_banner_title', $home->pre_banner_title) }}"
-             class="form-control">
+             class="form-control full-width">
       @error('pre_banner_title')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
     <div class="mb-3">
@@ -28,7 +28,7 @@
       <input type="text"
              name="pre_banner_button_text"
              value="{{ old('pre_banner_button_text', $home->pre_banner_button_text) }}"
-             class="form-control">
+             class="form-control full-width">
       @error('pre_banner_button_text')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
     <div class="mb-3">
@@ -45,46 +45,16 @@
       @error('pre_banner_button_collection_id')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
 
-    <hr>
-    {{-- B) Phần Bộ Sưu Tập --}}
-    <h5 class="mt-4">Phần Bộ Sưu Tập</h5>
-    <div class="mb-3">
-      <label class="form-label">Tiêu đề bộ sưu tập (H2)</label>
-      <input type="text"
-             name="collection_section_title"
-             value="{{ old('collection_section_title', $home->collection_section_title) }}"
-             class="form-control">
-      @error('collection_section_title')<div class="text-danger">{{ $message }}</div>@enderror
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Nội dung nút bộ sưu tập</label>
-      <input type="text"
-             name="collection_section_button_text"
-             value="{{ old('collection_section_button_text', $home->collection_section_button_text) }}"
-             class="form-control">
-      @error('collection_section_button_text')<div class="text-danger">{{ $message }}</div>@enderror
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Chọn Collection cho nút bộ sưu tập</label>
-      <select name="collection_section_button_collection_id" class="form-select">
-        <option value="">-- Không chọn --</option>
-        @foreach($collections as $id => $name)
-          <option value="{{ $id }}"
-            @selected(old('collection_section_button_collection_id', $home->collection_section_button_collection_id)==$id)>
-            {{ $name }}
-          </option>
-        @endforeach
-      </select>
-      @error('collection_section_button_collection_id')<div class="text-danger">{{ $message }}</div>@enderror
-    </div>
+    
 
     <hr>
     {{-- C) Banner chính & nút trung tâm --}}
-    <div class="mb-3">
+    <h1 class="margintop6rem">Sửa Banner chính và nút trung tâm</h1>
+    <div class="mt-3 mb-3">
       <label class="form-label">Ảnh Banner chính (100vw×80vh)</label>
       <input type="file"
              name="banner_image"
-             class="form-control"
+             class="form-control full-width"
              accept="image/*">
       @error('banner_image')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
@@ -103,7 +73,7 @@
       <input type="checkbox"
              name="show_button"
              id="show_button"
-             class="form-check-input"
+             class="form-check-input custom-checkbox"
              value="1"
              @checked(old('show_button', $home->show_button))>
       <label for="show_button" class="form-check-label">
@@ -116,7 +86,7 @@
       <input type="text"
              name="button_text"
              value="{{ old('button_text', $home->button_text) }}"
-             class="form-control">
+             class="form-control full-width">
       @error('button_text')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
     <div class="mb-3">
@@ -133,15 +103,20 @@
       @error('button_collection_id')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
 
+
+    
+
+
+
     <hr>
     {{-- D) Phần Khởi Đầu (lead + nút “Xem chi tiết”) --}}
-    <h5 class="mt-4">Phần Khởi Đầu (lead + nút “Xem chi tiết”)</h5>
+    <h1 class="margintop6rem">Sửa phần text và link dưới Banner </h1>
     <div class="mb-3">
       <label class="form-label">Nội dung lead (p.lead)</label>
       <input type="text"
              name="intro_text"
              value="{{ old('intro_text', $home->intro_text) }}"
-             class="form-control">
+             class="form-control full-width">
       @error('intro_text')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
     <div class="mb-3">
@@ -149,7 +124,7 @@
       <input type="text"
              name="intro_button_text"
              value="{{ old('intro_button_text', $home->intro_button_text) }}"
-             class="form-control">
+             class="form-control full-width">
       @error('intro_button_text')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
     <div class="mb-3">
@@ -166,25 +141,112 @@
       @error('intro_button_collection_id')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
 
+      <!--  THÊM PREVIEW VÀ CHỈNH SỬA COLLECTION SLIDER Ở ĐÂY -->
+      <hr>
+      <h1 class="margintop6rem">Preview và sửa Collection Slider</h1>
+
+    <h5 class="mt-4">Preview Collection Slider</h5>
+    <div class="d-flex overflow-auto py-2 collection-slider">
+      @foreach($collectionSliders as $slider)
+        <div class="flex-shrink-0 me-3" style="width:200px;">
+          <div class="card">
+            <img src="{{ asset('storage/'.$slider->image) }}"
+                 class="card-img-top" alt="">
+            <div class="card-body p-2 text-center">
+              <small class="text-muted">{{ $slider->text }}</small>
+            </div>
+          </div>
+        </div>
+      @endforeach
+    </div>
+    <a href="{{ route('admin.collection-sliders.index') }}"
+       class="btn btn-slide mb-4">
+      Chỉnh sửa Collection Slider
+    </a>
+
+
+
+    
+    <hr>
+    {{-- B) Phần Bộ Sưu Tập --}}
+    <h1 class="margintop6rem">Sửa link và text Bộ Sưu Tập</h1>
+
+    <div class="mb-3">
+      <label class="form-label">Tiêu đề bộ sưu tập (H2)</label>
+      <input type="text"
+             name="collection_section_title"
+             value="{{ old('collection_section_title', $home->collection_section_title) }}"
+             class="form-control full-width">
+      @error('collection_section_title')<div class="text-danger">{{ $message }}</div>@enderror
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Nội dung nút bộ sưu tập</label>
+      <input type="text"
+             name="collection_section_button_text"
+             value="{{ old('collection_section_button_text', $home->collection_section_button_text) }}"
+             class="form-control full-width">
+      @error('collection_section_button_text')<div class="text-danger">{{ $message }}</div>@enderror
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Chọn Collection cho nút bộ sưu tập</label>
+      <select name="collection_section_button_collection_id" class="form-select">
+        <option value="">-- Không chọn --</option>
+        @foreach($collections as $id => $name)
+          <option value="{{ $id }}"
+            @selected(old('collection_section_button_collection_id', $home->collection_section_button_collection_id)==$id)>
+            {{ $name }}
+          </option>
+        @endforeach
+      </select>
+      @error('collection_section_button_collection_id')<div class="text-danger">{{ $message }}</div>@enderror
+    </div>
+
+
+    <!-- THÊM PREVIEW VÀ CHỈNH SỬA PRODUCT SLIDER Ở ĐÂY -->
+    <hr>
+    <h1 class="margintop6rem">Preview và sửa Collection Slider</h1>
+
+    <div class="d-flex overflow-auto py-2 product-slider">
+      @foreach($productSliders as $slider)
+        <div class="flex-shrink-0 me-3" style="width:200px;">
+          <div class="card">
+            <div class="image-wrapper">  <img src="{{ asset('storage/'.$slider->image) }}"
+                  class="card-img-top" alt=""> </div>
+            <div class="card-body p-2 text-center">
+              <small class="text-muted">{{ $slider->product->name }}</small>
+            </div>
+          </div>
+        </div>
+      @endforeach
+    </div>
+    <a href="{{ route('admin.product-sliders.index') }}"
+       class="btn btn-slide mb-4">
+      Chỉnh sửa Product Slider
+    </a>
+
+
+
+
     <hr>
     {{-- E) Giới thiệu (About) --}}
-    <div class="mb-3">
+    <h1 class="margintop6rem">Sửa phần Giới thiệu Shop</h1>
+
+    <div class="mt-3">
       <label class="form-label">Tiêu đề Giới thiệu</label>
       <input type="text"
              name="about_title"
              value="{{ old('about_title', $home->about_title) }}"
-             class="form-control">
+             class="form-control full-width">
       @error('about_title')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
     <div class="mb-3">
       <label class="form-label">Nội dung Giới thiệu</label>
       <textarea name="about_text"
-                class="form-control"
+                class="form-control full-width"
                 rows="4">{{ old('about_text', $home->about_text) }}</textarea>
       @error('about_text')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
 
-    <button class="btn btn-primary">Lưu thay đổi</button>
   </form>
 </div>
 @endsection

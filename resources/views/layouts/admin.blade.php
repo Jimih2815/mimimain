@@ -4,12 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  
   <title>Admin Dashboard – MimiMain</title>
 
   {{-- Bootstrap CSS CDN (hoặc bạn đổi thành link tới public/css/app.css) --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   {{-- Bootstrap Icons --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  {{-- 1) Google Font: Baloo 2 --}}
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+  @vite('resources/scss/app.scss')
+
 </head>
 <body class="bg-light">
 

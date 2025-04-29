@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Traits\HandlesWebpUpload;
 use App\Models\HomePage;
 use App\Models\Collection;
+use App\Models\CollectionSlider;
+use App\Models\ProductSlider;
 
 class HomePageController extends Controller
 {
@@ -17,9 +19,21 @@ class HomePageController extends Controller
      */
     public function edit()
     {
-        $home        = HomePage::first();
-        $collections = Collection::pluck('name', 'id');
-        return view('admin.home.edit', compact('home', 'collections'));
+        $home               = HomePage::first();
+        $collections        = Collection::pluck('name', 'id');
+        $collectionSliders  = CollectionSlider::with('collection')
+                                ->orderBy('sort_order')
+                                ->get();
+        $productSliders     = ProductSlider::with('product')
+                                ->orderBy('sort_order')
+                                ->get();
+
+        return view('admin.home.edit', compact(
+            'home',
+            'collections',
+            'collectionSliders',
+            'productSliders'
+        ));
     }
 
     /**
@@ -27,7 +41,6 @@ class HomePageController extends Controller
      */
     public function update(Request $r)
     {
-        // 1) Validate tất cả các trường dynamic
         $data = $r->validate([
             // — Phần Khởi Đầu (intro) —
             'intro_text'                          => 'nullable|string|max:255',
@@ -54,15 +67,15 @@ class HomePageController extends Controller
             'about_text'                          => 'nullable|string',
 
             // — Nút trung tâm —
-            'show_button'                         => 'sometimes|boolean',
+            'show_button'                         => 'sometimes',
             'button_collection_id'                => 'nullable|exists:collections,id',
             'button_text'                         => 'nullable|string|max:50',
         ]);
 
-        // 2) Xử lý checkbox cho nút trung tâm
-        $data['show_button'] = $r->has('show_button');
+        // Checkbox trả về true/false
+        $data['show_button'] = $r->boolean('show_button');
 
-        // 3) Xử lý upload & convert ảnh Banner sang WebP
+        // Nếu có banner mới thì convert & upload WebP
         if ($r->hasFile('banner_image')) {
             $data['banner_image'] = $this->uploadAsWebp(
                 $r->file('banner_image'),
@@ -70,10 +83,8 @@ class HomePageController extends Controller
             );
         }
 
-        // 4) Cập nhật vào DB
         HomePage::first()->update($data);
 
-        // 5) Trả về với thông báo thành công
         return redirect()
             ->route('admin.home.edit')
             ->with('success', 'Cập nhật Home Page thành công');

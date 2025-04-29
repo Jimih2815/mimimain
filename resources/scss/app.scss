@@ -59,6 +59,14 @@
 @import "./profile.scss";
 @import "./home-section-images.scss";
 
+
+
+/* === Admin-specific styles === */
+@import "./admin/home-edit.scss";
+
+
+
+
 /* giữ nguyên partial components nếu có */
 @layer components {
   .about-text {
