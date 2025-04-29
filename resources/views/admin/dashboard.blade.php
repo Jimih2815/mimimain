@@ -6,7 +6,26 @@
   <h1 class="mb-4">🚀 Admin Dashboard</h1>
 
   <div class="row g-3">
-    
+    {{-- Home Page --}}
+      <div class="col-md-3">
+        <a href="{{ route('admin.home.edit') }}" class="card h-100 text-center text-decoration-none">
+          <div class="card-body">
+            <i class="bi bi-house fs-1"></i>
+            <h5 class="mt-2">Trang chủ</h5>
+          </div>
+        </a>
+      </div>
+
+
+    {{-- Sản phẩm --}}
+      <div class="col-md-3">
+        <a href="{{ route('admin.products.index') }}" class="card h-100 text-center text-decoration-none">
+          <div class="card-body">
+            <i class="bi bi-box-seam fs-1"></i>
+            <h5 class="mt-2">Sản phẩm</h5>
+          </div>
+        </a>
+      </div>
     {{-- Collections --}}
     <div class="col-md-3">
       <a href="{{ route('admin.collections.index') }}" class="card h-100 text-center text-decoration-none">
@@ -27,15 +46,7 @@
       </a>
     </div>
 
-    {{-- Home Page --}}
-    <div class="col-md-3">
-      <a href="{{ route('admin.home.edit') }}" class="card h-100 text-center text-decoration-none">
-        <div class="card-body">
-          <i class="bi bi-house fs-1"></i>
-          <h5 class="mt-2">Trang chủ</h5>
-        </div>
-      </a>
-    </div>
+    
 
     {{-- Home Section Images --}}
     <div class="col-md-3">
@@ -57,15 +68,7 @@
       </a>
     </div>
 
-    {{-- Sản phẩm --}}
-    <div class="col-md-3">
-      <a href="{{ route('admin.products.index') }}" class="card h-100 text-center text-decoration-none">
-        <div class="card-body">
-          <i class="bi bi-box-seam fs-1"></i>
-          <h5 class="mt-2">Sản phẩm</h5>
-        </div>
-      </a>
-    </div>
+    
 
     {{-- Product Sliders --}}
     <div class="col-md-3">
@@ -97,25 +100,25 @@
       </a>
     </div>
 
-    {{-- Widgets --}}
-    <div class="col-md-3">
+    <!-- {{-- Widgets --}} -->
+    <!-- <div class="col-md-3">
       <a href="{{ route('admin.widgets.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">
           <i class="bi bi-puzzle fs-1"></i>
           <h5 class="mt-2">Widgets</h5>
         </div>
       </a>
-    </div>
+    </div> -->
 
-    {{-- Widget Placements --}}
-    <div class="col-md-3">
+    <!-- {{-- Widget Placements --}} -->
+    <!-- <div class="col-md-3">
       <a href="{{ route('admin.placements.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">
           <i class="bi bi-pin-angle fs-1"></i>
           <h5 class="mt-2">Widget Placements</h5>
         </div>
       </a>
-    </div>
+    </div> -->
   </div>
 </div>
 @endsection

@@ -9,6 +9,7 @@ use App\Models\HomePage;
 use App\Models\Collection;
 use App\Models\CollectionSlider;
 use App\Models\ProductSlider;
+use App\Models\HomeSectionImage;
 
 class HomePageController extends Controller
 {
@@ -18,23 +19,26 @@ class HomePageController extends Controller
      * Hiển thị form chỉnh sửa Home Page
      */
     public function edit()
-    {
-        $home               = HomePage::first();
-        $collections        = Collection::pluck('name', 'id');
-        $collectionSliders  = CollectionSlider::with('collection')
-                                ->orderBy('sort_order')
-                                ->get();
-        $productSliders     = ProductSlider::with('product')
-                                ->orderBy('sort_order')
-                                ->get();
+{
+    $home               = HomePage::first();
+    $collections        = Collection::pluck('name', 'id');
+    $collectionSliders  = CollectionSlider::with('collection')
+                            ->orderBy('sort_order')
+                            ->get();
+    $productSliders     = ProductSlider::with('product')
+                            ->orderBy('sort_order')
+                            ->get();
+    // Lấy về tất cả Home Section Images để preview, dùng position thay sort_order
+    $homeSectionImages  = HomeSectionImage::orderBy('position')->get();
 
-        return view('admin.home.edit', compact(
-            'home',
-            'collections',
-            'collectionSliders',
-            'productSliders'
-        ));
-    }
+    return view('admin.home.edit', compact(
+        'home',
+        'collections',
+        'collectionSliders',
+        'productSliders',
+        'homeSectionImages'
+    ));
+}
 
     /**
      * Xử lý submit cập nhật Home Page

@@ -202,6 +202,27 @@
     </div>
 
 
+    <!-- THÊM PREVIEW VÀ CHỈNH SỬA admin/home-section-images VÀO ĐÂY -->
+    <hr>
+    <h5 class="mt-4">Preview Home Section Images</h5>
+    <div class="d-flex flex-wrap gap-3 mb-4">
+      @foreach($homeSectionImages->take(2) as $sectionImage)
+        <div class="card" style="width: 200px;">
+          <img src="{{ asset('storage/'.$sectionImage->image) }}"
+               class="card-img-top"
+               alt="Home Section Image">
+        </div>
+      @endforeach
+    </div>
+    <a href="{{ url('/admin/home-section-images') }}"
+       class="btn btn-slide mb-4">
+      Chỉnh sửa Banner 2 ảnh
+    </a>
+
+
+
+
+
     <!-- THÊM PREVIEW VÀ CHỈNH SỬA PRODUCT SLIDER Ở ĐÂY -->
     <hr>
     <h1 class="margintop6rem">Preview và sửa Collection Slider</h1>
