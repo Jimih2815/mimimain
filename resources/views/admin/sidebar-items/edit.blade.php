@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="trang-sidebar">
+<a href="{{ route('admin.sidebar-items.index') }}" class="nut-quay-ve mb-3">
+  <i class="fa-solid fa-chevron-left"></i> Quay về Side Bar
+  </a>
   <h1 class="mb-4" style="color: #b83232; font-size: 3rem;">Sửa Mục Sidebar</h1>
 
   <form action="{{ route('admin.sidebar-items.update', $sidebarItem) }}"

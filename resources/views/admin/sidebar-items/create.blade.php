@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="trang-sidebar">
+<a href="{{ route('admin.sidebar-items.index') }}" class="nut-quay-ve mb-3">
+  <i class="fa-solid fa-chevron-left"></i> Quay về Side Bar
+  </a>
   <h1 class="mb-4" style="color: #b83232; font-size: 3rem;" >Thêm Mục Cha Mới</h1>
 
   <form action="{{ route('admin.sidebar-items.store') }}" method="POST" id="sidebar-form">
@@ -52,7 +55,7 @@
       </button>
     </div>
 
-    <button class="btn-mimi nut-them-slide ">Tạo Mục Cha</button>
+    <div class="d-flex justify-center mt-4 mb-5"><button class="btn-mimi nut-them-slide ">Tạo Mục Cha</button></div>
   </form>
 </div>
 
