@@ -95,6 +95,16 @@
           <input type="hidden" name="active" value="{{ $sec->id }}">
           @method('PUT')
           <input name="name" class="form-control" value="{{ $sec->name }}" required>
+      {{-- Chọn Collection liên kết --}}
+        <select name="collection_id" class="form-select w-25">
+          <option value="">– Không liên kết –</option>
+         @foreach($collections as $col)
+            <option value="{{ $col->id }}"
+              {{ $sec->collection_id == $col->id ? 'selected' : '' }}>
+              {{ $col->name }}
+            </option>
+          @endforeach
+        </select>
           <!-- <p style="font-weight: 800; width: 12rem; margin: 0;">Thứ tự</p> -->
           <input name="sort_order" style = "width:10%;" type="number" class="form-control" value="{{ $sec->sort_order }}">
           <button class="btn-mimi nut-luu">Lưu Section</button>

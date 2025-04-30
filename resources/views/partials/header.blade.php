@@ -54,9 +54,11 @@
 
 
             <li class="nav-item dropdown position-static">
-              <a class="nav-link px-3 fw-semibold text-dark"
-                href="#"
-                id="sec-{{ $section->id }}">
+            <a class="nav-link px-3 fw-semibold text-dark"
+              href="{{ $section->collection_id 
+                        ? route('collections.show', $section->collection->slug) 
+                       : '#' }}"
+              id="sec-{{ $section->id }}">
                 {{ $section->name }}
               </a>
               <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
