@@ -6,8 +6,11 @@
   .product-card {
     > a {
       width: 100%;
-      aspect-ratio: 1/1;
+      aspect-ratio: 1 / 1;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   
     .card-body-favorite {

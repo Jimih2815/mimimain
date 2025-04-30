@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="sua-chi-tiet-san-pham">
+  <a href="{{ route('admin.products.index') }}" class="btn nut-quay-ve mb-3">
+    <i class="fa-solid fa-chevron-left"></i> Danh sách sản phẩm
+  </a>
   <h1 class="mb-4 tieu-de">Sửa sản phẩm #{{ $product->id }}</h1>
   <!-- @if(session('success'))
   <div class="alert alert-success">

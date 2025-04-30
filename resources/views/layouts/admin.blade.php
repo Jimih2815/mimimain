@@ -16,6 +16,8 @@
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
     rel="stylesheet"
   >
+  <script src="https://kit.fontawesome.com/1081860f2a.js" crossorigin="anonymous"></script>
+
   {{-- Vite: biên dịch SCSS + JS --}}
   @vite('resources/scss/app.scss')
 </head>

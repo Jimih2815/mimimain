@@ -141,4 +141,26 @@
           display: block;
         }
       }
+
+    .nut-quay-ve {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.5rem;
+        color: #b18623;
+        font-size: 1.2rem;
+        font-weight: 600;
+        &:hover {
+            color: #cead62;
+
+        }
+        &:active {
+            background-color: transparent !important;
+            color: #cead62 !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            font-weight: normal !important;
+        }
+    }
 }
