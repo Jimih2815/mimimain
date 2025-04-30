@@ -14,7 +14,7 @@ class CollectionSliderController extends Controller
     use HandlesWebpUpload;
     
     /**
-     * Hiển thị danh sách slider và tiêu đề từ HomePage
+     * INDEX: hiển thị danh sách slider và tiêu đề từ HomePage
      */
     public function index()
     {
@@ -22,23 +22,22 @@ class CollectionSliderController extends Controller
                   ->orderBy('sort_order')
                   ->get();
 
-        $home  = HomePage::first();
+        $home = HomePage::first();
 
         return view('admin.collection-sliders.index', compact('items', 'home'));
     }
 
     /**
-     * Form thêm mới
+     * CREATE: form thêm mới
      */
     public function create()
     {
-        $collections = Collection::pluck('name','id');
-
+        $collections = Collection::pluck('name', 'id');
         return view('admin.collection-sliders.form', compact('collections'));
     }
 
     /**
-     * Lưu slider mới, chuyển ảnh sang WebP
+     * STORE: lưu slider mới, convert ảnh sang WebP
      */
     public function store(Request $r)
     {
@@ -48,10 +47,10 @@ class CollectionSliderController extends Controller
             'text'          => 'required|string',
         ]);
 
-        // Convert & upload WebP
+        // Upload WebP
         $path = $this->uploadAsWebp($r->file('image'), 'sliders');
 
-        // Tính sort_order = max + 1
+        // Tự động tính sort_order = max + 1
         $order = CollectionSlider::max('sort_order') + 1;
 
         CollectionSlider::create([
@@ -67,18 +66,17 @@ class CollectionSliderController extends Controller
     }
 
     /**
-     * Form sửa
+     * EDIT: form sửa
      */
     public function edit(CollectionSlider $collectionSlider)
     {
         $item        = $collectionSlider;
-        $collections = Collection::pluck('name','id');
-
-        return view('admin.collection-sliders.form', compact('item','collections'));
+        $collections = Collection::pluck('name', 'id');
+        return view('admin.collection-sliders.form', compact('item', 'collections'));
     }
 
     /**
-     * Cập nhật slider, nếu có ảnh mới thì chuyển sang WebP
+     * UPDATE: cập nhật slider, đổi ảnh nếu có
      */
     public function update(Request $r, CollectionSlider $collectionSlider)
     {
@@ -103,36 +101,47 @@ class CollectionSliderController extends Controller
     }
 
     /**
-     * Xóa slider
+     * DESTROY: xóa slider
      */
     public function destroy(CollectionSlider $collectionSlider)
     {
         $collectionSlider->delete();
-
         return back()->with('success', 'Đã xóa slider item.');
     }
 
     /**
-     * Đổi vị trí up/down
+     * MOVE: đổi vị trí lên/xuống (giũ nguyên logic của bạn)
      */
     public function move(Request $r, CollectionSlider $collectionSlider)
     {
         $dir = $r->input('dir');
-
         $swap = CollectionSlider::where('sort_order', 
-                  $dir === 'up' ? '<' : '>', 
-                  $collectionSlider->sort_order)
+                    $dir === 'up' ? '<' : '>', 
+                    $collectionSlider->sort_order)
                 ->orderBy('sort_order', $dir === 'up' ? 'desc' : 'asc')
                 ->first();
 
         if ($swap) {
-            $a = $collectionSlider->sort_order;
+            $tmp = $collectionSlider->sort_order;
             $collectionSlider->sort_order = $swap->sort_order;
-            $swap->sort_order             = $a;
+            $swap->sort_order             = $tmp;
             $collectionSlider->save();
             $swap->save();
         }
 
         return back();
+    }
+
+    /**
+     * REORDER: nhận mảng IDs và cập nhật sort_order qua AJAX
+     */
+    public function reorder(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        foreach ($ids as $index => $id) {
+            CollectionSlider::where('id', $id)
+                ->update(['sort_order' => $index + 1]);
+        }
+        return response()->json(['status' => 'success']);
     }
 }

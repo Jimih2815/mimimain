@@ -111,6 +111,19 @@ class ProductSliderController extends Controller
     }
 
     /**
+     * REORDER: nhận mảng IDs và cập nhật sort_order
+     */
+    public function reorder(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        foreach ($ids as $index => $id) {
+            ProductSlider::where('id', $id)
+                ->update(['sort_order' => $index + 1]);
+        }
+        return response()->json(['status' => 'success']);
+    }
+
+    /**
      * DESTROY: xóa
      */
     public function destroy(ProductSlider $product_slider)

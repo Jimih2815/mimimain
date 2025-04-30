@@ -1,8 +1,10 @@
+{{-- resources/views/admin/collection-sliders/index.blade.php --}}
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
+<div class="trang-slider-san-pham">
   <h1 class="mb-4">Collection Slider</h1>
+
   {{-- Form chỉnh Tiêu đề Slider Bộ sưu tập --}}
   <form action="{{ route('admin.home.update') }}" method="POST" class="mb-4">
     @csrf
@@ -18,50 +20,48 @@
         @enderror
       </div>
       <div class="col-auto">
-        <button class="btn btn-secondary">Lưu tiêu đề</button>
+        <button class="btn-mimi nut-luu">Lưu tiêu đề</button>
       </div>
     </div>
   </form>
-  {{-- /Form chỉnh Tiêu đề --}}
-  <a href="{{ route('admin.collection-sliders.create') }}"
-     class="btn btn-primary mb-3">+ Thêm Item</a>
+  {{-- /Form --}}
 
-  <table class="table table-striped">
+  <a href="{{ route('admin.collection-sliders.create') }}"
+     class="btn-mimi nut-them-slide mb-3">+ Thêm Item</a>
+  <p class="mt-4 mb-1 ms-2" style="font-style: italic;">Kéo/Thả chuột để thay đổi thứ tự</p>
+  <table id="collection-sliders-table"
+         class="table table-striped"
+         style="position: relative;">
     <thead>
       <tr>
-        <th>Thứ tự</th>
+        <th style="width: 5rem;">Thứ tự</th>
         <th>Ảnh</th>
         <th>Text</th>
         <th>Collection</th>
-        <th>Action</th>
+        <th style="width: 10rem;">Action</th>
       </tr>
     </thead>
     <tbody>
       @foreach($items as $it)
-      <tr>
-        <td>{{ $it->sort_order }}</td>
+      <tr data-id="{{ $it->id }}">
+        {{-- handle kéo --}}
+        <td class="sort-handle" style="cursor: move;">
+          {{ $it->sort_order }}
+        </td>
         <td>
           <img src="{{ asset('storage/'.$it->image) }}"
-               width="60" class="rounded">
+               width="60" class="rounded" alt="">
         </td>
         <td>{{ $it->text }}</td>
         <td>{{ $it->collection->name }}</td>
-        <td class="d-flex gap-1">
-          <form action="{{ route('admin.collection-sliders.move',[$it,'dir'=>'up']) }}"
-                method="POST">@csrf
-            <button class="btn btn-sm btn-secondary">▲</button>
-          </form>
-          <form action="{{ route('admin.collection-sliders.move',[$it,'dir'=>'down']) }}"
-                method="POST">@csrf
-            <button class="btn btn-sm btn-secondary">▼</button>
-          </form>
+        <td class="d-flex gap-1" >
           <a href="{{ route('admin.collection-sliders.edit',$it) }}"
-             class="btn btn-sm btn-warning">Sửa</a>
+             class="btn-mimi nut-sua">Sửa</a>
           <form action="{{ route('admin.collection-sliders.destroy',$it) }}"
                 method="POST"
                 onsubmit="return confirm('Xóa hả?');">
             @csrf @method('DELETE')
-            <button class="btn btn-sm btn-danger">Xóa</button>
+            <button class="btn-mimi nut-xoa">Xóa</button>
           </form>
         </td>
       </tr>
@@ -70,3 +70,68 @@
   </table>
 </div>
 @endsection
+
+@push('styles')
+  <style>
+    .trang-slider-san-pham .table-striped th {
+      background-color: #4ab3af;
+      border: 2px solid #fff;
+      color: #fff;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .trang-slider-san-pham .table-striped td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .trang-slider-san-pham .table-striped tbody tr td.d-flex {
+      display: table-cell !important;
+      vertical-align: middle;
+      text-align: center;
+      padding: 0.5rem;
+    }
+    .trang-slider-san-pham .table-striped tbody tr td.d-flex > * {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 .25rem;
+    }
+  </style>
+@endpush
+
+@push('scripts')
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tbody = document.querySelector('#collection-sliders-table tbody');
+      const reorderUrl = @json(route('admin.collection-sliders.reorder'));
+
+      Sortable.create(tbody, {
+        // handle: '.sort-handle',
+        animation: 150,
+        onEnd: function() {
+          const ids = Array.from(tbody.querySelectorAll('tr'))
+            .map(tr => tr.dataset.id);
+
+          fetch(reorderUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ ids })
+          })
+          .then(r => r.json())
+          .then(json => {
+            if (json.status === 'success') {
+              tbody.querySelectorAll('tr').forEach((tr, idx) => {
+                tr.querySelector('.sort-handle').textContent = idx + 1;
+              });
+            } else {
+              alert('Lỗi lưu thứ tự');
+            }
+          });
+        }
+      });
+    });
+  </script>
+@endpush

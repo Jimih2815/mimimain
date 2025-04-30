@@ -1,12 +1,12 @@
+{{-- resources/views/admin/product-sliders/edit.blade.php --}}
 @extends('layouts.admin')
 
 @section('content')
-<div class="container">
-  <h1 class="mb-4">Sửa Slider sản phẩm</h1>
-
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
+<div class="trang-slider-san-pham">
+  <a href="{{ route('admin.product-sliders.index') }}" class="nut-quay-ve mb-3">
+  <i class="fa-solid fa-chevron-left"></i> Quay về danh sách slider
+  </a>
+  <h1 class="mb-4" style="color: #b83232; font-size: 3rem;">Sửa Slider sản phẩm</h1>
 
   {{-- Hiển thị lỗi validation --}}
   @if ($errors->any())
@@ -28,7 +28,10 @@
     {{-- Chọn product --}}
     <div class="mb-3">
       <label class="form-label">Sản phẩm</label>
-      <select name="product_id" class="form-control" required>
+      <select id="product-select"
+              name="product_id"
+              class="form-select select-searchable"
+              required>
         @foreach($products as $p)
           <option value="{{ $p->id }}"
             @if(old('product_id', $slider->product_id)==$p->id) selected @endif>
@@ -59,8 +62,50 @@
              value="{{ old('sort_order', $slider->sort_order) }}">
     </div>
 
-    <button class="btn btn-primary">Cập nhật</button>
-    <a href="{{ route('admin.product-sliders.index') }}" class="btn btn-secondary">Hủy</a>
+    <button class="btn-mimi nut-sua">Cập nhật</button>
+    <a href="{{ route('admin.product-sliders.index') }}" class="btn-mimi nut-xoa">Hủy</a>
   </form>
 </div>
 @endsection
+
+@push('styles')
+  <!-- TomSelect CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+  <style>
+    /* --- “Dẹp” wrapper của TomSelect, chỉ giữ lại ts-control --- */
+    .ts-wrapper.form-select.select-searchable {
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+    /* Định lại khung hiển thị chính */
+    .ts-control.form-select {
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+      padding: .375rem .75rem;
+      background: #fff;
+    }
+    /* Cho dropdown bám full width */
+    .ts-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 1100;
+    }
+  </style>
+@endpush
+
+@push('scripts')
+  <!-- TomSelect JS -->
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new TomSelect('#product-select', {
+        create: false,
+        placeholder: 'Tìm sản phẩm…',
+        dropdownDirection: 'bottom'
+      });
+    });
+  </script>
+@endpush

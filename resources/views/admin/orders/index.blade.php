@@ -1,8 +1,29 @@
 @extends('layouts.admin')
 
 @section('content')
+<style>
+  /* mọi th nền #4ab3af, viền trắng 2px, chữ trắng, căn giữa */
+  .table.table-bordered.align-middle th {
+    background-color: #4ab3af !important;
+    border: 2px solid #fff      !important;
+    color: #fff                 !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+  /* mọi td căn giữa */
+  .table.table-bordered.align-middle td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  /* với những td có colspan thì canh trái, bỏ padding */
+  .table.table-bordered.align-middle td[colspan] {
+    text-align: left;
+    padding-left: 0 !important;
+  }
+</style>
+
 <div class="container py-4">
-  <h2 class="mb-4">Danh sách Đơn hàng</h2>
+  <h2 class="mb-4" style="color: #b83232; font-size: 3rem;">Danh sách Đơn hàng</h2>
 
   <table class="table table-bordered align-middle">
     <thead class="table-light">

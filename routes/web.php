@@ -138,7 +138,6 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
 | Middleware:    auth (và role-check nếu cần)
 */
 Route::prefix('admin')
-     // ->middleware('auth')
      ->name('admin.')
      ->group(function () {
 
@@ -165,41 +164,46 @@ Route::prefix('admin')
     // 4.4 Quản lý sản phẩm
     Route::resource('products', AdminProductController::class);
 
-        // 4.6 Quản lý người dùng
+    // 4.6 Quản lý người dùng
     Route::controller(AdminUserController::class)->group(function () {
-        Route::get   ('users',                      'index')->name('users.index');
-        Route::get   ('users/{user}',               'show')->name('users.show');
-        Route::post  ('users/{user}/reset-password','resetPassword')->name('users.resetPassword');
-        Route::delete('users/{user}',               'destroy')->name('users.destroy');
+        Route::get   ('users',                       'index')->name('users.index');
+        Route::get   ('users/{user}',                'show')->name('users.show');
+        Route::post  ('users/{user}/reset-password', 'resetPassword')->name('users.resetPassword');
+        Route::delete('users/{user}',                'destroy')->name('users.destroy');
     });
 
-    // 4.7 Collections & Collection Sliders
+    // 4.7 Collections
     Route::resource('collections', AdminCollectionController::class);
 
-    // Định nghĩa route move trước khi resource để tránh trùng tên
-    Route::post('collection-sliders/{collection_slider}/move', 
+    // Collection‐Sliders: reorder AJAX
+    Route::post('collection-sliders/reorder', [CollectionSliderController::class, 'reorder'])
+         ->name('collection-sliders.reorder');
+
+    // Collection‐Sliders: move up/down
+    Route::post('collection-sliders/{collection_slider}/move',
          [CollectionSliderController::class,'move'])
          ->name('collection-sliders.move');
 
+    // Collection‐Sliders: CRUD (except show)
     Route::resource('collection-sliders', CollectionSliderController::class)
          ->except(['show']);
 
-    // 4.8 Home Page (banner) & Home Section Images
-    Route::get ('home',                  [HomePageController::class,'edit'])->name('home.edit');
-    Route::post('home',                  [HomePageController::class,'update'])->name('home.update');
-    Route::get ('home-section-images',   [HomeSectionImageController::class,'index'])->name('home-section-images.index');
-    Route::post('home-section-images',   [HomeSectionImageController::class,'update'])->name('home-section-images.update');
+    // 4.8 Home Page & Home Section Images
+    Route::get  ('home',                [HomePageController::class,'edit'])->name('home.edit');
+    Route::post ('home',                [HomePageController::class,'update'])->name('home.update');
+    Route::get  ('home-section-images', [HomeSectionImageController::class,'index'])->name('home-section-images.index');
+    Route::post ('home-section-images', [HomeSectionImageController::class,'update'])->name('home-section-images.update');
 
     // 4.9 Product Sliders
     Route::resource('product-sliders', ProductSliderController::class)
          ->only(['index','create','store','edit','update','destroy']);
+    Route::post('product-sliders/reorder', [ProductSliderController::class, 'reorder'])
+         ->name('product-sliders.reorder');
 
-    // 4.10 Widgets & Widget Placements
-    Route::resource('widgets',           WidgetController::class);
-    Route::resource('placements', WidgetPlacementController::class);
-    Route::resource('sidebar-items', SidebarItemController::class);
-
-    
+    // 4.10 Widgets & Placements
+    Route::resource('widgets',         WidgetController::class);
+    Route::resource('placements',      WidgetPlacementController::class);
+    Route::resource('sidebar-items',   SidebarItemController::class);
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL

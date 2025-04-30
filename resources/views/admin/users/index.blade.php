@@ -1,12 +1,35 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-    <h1 class="mb-4">Quản lý Người dùng</h1>
+<style>
+  /* ==== Style chung cho trang Quản lý Người dùng ==== */
+  /* th nền xanh, viền trắng 2px, chữ trắng, căn giữa */
+  .table.table-bordered.table-hover th {
+    background-color: #4ab3af !important;
+    border: 2px solid #fff      !important;
+    color: #fff                 !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+  /* tất cả td căn giữa */
+  .table.table-bordered.table-hover td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  /* nếu có td[colspan], canh trái và xoá padding trái */
+  .table.table-bordered.table-hover td[colspan] {
+    text-align: left;
+    padding-left: 0 !important;
+  }
+</style>
 
-    @if(session('success'))
+
+<div class="container-fluid">
+    <h1 class="mb-4 style="color: #b83232; font-size: 3rem;"">Quản lý Người dùng</h1>
+
+    <!-- @if(session('success'))
       <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    @endif -->
 
     <table class="table table-bordered table-hover">
       <thead class="table-light">

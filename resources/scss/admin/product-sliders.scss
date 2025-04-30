@@ -1,0 +1,116 @@
+.trang-slider-san-pham {
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+    .table.table-bordered.table-hover {
+        // 1) Style chung cho header
+        th {
+          background-color: #4ab3af;
+          border: 2px solid #fff;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+        }
+    
+        // 2) Căn giữa tất cả ô
+        td {
+          text-align: center;
+          vertical-align: middle;
+        }
+    
+        // 3) Với ô .d-flex.gap-1 (cột Thao tác)
+        tbody tr {
+          td.d-flex.gap-1 {
+            // Trả về table-cell để cell full height
+            display: table-cell !important;
+            text-align: center;
+            vertical-align: middle;
+            padding: 0.5rem;  // nếu muốn
+            // Các nút con là inline-block, cách nhau
+            > * {
+              display: inline-block;
+              margin: 0 0.25rem;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+
+      .nut-luu {
+        background-color: #4ab3af;
+        &:hover {
+            background-color: #8cd3d1;
+
+        }
+      }
+      .nut-them-slide {
+        background-color: #d1a029;
+        display: flex;
+            text-decoration: none;
+            width: 16rem;
+            justify-content: center;
+            align-items: center;
+        &:hover {
+            background-color: #d4b876;
+
+        }
+      }
+      .nut-sua {
+        background-color: #3f9426;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        &:hover {
+            background-color: #7ec269;
+        }
+    }
+    .nut-xoa {
+        background-color: #b83232;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        &:hover {
+            background-color: #d17171;
+        }
+    }
+    .img-cont {
+        width: 100px;
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;         
+            object-position: center;
+            
+        }
+    }
+    label {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .nut-quay-ve {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.5rem;
+        color: #b18623;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+            color: #cead62;
+
+        }
+        &:active {
+            background-color: transparent !important;
+            color: #cead62 !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            font-weight: normal !important;
+        }
+    }
+}

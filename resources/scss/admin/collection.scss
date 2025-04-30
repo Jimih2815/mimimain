@@ -1,0 +1,107 @@
+.trang-collection {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    .tao-bo-suu-tap {
+        background-color: #d1a029;
+        text-decoration: none;
+        justify-content: center;
+        display: flex;
+        margin: 0 0;
+        align-items: center;
+        width: 14rem;
+        gap: 8px;
+
+        &:hover {
+            background-color: #dbbc72;
+        }
+
+    }
+
+    .nut-xem {
+        background-color: #4ab3af;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        &:hover {
+            background-color: #87d6d4;
+        }
+    }
+
+
+    .nut-sua {
+        background-color: #3f9426;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        &:hover {
+            background-color: #7ec269;
+        }
+    }
+
+    .nut-xoa {
+        background-color: #b83232;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        &:hover {
+            background-color: #d17171;
+        }
+    }
+    th, td {
+        text-align: center;
+    }
+}
+.trang-sua-collection {
+    label {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .item {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    // 1) Giữ wrapper ở dạng block để dropdown vẫn có container
+.ts-wrapper.form-select.multi.plugin-remove_button.plugin-no_backspace_delete.has-items {
+    display: block !important;
+    position: relative;          // cần để dropdown position:absolute căn relative với wrapper
+    border: none !important;     // xoá border thừa thãi
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  
+  // 2) Style ts-control thành khung duy nhất
+  .ts-control {
+    display: block !important;
+    width: 100%;
+    border: 1px solid #ced4da !important;   // hoặc biến border của bạn
+    border-radius: .25rem !important;
+    padding: .375rem .75rem !important;
+    background-color: #fff !important;
+  }
+  
+  // 3) Kéo dropdown đúng vị trí và hiển thị
+  .ts-dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 1100 !important;     // trên những layer khác
+  }
+  
+  // 4) Dropdown-content hiển thị block để list suggestions xuất hiện
+  .ts-dropdown-content {
+    display: block !important;
+  }
+  .nut-back {
+    color: #b18623;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    &:hover {
+        color: #c7a965;
+
+    }
+  }
+}
