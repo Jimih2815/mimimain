@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="trang-slider-san-pham">
-  <h1 class="mb-4">Collection Slider</h1>
+  <h1 class="mb-4" style="color: #b83232; font-size: 3rem;">Collection Slider</h1>
 
   {{-- Form chỉnh Tiêu đề Slider Bộ sưu tập --}}
   <form action="{{ route('admin.home.update') }}" method="POST" class="mb-4">
@@ -27,7 +27,7 @@
   {{-- /Form --}}
 
   <a href="{{ route('admin.collection-sliders.create') }}"
-     class="btn-mimi nut-them-slide mb-3">+ Thêm Item</a>
+     class="btn-mimi nut-them-slide mb-3">+ Thêm Bộ Sưu Tập</a>
   <p class="mt-4 mb-1 ms-2" style="font-style: italic;">Kéo/Thả chuột để thay đổi thứ tự</p>
   <table id="collection-sliders-table"
          class="table table-striped"
@@ -50,7 +50,7 @@
         </td>
         <td>
           <img src="{{ asset('storage/'.$it->image) }}"
-               width="60" class="rounded" alt="">
+               width="150" class="rounded" alt="">
         </td>
         <td>{{ $it->text }}</td>
         <td>{{ $it->collection->name }}</td>

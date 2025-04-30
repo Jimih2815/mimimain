@@ -1,14 +1,15 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-  <h1 class="mb-4">
+<div class="trang-slider-san-pham">
+
+  <a href="{{ route('admin.collection-sliders.index') }}" class="nut-quay-ve mb-3">
+    <i class="fa-solid fa-chevron-left"></i> Quay về danh sách slider
+  </a>
+
+  <h1 class="mb-4" style="color: #b83232; font-size: 3rem;">
     {{ isset($item) ? "Sửa" : "Thêm" }} Collection Slider
   </h1>
-
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
 
   <form action="{{ isset($item)
                    ? route('admin.collection-sliders.update',$item)
@@ -50,7 +51,7 @@
       </div>
     @endif
 
-    <button class="btn btn-primary">
+    <button class="btn-mimi nut-them-slide">
       {{ isset($item) ? 'Cập nhật' : 'Tạo mới' }}
     </button>
   </form>
