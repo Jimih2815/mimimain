@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container py-4">
-  <h1 class="mb-4">Thêm Mục Cha Mới</h1>
+<div class="trang-sidebar">
+  <h1 class="mb-4" style="color: #b83232; font-size: 3rem;" >Thêm Mục Cha Mới</h1>
 
   <form action="{{ route('admin.sidebar-items.store') }}" method="POST" id="sidebar-form">
     @csrf
@@ -47,12 +47,12 @@
           @endforeach
         @endif
       </div>
-      <button type="button" id="btn-add-child" class="btn btn-sm btn-success">
+      <button style="width:12rem;" type="button" id="btn-add-child" class="btn-mimi nut-xoa-muc-con">
         + Thêm mục con
       </button>
     </div>
 
-    <button class="btn btn-primary">Tạo Mục Cha</button>
+    <button class="btn-mimi nut-them-slide ">Tạo Mục Cha</button>
   </form>
 </div>
 

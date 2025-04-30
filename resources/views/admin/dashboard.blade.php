@@ -39,6 +39,16 @@
     </div>
 
 
+    {{-- Side bar --}}
+    <div class="col-md-3 danh-sach">
+      <a href="{{ route('admin.sidebar-items.index') }}" class="card h-100 text-center text-decoration-none">
+        <div class="card-body">
+          <i class="bi bi-layout-sidebar fs-1"></i>
+          <h5 class="mt-2">Side Bar</h5>
+        </div>
+      </a>
+    </div> 
+
     {{-- Collections --}}
     <div class="col-md-3 danh-sach">
       <a href="{{ route('admin.collections.index') }}" class="card h-100 text-center text-decoration-none">
@@ -101,6 +111,9 @@
         </div>
       </a>
     </div> 
+
+    
+
 
 
   <!-- {{-- Widgets --}} -->

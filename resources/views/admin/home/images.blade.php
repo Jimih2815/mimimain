@@ -5,8 +5,8 @@
 @endphp
 
 @section('content')
-<div class="container-fluid">
-  <h1 class="mb-4">Quản lý 2 ảnh Section</h1>
+<div class="trang-slider-san-pham">
+  <h1 class="mb-4" style="color: #b83232; font-size: 3rem;">Quản lý 2 ảnh Section</h1>
 
   @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
@@ -63,7 +63,7 @@
 
       {{-- Nút submit --}}
       <div class="col-12">
-        <button class="btn btn-primary">Cập nhật ảnh Section</button>
+        <button class="btn-mimi nut-them-slide mb-5">Cập nhật ảnh Section</button>
       </div>
     </div>
   </form>
