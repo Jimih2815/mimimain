@@ -91,10 +91,12 @@
               method="POST"
               class="d-flex gap-2 align-items-center mb-3">
           @csrf
+          <!-- <p style="font-weight: 800; width: 12rem; margin: 0;">Tên Section</p> -->
           <input type="hidden" name="active" value="{{ $sec->id }}">
           @method('PUT')
-          <input name="name" class="form-control w-25" value="{{ $sec->name }}" required>
-          <input name="sort_order" type="number" class="form-control w-15" value="{{ $sec->sort_order }}">
+          <input name="name" class="form-control" value="{{ $sec->name }}" required>
+          <!-- <p style="font-weight: 800; width: 12rem; margin: 0;">Thứ tự</p> -->
+          <input name="sort_order" style = "width:10%;" type="number" class="form-control" value="{{ $sec->sort_order }}">
           <button class="btn-mimi nut-luu">Lưu Section</button>
         </form>
         <form action="{{ route('admin.menu.section.destroy',$sec) }}"
@@ -116,8 +118,8 @@
               @csrf
               <input type="hidden" name="active" value="{{ $sec->id }}">
               @method('PUT')
-              <input name="title" class="form-control w-25" value="{{ $grp->title }}" required>
-              <input name="sort_order" type="number" class="form-control w-15" value="{{ $grp->sort_order }}">
+              <input name="title" class="form-control" value="{{ $grp->title }}" required>
+              <input name="sort_order" style = "width:10%;" type="number " class="form-control" value="{{ $grp->sort_order }}">
               <button class="btn-mimi luu-muc">Lưu Mục</button>
             </form>
             <form action="{{ route('admin.menu.group.destroy',$grp) }}"
