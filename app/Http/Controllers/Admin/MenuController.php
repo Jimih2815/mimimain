@@ -28,7 +28,8 @@ class MenuController extends Controller
             'slug'       => Str::slug($r->name),
             'sort_order' => MenuSection::max('sort_order') + 1,
         ]);
-        return back();
+        return back()->withInput();
+
     }
 
     public function updateSection(Request $r, MenuSection $section)
@@ -39,12 +40,14 @@ class MenuController extends Controller
             'slug'       => Str::slug($r->name),
             'sort_order' => $r->sort_order,
         ]);
-        return back();
+        return back()->withInput();
+
     }
 
     public function destroySection(MenuSection $section)
     {
-        $section->delete(); return back();
+        $section->delete(); return back()->withInput();
+
     }
 
     /* ========== GROUP CRUD ========== */
@@ -55,19 +58,22 @@ class MenuController extends Controller
             'title'      => $r->title,
             'sort_order' => $section->groups()->max('sort_order') + 1,
         ]);
-        return back();
+        return back()->withInput();
+
     }
 
     public function updateGroup(Request $r, MenuGroup $group)
     {
         $r->validate(['title'=>'required','sort_order'=>'integer']);
         $group->update($r->only('title','sort_order'));
-        return back();
+        return back()->withInput();
+
     }
 
     public function destroyGroup(MenuGroup $group)
     {
-        $group->delete(); return back();
+        $group->delete(); return back()->withInput();
+
     }
 
     /* ========== PRODUCT PIVOT ========== */
@@ -84,11 +90,13 @@ class MenuController extends Controller
 
             $group->products()->attach($r->product_id, ['sort_order' => $next]);
         }
-        return back();
+        return back()->withInput();
+
     }
 
     public function removeProductFromGroup(MenuGroup $group, $pid)
     {
-        $group->products()->detach($pid); return back();
+        $group->products()->detach($pid); return back()->withInput();
+
     }
 }

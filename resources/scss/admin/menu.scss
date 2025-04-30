@@ -1,0 +1,209 @@
+
+.trang-sua-menu {  
+   width: 50%;
+   margin-right:auto;
+   margin-left: auto;
+
+
+
+   .mega-menu-preview {
+    background: #fff;
+    padding: 1rem 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  
+    ul.nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+  
+      .nav-item {
+        position: relative;
+  
+        // dùng span.nav-link thay cho a để chặn click
+        span.nav-link {
+          display: block;
+          padding: 0.5rem 0.75rem;
+          color: #333;
+          font-weight: 600;
+          transition: color .2s;
+          cursor: default;
+  
+          &:hover {
+            color: $brand-teal;
+          }
+        }
+  
+        // Ẩn dropdown mặc định
+        .mega-menu-preview__dropdown {
+          display: none ;
+          visibility: hidden ;
+          opacity: 0 ;
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-10px);
+          min-width: 600px;
+          background: #fff;
+          border: none;
+          padding: 2rem;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          z-index: 1000;
+          transition: all .2s ease;
+          width: 100%;
+          .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+          }
+  
+          h6 {
+            color: #4ab3af;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+          }
+  
+          ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+  
+            li {
+              margin-bottom: 0.25rem;
+  
+              .dropdown-item {
+                display: block;
+                color: #555;
+                padding: 0;
+                transition: color .2s;
+  
+                &:hover {
+                  color: $brand-teal;
+                  background: transparent !important;
+                }
+              }
+            }
+          }
+        }
+  
+        // Hiển thị dropdown khi hover
+        &:hover {
+          span.nav-link {
+            color: $brand-teal;
+          }
+          .mega-menu-preview__dropdown {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+      }
+    }
+  }
+  
+  .nut-them-section {
+    background-color: #d1a029;
+    font-size: 1.2rem;
+    &:hover {
+        background-color: #dbc183;
+
+    }
+  }
+  .nut-luu {
+    background-color: #3f9426;
+    font-size: 1rem;
+    font-weight: 400 !important;
+    white-space: nowrap;
+    &:hover {
+        background-color: #75b961;
+
+    }
+  }
+  .luu-muc {
+    background-color: #3f9426;
+    font-size: 1rem;
+    font-weight: 400 !important;
+    white-space: nowrap;
+    &:hover {
+        background-color: #75b961;
+    }
+  }
+  .nut-xoa {
+    background-color: #b83232;
+    font-size: 1rem;
+    font-weight: 400 !important;
+    white-space: nowrap;
+    &:hover {
+        background-color: #e46969;
+    }
+  }
+  .nut-them {
+    background-color: #4ab3af;
+    font-size: 1rem;
+    font-weight: 400 !important;
+    white-space: nowrap;
+    &:hover {
+        background-color: #7ddbd8;
+    }
+  }
+  .nut-them-muc {
+    background-color: #d1a029;
+    font-size: 1.2rem;
+    font-weight: 600 !important;
+    white-space: nowrap;
+    &:hover {
+        background-color: #d8b462;
+    }
+  }
+  .nut-xoa-muc {
+    border: 1px solid #b83232;
+    border-radius: 50px;
+    padding: 0.1rem 1rem;
+    font-size: 1rem;
+    color: #b83232;
+    font-weight: 400;
+  }
+.khung-section {
+    border: 2px solid #d1a029;
+    border-radius: 10px;
+}
+.nut-x {
+    color: white;
+    background-color: #b83232;
+    border: 2px solid #b83232;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 0.4rem 0.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+        color: #b83232;
+        background-color: #ffffff;
+        border: 2px solid #b83232;
+    }
+
+}
+.nav-link.active {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #f8f9fa;
+}
+.nav-link {
+    color: #4ab3af !important;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.form-them-muc-cont {
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1.5rem 0 4rem 0;
+}
+
+
+
+}

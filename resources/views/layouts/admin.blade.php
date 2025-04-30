@@ -20,6 +20,8 @@
 
   {{-- Vite: biên dịch SCSS + JS --}}
   @vite('resources/scss/app.scss')
+  @stack('styles')
+
 </head>
 <body class="bg-light">
 
