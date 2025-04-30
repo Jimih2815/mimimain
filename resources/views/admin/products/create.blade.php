@@ -80,7 +80,7 @@
     <button type="button"
             id="add-option-btn"
             class="btn btn-sm nut-them mb-5 me-3">
-      + Thêm Option
+      + Thêm Phân Loại
     </button>
 
     <button class="btn mb-5 nut-cap-nhat">Lưu lại</button>
@@ -101,7 +101,7 @@
       <button type="button"
               class="btn btn-sm nut-them-phan-loai add-value"
               data-opt-index="{i}">
-        + Thêm Phân Loại
+        + Thêm Thuộc Tinh
       </button>
     </div>
   </template>

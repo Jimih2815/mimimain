@@ -154,7 +154,7 @@
 
               {{-- 3) Cột Giá trị --}}
               <div class="me-2 flex-fill">
-                <label class="form-label">Giá trị</label>
+                <label class="form-label">Thuộc tính Phân loại</label>
                 <input name="options[{{ $i }}][values][{{ $j }}][value]"
                       class="form-control"
                       value="{{ old("options.$i.values.$j.value", $val->value) }}"
@@ -181,7 +181,7 @@
           <button type="button"
                   class="btn btn-sm nut-them-phan-loai add-value"
                   data-opt-index="{{ $i }}">
-            + Thêm Giá trị
+            + Thêm Thuộc Tính
           </button>
         </div>
       @endforeach
