@@ -21,7 +21,8 @@
     </div>
   @endif
 
-  <form action="{{ route('admin.products.update', $product) }}"
+  <form novalidate
+        action="{{ route('admin.products.update', $product) }}"
         method="POST"
         enctype="multipart/form-data">
     @csrf
@@ -249,33 +250,12 @@
 
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', () => {
   let optCount = document.querySelectorAll('.option-block').length;
+  const optionsContainer = document.getElementById('options-container');
+  const form = document.querySelector('form');
 
-  document.getElementById('add-option-btn').onclick = () => {
-    const tpl = document.getElementById('tpl-option').innerHTML;
-    const html = tpl
-      .replaceAll('{i}', optCount)
-      .replaceAll('{i_display}', optCount + 1);
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = html;
-    document.getElementById('options-container').appendChild(wrapper);
-    addValue(optCount);
-    optCount++;
-  };
-
-  document.getElementById('options-container')
-    .addEventListener('click', e => {
-      if (e.target.matches('.add-value')) {
-        addValue(e.target.getAttribute('data-opt-index'));
-      }
-      if (e.target.matches('.remove-option')) {
-        e.target.closest('.option-block').remove();
-      }
-      if (e.target.matches('.remove-value')) {
-        e.target.closest('.value-block').remove();
-      }
-    });
-
+  // Tạo 1 dòng mới trong option-block thứ i
   function addValue(i) {
     const block = document.querySelector(`.option-block[data-index="${i}"]`);
     const container = block.querySelector('.values-container');
@@ -286,5 +266,77 @@
     wrapper.innerHTML = tpl;
     container.appendChild(wrapper);
   }
+
+  // Kiểm tra 1 value-block đã điền xong cả value + extra_price chưa
+  function isBlockReady(vb) {
+    const valInp   = vb.querySelector('input[name*="[value]"]');
+    const extraInp = vb.querySelector('input[name*="[extra_price]"]');
+    return valInp.value.trim() !== '' && extraInp.value.trim() !== '';
+  }
+
+  // 1) Khởi tạo: nếu option-block không có dòng nào, thêm 1
+  document.querySelectorAll('.option-block').forEach(block => {
+    const i = block.dataset.index;
+    if (!block.querySelectorAll('.value-block').length) {
+      addValue(i);
+    }
+  });
+
+  // 2) Auto-add khi hoàn thiện dòng cuối (value + extra_price)
+  optionsContainer.addEventListener('input', e => {
+    if (!e.target.matches('input[name*="[value]"], input[name*="[extra_price]"]')) return;
+    const vb = e.target.closest('.value-block');
+    const all = Array.from(vb.parentElement.querySelectorAll('.value-block'));
+    if (
+      vb === all[all.length - 1] &&
+      isBlockReady(vb) &&
+      !vb.dataset.handled
+    ) {
+      vb.dataset.handled = 'true';
+      addValue(vb.closest('.option-block').dataset.index);
+    }
+  });
+
+  // 3) Nút +Thêm Option
+  document.getElementById('add-option-btn').onclick = () => {
+    const tpl = document.getElementById('tpl-option').innerHTML;
+    const html = tpl
+      .replaceAll('{i}', optCount)
+      .replaceAll('{i_display}', optCount + 1);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+    optionsContainer.appendChild(wrapper);
+    addValue(optCount);
+    optCount++;
+  };
+
+  // 4) Nút +Thêm Thuộc tính / Remove
+  optionsContainer.addEventListener('click', e => {
+    if (e.target.matches('.add-value')) {
+      addValue(e.target.getAttribute('data-opt-index'));
+    }
+    if (e.target.matches('.remove-option')) {
+      e.target.closest('.option-block').remove();
+    }
+    if (e.target.matches('.remove-value')) {
+      e.target.closest('.value-block').remove();
+    }
+  });
+
+  // 5) Trước khi submit: remove hẳn các value-block trống
+  form.addEventListener('submit', () => {
+    document.querySelectorAll('.value-block').forEach(vb => {
+      const valInp   = vb.querySelector('input[name*="[value]"]');
+      const extraInp = vb.querySelector('input[name*="[extra_price]"]');
+      if (valInp.value.trim() === '' && extraInp.value.trim() === '') {
+        vb.remove();
+      }
+    });
+  });
+});
 </script>
 @endpush
+
+
+
+
