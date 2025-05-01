@@ -333,61 +333,35 @@
 
       // === 2) KHỞI TẠO TINYMCE ===
       if (!window.tinymce) return;
-      console.log('✨ init TinyMCE?', typeof tinymce, tinymce.majorVersion);
 
       tinymce.init({
         selector: '#long_description',
         height: 400,
         menubar: false,
 
-        // KHAI BÁO PLUGIN DÙNG DẠNG CHUỖI hoặc MẢNG
+        // Plugins
         plugins: [
           'advlist','autolink','lists','link','image','charmap','preview','anchor',
           'searchreplace','visualblocks','code','fullscreen',
           'insertdatetime','media','table','paste','help','wordcount'
         ].join(' '),
 
+        // Toolbar
         toolbar:
           'undo redo | formatselect | bold italic underline | ' +
           'alignleft aligncenter alignright alignjustify | ' +
           'bullist numlist outdent indent | link image media | code',
 
-        // === CẤU HÌNH UPLOAD ẢNH ===
-        images_upload_url: '{{ route("admin.products.uploadImage") }}',
+        // === Built-in uploader với token trên URL ===
+        images_upload_url: '{{ route("admin.products.uploadImage") }}?_token={{ csrf_token() }}',
         automatic_uploads: true,
         images_upload_credentials: true,
 
-        // Hoặc custom handler nếu bạn muốn
-        /*
-        images_upload_handler: function(blobInfo, success, failure) {
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', '{{ route("admin.products.uploadImage") }}');
-          xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector("meta[name='csrf-token']").getAttribute('content'));
-          xhr.onload = function() {
-            if (xhr.status !== 200) return failure('HTTP Error: ' + xhr.status);
-            try {
-              var json = JSON.parse(xhr.responseText);
-              if (!json.location) throw "No location field";
-              success(json.location);
-            } catch (e) {
-              failure('Upload thất bại: ' + e);
-            }
-          };
-          var formData = new FormData();
-          formData.append('file', blobInfo.blob(), blobInfo.filename());
-          xhr.send(formData);
-        },
-        */
-
+        // Tùy style bên trong editor
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
       });
     });
   </script>
 @endpush
-
-
-
-
-
 
 

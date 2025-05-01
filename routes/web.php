@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Route;
 | Phân chia theo nhóm: PUBLIC, AUTH, ADMIN
 */
 
-//
 // PUBLIC CONTROLLERS
-//
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CollectionController;
@@ -22,18 +20,14 @@ use App\Http\Controllers\CheckoutController;
 use App\Models\Product;
 use App\Http\Controllers\FavoriteController;
 
-//
 // AUTH CONTROLLERS
-//
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
-//
 // ADMIN CONTROLLERS
-//
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController         as AdminProductController;
@@ -48,7 +42,6 @@ use App\Http\Controllers\Admin\ProductSliderController;
 use App\Http\Controllers\Admin\WidgetController;
 use App\Http\Controllers\Admin\WidgetPlacementController;
 use App\Http\Controllers\Admin\SidebarItemController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +83,7 @@ Route::get('/favorites', [FavoriteController::class, 'index'])
 // toggle favorite qua AJAX
 Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])
      ->name('favorites.toggle');
+
 /*
 |--------------------------------------------------------------------------
 | 3. AUTH ROUTES
@@ -163,6 +157,9 @@ Route::prefix('admin')
 
     // 4.4 Quản lý sản phẩm
     Route::resource('products', AdminProductController::class);
+    // route để TinyMCE upload ảnh
+    Route::post('products/upload-image', [AdminProductController::class, 'uploadImage'])
+         ->name('products.uploadImage');
 
     // 4.6 Quản lý người dùng
     Route::controller(AdminUserController::class)->group(function () {
@@ -178,12 +175,10 @@ Route::prefix('admin')
     // Collection‐Sliders: reorder AJAX
     Route::post('collection-sliders/reorder', [CollectionSliderController::class, 'reorder'])
          ->name('collection-sliders.reorder');
-
     // Collection‐Sliders: move up/down
     Route::post('collection-sliders/{collection_slider}/move',
          [CollectionSliderController::class,'move'])
          ->name('collection-sliders.move');
-
     // Collection‐Sliders: CRUD (except show)
     Route::resource('collection-sliders', CollectionSliderController::class)
          ->except(['show']);
@@ -204,9 +199,6 @@ Route::prefix('admin')
     Route::resource('widgets',         WidgetController::class);
     Route::resource('placements',      WidgetPlacementController::class);
     Route::resource('sidebar-items',   SidebarItemController::class);
-     // route để TinyMCE upload ảnh
-     Route::post('products/upload-image', [ProductController::class, 'uploadImage'])
-     ->name('products.uploadImage');
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL
