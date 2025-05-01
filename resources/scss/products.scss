@@ -366,3 +366,43 @@
     color: #b83232;
   }
 }
+
+
+
+/* Chặn browser kéo image */
+.product-swiper-related .swiper-slide img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Đảm bảo container ngoài không scroll ngang */
+.slider-full-width {
+  overflow-x: hidden !important;
+}
+.slider-related {
+  > .d-flex {
+    .related-prev,
+    .related-next {
+      position: static !important;
+      top: auto !important;
+      margin: 0 !important;
+      transform: none !important;
+
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 3rem !important;
+      height: 3rem !important;
+      background-color: #4ab3af !important;
+      border: 1px solid #4ab3af !important;
+      border-radius: 50% !important;
+      color: white !important;
+    }
+
+    .related-prev {
+      margin-right: 1rem !important;
+    }
+  }
+}

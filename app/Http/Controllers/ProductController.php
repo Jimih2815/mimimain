@@ -50,6 +50,26 @@ class ProductController extends Controller
             }])
             ->get();
 
-        return view('products.show', compact('product','optionTypes'));
+        // ==== MỚI: Related Products Logic ====
+        // Lấy collection mới nhất của product, rồi lấy tối đa 15 sp khác trong collection đó
+        $latestCollection = $product->collections()
+                                    ->orderBy('created_at', 'desc')
+                                    ->first();
+
+        if ($latestCollection) {
+            $relatedProducts = $latestCollection->products()
+                ->where('id', '<>', $product->id)
+                ->take(15)
+                ->get();
+        } else {
+            // fallback: random 15 sp
+            $relatedProducts = Product::where('id', '<>', $product->id)
+                ->inRandomOrder()
+                ->take(15)
+                ->get();
+        }
+        // =====================================
+
+        return view('products.show', compact('product','optionTypes','relatedProducts'));
     }
 }

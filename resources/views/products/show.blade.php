@@ -159,6 +159,36 @@
     </div>
   </div>
 </div>
+
+
+{{-- ─── RELATED PRODUCTS SLIDER ─── --}}
+<div class="slider-related mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Sản phẩm liên quan</h3>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-outline-secondary me-2 related-prev">
+        <i class="fa-solid fa-chevron-left fs-4"></i>
+      </button>
+      <button type="button" class="btn btn-outline-secondary related-next">
+        <i class="fa-solid fa-chevron-right fs-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="swiper product-swiper-related">
+    <div class="swiper-wrapper">
+      @foreach($relatedProducts as $rel)
+        <div class="swiper-slide">
+          @include('partials.product-card', ['product' => $rel])
+        </div>
+      @endforeach
+    </div>
+    {{-- nếu cần pagination: --}}
+    {{-- <div class="swiper-pagination"></div> --}}
+  </div>
+</div>
+{{-- ───────────────────────────────── --}}
+
 @endsection
 
 @push('scripts')
