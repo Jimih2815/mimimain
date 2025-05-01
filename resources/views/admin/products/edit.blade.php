@@ -334,34 +334,69 @@
       // === 2) KHỞI TẠO TINYMCE ===
       if (!window.tinymce) return;
 
-      tinymce.init({
-        selector: '#long_description',
-        height: 400,
-        menubar: false,
+  tinymce.init({
+    selector: '#long_description',
+    height: 400,
+    menubar: false,
 
-        // Plugins
-        plugins: [
-          'advlist','autolink','lists','link','image','charmap','preview','anchor',
-          'searchreplace','visualblocks','code','fullscreen',
-          'insertdatetime','media','table','paste','help','wordcount'
-        ].join(' '),
+    /*
+     |------------------------------------------------------------------
+     | Plugins – KHÔNG cần 'font' nữa; font-family & font-size
+     | là core toolbar items từ TinyMCE 5 trở lên
+     |------------------------------------------------------------------
+     */
+    plugins: [
+      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
+      'searchreplace', 'visualblocks', 'code', 'fullscreen',
+      'insertdatetime', 'media', 'table', 'paste', 'help', 'wordcount'
+    ].join(' '),
 
-        // Toolbar
-        toolbar:
-          'undo redo | formatselect | bold italic underline | ' +
-          'alignleft aligncenter alignright alignjustify | ' +
-          'bullist numlist outdent indent | link image media | code',
+    /*
+     |------------------------------------------------------------------
+     | Toolbar – TinyMCE 6 đổi tên:
+     |   fontselect      → fontfamily
+     |   fontsizeselect  → fontsize
+     | Để “ăn chắc”, ta cho cả 2 cặp nút; engine sẽ bỏ qua nút
+     | không tồn tại ở phiên bản đang chạy, nên không báo lỗi.
+     |------------------------------------------------------------------
+     */
+    toolbar: [
+      'undo redo | fontfamily fontselect | fontsize fontsizeselect | blocks |',
+      'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |',
+      'bullist numlist outdent indent | link image media | removeformat | code'
+    ].join(' '),
 
-        // === Built-in uploader với token trên URL ===
-        images_upload_url: '{{ route("admin.products.uploadImage") }}?_token={{ csrf_token() }}',
-        automatic_uploads: true,
-        images_upload_credentials: true,
+    /*
+     |------------------------------------------------------------------
+     | Danh sách cỡ chữ hiển thị (theo TinyMCE 6: option
+     | "font_size_formats"; bản 5 vẫn chấp nhận "fontsize_formats")
+     |------------------------------------------------------------------
+     */
+    font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
+    // TinyMCE 5 fallback (được bỏ qua bởi v6 mà không lỗi)
+    fontsize_formats : '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
 
-        // Tùy style bên trong editor
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-      });
-    });
-  </script>
+    /*
+     |------------------------------------------------------------------
+     | Cấu hình uploader ảnh kèm CSRF (Laravel)
+     |------------------------------------------------------------------
+     */
+    images_upload_url: '{{ route("admin.products.uploadImage") }}?_token={{ csrf_token() }}',
+    automatic_uploads: true,
+    images_upload_credentials: true,
+
+    /*
+     |------------------------------------------------------------------
+     | CSS hiển thị bên trong editor
+     |------------------------------------------------------------------
+     */
+    content_style: `
+      body {font-family: Helvetica,Arial,sans-serif; font-size: 14px;}
+      img  {max-width: 100%; height: auto;}
+    `
+  });
+});
+</script>
 @endpush
 
 
