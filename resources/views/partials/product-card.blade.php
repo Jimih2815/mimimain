@@ -11,9 +11,9 @@
     <p class="card-text text-danger fw-bold">
       {{ number_format($product->base_price,0,',','.') }}₫
     </p>
-    <a href="{{ route('products.show', $product->slug) }}"
+    <!-- <a href="{{ route('products.show', $product->slug) }}"
        class="mt-auto btn btn-sm btn-outline-primary">
       Xem chi tiết
-    </a>
+    </a> -->
   </div>
 </div>

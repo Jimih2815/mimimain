@@ -162,9 +162,9 @@
 
 
 {{-- ─── RELATED PRODUCTS SLIDER ─── --}}
-<div class="slider-related mb-5">
+<div class="slider-related mb-5 ms-3 me-3">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="mb-0">Sản phẩm liên quan</h3>
+    <h2 class="mb-0">Phù hợp với bạn</h2>
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-outline-secondary me-2 related-prev">
         <i class="fa-solid fa-chevron-left fs-4"></i>
