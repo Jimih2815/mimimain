@@ -32,11 +32,19 @@ class ProductController extends Controller
     public function uploadImage(Request $request)
     {
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'file' => 'required|image|max:4096',            // chấp nhận mọi định dạng ảnh
         ]);
-        $path = $request->file('file')->store('public/product-descriptions');
-        $url  = Storage::url($path);
-        return response()->json(['location' => $url]);
+    
+        // Dùng trait để convert & lưu webp vào storage/app/public/products/descriptions
+        $relativePath = $this->uploadAsWebp(
+            $request->file('file'),
+            'products/descriptions'                         // folder tuỳ bạn đặt
+        );
+    
+        // Trả về absolute URL để TinyMCE chèn vào editor
+        return response()->json([
+            'location' => asset('storage/' . $relativePath)
+        ]);
     }
 
     public function store(Request $request)
