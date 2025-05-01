@@ -189,6 +189,12 @@
 </div>
 {{-- ───────────────────────────────── --}}
 
+@if($product->long_description)
+  <div class="product-long-description mt-4">
+    {!! $product->long_description !!}
+  </div>
+@endif
+
 @endsection
 
 @push('scripts')

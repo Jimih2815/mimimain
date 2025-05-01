@@ -204,6 +204,9 @@ Route::prefix('admin')
     Route::resource('widgets',         WidgetController::class);
     Route::resource('placements',      WidgetPlacementController::class);
     Route::resource('sidebar-items',   SidebarItemController::class);
+     // route để TinyMCE upload ảnh
+     Route::post('products/upload-image', [ProductController::class, 'uploadImage'])
+     ->name('products.uploadImage');
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL

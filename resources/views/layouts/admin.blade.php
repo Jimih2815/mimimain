@@ -2,23 +2,50 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Dashboard – MimiMain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {{-- Bootstrap CSS CDN --}}
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  {{-- Bootstrap Icons (nếu cần) --}}
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  {{-- Google Font --}}
+  {{-- CSRF token for AJAX uploads and TinyMCE --}}
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  <title>@yield('title', 'Admin Dashboard') – MimiMain</title>
+
+  {{-- Bootstrap CSS --}}
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-KE6BqgF7iO8u1h98zsIhBf/0p7Su1RXVNAp+1je56qOxjW0eEyUF0WgUrKDx6i6/" 
+    crossorigin="anonymous"
+  >
+
+  {{-- Bootstrap Icons --}}
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" 
+    rel="stylesheet"
+  >
+
+  {{-- Google Font: Baloo 2 --}}
   <link 
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
     rel="stylesheet"
   >
+
   {{-- FontAwesome --}}
-  <script src="https://kit.fontawesome.com/1081860f2a.js" crossorigin="anonymous"></script>
+  <script 
+    src="https://kit.fontawesome.com/1081860f2a.js" 
+    crossorigin="anonymous">
+  </script>
+
+  {{-- TinyMCE WYSIWYG Editor --}}
+  <script src="{{ asset('vendor/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+
 
   {{-- Vite: biên dịch SCSS + JS --}}
-  @vite('resources/scss/app.scss')
+  @vite([
+    'resources/scss/app.scss',
+    'resources/js/app.js',  {{-- nếu bạn có file JS chung --}}
+  ])
+
+  {{-- Cho phép các trang con push thêm style --}}
   @stack('styles')
 </head>
 <body class="bg-light">

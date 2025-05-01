@@ -58,6 +58,8 @@
           required
         >
       </div>
+      
+
     </div>
 
 
@@ -68,6 +70,13 @@
                 rows="3">{{ old('description', $product->description) }}</textarea>
     </div>
 
+    <div class="mb-3 w-100">
+      <label for="long_description" class="form-label">Mô tả chi tiết</label>
+      <textarea id="long_description"
+                name="long_description"
+                class="form-control"
+                rows="10">{{ old('long_description', $product->long_description) }}</textarea>
+    </div>
     
 
     <hr>
@@ -249,93 +258,135 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  let optCount = document.querySelectorAll('.option-block').length;
-  const optionsContainer = document.getElementById('options-container');
-  const form = document.querySelector('form');
+    {{-- Ensure bạn đã include CDN TinyMCE ở layout/admin.blade.php: 
+       <script src="https://cdn.tiny.cloud/1/…/tinymce.min.js" referrerpolicy="origin"></script> --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // === 1) XỬ LÝ DYNAMIC OPTIONS / VALUES ===
+      const optionsContainer = document.getElementById('options-container');
+      const addOptionBtn     = document.getElementById('add-option-btn');
+      let optionCount        = optionsContainer.querySelectorAll('.option-block').length;
+      const tplOption        = document.getElementById('tpl-option').innerHTML;
+      const tplValue         = document.getElementById('tpl-value').innerHTML;
 
-  // Tạo 1 dòng mới trong option-block thứ i
-  function addValue(i) {
-    const block = document.querySelector(`.option-block[data-index="${i}"]`);
-    const container = block.querySelector('.values-container');
-    const j = container.querySelectorAll('.value-block').length;
-    let tpl = document.getElementById('tpl-value').innerHTML;
-    tpl = tpl.replaceAll('{i}', i).replaceAll('{j}', j);
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = tpl;
-    container.appendChild(wrapper);
-  }
-
-  // Kiểm tra 1 value-block đã điền xong cả value + extra_price chưa
-  function isBlockReady(vb) {
-    const valInp   = vb.querySelector('input[name*="[value]"]');
-    const extraInp = vb.querySelector('input[name*="[extra_price]"]');
-    return valInp.value.trim() !== '' && extraInp.value.trim() !== '';
-  }
-
-  // 1) Khởi tạo: nếu option-block không có dòng nào, thêm 1
-  document.querySelectorAll('.option-block').forEach(block => {
-    const i = block.dataset.index;
-    if (!block.querySelectorAll('.value-block').length) {
-      addValue(i);
-    }
-  });
-
-  // 2) Auto-add khi hoàn thiện dòng cuối (value + extra_price)
-  optionsContainer.addEventListener('input', e => {
-    if (!e.target.matches('input[name*="[value]"], input[name*="[extra_price]"]')) return;
-    const vb = e.target.closest('.value-block');
-    const all = Array.from(vb.parentElement.querySelectorAll('.value-block'));
-    if (
-      vb === all[all.length - 1] &&
-      isBlockReady(vb) &&
-      !vb.dataset.handled
-    ) {
-      vb.dataset.handled = 'true';
-      addValue(vb.closest('.option-block').dataset.index);
-    }
-  });
-
-  // 3) Nút +Thêm Option
-  document.getElementById('add-option-btn').onclick = () => {
-    const tpl = document.getElementById('tpl-option').innerHTML;
-    const html = tpl
-      .replaceAll('{i}', optCount)
-      .replaceAll('{i_display}', optCount + 1);
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = html;
-    optionsContainer.appendChild(wrapper);
-    addValue(optCount);
-    optCount++;
-  };
-
-  // 4) Nút +Thêm Thuộc tính / Remove
-  optionsContainer.addEventListener('click', e => {
-    if (e.target.matches('.add-value')) {
-      addValue(e.target.getAttribute('data-opt-index'));
-    }
-    if (e.target.matches('.remove-option')) {
-      e.target.closest('.option-block').remove();
-    }
-    if (e.target.matches('.remove-value')) {
-      e.target.closest('.value-block').remove();
-    }
-  });
-
-  // 5) Trước khi submit: remove hẳn các value-block trống
-  form.addEventListener('submit', () => {
-    document.querySelectorAll('.value-block').forEach(vb => {
-      const valInp   = vb.querySelector('input[name*="[value]"]');
-      const extraInp = vb.querySelector('input[name*="[extra_price]"]');
-      if (valInp.value.trim() === '' && extraInp.value.trim() === '') {
-        vb.remove();
+      function addValueRow(idx) {
+        const block     = optionsContainer.querySelector(`.option-block[data-index="${idx}"]`);
+        const container = block.querySelector('.values-container');
+        const newJ      = container.querySelectorAll('.value-block').length;
+        const html      = tplValue.replace(/{i}/g, idx).replace(/{j}/g, newJ);
+        const wrap      = document.createElement('div');
+        wrap.innerHTML  = html;
+        container.appendChild(wrap.firstElementChild);
       }
+
+      // Khởi tạo nếu block nào chưa có value
+      optionsContainer.querySelectorAll('.option-block').forEach(block => {
+        const idx = block.dataset.index;
+        if (!block.querySelector('.value-block')) addValueRow(idx);
+      });
+
+      // Auto-add khi user nhập ở dòng cuối
+      optionsContainer.addEventListener('input', function(e) {
+        if (!e.target.matches('input[name*="[value]"], input[name*="[extra_price]"]')) return;
+        const vb     = e.target.closest('.value-block');
+        const sibs   = vb.parentNode.querySelectorAll('.value-block');
+        const isLast = vb === sibs[sibs.length - 1];
+        const hasVal = vb.querySelector('input[name*="[value]"]').value.trim() !== '';
+        const hasPr  = vb.querySelector('input[name*="[extra_price]"]').value.trim() !== '';
+        if (isLast && (hasVal || hasPr)) addValueRow(vb.closest('.option-block').dataset.index);
+      });
+
+      // Thêm Option mới
+      addOptionBtn.addEventListener('click', function() {
+        const html = tplOption
+          .replace(/{i}/g, optionCount)
+          .replace(/{i_display}/g, optionCount + 1);
+        const wrap = document.createElement('div');
+        wrap.innerHTML = html;
+        optionsContainer.appendChild(wrap.firstElementChild);
+        addValueRow(optionCount);
+        optionCount++;
+      });
+
+      // Delegate click: add-value, remove-option, remove-value
+      optionsContainer.addEventListener('click', function(e) {
+        if (e.target.matches('.add-value')) {
+          addValueRow(e.target.dataset.optIndex);
+        }
+        if (e.target.matches('.remove-option')) {
+          e.target.closest('.option-block').remove();
+        }
+        if (e.target.matches('.remove-value')) {
+          e.target.closest('.value-block').remove();
+        }
+      });
+
+      // Trước khi submit: loại bỏ value-block trống
+      const form = optionsContainer.closest('form');
+      form.addEventListener('submit', function() {
+        optionsContainer.querySelectorAll('.value-block').forEach(vb => {
+          const hasVal = vb.querySelector('input[name*="[value]"]').value.trim() !== '';
+          const hasPr  = vb.querySelector('input[name*="[extra_price]"]').value.trim() !== '';
+          if (!hasVal && !hasPr) vb.remove();
+        });
+      });
+
+      // === 2) KHỞI TẠO TINYMCE ===
+      if (!window.tinymce) return;
+      console.log('✨ init TinyMCE?', typeof tinymce, tinymce.majorVersion);
+
+      tinymce.init({
+        selector: '#long_description',
+        height: 400,
+        menubar: false,
+
+        // KHAI BÁO PLUGIN DÙNG DẠNG CHUỖI hoặc MẢNG
+        plugins: [
+          'advlist','autolink','lists','link','image','charmap','preview','anchor',
+          'searchreplace','visualblocks','code','fullscreen',
+          'insertdatetime','media','table','paste','help','wordcount'
+        ].join(' '),
+
+        toolbar:
+          'undo redo | formatselect | bold italic underline | ' +
+          'alignleft aligncenter alignright alignjustify | ' +
+          'bullist numlist outdent indent | link image media | code',
+
+        // === CẤU HÌNH UPLOAD ẢNH ===
+        images_upload_url: '{{ route("admin.products.uploadImage") }}',
+        automatic_uploads: true,
+        images_upload_credentials: true,
+
+        // Hoặc custom handler nếu bạn muốn
+        /*
+        images_upload_handler: function(blobInfo, success, failure) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '{{ route("admin.products.uploadImage") }}');
+          xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector("meta[name='csrf-token']").getAttribute('content'));
+          xhr.onload = function() {
+            if (xhr.status !== 200) return failure('HTTP Error: ' + xhr.status);
+            try {
+              var json = JSON.parse(xhr.responseText);
+              if (!json.location) throw "No location field";
+              success(json.location);
+            } catch (e) {
+              failure('Upload thất bại: ' + e);
+            }
+          };
+          var formData = new FormData();
+          formData.append('file', blobInfo.blob(), blobInfo.filename());
+          xhr.send(formData);
+        },
+        */
+
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+      });
     });
-  });
-});
-</script>
+  </script>
 @endpush
+
+
+
 
 
 
