@@ -334,68 +334,56 @@
       // === 2) KHỞI TẠO TINYMCE ===
       if (!window.tinymce) return;
 
-  tinymce.init({
-    selector: '#long_description',
-    height: 400,
-    menubar: false,
+      tinymce.init({
+        selector: '#long_description',
+        height: 400,
+        menubar: false,
 
-    /*
-     |------------------------------------------------------------------
-     | Plugins – KHÔNG cần 'font' nữa; font-family & font-size
-     | là core toolbar items từ TinyMCE 5 trở lên
-     |------------------------------------------------------------------
-     */
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
-      'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'paste', 'help', 'wordcount'
-    ].join(' '),
+        /* ――― Plugins (không cần 'font') ――― */
+        plugins: [
+          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
+          'searchreplace', 'visualblocks', 'code', 'fullscreen',
+          'insertdatetime', 'media', 'table', 'paste', 'help', 'wordcount'
+        ].join(' '),
 
-    /*
-     |------------------------------------------------------------------
-     | Toolbar – TinyMCE 6 đổi tên:
-     |   fontselect      → fontfamily
-     |   fontsizeselect  → fontsize
-     | Để “ăn chắc”, ta cho cả 2 cặp nút; engine sẽ bỏ qua nút
-     | không tồn tại ở phiên bản đang chạy, nên không báo lỗi.
-     |------------------------------------------------------------------
-     */
-    toolbar: [
-      'undo redo | fontfamily fontselect | fontsize fontsizeselect | blocks |',
-      'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |',
-      'bullist numlist outdent indent | link image media | removeformat | code'
-    ].join(' '),
+        /* ――― Toolbar (TinyMCE 6 đổi tên) ――― */
+        toolbar: [
+          'undo redo | fontfamily fontselect | fontsize fontsizeselect | blocks |',
+          'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |',
+          'bullist numlist outdent indent | link image media | removeformat | code'
+        ].join(' '),
 
-    /*
-     |------------------------------------------------------------------
-     | Danh sách cỡ chữ hiển thị (theo TinyMCE 6: option
-     | "font_size_formats"; bản 5 vẫn chấp nhận "fontsize_formats")
-     |------------------------------------------------------------------
-     */
-    font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
-    // TinyMCE 5 fallback (được bỏ qua bởi v6 mà không lỗi)
-    fontsize_formats : '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
+        /* ――― Dropdown kích cỡ chữ ――― */
+        font_size_formats:  '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
+        fontsize_formats  : '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt', // fallback TinyMCE 5
 
-    /*
-     |------------------------------------------------------------------
-     | Cấu hình uploader ảnh kèm CSRF (Laravel)
-     |------------------------------------------------------------------
-     */
-    images_upload_url: '{{ route("admin.products.uploadImage") }}?_token={{ csrf_token() }}',
-    automatic_uploads: true,
-    images_upload_credentials: true,
+        /* ――― Dropdown font-family (thêm Baloo 2) ――― */
+        font_family_formats: [
+          'Baloo 2="Baloo 2",cursive',
+          'Arial=Arial,Helvetica,sans-serif',
+          'Helvetica=Helvetica,Arial,sans-serif',
+          'Verdana=Verdana,Geneva,sans-serif',
+          'Tahoma=Tahoma,Arial,sans-serif',
+          'Times New Roman=Times New Roman,serif',
+          'Georgia=Georgia,serif',
+          'Courier New=Courier New,courier'
+        ].join(';'),
 
-    /*
-     |------------------------------------------------------------------
-     | CSS hiển thị bên trong editor
-     |------------------------------------------------------------------
-     */
-    content_style: `
-      body {font-family: Helvetica,Arial,sans-serif; font-size: 14px;}
-      img  {max-width: 100%; height: auto;}
-    `
-  });
-});
+        /* ――― Uploader ảnh kèm CSRF (Laravel) ――― */
+        images_upload_url: '{{ route("admin.products.uploadImage") }}?_token={{ csrf_token() }}',
+        automatic_uploads: true,
+        images_upload_credentials: true,
+
+        /* ――― CSS trong iframe editor ――― */
+        content_style: `
+          /* Nạp Google Font ngay trong iframe để chắc cú */
+          @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+
+          body { font-family: "Baloo 2", cursive; font-size: 14px; }
+          img  { max-width: 100%; height: auto; }
+        `
+      });
+    });
 </script>
 @endpush
 
