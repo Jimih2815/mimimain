@@ -36,7 +36,13 @@
   </script>
 
   {{-- TinyMCE WYSIWYG Editor --}}
-  <script src="{{ asset('vendor/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+  <!-- TinyMCE Cloud (đã gắn API‑key) -->
+  <script
+    src="https://cdn.tiny.cloud/1/wrdztyv2n38gnuvpweunqfv6jxih7qahyqgryofpcbrwqmsm/tinymce/6/tinymce.min.js"
+    referrerpolicy="origin"
+    defer  {{-- defer giúp không chặn parse HTML --}}
+  ></script>
+
 
 
   {{-- Vite: biên dịch SCSS + JS --}}
