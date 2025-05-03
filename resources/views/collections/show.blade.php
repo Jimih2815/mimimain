@@ -89,6 +89,9 @@
     </div>
   @endif
 </div>
+
+@include('partials.back-to-top-full')
+
 @endsection
 
 
