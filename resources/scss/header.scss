@@ -209,9 +209,11 @@ header {
 
       a {
         font-size: 1.3rem;
-        color: #333;
         position: relative;
         transition: color .2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         &:hover {
           color: $brand-teal;
@@ -247,7 +249,7 @@ header {
   &:hover {
     border: 1px solid #d1a029;
     color: white !important;
-    background-color: darken(#d1a029,5%); 
+    background-color: lighten(#d1a029,20%); 
   }
 }
 .input-group {

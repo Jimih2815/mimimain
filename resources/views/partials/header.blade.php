@@ -149,15 +149,14 @@
           </ul>
         </div>
 
-        @if($cartCount)
-          <div class="text-center mt-2 view-cart-li">
-            <a href="{{ route('cart.index') }}"
-              class="btn-mimi nut-dropdown-gio-hang w-100 text-decoration-none"
-              style="color:white!important;">
-              Xem toàn bộ giỏ hàng
-            </a>
-          </div>
-        @endif
+        <div class="text-center mt-2 view-cart-li"
+            style="{{ $cartCount ? '' : 'display:none' }}">
+          <a href="{{ route('cart.index') }}"
+            class="btn-mimi nut-dropdown-gio-hang w-100 text-decoration-none"
+            style="color:white!important; font-size:1rem;">
+            Xem toàn bộ giỏ hàng
+          </a>
+        </div>
 
     </div>
 
@@ -196,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnClose  = document.getElementById('cart-notif-close');
   let timeoutHide;
 
-  // hiển thị notification
+  // show notification
   window.showCartNotification = (msg, imgUrl) => {
     clearTimeout(timeoutHide);
     notifList.innerHTML = `
@@ -211,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     timeoutHide = setTimeout(window.hideCartNotification, 3000);
   };
 
-  // ẩn notification
+  // hide notification
   window.hideCartNotification = () => {
     notif.style.display = 'none';
     notif.classList.remove('show');
@@ -227,4 +226,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
+
 

@@ -200,11 +200,20 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Khởi tạo ảnh chính và thumbnails ---
-  const mainImg         = document.getElementById('main-product-img');
-  const thumbs          = document.querySelectorAll('.thumb-item');
-  const thumbsContainer = document.querySelector('.thumbs-container');
+  const csrf           = document.querySelector('meta[name="csrf-token"]').content;
+  const mainImg        = document.getElementById('main-product-img');
+  const thumbs         = document.querySelectorAll('.thumb-item');
+  const thumbsContainer= document.querySelector('.thumbs-container');
+  const basePrice      = {{ $product->base_price }};
+  const totalEl        = document.getElementById('total-price');
+  const items          = document.querySelectorAll('.option-item-show');
+  const selected       = {};
+  const form           = document.getElementById('add-to-cart-form');
+  const errorEl        = document.getElementById('option-error');
+  const buyNowBtn      = document.getElementById('buy-now-btn');
+  const badge          = document.getElementById('cart-count');
 
+  // ─── Thumbnails ───
   function adjustThumbsHeight() {
     if (thumbsContainer && mainImg) {
       thumbsContainer.style.height = mainImg.clientHeight + 'px';
@@ -213,75 +222,48 @@ document.addEventListener('DOMContentLoaded', () => {
   mainImg.addEventListener('load', adjustThumbsHeight);
   window.addEventListener('resize', adjustThumbsHeight);
   if (mainImg.complete) adjustThumbsHeight();
-
-  function swapThumb(thumb) {
-    thumbs.forEach(t => t.classList.remove('selected'));
-    thumb.classList.add('selected');
-    mainImg.src = thumb.dataset.src;
+  function swapThumb(t) {
+    thumbs.forEach(x=>x.classList.remove('selected'));
+    t.classList.add('selected');
+    mainImg.src = t.dataset.src;
     adjustThumbsHeight();
   }
-  thumbs.forEach(thumb => {
-    thumb.addEventListener('click', () => swapThumb(thumb));
-    thumb.addEventListener('mouseenter', () => swapThumb(thumb));
+  thumbs.forEach(t => {
+    t.addEventListener('click', ()=>swapThumb(t));
+    t.addEventListener('mouseenter', ()=>swapThumb(t));
   });
 
-  // --- Logic chọn Option và cập nhật giá ---
-  const basePrice = {{ $product->base_price }};
-  const totalEl   = document.getElementById('total-price');
-  const items     = document.querySelectorAll('.option-item-show');
-  const selected  = {};
-
-  const form      = document.getElementById('add-to-cart-form');
-  const errorEl   = document.getElementById('option-error');
-  const buyNowBtn = document.getElementById('buy-now-btn');
-
-  form.addEventListener('submit', e => {
-    const missing = Array
-      .from(form.querySelectorAll('input[id^="option-input-"]'))
-      .some(i => !i.value);
-    if (missing) {
-      e.preventDefault();
-      errorEl.style.display = 'block';
-    }
-  });
-
+  // ─── Option selection & price update ───
   function updateTotal() {
-    const sumExtra = Object.values(selected).reduce((a, b) => a + b, 0);
-    const total    = basePrice + sumExtra;
-    totalEl.textContent = total.toLocaleString('vi-VN') + '₫';
+    const sum = Object.values(selected).reduce((a,b)=>a+b,0);
+    totalEl.textContent = (basePrice + sum).toLocaleString('vi-VN') + '₫';
   }
-
   items.forEach(el => {
     el.addEventListener('click', () => {
       const typeId = el.dataset.typeId;
       const valId  = el.dataset.valId;
-      const extra  = parseInt(el.dataset.extra) || 0;
-
-      // Chọn option
-      document
-        .querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`)
-        .forEach(sib => sib.classList.remove('selected'));
+      const extra  = parseInt(el.dataset.extra)||0;
+      document.querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`)
+              .forEach(x=>x.classList.remove('selected'));
       el.classList.add('selected');
-
       selected[typeId] = extra;
       document.getElementById(`option-input-${typeId}`).value = valId;
       errorEl.style.display = 'none';
       updateTotal();
 
-      // Đổi ảnh nếu nhóm đầu
-      const groupEl = el.closest('.option-items-show');
-      if (groupEl && groupEl.dataset.firstGroup === '1' && el.dataset.img) {
+      // swap main image if first group
+      const grp = el.closest('.option-items-show');
+      if (grp.dataset.firstGroup==='1' && el.dataset.img) {
         mainImg.src = el.dataset.img;
         adjustThumbsHeight();
       }
     });
   });
 
-  // --- Nút Mua Ngay ---
+  // ─── Buy Now ───
   buyNowBtn.addEventListener('click', () => {
-    const missing = Array
-      .from(form.querySelectorAll('input[id^="option-input-"]'))
-      .some(i => !i.value);
+    const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]'))
+                         .some(i=>!i.value);
     if (missing) {
       errorEl.style.display = 'block';
       return;
@@ -289,8 +271,87 @@ document.addEventListener('DOMContentLoaded', () => {
     form.action = "{{ route('checkout.buyNow', $product->id) }}";
     form.submit();
   });
+
+  // ─── AJAX add to cart ───
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]'))
+                         .some(i=>!i.value);
+    if (missing) {
+      errorEl.style.display = 'block';
+      return;
+    }
+    errorEl.style.display = 'none';
+
+    const btn      = form.querySelector('button[type="submit"]');
+    const origText = btn.textContent;
+    const data     = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: data
+    })
+    .then(res => res.json())
+    .then(json => {
+      if (!json.success) {
+        alert(json.message || 'Thêm thất bại, thử lại nhé!');
+        return;
+      }
+
+      // update badge
+      if (badge) {
+        badge.textContent   = json.total_items;
+        badge.style.display = 'block';
+      }
+
+      // update dropdown-cart
+      const listUL = document.querySelector('.scrollable-cart ul#header-cart-list');
+      if (listUL) {
+        const emptyLi = listUL.querySelector('.empty-cart');
+        if (emptyLi) emptyLi.remove();
+
+        let existing = listUL.querySelector(`li[data-key="${json.item.key}"]`);
+        if (existing) {
+          const sm = existing.querySelector('small.text-muted');
+          sm.textContent = `${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}`;
+        } else {
+          const li = document.createElement('li');
+          li.className       = 'd-flex align-items-center mb-2';
+          li.dataset.key     = json.item.key;
+          li.innerHTML       = `
+            <img src="${json.item.image}"
+                 width="50" class="me-2 rounded"
+                 alt="${json.item.name}">
+            <div class="flex-grow-1">
+              <div class="fw-semibold">${json.item.name}</div>
+              <small class="text-muted">
+                ${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}
+              </small>
+            </div>`;
+          listUL.appendChild(li);
+        }
+      }
+
+      // cập nhật nút them giỏ
+      const viewLi = document.querySelector('.view-cart-li');
+      if (viewLi) viewLi.style.display = 'block';
+      
+      // button feedback
+      btn.textContent = 'Đã thêm';
+      setTimeout(()=> btn.textContent = origText, 1500);
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Có lỗi xảy ra, xem console nhé.');
+    });
+  });
 });
 </script>
 @endpush
+
 
 

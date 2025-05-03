@@ -212,6 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
 
+          // ——— bật nút “Xem toàn bộ giỏ hàng” ———
+          const viewLi = document.querySelector('.view-cart-li');
+          if (viewLi) viewLi.style.display = 'block';
+
 
           // c) Feedback nút
           btn.textContent = 'Đã thêm';
