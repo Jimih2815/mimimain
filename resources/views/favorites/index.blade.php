@@ -106,6 +106,10 @@
   </div>
 
 </div>
+
+
+@include('partials.back-to-top-full')
+
 @endsection
 
 @push('scripts')

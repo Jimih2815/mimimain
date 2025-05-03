@@ -177,6 +177,10 @@
       <p class="mx-auto" style="max-width:720px">{{ $home->about_text }}</p>
     </div>
   </div>
+
+  @include('partials.back-to-top-full')
+
+  
 @endsection
 
 @push('scripts')

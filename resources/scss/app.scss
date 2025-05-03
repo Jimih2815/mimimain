@@ -360,6 +360,7 @@ body {
   flex-direction: column;
   align-items: flex-end;
   z-index: 1000;
+  pointer-events: none;
 }
 
 /* Toggle button trên cùng */
@@ -377,6 +378,7 @@ body {
   cursor: pointer;
   transition: transform 0.3s ease;
   margin-bottom: 10px;
+  pointer-events: auto;
 }
 
 /* Xoay icon khi mở */
@@ -436,12 +438,13 @@ body {
 .mc-phone-btn     { 
   background-color: #3f9426; 
   position: absolute;
-    top: -55%;
-    right: 0%;
+  top: -55%;
+  right: 0%;
     transition: 
-    width 0.3s ease,
-    border-radius 0.3s ease,
-    right 0.3s ease;
+    width 0.3s ease, 
+    border-radius 0.3s ease, 
+    right 0.3s ease,
+    transform 0.3s ease;  
   overflow: hidden;
   .fa-phone {
     font-size: 2.4rem;
@@ -467,6 +470,7 @@ body {
     color: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     right: 0 !important;
+    
 }
 .mc-phone-text i {
   opacity: 0;
@@ -483,4 +487,79 @@ body {
   display: flex;          /* để canh giữa text/icon */
   align-items: center;    
   justify-content: center;
+}
+
+
+
+
+// CSS cho nút back to top
+
+.back-to-top-full {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: transparent;
+  /* border-top-left-radius: 300% 400%; */
+  /* border-top-right-radius: 300% 400%; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  pointer-events: none !important;
+  transition: opacity 0.4s ease, transform 0.6s ease;
+  z-index: 1000;
+
+  transform: translateY(100%);
+  overflow: hidden; /* để che phần nền ::before */
+  /* → XÓA hẳn position: relative;  */
+}
+
+/* Pseudo-element tạo nền gradient mái vòm */
+.back-to-top-full::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(
+    to top,
+    rgba(255,255,255,1)   0%,
+    rgba(255,255,255,0.5) 40%,
+    rgba(255,255,255,0.2) 70%,
+    rgba(255,255,255,0)   100%
+  );
+  transition: height 0.2s ease;
+  z-index: -1;
+  /* border-top-left-radius: 300% 400%; */
+  /* border-top-right-radius: 300% 400%; */
+}
+
+/* Khi scroll xuống → show container */
+.back-to-top-full.show {
+  opacity: 0.6;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Khi icon hover (JS gắn .active lên container) */
+.back-to-top-full.active::before {
+  height: 100%;
+}
+
+/* Icon styling */
+.back-to-top-full i.fa-angles-up {
+  color: #333;
+  font-size: 2rem;
+  transition: transform 0.4s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Icon bay lên nhẹ khi hover */
+.back-to-top-full.active i.fa-angles-up {
+  transform: translateY(-3px) scale(1.2);
 }

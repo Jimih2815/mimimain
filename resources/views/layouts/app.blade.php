@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Sau 5s tự thu gọn panel
-  setTimeout(() => panel.classList.remove('expanded'), 5000);
+  setTimeout(() => panel.classList.remove('expanded'), 15000);
 
   // Toggle mở/đóng panel
   toggle.addEventListener('click', () => {
