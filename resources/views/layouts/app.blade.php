@@ -53,10 +53,93 @@
     @endif
   </main>
 
+
+
+ <!-- Floating Contact Panel -->
+ <div class="mc-floating-panel expanded" id="mcFloatingPanel">
+    <!-- 1) Toggle mở/đóng -->
+    <button type="button"
+            class="mc-floating-toggle"
+            id="mcToggleBtn"
+            style="margin-bottom: 6rem;"
+            aria-label="Mở / Đóng liên hệ">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- 2) 3 nút liên hệ -->
+    <div class="mc-floating-contact">
+      <a href="tel:0354235669"
+         class="mc-floating-contact__btn mc-phone-btn text-decoration-none"
+         title="Gọi: 0354 235 669">
+        <i class="fas fa-phone"></i>
+      </a>
+      <a href="https://zalo.me/0354235669"
+         class="mc-floating-contact__btn mc-zalo-btn text-decoration-none"
+         target="_blank" rel="noopener"
+         title="Chat Zalo: 0354 235 669">
+        <img src="/logochat/logo-zalo-chat.webp" alt="Zalo" class="w-100 h-100">
+      </a>
+      <a href="https://m.me/61560867710445"
+         class="mc-floating-contact__btn mc-messenger-btn text-decoration-none"
+         target="_blank" rel="noopener"
+         title="Chat Facebook">
+        <i class="fab fa-facebook-messenger"></i>
+      </a>
+    </div>
+  </div>
+
+
   {{-- Footer chung --}}
   @include('partials.footer')
 
   {{-- Nếu có các script cần push từ các view con --}}
   @stack('scripts')
+
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const panel    = document.getElementById('mcFloatingPanel');
+  const toggle   = document.getElementById('mcToggleBtn');
+  const phoneBtn = document.querySelector('.mc-phone-btn');
+
+  // Phát hiện desktop
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i
+                     .test(navigator.userAgent);
+
+  if (!isMobile && phoneBtn) {
+    // 1) Click để show số
+    phoneBtn.addEventListener('click', e => {
+      e.preventDefault();
+      phoneBtn.removeAttribute('href');
+      phoneBtn.classList.add('mc-phone-text');
+      phoneBtn.innerText = '0354 235 669';
+    });
+
+    // 2) Khi chuột rời khỏi nút, revert về icon
+    phoneBtn.addEventListener('mouseleave', () => {
+      if (phoneBtn.classList.contains('mc-phone-text')) {
+        phoneBtn.classList.remove('mc-phone-text');
+        phoneBtn.setAttribute('href', 'tel:0354235669');
+        phoneBtn.innerHTML = '<i class="fas fa-phone"></i>';
+      }
+    });
+  }
+
+  // Sau 5s tự thu gọn panel
+  setTimeout(() => panel.classList.remove('expanded'), 5000);
+
+  // Toggle mở/đóng panel
+  toggle.addEventListener('click', () => {
+    panel.classList.toggle('expanded');
+  });
+});
+</script>
+
+
+
+
+
+
+
 </body>
 </html>

@@ -351,3 +351,136 @@ body {
 
 
 
+/* ─── Floating Contact Panel ─── */
+.mc-floating-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+/* Toggle button trên cùng */
+.mc-floating-toggle {
+  padding: 17px 6px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  font-size: 1.3rem;
+  background-color: #d1a029;
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin-bottom: 10px;
+}
+
+/* Xoay icon khi mở */
+.mc-floating-toggle {
+  opacity: 0.6;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.mc-floating-panel.expanded .mc-floating-toggle {
+  opacity: 1;
+  
+}
+.mc-floating-panel.expanded .mc-floating-toggle i {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* Container 3 nút liên hệ */
+.mc-floating-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* Ẩn ban đầu */
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  position: relative;
+}
+
+/* Khi panel có .expanded thì show */
+.mc-floating-panel.expanded .mc-floating-contact {
+  /* Hiện ra */
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+  margin-right: 1rem;
+}
+
+/* Style chung cho mỗi nút */
+.mc-floating-contact__btn {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+.mc-floating-contact__btn:hover {
+  transform: scale(1.1);
+}
+
+/* Biến thể màu */
+.mc-phone-btn     { 
+  background-color: #3f9426; 
+  position: absolute;
+    top: -55%;
+    right: 0%;
+    transition: 
+    width 0.3s ease,
+    border-radius 0.3s ease,
+    right 0.3s ease;
+  overflow: hidden;
+  .fa-phone {
+    font-size: 2.4rem;
+  }
+} 
+.mc-zalo-btn      { background-color: #0068ff; } 
+.mc-messenger-btn { 
+  background-color: #0084ff;
+  .fa-facebook-messenger {
+    font-size: 3rem;
+  } 
+} 
+
+/* Khi desktop – chuyển phone-btn thành dạng text */
+.mc-phone-text {
+  width: 150px !important;
+    height: 65px;
+    padding: 0.5rem 1rem;
+    border-radius: 50px !important;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-color: #3f9426;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    right: 0 !important;
+}
+.mc-phone-text i {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.mc-phone-btn i {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.1s;
+}
+.mc-phone-btn,
+.mc-phone-text {
+  white-space: nowrap;    /* không wrap xuống dòng */
+  overflow: hidden;       /* ẩn phần text tràn ra ngoài */
+  display: flex;          /* để canh giữa text/icon */
+  align-items: center;    
+  justify-content: center;
+}
