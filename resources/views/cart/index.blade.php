@@ -39,30 +39,34 @@
                         method="POST"
                         class="d-inline-block xoa-border">
                     @csrf
-                    <button type="submit"
-                            name="action" value="dec"
-                            class="btn btn-outline-secondary btn-sm xoa-border">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary btn-sm xoa-border qty-btn minus"
+                      data-key="{{ $key }}"
+                      data-action="dec"
+                    >
                       @if($item['quantity'] > 1)
                         &minus;
                       @else
-                        <i class="fa fa-trash xoa-border"></i>
+                        <i class="fa fa-trash"></i>
                       @endif
                     </button>
-                  </form>
 
-                  <span class="btn btn-outline-secondary btn-sm mx-1 disabled xoa-border">
-                    {{ $item['quantity'] }}
-                  </span>
+                    <span
+                      class="item-qty btn btn-outline-secondary btn-sm mx-1 disabled xoa-border"
+                    >
+                      {{ $item['quantity'] }}
+                    </span>
 
-                  <form action="{{ route('cart.update', $key) }}"
-                        method="POST"
-                        class="d-inline-block xoa-border">
-                    @csrf
-                    <button type="submit"
-                            name="action" value="inc"
-                            class="btn btn-outline-secondary btn-sm xoa-border">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary btn-sm xoa-border qty-btn plus"
+                      data-key="{{ $key }}"
+                      data-action="inc"
+                    >
                       +
                     </button>
+
                   </form>
                 </div>
 
@@ -167,6 +171,7 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // === 1) Checkout summary logic ===
   const form        = document.getElementById('checkout-form');
   const btn         = document.getElementById('checkout-button');
   const warnEl      = document.getElementById('checkout-warning');
@@ -184,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
         subtotal += price * qty;
       }
     });
-
     const shipping = subtotal > 199000 
       ? 0 
       : (subtotal === 0 ? 0 : 20000);
@@ -197,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
     grandEl.textContent    = grand.toLocaleString('vi-VN') + '₫';
   }
 
-  // Kiểm tra khi submit
   form.addEventListener('submit', e => {
     recalcSummary();
     if (!Array.from(boxes).some(cb => cb.checked)) {
@@ -207,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Cập nhật ngay khi check/uncheck
   boxes.forEach(cb => 
     cb.addEventListener('change', () => {
       recalcSummary();
@@ -216,8 +218,64 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   );
 
+  // === 2) AJAX update quantity & remove ===
+  const token = document.querySelector('meta[name="csrf-token"]').content;
+  const updateUrl = "{{ url('/cart/update') }}"; 
+
+  document.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const rowKey = btn.dataset.key;
+      const action = btn.dataset.action;
+
+      try {
+        const res = await fetch(`${updateUrl}/${rowKey}`, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN':     token,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type':     'application/json',
+            'Accept':           'application/json',
+          },
+          body: JSON.stringify({ action })
+        });
+
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        if (data.success) {
+          const row   = btn.closest('.d-flex.align-items-start');
+          const qtyEl = row.querySelector('.item-qty');
+          qtyEl.textContent = data.quantity;
+
+          // Cập nhật dataset.qty để summary đúng
+          const cb = row.querySelector('input.rowCheck');
+          if (cb) cb.dataset.qty = data.quantity;
+
+          // **MỚI**: Cập nhật icon cho nút "minus" / "trash"
+          const decBtn = row.querySelector('.qty-btn.minus');
+          if (data.quantity > 1) {
+            decBtn.innerHTML = '&minus;';                     // hiển dấu trừ
+          } else {
+            decBtn.innerHTML = '<i class="fa fa-trash"></i>'; // hiển icon thùng rác
+          }
+
+          // Nếu quantity = 0 thì remove mục
+          if (data.quantity === 0) {
+            row.remove();
+          }
+
+          // Cập nhật lại summary
+          recalcSummary();
+        }
+      } catch (err) {
+        console.error('Lỗi cập nhật giỏ hàng:', err);
+      }
+    });
+  });
 });
 </script>
 @endpush
+
+
+
 
 
