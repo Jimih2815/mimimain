@@ -1,4 +1,3 @@
-{{-- resources/views/favorites/index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -54,40 +53,40 @@
                 <div class="mb-3">
                   <label class="form-label">{{ $typeName }}</label>
                   <div class="d-flex flex-row option-items-show mb-2"
-                       data-first-group="{{ $loop->first ? '1':'0' }}">
+                      data-first-group="{{ $loop->first ? '1':'0' }}">
                     @foreach($values as $val)
                       <div class="option-item-show"
-                           data-type-id="{{ $typeId }}"
-                           data-val-id="{{ $val->id }}"
-                           data-extra="{{ $val->extra_price }}"
-                           data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
+                          data-type-id="{{ $typeId }}"
+                          data-val-id="{{ $val->id }}"
+                          data-extra="{{ $val->extra_price }}"
+                          data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
                         {{ $val->value }}
                       </div>
                     @endforeach
                   </div>
                   <input type="hidden"
-                         name="options[{{ $typeId }}]"
-                         id="option-input-{{ $product->id }}-{{ $typeId }}"
-                         required>
+                        name="options[{{ $typeId }}]"
+                        id="option-input-{{ $product->id }}-{{ $typeId }}"
+                        required>
                 </div>
               @endforeach
 
               {{-- 2) Thông báo lỗi --}}
               <div id="option-error-{{ $product->id }}"
-                   class="text-danger small mb-2"
-                   style="display:none;">
+                  class="text-danger small mb-2"
+                  style="display:none;">
                 !!! Vui lòng chọn các tuỳ chọn.
               </div>
 
               {{-- 3) Hidden inputs final price & image --}}
               <input type="hidden"
-                     name="final_price"
-                     id="final-price-{{ $product->id }}"
-                     value="{{ $product->base_price }}">
+                    name="final_price"
+                    id="final-price-{{ $product->id }}"
+                    value="{{ $product->base_price }}">
               <input type="hidden"
-                     name="selected_img"
-                     id="selected-img-{{ $product->id }}"
-                     value="">
+                    name="selected_img"
+                    id="selected-img-{{ $product->id }}"
+                    value="">
 
               {{-- 4) Nút thêm giỏ hàng --}}
               <button type="submit"
@@ -104,50 +103,98 @@
       </div>
     @endforelse
   </div>
-
 </div>
 
-
 @include('partials.back-to-top-full')
-
 @endsection
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', ()=> {
   const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
-  // Toggle yêu thích: xóa ngay card và đổi icon
-  document.querySelectorAll('.btn-fav-toggle').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+  // 1) Toggle yêu thích (giữ nguyên)
+  document.querySelectorAll('.btn-fav-toggle').forEach(btn => {
+    btn.addEventListener('click', ()=> {
       const pid = btn.dataset.id;
       fetch(`/favorites/toggle/${pid}`, {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf,
-          'Accept':       'application/json',
-          'Content-Type': 'application/json'
+          'Accept':      'application/json',
+          'Content-Type':'application/json'
         }
       })
       .then(res => res.json())
       .then(json => {
-        const icon = btn.querySelector('i.fa-heart');
+        const icon    = btn.querySelector('i.fa-heart');
         const cardCol = btn.closest('.favorite-card');
-        if(json.added){
+        if (json.added) {
           icon.classList.replace('far','fas');
         } else {
           icon.classList.replace('fas','far');
-          if(cardCol) cardCol.remove();
+          if (cardCol) cardCol.remove();
         }
       })
-      .catch(()=>{
-        alert('Có lỗi, vui lòng thử lại.');
+      .catch(()=> alert('Có lỗi, vui lòng thử lại.'));
+    });
+  });
+
+  // 2) AJAX “Thêm vào giỏ hàng” + bắt buộc chọn đủ option
+  document.querySelectorAll('form[id^="add-to-cart-form-"]').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Lấy pid từ form.id, ví dụ "add-to-cart-form-5" => pid = "5"
+      const pid = form.id.replace('add-to-cart-form-','');
+      const errorEl = document.getElementById(`option-error-${pid}`);
+
+      // 2.1) Check bắt buộc chọn hết option (nếu có)
+      const inputs = form.querySelectorAll(`input[id^="option-input-${pid}-"]`);
+      const missing = Array.from(inputs).some(i => !i.value);
+      if (missing) {
+        if (errorEl) errorEl.style.display = 'block';
+        return;  // dừng, không AJAX
+      }
+      if (errorEl) errorEl.style.display = 'none';
+
+      // 2.2) Gửi AJAX
+      const btn          = form.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      const data         = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN'     : csrf,
+          'X-Requested-With' : 'XMLHttpRequest'
+        },
+        body: data
+      })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success) {
+          // Cập nhật badge cart nếu có
+          const badge = document.getElementById('cart-count');
+          if (badge && json.total_items != null) {
+            badge.textContent = json.total_items;
+          }
+          // Feedback nút
+          btn.textContent = 'Đã thêm';
+          setTimeout(() => btn.textContent = originalText, 1500);
+        } else {
+          alert(json.message || 'Thêm thất bại, thử lại sau nhé!');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Có lỗi xảy ra, xem console nhé.');
       });
     });
   });
 
-  // Option + giá + ảnh + add-to-cart logic
-  document.querySelectorAll('.product-card').forEach(card=>{
+  // 3) Option + giá + ảnh logic (giữ nguyên y nguyên)
+  document.querySelectorAll('.product-card').forEach(card => {
     const pid        = card.dataset.productId;
     const totalEl    = card.querySelector(`#total-price-${pid}`);
     const mainImg    = card.querySelector(`#main-img-${pid}`);
@@ -179,29 +226,31 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
         selected[typeId] = extra;
         document.getElementById(`option-input-${pid}-${typeId}`).value = valId;
-        errorEl.style.display = 'none';
+        if (errorEl) errorEl.style.display = 'none';
 
         updateTotal();
 
         // Swap ảnh nếu nhóm đầu
         const groupEl = el.closest('.option-items-show');
-        if(groupEl.dataset.firstGroup==='1' && el.dataset.img){
+        if (groupEl.dataset.firstGroup==='1' && el.dataset.img) {
           mainImg.src    = el.dataset.img;
           imgInput.value = el.dataset.img;
         }
       });
     });
 
+    // Chặn submit form mặc định của phần option (nếu JS vì lý do gì đó chạy lại)
     form.addEventListener('submit', e=>{
       const missing = Array.from(
-        form.querySelectorAll(`input[id^="option-input-${pid}"]`)
+        form.querySelectorAll(`input[id^="option-input-${pid}-"]`)
       ).some(i=>!i.value);
-      if(missing){
+      if (missing) {
         e.preventDefault();
-        errorEl.style.display='block';
+        if (errorEl) errorEl.style.display='block';
       }
     });
   });
 });
 </script>
 @endpush
+
