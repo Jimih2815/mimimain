@@ -110,60 +110,58 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', ()=> {
+document.addEventListener('DOMContentLoaded', () => {
   const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
-  // 1) Toggle yêu thích (giữ nguyên)
+  // 1) Toggle yêu thích
   document.querySelectorAll('.btn-fav-toggle').forEach(btn => {
-    btn.addEventListener('click', ()=> {
+    btn.addEventListener('click', () => {
       const pid = btn.dataset.id;
       fetch(`/favorites/toggle/${pid}`, {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf,
-          'Accept':      'application/json',
-          'Content-Type':'application/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         }
       })
       .then(res => res.json())
       .then(json => {
-        const icon    = btn.querySelector('i.fa-heart');
-        const cardCol = btn.closest('.favorite-card');
-        if (json.added) {
-          icon.classList.replace('far','fas');
-        } else {
+        const icon = btn.querySelector('i.fa-heart');
+        const card = btn.closest('.favorite-card');
+        if (json.added) icon.classList.replace('far','fas');
+        else {
           icon.classList.replace('fas','far');
-          if (cardCol) cardCol.remove();
+          if (card) card.remove();
         }
       })
-      .catch(()=> alert('Có lỗi, vui lòng thử lại.'));
+      .catch(() => alert('Có lỗi, vui lòng thử lại.'));
     });
   });
 
-  // 2) AJAX “Thêm vào giỏ hàng” + bắt buộc chọn đủ option
+  // 2) AJAX “Thêm vào giỏ hàng” + validation + badge + header-list + notification
   document.querySelectorAll('form[id^="add-to-cart-form-"]').forEach(form => {
+    if (form.dataset.bound) return;
+    form.dataset.bound = '1';
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-
-      // Lấy pid từ form.id, ví dụ "add-to-cart-form-5" => pid = "5"
-      const pid = form.id.replace('add-to-cart-form-','');
+      const pid     = this.id.replace('add-to-cart-form-','');
       const errorEl = document.getElementById(`option-error-${pid}`);
-
-      // 2.1) Check bắt buộc chọn hết option (nếu có)
-      const inputs = form.querySelectorAll(`input[id^="option-input-${pid}-"]`);
+      const inputs  = this.querySelectorAll(`input[id^="option-input-${pid}-"]`);
       const missing = Array.from(inputs).some(i => !i.value);
+
       if (missing) {
         if (errorEl) errorEl.style.display = 'block';
-        return;  // dừng, không AJAX
+        return;
       }
       if (errorEl) errorEl.style.display = 'none';
 
-      // 2.2) Gửi AJAX
-      const btn          = form.querySelector('button[type="submit"]');
-      const originalText = btn.textContent;
-      const data         = new FormData(form);
+      const btn      = this.querySelector('button[type="submit"]');
+      const origText = btn.textContent;
+      const data     = new FormData(this);
 
-      fetch(form.action, {
+      fetch(this.action, {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN'     : csrf,
@@ -174,14 +172,55 @@ document.addEventListener('DOMContentLoaded', ()=> {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          // Cập nhật badge cart nếu có
+          // a) Cập nhật badge
           const badge = document.getElementById('cart-count');
-          if (badge && json.total_items != null) {
+          if (badge) {
             badge.textContent = json.total_items;
+            badge.style.display = 'block';
           }
-          // Feedback nút
+
+          // b) Cập nhật header-cart-list
+          const listContainer = document.querySelector('.scrollable-cart ul#header-cart-list');
+          if (listContainer) {
+            // remove placeholder nếu có
+            const empty = listContainer.querySelector('.empty-cart');
+            if (empty) empty.remove();
+
+            // thử tìm <li data-key="…">
+            let existing = listContainer.querySelector(`li[data-key="${json.item.key}"]`);
+            if (existing) {
+              // chỉ update số lượng
+              const sm = existing.querySelector('small.text-muted');
+              sm.textContent = `${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}`;
+            } else {
+              // tạo mới
+              const li = document.createElement('li');
+              li.className = 'd-flex align-items-center mb-2';
+              li.dataset.key = json.item.key;
+              li.innerHTML = `
+                <img src="${json.item.image}"
+                    width="50" class="me-2 rounded"
+                    alt="${json.item.name}">
+                <div class="flex-grow-1">
+                  <div class="fw-semibold">${json.item.name}</div>
+                  <small class="text-muted">
+                    ${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}
+                  </small>
+                </div>`;
+              // chèn li vào listContainer
+              listContainer.appendChild(li);
+            }
+          }
+
+
+          // c) Feedback nút
           btn.textContent = 'Đã thêm';
-          setTimeout(() => btn.textContent = originalText, 1500);
+          setTimeout(() => btn.textContent = origText, 1500);
+
+          // d) Notification
+          if (window.showCartNotification) {
+            window.showCartNotification(json.message, json.image);
+          }
         } else {
           alert(json.message || 'Thêm thất bại, thử lại sau nhé!');
         }
@@ -193,7 +232,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
     });
   });
 
-  // 3) Option + giá + ảnh logic (giữ nguyên y nguyên)
+  // 3) Option/value logic & giá/ảnh (giữ nguyên)
   document.querySelectorAll('.product-card').forEach(card => {
     const pid        = card.dataset.productId;
     const totalEl    = card.querySelector(`#total-price-${pid}`);
@@ -201,56 +240,54 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const basePrice  = parseInt(totalEl.textContent.replace(/[^\d]/g,''),10);
     const items      = card.querySelectorAll('.option-item-show');
     const selected   = {};
-    const form       = document.getElementById(`add-to-cart-form-${pid}`);
-    const errorEl    = document.getElementById(`option-error-${pid}`);
-    const finalInput = document.getElementById(`final-price-${pid}`);
-    const imgInput   = document.getElementById(`selected-img-${pid}`);
+    const formEl     = document.getElementById(`add-to-cart-form-${pid}`);
+    const errorEl2   = document.getElementById(`option-error-${pid}`);
+    const finalIn    = document.getElementById(`final-price-${pid}`);
+    const imgIn      = document.getElementById(`selected-img-${pid}`);
 
-    function updateTotal(){
+    function updateTotal() {
       const sumExtra = Object.values(selected).reduce((a,b)=>a+b,0);
       const total    = basePrice + sumExtra;
       totalEl.textContent = total.toLocaleString('vi-VN') + '₫';
-      finalInput.value   = total;
+      finalIn.value       = total;
     }
 
-    items.forEach(el=>{
-      el.addEventListener('click', ()=>{
+    items.forEach(el => {
+      el.addEventListener('click', () => {
         const typeId = el.dataset.typeId;
         const valId  = el.dataset.valId;
         const extra  = parseInt(el.dataset.extra)||0;
 
-        // Chọn option
         card.querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`)
             .forEach(sib=>sib.classList.remove('selected'));
         el.classList.add('selected');
 
         selected[typeId] = extra;
         document.getElementById(`option-input-${pid}-${typeId}`).value = valId;
-        if (errorEl) errorEl.style.display = 'none';
+        if (errorEl2) errorEl2.style.display = 'none';
 
         updateTotal();
 
-        // Swap ảnh nếu nhóm đầu
         const groupEl = el.closest('.option-items-show');
         if (groupEl.dataset.firstGroup==='1' && el.dataset.img) {
-          mainImg.src    = el.dataset.img;
-          imgInput.value = el.dataset.img;
+          mainImg.src = el.dataset.img;
+          imgIn.value = el.dataset.img;
         }
       });
     });
 
-    // Chặn submit form mặc định của phần option (nếu JS vì lý do gì đó chạy lại)
-    form.addEventListener('submit', e=>{
-      const missing = Array.from(
-        form.querySelectorAll(`input[id^="option-input-${pid}-"]`)
+    formEl.addEventListener('submit', e => {
+      const miss = Array.from(
+        formEl.querySelectorAll(`input[id^="option-input-${pid}-"]`)
       ).some(i=>!i.value);
-      if (missing) {
+      if (miss) {
         e.preventDefault();
-        if (errorEl) errorEl.style.display='block';
+        if (errorEl2) errorEl2.style.display='block';
       }
     });
   });
 });
 </script>
 @endpush
+
 

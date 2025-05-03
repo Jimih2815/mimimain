@@ -14,7 +14,24 @@ $brand-gold : #d1a029;  // chủ đạo 3
 /* 2) Global header */
 header {
   box-shadow: none ;
-
+    
+    .scrollable-cart {
+      scrollbar-width: thin; // Firefox
+      scrollbar-color: #4ab3af transparent;
+    
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+    
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        background-color: #4ab3af;
+        border-radius: 3px;
+      }
+    }
 
   .bi-heart-fill {
     color: #b83232 !important;
@@ -279,4 +296,8 @@ header {
     border-color: inherit !important; /* giữ nguyên viền nếu có */
     color: inherit !important; /* giữ nguyên màu chữ */
   }
+
+
+
+
 }

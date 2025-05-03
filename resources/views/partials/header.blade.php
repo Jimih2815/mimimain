@@ -51,14 +51,12 @@
       <nav class="position-absolute start-50 translate-middle-x">
         <ul class="nav">
           @foreach($menuSections as $section)
-
-
             <li class="nav-item dropdown position-static">
-            <a class="nav-link px-3 fw-semibold text-dark"
-              href="{{ $section->collection_id 
-                        ? route('collections.show', $section->collection->slug) 
-                       : '#' }}"
-              id="sec-{{ $section->id }}">
+              <a class="nav-link px-3 fw-semibold text-dark"
+                 href="{{ $section->collection_id 
+                           ? route('collections.show', $section->collection->slug) 
+                           : '#' }}"
+                 id="sec-{{ $section->id }}">
                 {{ $section->name }}
               </a>
               <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
@@ -110,25 +108,33 @@
         </a>
 
         {{-- Giỏ hàng --}}
-        <div class="dropdown">
-          <a href="#"
-             class="text-dark position-relative fs-5"
-             id="cartDropdown"
-             data-bs-toggle="dropdown"
-             aria-expanded="false">
-            <i class="bi bi-bag-fill"></i>
-            @if ($cartCount)
-              <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
-                {{ $cartCount }}
-              </span>
-            @endif
-          </a>
+  <div class="dropdown">
+      <a href="#"
+      class="text-dark position-relative fs-5"
+      id="cartDropdown"
+      data-bs-toggle="dropdown">
+      <i class="bi bi-bag-fill"></i>
+      <span id="cart-count"
+            class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+            style="{{ $cartCount ? '' : 'display:none' }}">
+        {{ $cartCount }}
+      </span>
+    </a>
 
-          <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="cartDropdown" style="min-width:300px; z-index:1200; border-color: #d1a029;">
-            @forelse ($cart as $item)
-              <li class="d-flex align-items-center mb-2">
-                @if (!empty($item['image']))
-                  <img src="{{ asset('storage/'.$item['image']) }}" width="50" class="me-2 rounded" alt="{{ $item['name'] }}">
+    {{-- Nội dung dropdown giỏ hàng --}}
+    <div class="dropdown-menu dropdown-menu-end p-3"
+          aria-labelledby="cartDropdown"
+          style="min-width:300px; z-index:1200; border-color:#d1a029;">
+
+        {{-- scroll container với overflow --}}
+        <div class="scrollable-cart" style="max-height:500px; overflow-y:auto;">
+          <ul id="header-cart-list" class="list-unstyled mb-0">
+            @forelse($cart as $item)
+              <li data-key="{{ md5($item['product_id'].'|'.json_encode($item['options'] ?? [])) }}"
+                  class="d-flex align-items-center mb-2">
+                @if(!empty($item['image']))
+                  <img src="{{ asset('storage/'.$item['image']) }}"
+                      width="50" class="me-2 rounded" alt="{{ $item['name'] }}">
                 @endif
                 <div class="flex-grow-1">
                   <div class="fw-semibold">{{ $item['name'] }}</div>
@@ -138,26 +144,87 @@
                 </div>
               </li>
             @empty
-              <li class="text-center mb-0">Giỏ hàng trống! 😊</li>
+              <li class="text-center mb-0 empty-cart">Giỏ hàng trống! 😊</li>
             @endforelse
-
-            @if ($cartCount)
-              <li class="text-center mt-2">
-              <a 
-                  href="{{ route('cart.index') }}"
-                  class="btn btn-primary btn-sm w-100 nut-dropdown-gio-hang"
-                  style="color: white;"
-                  onmouseover="this.style.setProperty('color', 'white', 'important')"
-                  onmouseout="this.style.setProperty('color', 'white', 'important')"
-                >
-                  Xem toàn bộ giỏ hàng
-              </a>
-              </li>
-            @endif
           </ul>
         </div>
-      </div>
 
+        @if($cartCount)
+          <div class="text-center mt-2 view-cart-li">
+            <a href="{{ route('cart.index') }}"
+              class="btn-mimi nut-dropdown-gio-hang w-100 text-decoration-none"
+              style="color:white!important;">
+              Xem toàn bộ giỏ hàng
+            </a>
+          </div>
+        @endif
+
+    </div>
+
+
+    {{-- Notification “Đã thêm” --}}
+    <div id="cart-notification"
+         class="dropdown-menu dropdown-menu-end p-3 position-fixed"
+         style="
+           top: 8rem;
+           right: 1rem;
+           display: none;
+           min-width: 240px;
+           z-index: 2000;
+           border: 2px solid #d1a029;
+         ">
+      <button type="button"
+              class="float-end"
+              aria-label="Close"
+              id="cart-notif-close"
+              style="color: #b83232; 
+                    background: none;
+                    border: none;
+                    outline: none;">
+              <i class="fa-solid fa-xmark"></i>
+      </button>
+      <ul id="cart-notification-list" class="list-unstyled mb-0"></ul>
     </div>
   </div>
 </header>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const notif     = document.getElementById('cart-notification');
+  const notifList = document.getElementById('cart-notification-list');
+  const btnClose  = document.getElementById('cart-notif-close');
+  let timeoutHide;
+
+  // hiển thị notification
+  window.showCartNotification = (msg, imgUrl) => {
+    clearTimeout(timeoutHide);
+    notifList.innerHTML = `
+      <li class="d-flex align-items-center">
+        <img src="${imgUrl}"
+             style="width:50px;height:50px;object-fit:cover;border-radius:4px;"
+             class="me-2" alt="">
+        <span>${msg}</span>
+      </li>`;
+    notif.style.display = 'block';
+    notif.classList.add('show');
+    timeoutHide = setTimeout(window.hideCartNotification, 3000);
+  };
+
+  // ẩn notification
+  window.hideCartNotification = () => {
+    notif.style.display = 'none';
+    notif.classList.remove('show');
+    clearTimeout(timeoutHide);
+  };
+
+  btnClose.addEventListener('click', window.hideCartNotification);
+  document.addEventListener('click', e => {
+    if (!notif.contains(e.target) && !e.target.closest('#cartDropdown')) {
+      window.hideCartNotification();
+    }
+  });
+});
+</script>
+@endpush
+

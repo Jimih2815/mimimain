@@ -15,91 +15,119 @@ class CartController extends Controller
      * Hiển thị giỏ hàng
      */
     public function index()
-    {
-        $this->mergeDBCartIntoSession();
-    
-        // 1) Lấy cart từ session
-        $cart = session('cart', []);
-    
-        // 2) Với mỗi item, bổ sung slug nếu chưa có
-        foreach ($cart as $key => $item) {
-            if (! isset($item['slug'])) {
-                // Lấy model Product để đọc slug
-                $prod = Product::find($item['product_id']);
-                $cart[$key]['slug'] = $prod->slug;
-            }
+{
+    $this->mergeDBCartIntoSession();
+
+    // Lấy cart
+    $cart = session('cart', []);
+
+    // Gộp các entry có cùng key (trong thực tế session cart đã dùng key=md5, nhưng
+    // mergeDB có thể tạo entry lặp lại, nên chúng ta vẫn gộp lại)
+    $new = [];
+    foreach ($cart as $entry) {
+        $key = md5($entry['product_id'] . '|' . json_encode($entry['options'] ?? []));
+        if (isset($new[$key])) {
+            $new[$key]['quantity'] += $entry['quantity'];
+        } else {
+            $new[$key] = $entry;
         }
-        // Viết lại cart vào session (tuỳ chọn, để giữ persist)
-        session(['cart' => $cart]);
-    
-        // 3) Tính tổng như cũ
-        $total = array_reduce(
-            $cart,
-            fn($sum, $item) => $sum + $item['price'] * $item['quantity'],
-            0
-        );
-    
-        return view('cart.index', compact('cart','total'));
     }
+    $cart = $new;
+    session(['cart' => $cart]);
+
+    // Bổ sung slug như trước
+    foreach ($cart as $key => $item) {
+        if (!isset($item['slug'])) {
+            $prod = Product::find($item['product_id']);
+            $cart[$key]['slug'] = $prod->slug;
+        }
+    }
+    session(['cart' => $cart]);
+
+    $total = array_reduce(
+        $cart,
+        fn($sum, $item) => $sum + $item['price'] * $item['quantity'],
+        0
+    );
+
+    return view('cart.index', compact('cart','total'));
+}
 
     /**
      * Thêm sản phẩm vào giỏ (có options & tính giá base+extra)
      */
-    public function add(Request $request, $id)
-    {
-        $product = Product::with('optionValues')->findOrFail($id);
-        $chosen  = $request->input('options', []);
+    /**
+ * Thêm sản phẩm vào giỏ (có options & tính giá base+extra)
+ */
+/**
+ * Thêm sản phẩm vào giỏ (có options & tính giá base+extra)
+ */
+public function add(Request $request, $id)
+{
+    $product = Product::with('optionValues')->findOrFail($id);
+    $chosen  = $request->input('options', []);
 
-        // Tính tổng extra price từ các option đã chọn
-        $extra = OptionValue::whereIn('id', array_values($chosen))
-                            ->sum('extra_price');
-        $price = $product->base_price + $extra;
+    // 1) Tính tổng extra price
+    $extra = OptionValue::whereIn('id', array_values($chosen))
+                        ->sum('extra_price');
+    $price = $product->base_price + $extra;
 
-        // --- Xác định image cho cart item ---
-        $imagePath = $product->img;
-        if (!empty($chosen)) {
-            $firstValId = array_values($chosen)[0];
-            $optVal     = OptionValue::find($firstValId);
-            if ($optVal && $optVal->option_img) {
-                $imagePath = $optVal->option_img;
-            }
+    // 2) Chọn ảnh cho item
+    $imagePath = $product->img;
+    if (!empty($chosen)) {
+        $firstValId = array_values($chosen)[0];
+        $optVal     = OptionValue::find($firstValId);
+        if ($optVal && $optVal->option_img) {
+            $imagePath = $optVal->option_img;
         }
-
-        // --- Thêm vào session cart ---
-        $cart = session('cart', []);
-        $key  = md5($id . '|' . json_encode($chosen));
-
-        if (isset($cart[$key])) {
-            $cart[$key]['quantity']++;
-        } else {
-            $cart[$key] = [
-                'product_id' => $id,
-                'quantity'   => 1,
-                'price'      => $price,
-                'options'    => $chosen,
-                'name'       => $product->name,
-                'image'      => $imagePath,
-                'slug'       => $product->slug,
-            ];
-        }
-
-        session(['cart' => $cart]);
-        $this->syncCartToDB($cart);
-
-        // Trả về JSON nếu là AJAX request
-        if ($request->ajax()) {
-            $totalItems = array_sum(array_column($cart, 'quantity'));
-
-            return response()->json([
-                'success'     => true,
-                'message'     => "Đã thêm “{$product->name}” vào giỏ hàng!",
-                'total_items' => $totalItems,
-            ]);
-        }
-
-        // Fallback: redirect bình thường
-        return back()->with('success', "Đã thêm “{$product->name}” vào giỏ hàng!");
     }
+    $imageUrl = asset('storage/' . $imagePath);
+
+    // 3) Thêm / cập nhật session cart
+    $cart = session('cart', []);
+    $key  = md5($id . '|' . json_encode($chosen));
+
+    if (isset($cart[$key])) {
+        $cart[$key]['quantity']++;
+    } else {
+        $cart[$key] = [
+            'product_id' => $id,
+            'quantity'   => 1,
+            'price'      => $price,
+            'options'    => $chosen,
+            'name'       => $product->name,
+            'image'      => $imagePath,
+            'slug'       => $product->slug,
+        ];
+    }
+
+    session(['cart' => $cart]);
+    $this->syncCartToDB($cart);
+
+    // 4) AJAX response: thêm always trả về trường `item`
+    if ($request->ajax()) {
+        $totalItems = array_sum(array_column($cart, 'quantity'));
+        $imageUrl   = asset('storage/' . $imagePath);
+    
+        return response()->json([
+            'success'      => true,
+            'message'      => "Đã thêm “{$product->name}” vào giỏ hàng!",
+            'total_items'  => $totalItems,
+            'item'         => [
+                'key'      => $key,
+                'name'     => $product->name,
+                'price'    => $price,
+                'quantity' => $cart[$key]['quantity'],  // số lượng thực
+                'image'    => $imageUrl,
+            ],
+        ]);
+    }
+
+    // 5) Fallback non-AJAX
+    return back()->with('success', "Đã thêm “{$product->name}” vào giỏ hàng!");
+}
+
+
 
 
 
