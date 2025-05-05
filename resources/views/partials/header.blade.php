@@ -10,7 +10,7 @@
   {{-- 1) Top bar --}}
   <div class="header-top bg-light py-1">
     <div class="container d-flex justify-content-end small">
-      <a href="https://www.google.com" class="me-3 text-decoration-none text-dark" target="_blank">Trợ giúp</a>
+      <a href="{{ asset('help') }}" class="me-3 text-decoration-none text-dark" target="_blank">Trợ giúp</a>
 
       @guest
         <a href="{{ route('register') }}" class="me-3 text-decoration-none text-dark">Đăng ký</a>

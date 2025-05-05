@@ -19,6 +19,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Models\Product;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HelpRequestController;
+
 
 // AUTH CONTROLLERS
 use App\Http\Controllers\Auth\RegisterController;
@@ -42,6 +44,8 @@ use App\Http\Controllers\Admin\ProductSliderController;
 use App\Http\Controllers\Admin\WidgetController;
 use App\Http\Controllers\Admin\WidgetPlacementController;
 use App\Http\Controllers\Admin\SidebarItemController;
+use App\Http\Controllers\Admin\HelpRequestController as AdminHelpRequestController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +75,7 @@ Route::prefix('checkout')->name('checkout.')->group(function () {
     Route::post ('confirm',         [CheckoutController::class,'confirm'])->name('confirm');
     Route::get  ('success/{order}', [CheckoutController::class,'success'])->name('success');
 });
+
 // Trang checkout hiển thị form thanh toán
 Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
 
@@ -83,6 +88,15 @@ Route::get('/favorites', [FavoriteController::class, 'index'])
 // toggle favorite qua AJAX
 Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])
      ->name('favorites.toggle');
+
+Route::view('/help', 'help')->name('help');
+Route::middleware('auth')->group(function () {
+    Route::get('/help',  [HelpRequestController::class, 'create'])
+         ->name('help.create');
+    Route::post('/help', [HelpRequestController::class, 'store'])
+         ->name('help.store');
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -134,7 +148,7 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
 Route::prefix('admin')
      ->name('admin.')
      ->group(function () {
-
+     
     // 4.1 Dashboard
     Route::get('/', fn() => view('admin.dashboard'))->name('dashboard');
 
@@ -199,6 +213,11 @@ Route::prefix('admin')
     Route::resource('widgets',         WidgetController::class);
     Route::resource('placements',      WidgetPlacementController::class);
     Route::resource('sidebar-items',   SidebarItemController::class);
+
+    Route::post(
+     'help-requests/{helpRequest}/update',
+     [AdminHelpRequestController::class, 'update']
+     )->name('help_requests.update');
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL

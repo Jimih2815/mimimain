@@ -33,4 +33,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+    public function helpRequests()
+    {
+        return $this->hasMany(HelpRequest::class);
+    }
 }
