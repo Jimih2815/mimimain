@@ -20,7 +20,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Models\Product;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HelpRequestController;
-
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsCtrl;
 
 // AUTH CONTROLLERS
 use App\Http\Controllers\Auth\RegisterController;
@@ -97,9 +98,12 @@ Route::middleware('auth')->group(function () {
          ->name('help.store');
 });
 
-// Bỏ auth vòng ngoài, để truy cập công khai
 Route::get('favorites', [FavoriteController::class,'index'])->name('favorites.index');
 Route::post('favorites/toggle/{product}', [FavoriteController::class,'toggle'])->name('favorites.toggle');
+
+Route::get('/news', [NewsController::class,'index'])->name('news.index');
+Route::get('/news/{slug}', [NewsController::class,'show'])->name('news.show');
+
 
 
 /*
@@ -223,6 +227,13 @@ Route::prefix('admin')
      'help-requests/{helpRequest}/update',
      [AdminHelpRequestController::class, 'update']
      )->name('help_requests.update');
+     // Admin (nằm ngoài auth nếu bạn có group admin riêng, hoặc để trong middleware('auth','is_admin'))
+         // 4.x Quản lý News
+     Route::resource('news', AdminNewsCtrl::class)
+          ->except(['show']);
+     // Tuỳ Im­age upload cho TinyMCE
+     Route::post('news/upload-image', [AdminNewsCtrl::class, 'uploadImage'])
+          ->name('news.uploadImage');   
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL
