@@ -102,9 +102,9 @@
 
         {{-- Yêu thích --}}
         <a href="{{ route('favorites.index') }}"
-          class="text-dark fs-5 position-relative"
+          class="text-dark fs-5 position-relative text-decoration-none"
           title="Yêu thích">
-          <i class="bi bi-heart-fill text-danger"></i>
+          <i style="color:#b83232 !important;" class="fas fa-heart text-danger"></i>
         </a>
 
         {{-- Giỏ hàng --}}

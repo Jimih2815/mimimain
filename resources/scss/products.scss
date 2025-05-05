@@ -337,6 +337,49 @@
       }
     }
   }
+
+  // 1. Biến tuỳ chỉnh
+$favorite-default-color: #b83232;        // màu tim rỗng
+$favorite-active-color: #b83232;     // màu tim đặc (đỏ tươi)
+$favorite-size: 1.6rem;              // kích thước icon
+$favorite-hover-scale: 1.2;          // tỉ lệ khi hover
+$transition-duration: 0.2s;          // thời gian chuyển đổi
+
+// 2. Container cho tiêu đề + nút tim
+.trai-tim-cont {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.75rem;
+  }
+
+  // 3. Nút favorite
+  .btn-favorite {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0; // để icon căn chính giữa
+
+    i.fa-heart {
+      font-size: $favorite-size;
+      color: $favorite-default-color;
+      transition: color $transition-duration ease, transform $transition-duration ease;
+
+      &.fas {
+        color: $favorite-active-color;
+      }
+    }
+
+    // 4. Hiệu ứng hover
+    &:hover i.fa-heart {
+      transform: scale($favorite-hover-scale);
+    }
+  }
+}
 }
 
 

@@ -41,7 +41,17 @@
 
       {{-- Thông tin & chọn Option --}}
     <div class="option-san-pham">
-      <h2>{{ $product->name }}</h2>
+      <div class="trai-tim-cont d-flex align-items-center justify-content-between gap-2">
+        <h2 class="mb-0">{{ $product->name }}</h2>
+        <button
+          type="button"
+          class="btn-favorite trai-tim"
+          data-id="{{ $product->id }}"
+        >
+          <i class="{{ in_array($product->id, session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
+        </button>
+      </div>
+
       <p class="text-muted">{{ $product->description }}</p>
 
       <p class="fs-4">
@@ -347,6 +357,30 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(err => {
       console.error(err);
       alert('Có lỗi xảy ra, xem console nhé.');
+    });
+  });
+  document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      fetch(`/favorites/toggle/${id}`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf,
+          'Accept': 'application/json'
+        },
+      })
+      .then(res => res.json())
+      .then(json => {
+        const icon = btn.querySelector('i.fa-heart');
+        if (json.added) {
+          // vừa thêm favorites
+          icon.classList.replace('far', 'fas');
+        } else {
+          // vừa bỏ favorites
+          icon.classList.replace('fas', 'far');
+        }
+      })
+      .catch(console.error);
     });
   });
 });

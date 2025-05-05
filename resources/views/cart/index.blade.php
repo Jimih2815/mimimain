@@ -70,9 +70,14 @@
                   </form>
                 </div>
 
-                <button type="button" class="trai-tim">
-                  <i class="fa fa-heart"></i>
+                <button
+                  type="button"
+                  class="btn-favorite trai-tim"
+                  data-id="{{ $item['product_id'] }}"
+                >
+                  <i class="{{ in_array($item['product_id'], session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
                 </button>
+
               </div>            
             </div>
 
@@ -269,6 +274,34 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         console.error('Lỗi cập nhật giỏ hàng:', err);
       }
+    });
+  });
+
+
+
+  const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+  // === Xử lý nút favorite trên trang Cart ===
+  document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      fetch(`/favorites/toggle/${id}`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf,
+          'Accept': 'application/json',
+        },
+      })
+      .then(res => res.json())
+      .then(json => {
+        const icon = btn.querySelector('i.fa-heart');
+        if (json.added) {
+          icon.classList.replace('far', 'fas');
+        } else {
+          icon.classList.replace('fas', 'far');
+        }
+      })
+      .catch(console.error);
     });
   });
 });
