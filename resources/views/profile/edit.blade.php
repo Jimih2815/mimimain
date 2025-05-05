@@ -141,40 +141,70 @@
       </div>
     </div>
 
-    {{-- Trợ giúp --}}
-    <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="help-tab">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title mb-4 mt-4">Yêu cầu trợ giúp của bạn</h4>
+    
+  {{-- Trợ giúp --}}
+  <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="help-tab">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4 mt-4">Yêu cầu trợ giúp của bạn</h4>
 
-          @if($user->helpRequests->isEmpty())
-            <p>Bạn chưa gửi yêu cầu trợ giúp nào.</p>
-          @else
-            <table class="table table-bordered  text-center">
-              <thead class="table-light">
+        @php
+          use Illuminate\Support\Str;
+
+          $orderedRequests = $user->helpRequests
+            ->sort(function($a, $b) {
+              $aDone = $a->status === 'Hoàn thành';
+              $bDone = $b->status === 'Hoàn thành';
+
+              // 1) Đẩy nhóm 'Hoàn thành' xuống cuối
+              if ($aDone !== $bDone) {
+                return $aDone <=> $bDone;
+              }
+              // 2) Trong nhóm 'Hoàn thành', sắp mới → cũ
+              if ($aDone) {
+                return $b->created_at->timestamp <=> $a->created_at->timestamp;
+              }
+              // 3) Nhóm chưa hoàn thành, sắp cũ → mới
+              return $a->created_at->timestamp <=> $b->created_at->timestamp;
+            })
+            ->values();
+        @endphp
+
+        {{-- Nếu không có yêu cầu nào --}}
+        @if($orderedRequests->isEmpty())
+          <p>Bạn chưa gửi yêu cầu trợ giúp nào.</p>
+
+        {{-- Ngược lại, hiển thị bảng --}}
+        @else
+          <table class="table table-bordered text-center">
+            <thead class="table-light">
+              <tr>
+                <th style="width:5%;">STT</th>
+                <th style="width:40%;">Nội dung</th>
+                <th style="width:40%;">Phản hồi</th>
+                <th style="width:15%;">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($orderedRequests as $req)
+                @php
+                  $statusClass = 'status-' . Str::slug($req->status, '-');
+                @endphp
                 <tr>
-                  <th style="width:5%;">STT</th>
-                  <th style="width:40%;">Nội dung</th>
-                  <th style="width:40%;">Phản hồi</th>
-                  <th style="width:15%;">Trạng thái</th>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ $req->message }}</td>
+                  <td>{{ $req->response ?? '—' }}</td>
+                  <td class="text-center {{ $statusClass }}">
+                    {{ $req->status }}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                @foreach($user->helpRequests as $i => $req)
-                  <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $req->message }}</td>
-                    <td>{{ $req->response ?? '—' }}</td>
-                    <td>{{ $req->status }}</td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          @endif
-        </div>
+              @endforeach
+            </tbody>
+          </table>
+        @endif
+
       </div>
     </div>
-
   </div>
 </div>
 @endsection
