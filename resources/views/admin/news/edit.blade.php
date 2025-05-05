@@ -49,7 +49,7 @@
       @enderror
     </div>
 
-    <button class="btn btn-success">Cập nhật</button>
+    <button class="btn-mimi nut-xanh mt-4 mb-5">Cập nhật</button>
   </form>
 </div>
 @endsection  {{-- nhớ đóng section trước khi @push --}}

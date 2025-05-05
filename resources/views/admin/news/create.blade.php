@@ -29,7 +29,7 @@
       @error('content')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
 
-    <button class="btn btn-success">Lưu</button>
+    <button style ="padding: 0.5rem 2.5rem; font-size: 1.5rem;" class="btn-mimi nut-vang mt-4">Lưu</button>
   </form>
 </div>
 @endsection  {{-- ← Đóng section chính ở đây --}}
