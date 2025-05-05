@@ -46,7 +46,7 @@
         color: #666;
     }
     .page-item.active .page-link {
-        background-color: #2e7d74;
+        background-color:rgb(115, 204, 194);
         color: #fff;
     }
     .page-link {
@@ -60,6 +60,10 @@
     .pagination-summary, 
     .text-muted {
     display: none !important;
+    }
+    .page-item.active .page-link {
+    border-color: #4ab3af !important;
+    color: #fff !important;
     }
 </style>
 
