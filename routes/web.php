@@ -97,6 +97,10 @@ Route::middleware('auth')->group(function () {
          ->name('help.store');
 });
 
+// Bỏ auth vòng ngoài, để truy cập công khai
+Route::get('favorites', [FavoriteController::class,'index'])->name('favorites.index');
+Route::post('favorites/toggle/{product}', [FavoriteController::class,'toggle'])->name('favorites.toggle');
+
 
 /*
 |--------------------------------------------------------------------------

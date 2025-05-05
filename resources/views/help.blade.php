@@ -70,10 +70,19 @@
         type="text"
         id="phone"
         name="phone"
-        class="form-control"
+        class="form-control @error('phone') is-invalid @enderror"
         value="{{ old('phone', auth()->user()->phone ?? '') }}"
-        required>
+        required
+        inputmode="numeric"               {{-- hiện bàn phím số trên mobile --}}
+        pattern="\d*"                     {{-- chỉ khớp chuỗi toàn số --}}
+        oninput="this.value = this.value.replace(/\D/g, '')"  {{-- gạt hết ký tự không phải số --}}
+        maxlength="15"                    {{-- giới hạn tối đa, tuỳ bạn chỉnh --}}
+      >
+      @error('phone')
+        <div class="invalid-feedback">{{ $message }}</div>
+      @enderror
     </div>
+
 
     <div class="form-group">
       <label for="message">Nội dung yêu cầu</label>

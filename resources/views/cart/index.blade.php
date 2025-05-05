@@ -70,12 +70,19 @@
                   </form>
                 </div>
 
+                @php
+                  // Kiểm tra xem đã favorite chưa: auth → DB, guest → session
+                  $isFav = auth()->check()
+                    ? auth()->user()->favorites->contains($item['product_id'])
+                    : in_array($item['product_id'], session('favorites', []));
+                @endphp
+
                 <button
                   type="button"
                   class="btn-favorite trai-tim"
                   data-id="{{ $item['product_id'] }}"
                 >
-                  <i class="{{ in_array($item['product_id'], session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
+                  <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
                 </button>
 
               </div>            

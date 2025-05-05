@@ -110,6 +110,7 @@
 
 @push('scripts')
 <script>
+// Xử lý AJAX cho Favorite và Cart
 document.addEventListener('DOMContentLoaded', () => {
   const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
@@ -122,16 +123,19 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: {
           'X-CSRF-TOKEN': csrf,
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'X-Requested-With': 'XMLHttpRequest'
         }
       })
       .then(res => res.json())
       .then(json => {
         const icon = btn.querySelector('i.fa-heart');
         const card = btn.closest('.favorite-card');
-        if (json.added) icon.classList.replace('far','fas');
-        else {
+        if (json.added) {
+          icon.classList.replace('far','fas');
+          icon.classList.add('text-danger');
+        } else {
           icon.classList.replace('fas','far');
+          icon.classList.remove('text-danger');
           if (card) card.remove();
         }
       })
@@ -139,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2) AJAX “Thêm vào giỏ hàng” + validation + badge + header-list + notification
+  // 2) AJAX Thêm vào giỏ hàng + validation + update badge & list & notification
   document.querySelectorAll('form[id^="add-to-cart-form-"]').forEach(form => {
     if (form.dataset.bound) return;
     form.dataset.bound = '1';
@@ -178,53 +182,35 @@ document.addEventListener('DOMContentLoaded', () => {
             badge.textContent = json.total_items;
             badge.style.display = 'block';
           }
-
           // b) Cập nhật header-cart-list
           const listContainer = document.querySelector('.scrollable-cart ul#header-cart-list');
           if (listContainer) {
-            // remove placeholder nếu có
             const empty = listContainer.querySelector('.empty-cart');
             if (empty) empty.remove();
-
-            // thử tìm <li data-key="…">
             let existing = listContainer.querySelector(`li[data-key="${json.item.key}"]`);
             if (existing) {
-              // chỉ update số lượng
-              const sm = existing.querySelector('small.text-muted');
-              sm.textContent = `${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}`;
+              existing.querySelector('small.text-muted').textContent = `${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}`;
             } else {
-              // tạo mới
               const li = document.createElement('li');
               li.className = 'd-flex align-items-center mb-2';
               li.dataset.key = json.item.key;
               li.innerHTML = `
-                <img src="${json.item.image}"
-                    width="50" class="me-2 rounded"
-                    alt="${json.item.name}">
+                <img src="${json.item.image}" width="50" class="me-2 rounded" alt="${json.item.name}">
                 <div class="flex-grow-1">
                   <div class="fw-semibold">${json.item.name}</div>
-                  <small class="text-muted">
-                    ${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}
-                  </small>
+                  <small class="text-muted">${json.item.price.toLocaleString('vi-VN')}₫ × ${json.item.quantity}</small>
                 </div>`;
-              // chèn li vào listContainer
               listContainer.appendChild(li);
             }
           }
-
-          // ——— bật nút “Xem toàn bộ giỏ hàng” ———
+          // c) Hiện nút "Xem toàn bộ giỏ hàng"
           const viewLi = document.querySelector('.view-cart-li');
           if (viewLi) viewLi.style.display = 'block';
-
-
-          // c) Feedback nút
+          // d) Feedback nút
           btn.textContent = 'Đã thêm';
           setTimeout(() => btn.textContent = origText, 1500);
-
-          // d) Notification
-          if (window.showCartNotification) {
-            window.showCartNotification(json.message, json.image);
-          }
+          // e) Notification tuỳ chỉnh
+          if (window.showCartNotification) window.showCartNotification(json.message, json.image);
         } else {
           alert(json.message || 'Thêm thất bại, thử lại sau nhé!');
         }
@@ -236,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 3) Option/value logic & giá/ảnh (giữ nguyên)
+  // 3) Logic tuỳ chọn giá & ảnh
   document.querySelectorAll('.product-card').forEach(card => {
     const pid        = card.dataset.productId;
     const totalEl    = card.querySelector(`#total-price-${pid}`);
@@ -248,30 +234,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorEl2   = document.getElementById(`option-error-${pid}`);
     const finalIn    = document.getElementById(`final-price-${pid}`);
     const imgIn      = document.getElementById(`selected-img-${pid}`);
-
     function updateTotal() {
       const sumExtra = Object.values(selected).reduce((a,b)=>a+b,0);
       const total    = basePrice + sumExtra;
       totalEl.textContent = total.toLocaleString('vi-VN') + '₫';
       finalIn.value       = total;
     }
-
     items.forEach(el => {
       el.addEventListener('click', () => {
         const typeId = el.dataset.typeId;
         const valId  = el.dataset.valId;
         const extra  = parseInt(el.dataset.extra)||0;
-
-        card.querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`)
-            .forEach(sib=>sib.classList.remove('selected'));
+        card.querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`).forEach(sib=>sib.classList.remove('selected'));
         el.classList.add('selected');
-
         selected[typeId] = extra;
         document.getElementById(`option-input-${pid}-${typeId}`).value = valId;
         if (errorEl2) errorEl2.style.display = 'none';
-
         updateTotal();
-
         const groupEl = el.closest('.option-items-show');
         if (groupEl.dataset.firstGroup==='1' && el.dataset.img) {
           mainImg.src = el.dataset.img;
@@ -279,11 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-
     formEl.addEventListener('submit', e => {
-      const miss = Array.from(
-        formEl.querySelectorAll(`input[id^="option-input-${pid}-"]`)
-      ).some(i=>!i.value);
+      const miss = Array.from(formEl.querySelectorAll(`input[id^="option-input-${pid}-"]`)).some(i=>!i.value);
       if (miss) {
         e.preventDefault();
         if (errorEl2) errorEl2.style.display='block';
@@ -293,5 +269,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
-
-

@@ -2,49 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\OptionType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
     /**
      * GET /favorites
-     * Hiển thị trang Yêu Thích, truyền cả products và optionTypes cho view
+     * Display the list of favorited products (DB for auth, session for guest)
+     *
+     * @return \Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index()
     {
-        $favorites = session('favorites', []);
-        
-        // Thay vì paginate(), dùng get() để lấy hết
-        $products = \App\Models\Product::whereIn('id', $favorites)
-                    ->with('optionValues.type')  // nếu bạn cần eager-load
-                    ->get();
+        if (Auth::check()) {
+            // Logged-in user: fetch favorites from database
+            $ids = Auth::user()
+                      ->favorites()
+                      ->pluck('product_id')
+                      ->toArray();
+        } else {
+            // Guest user: fetch favorites from session
+            $ids = session('favorites', []);
+        }
+
+        $products = Product::whereIn('id', $ids)
+                           ->with('optionValues.type')
+                           ->get();
 
         return view('favorites.index', compact('products'));
     }
 
     /**
      * POST /favorites/toggle/{product}
-     * Thêm hoặc bỏ sản phẩm khỏi danh sách yêu thích
+     * Toggle the favorite status of a product
+     *
+     * @param  \App\Models\Product  $product
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function toggle(Request $request, Product $product)
+    public function toggle(Product $product)
     {
-        $favorites = session('favorites', []);
+        if (Auth::check()) {
+            $user = Auth::user();
+            $exists = $user->favorites()
+                           ->where('product_id', $product->id)
+                           ->exists();
 
-        if (in_array($product->id, $favorites)) {
-            // Bỏ favorite
-            $favorites = array_filter($favorites, fn($id) => $id != $product->id);
-            $added = false;
+            if ($exists) {
+                $user->favorites()->detach($product->id);
+                $added = false;
+            } else {
+                $user->favorites()->attach($product->id);
+                $added = true;
+            }
+
+            // Total favorites count for user
+            $count = $user->favorites()->count();
         } else {
-            // Thêm favorite
-            $favorites[] = $product->id;
-            $added = true;
+            $favorites = session('favorites', []);
+
+            if (in_array($product->id, $favorites)) {
+                // Remove from session
+                $favorites = array_filter($favorites, fn($id) => $id != $product->id);
+                $added = false;
+            } else {
+                // Add to session
+                $favorites[] = $product->id;
+                $added = true;
+            }
+
+            // Update session key
+            session(['favorites' => array_values($favorites)]);
+            // Total favorites count for guest
+            $count = count($favorites);
         }
 
-        // Cập nhật session
-        session(['favorites' => array_values($favorites)]);
-
-        return response()->json(['added' => $added]);
+        return response()->json([
+            'added' => $added,
+            'count' => $count,
+        ]);
     }
 }

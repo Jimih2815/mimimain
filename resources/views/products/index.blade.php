@@ -26,15 +26,24 @@
           <div class="card-body d-flex flex-column">
             <h5 class="card-title d-flex justify-content-between align-items-center noi-chua-nut-favorites">
               <a href="{{ route('products.show', $product->slug) }}"
-                 class="text-decoration-none text-dark">
+                class="text-decoration-none text-dark">
                 {{ $product->name }}
               </a>
+
+              @php
+                // Kiểm tra đã favorite chưa: nếu login thì check DB, nếu guest thì check session
+                $isFav = auth()->check()
+                  ? auth()->user()->favorites->contains($product->id)
+                  : in_array($product->id, session('favorites', []));
+              @endphp
+
               <button type="button"
                       class="btn-favorite"
                       data-id="{{ $product->id }}">
-                <i class="{{ in_array($product->id, session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
+                <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
               </button>
             </h5>
+
 
             <p class="card-text text-muted mb-2">
               Giá: <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
@@ -123,25 +132,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
   document.querySelectorAll('.btn-favorite').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const id = btn.dataset.id;
-      fetch(`/favorites/toggle/${id}`, {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrf,
-          'Accept':       'application/json',
-          'Content-Type': 'application/json'
-        },
-      })
-      .then(res => res.json())
-      .then(json => {
+      try {
+        const res = await fetch(`/favorites/toggle/${id}`, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': csrf,
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+          credentials: 'same-origin',
+        });
+        const json = await res.json();
         const icon = btn.querySelector('i.fa-heart');
+
         if (json.added) {
-          icon.classList.replace('far', 'fas');
+          icon.classList.remove('far','text-muted');
+          icon.classList.add('fas','text-danger');
         } else {
-          icon.classList.replace('fas', 'far');
+          icon.classList.remove('fas','text-danger');
+          icon.classList.add('far','text-muted');
         }
-      });
+      } catch (err) {
+        console.error(err);
+      }
     });
   });
 });

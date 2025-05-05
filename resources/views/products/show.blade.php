@@ -41,6 +41,13 @@
 
       {{-- Thông tin & chọn Option --}}
     <div class="option-san-pham">
+      @php
+        // Xác định đã favorite chưa: auth → DB, guest → session
+        $isFav = auth()->check()
+          ? auth()->user()->favorites->contains($product->id)
+          : in_array($product->id, session('favorites', []));
+      @endphp
+
       <div class="trai-tim-cont d-flex align-items-center justify-content-between gap-2">
         <h2 class="mb-0">{{ $product->name }}</h2>
         <button
@@ -48,7 +55,7 @@
           class="btn-favorite trai-tim"
           data-id="{{ $product->id }}"
         >
-          <i class="{{ in_array($product->id, session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
+          <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
         </button>
       </div>
 
