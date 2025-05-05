@@ -33,15 +33,22 @@
           @endif
 
           <div class="card-body d-flex flex-column">
+            @php
+              // Kiểm tra đã favorite chưa: auth → DB, guest → session
+              $isFav = auth()->check()
+                ? auth()->user()->favorites->contains($product->id)
+                : in_array($product->id, session('favorites', []));
+            @endphp
+
             <h5 class="card-title d-flex justify-content-between align-items-center noi-chua-nut-favorites">
               <a href="{{ route('products.show', $product->slug) }}"
-                 class="text-decoration-none text-dark">
+                class="text-decoration-none text-dark">
                 {{ $product->name }}
               </a>
               <button type="button"
                       class="btn-favorite"
                       data-id="{{ $product->id }}">
-                <i class="{{ in_array($product->id, session('favorites', [])) ? 'fas' : 'far' }} fa-heart"></i>
+                <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
               </button>
             </h5>
 
