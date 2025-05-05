@@ -52,9 +52,6 @@
             @foreach($vals as $val)
               <div class="text-muted">
                 <strong>{{ $val->type->name }}:</strong> {{ $val->value }}
-                @if($val->extra_price)
-                  (+{{ number_format($val->extra_price,0,',','.') }}₫)
-                @endif
               </div>
             @endforeach
           </div>
