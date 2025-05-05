@@ -118,7 +118,8 @@ Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class,'edit'])->name('profile.edit');
     Route::put('profile', [ProfileController::class,'update'])->name('profile.update');
     Route::put('profile/password', [ProfileController::class, 'updatePassword'])
-         ->name('password.update');
+     ->name('profile.password.update');
+
 });
 // Hiển thị form nhập email để gửi link
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])

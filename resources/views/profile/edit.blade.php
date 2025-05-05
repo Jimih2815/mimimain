@@ -93,7 +93,8 @@
           <hr>
 
           {{-- Đổi mật khẩu --}}
-          <form class="mt-5" method="POST" action="{{ route('password.update') }}">
+          <form class="mt-5" method="POST" action="{{ route('profile.password.update') }}">
+
             @csrf
             @method('PUT')
 
