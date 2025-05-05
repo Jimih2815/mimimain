@@ -233,7 +233,17 @@ Route::prefix('admin')
           ->except(['show']);
      // Tuỳ Im­age upload cho TinyMCE
      Route::post('news/upload-image', [AdminNewsCtrl::class, 'uploadImage'])
-          ->name('news.uploadImage');   
+          ->name('news.uploadImage'); 
+          
+     // chọn collection global cho news/index
+     Route::post('news/select-collection',
+             [AdminNewsCtrl::class, 'selectCollection']
+         )->name('news.selectCollection');
+
+     // assign từng tin tức vào collection
+     Route::post('news/{news}/assign-collection',
+             [AdminNewsCtrl::class, 'assignCollection']
+         )->name('news.assignCollection');
 });
 
 // Redirect khi có dấu slash thừa ở cuối URL

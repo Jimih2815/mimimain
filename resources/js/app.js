@@ -3,7 +3,7 @@
  * --------------------------------------------------
  * 1) Sidebar vẫn load ngay (nhẹ, code tự viết)
  * 2) Bootstrap JS load luôn vì hầu như trang nào cũng cần dropdown/modal
- * 3) Swiper -> dynamic import: chỉ tải khi DOM có .collection-swiper
+ * 3) Swiper -> dynamic import: chỉ tải khi DOM có .collection-swiper, .product-swiper, .product-swiper-related, .news-swiper
  * --------------------------------------------------
  */
 
@@ -11,13 +11,14 @@ import './sidebar';
 // Bootstrap JS & Popper
 import 'bootstrap';
 
+
 document.addEventListener('DOMContentLoaded', async () => {
-  /* ───────────────────────────────
+  /* ─────────────────────────────────────────────────
      A) Nếu trang có ít nhất 1 slider
-  ─────────────────────────────── */
+  ───────────────────────────────────────────────── */
   const needSwiper = document.querySelector(
-    '.collection-swiper, .product-swiper, .product-swiper-related'
-  );
+      '.collection-swiper, .product-swiper, .product-swiper-related, .news-swiper, .show-product-swiper'
+    );
 
   if (needSwiper) {
     // song song nạp JS & CSS (vite cho phép import CSS động)
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       import(/* webpackChunkName: "swiper" */ 'swiper/css/bundle'),
     ]);
 
-    /* A‑1) Collection slider (free mode) */
+    /* A-1) Collection slider (free mode) */
     if (document.querySelector('.collection-swiper')) {
       new Swiper('.collection-swiper', {
         slidesPerView: 'auto',
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    /* A‑2) Product slider (home) */
+    /* A-2) Product slider (home) */
     if (document.querySelector('.product-swiper')) {
       new Swiper('.product-swiper', {
         slidesPerView: 4,
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    /* A‑3) Related products slider (product detail) */
+    /* A-3) Related products slider (product detail) */
     if (document.querySelector('.product-swiper-related')) {
       new Swiper('.product-swiper-related', {
         direction: 'horizontal',
@@ -92,5 +93,71 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
       });
     }
+
+    /* A-4) News slider (news page) */
+    if (document.querySelector('.news-swiper')) {
+      new Swiper('.news-swiper', {
+        direction: 'horizontal',
+        slidesPerView: 4,
+        spaceBetween: 15,
+
+        loop: false,
+        rewind: false,
+        grabCursor: true,
+        simulateTouch: true,
+        touchStartPreventDefault: false,
+        touchMoveStopPropagation: true,
+        resistance: true,
+        resistanceRatio: 0.5,
+
+        navigation: {
+          prevEl: '.news-prev',
+          nextEl: '.news-next',
+        },
+        breakpoints: {
+          320:  { slidesPerView: 1 },
+          576:  { slidesPerView: 2 },
+          768:  { slidesPerView: 3 },
+          1024: { slidesPerView: 4 },
+        },
+      });
+    }
+
+    /* A-5) Show-page related products slider */
+    if (document.querySelector('.show-product-swiper')) {
+      new Swiper('.show-product-swiper', {
+        direction: 'horizontal',
+        slidesPerView: 4,
+        spaceBetween: 15,
+
+        loop: false,
+        rewind: false,
+        grabCursor: true,
+        simulateTouch: true,
+        touchStartPreventDefault: false,
+        touchMoveStopPropagation: true,
+
+        // cho phép disable nav + chặn kéo khi hết slide
+        watchOverflow: true,
+        resistance: true,
+        resistanceRatio: 0.5,
+
+        navigation: {
+          prevEl: '.show-prod-prev',
+          nextEl: '.show-prod-next',
+        },
+
+        breakpoints: {
+          320:  { slidesPerView: 1 },
+          576:  { slidesPerView: 2 },
+          768:  { slidesPerView: 3 },
+          1024: { slidesPerView: 4 },
+        },
+      });
+    }
+
+
+
+
   }
 });

@@ -7,14 +7,21 @@ use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Models\Collection; 
 
 class NewsController extends Controller
 {
-    public function index()
-    {
-        $posts = News::latest()->paginate(15);
-        return view('admin.news.index', compact('posts'));
-    }
+     // Trong index():
+     public function index()
+     {
+         $posts = News::latest()->paginate(15);
+         $collections = \App\Models\Collection::all();
+         $selectedId = session('news_selected_collection');
+         $selectedCollection = $selectedId
+             ? \App\Models\Collection::find($selectedId)
+             : null;
+         return view('admin.news.index', compact('posts','collections','selectedCollection'));
+     }
 
     public function create()
     {
@@ -102,4 +109,20 @@ class NewsController extends Controller
             return response()->json(['error' => 'Upload failed'], 500);
         }
     }
+    public function selectCollection(Request $req)
+    {
+        session(['news_selected_collection' => $req->collection_id]);
+        return back();
+    }
+
+    public function assignCollection(Request $req, News $news)
+    {
+        $news->update([
+        'collection_id' => $req->collection_id ?: null
+        ]);
+        return back();
+    }
+
+   
+
 }

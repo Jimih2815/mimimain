@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,9 +6,15 @@ use Illuminate\Support\Str;
 
 class News extends Model
 {
-    protected $fillable = ['title','slug','thumbnail','content'];
+    // Thêm collection_id vào đây
+    protected $fillable = [
+        'title',
+        'slug',
+        'thumbnail',
+        'content',
+        'collection_id',   // ← mới thêm
+    ];
 
-    // Tự động sinh slug từ title nếu chưa có
     public static function booted()
     {
         static::creating(function($n){
@@ -20,5 +25,10 @@ class News extends Model
                 $n->slug = Str::slug($n->title).'-'.time();
             }
         });
+    }
+
+    public function collection()
+    {
+        return $this->belongsTo(\App\Models\Collection::class);
     }
 }
