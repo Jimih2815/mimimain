@@ -9,7 +9,7 @@
           <li><a href="#">Về Mimi Shop</a></li>
           <li><a href="#">Tầm nhìn, sứ mệnh</a></li>
           <li><a href="#">Cam kết</a></li>
-          <li><a href="#">Tin tức</a></li>
+          <li><a href="{{ route('news.index') }}">Tin tức</a></li>
         </ul>
       </div>
       <div class="footer-danh-sach">
