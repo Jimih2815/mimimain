@@ -25,10 +25,27 @@
 <div class="container py-4">
   <h2 class="mb-4" style="color: #b83232; font-size: 3rem;">Danh sách Đơn hàng</h2>
 
+  <form method="GET"
+      action="{{ route('admin.orders.index') }}"
+      class="row g-3 mb-4 align-items-end justify-content-end">
+  <div class="col-auto">
+    <!-- <label for="q" class="form-label">Tìm kiếm</label> -->
+    <input type="text"
+           id="q"
+           name="q"
+           value="{{ $search ?? '' }}"
+           class="form-control"
+           placeholder="Tên, email, SĐT, mã đơn...">
+  </div>
+  <div class="col-auto">
+    <button style="padding: 0.4rem 1rem; font-size: 1rem;" type="submit" class="btn-mimi nut-vang">Go!</button>
+  </div>
+</form>
+
   <table class="table table-bordered align-middle">
     <thead class="table-light">
       <tr>
-        <th>Mã đơn hàng</th><th>Khách</th><th>Điện thoại</th><th>Tổng</th>
+        <th>Mã đơn hàng</th><th>Tài khoản</th><th>Khách</th><th>Điện thoại</th><th>Tổng</th>
         <th>Thanh toán</th><th>Mã vận đơn</th><th>Trạng thái</th><th>Ngày</th>
       </tr>
     </thead>
@@ -37,7 +54,14 @@
         <tr>
           {{-- 1. Mã đơn --}}
           <td>{{ $o->order_code }}</td>
-
+          {{-- 1b. Tài khoản --}}
+          <td>
+            @if($o->user)
+              {{ $o->user->email }}
+            @else
+              <span class="text-muted">Khách không có tài khoản</span>
+            @endif
+          </td>
           {{-- 2. Khách & địa chỉ --}}
           <td>
             {{ $o->fullname }}<br>
@@ -71,7 +95,7 @@
                 value="{{ $o->tracking_number }}"
                 class="form-control form-control-sm me-1"
                 placeholder="Mã vận đơn">
-              <button class="btn btn-sm btn-primary">Lưu</button>
+              <button style="padding: 0.4rem 1rem; font-size: 1rem;" class="btn-mimi nut-xanh-la">Lưu</button>
             </form>
           </td>
 

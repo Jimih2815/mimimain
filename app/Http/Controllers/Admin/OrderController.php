@@ -4,18 +4,43 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Illuminate\Http\Request;                 
 use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
-    {
-        $orders = Order::with('items.product')
-                 ->latest()->paginate(20);
+    
+public function index(Request $request)
+{
+    // Lấy từ khoá tìm kiếm (nếu có)
+    $search = $request->input('q');
 
-        return view('admin.orders.index', compact('orders'));
+    // 1) Khởi tạo query với eager-load user và items.product
+    $query = Order::with(['user', 'items.product'])
+                  ->latest();
+
+    // 2) Nếu có search thì filter theo fullname, address, phone, order_code,
+    //    tracking_number và email của user liên quan
+    if ($search) {
+        $query->where(function($q) use ($search) {
+            $q->where('fullname',         'like', "%{$search}%")
+              ->orWhere('address',        'like', "%{$search}%")
+              ->orWhere('phone',          'like', "%{$search}%")
+              ->orWhere('order_code',     'like', "%{$search}%")
+              ->orWhere('tracking_number','like', "%{$search}%")
+              ->orWhereHas('user', function($q2) use ($search) {
+                  $q2->where('email', 'like', "%{$search}%");
+              });
+        });
     }
+
+    // 3) Paginate 20 bản ghi/trang, và đính query string để giữ param q
+    $orders = $query->paginate(20)
+                    ->appends(['q' => $search]);
+
+    // 4) Trả về view kèm biến $orders và $search để view show lại nhu cầu filter
+    return view('admin.orders.index', compact('orders', 'search'));
+}
     public function update(Request $request, Order $order)
     {
         $data = $request->validate([
@@ -38,4 +63,5 @@ class OrderController extends Controller
         $order->save();
         return back();
     }
+    
 }
