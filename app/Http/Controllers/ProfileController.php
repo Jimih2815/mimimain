@@ -21,7 +21,7 @@ class ProfileController extends Controller
         $orders = $user->orders()
                        ->with('items.product')
                        ->latest()
-                       ->paginate(10);
+                       ->paginate(10); //sửa tạm là 1 tí đổi về 10
 
         // Trả về view profile.edit với biến 'user' và 'orders'
         return view('profile.edit', compact('user', 'orders'));

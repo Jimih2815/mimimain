@@ -125,4 +125,34 @@
       font-weight: bold;
     }
     
+
+    .page-item {
+      .page-link {
+        background-color: #d1a029;
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 0px;
+        width: 2.3rem;
+        height: 2.3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+          background-color: white;
+          color: #d1a029;
+          border: 2px solid #d1a029;
+
+        }
+      }
+      
+      &.active {
+        .page-link {
+          background-color: white !important;
+          color: #d1a029 !important;
+          border: 2px solid #d1a029;
+        }
+      }
+    }
+    
   }

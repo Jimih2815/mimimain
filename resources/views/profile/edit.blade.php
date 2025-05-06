@@ -138,6 +138,7 @@
       @if($orders->isEmpty())
         <p>Chưa có đơn hàng nào.</p>
       @else
+      <div id="orders-content">
         <table class="table table-bordered text-center">
           <thead>
             <tr>
@@ -195,7 +196,56 @@
             @endforeach
           </tbody>
         </table>
-        {{ $orders->links() }}
+      
+        @php
+    $current = $orders->currentPage();
+    $last    = $orders->lastPage();
+    $pages = [];
+
+    if ($last <= 5) {
+        // Nếu tổng trang ≤5 thì show hết
+        for ($i = 1; $i <= $last; $i++) {
+            $pages[] = $i;
+        }
+    } else {
+        if ($current <= 2) {
+            // Trang 1 hoặc 2: 1,2,3, last-1, last
+            $pages = [1,2,3, $last-1, $last];
+        } elseif ($current >= $last - 1) {
+            // Trang penultimate hoặc last: 1,2, last-2, last-1, last
+            $pages = [1,2, $last-2, $last-1, $last];
+        } else {
+            // Ở giữa: 1, current-1, current, current+1, last
+            $pages = [1, $current-1, $current, $current+1, $last];
+        }
+    }
+      @endphp
+
+      <nav>
+        <ul style="gap:2px;" class="pagination justify-content-center ">
+          {{-- Nút Prev --}}
+          <!-- <li class="page-item {{ $current==1?'disabled':'' }}">
+            <a class="page-link" href="{{ $orders->url($current-1) }}">«</a>
+          </li> -->
+
+          {{-- Các trang --}}
+          @foreach($pages as $p)
+            <li class="page-item {{ $p==$current?'active':'' }}">
+              @if($p == $current)
+                <span class="page-link">{{ $p }}</span>
+              @else
+                <a class="page-link" href="{{ $orders->url($p) }}">{{ $p }}</a>
+              @endif
+            </li>
+          @endforeach
+
+          {{-- Nút Next --}}
+          <!-- <li class="page-item {{ $current==$last?'disabled':'' }}">
+            <a class="page-link" href="{{ $orders->url($current+1) }}">»</a>
+          </li> -->
+        </ul>
+      </nav>
+    </div>
       @endif
     </div>
 
@@ -295,6 +345,42 @@
       }
     }
   });
+  document.addEventListener('DOMContentLoaded', () => {
+  // delegate click vào các link trong #orders-content
+  document
+    .querySelector('#orders-content')
+    .addEventListener('click', e => {
+      const a = e.target.closest('a.page-link');
+      if (!a) return;
+      const url = a.href;
+      // ngăn reload
+      e.preventDefault();
+
+      fetch(url, { headers: { 'X-Requested-With':'XMLHttpRequest' } })
+        .then(r => r.text())
+        .then(html => {
+          // parse HTML response
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const newContent = doc.querySelector('#orders-content');
+          // thay luôn nội dung
+          document.querySelector('#orders-content').innerHTML = newContent.innerHTML;
+          // cập nhật browser URL (optional)
+          history.pushState(null, '', url);
+        })
+        .catch(console.error);
+    });
+
+  // bắt back/forward để load lại nội dung đúng fragment
+  window.addEventListener('popstate', () => {
+    fetch(location.href, { headers:{ 'X-Requested-With':'XMLHttpRequest' } })
+      .then(r => r.text())
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        document.querySelector('#orders-content').innerHTML =
+          doc.querySelector('#orders-content').innerHTML;
+      });
+  });
+});
 </script>
 @endpush
 
