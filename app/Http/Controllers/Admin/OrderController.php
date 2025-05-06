@@ -23,11 +23,14 @@ public function index(Request $request)
     //    tracking_number và email của user liên quan
     if ($search) {
         $query->where(function($q) use ($search) {
-            $q->where('fullname',         'like', "%{$search}%")
-              ->orWhere('address',        'like', "%{$search}%")
-              ->orWhere('phone',          'like', "%{$search}%")
-              ->orWhere('order_code',     'like', "%{$search}%")
-              ->orWhere('tracking_number','like', "%{$search}%")
+            $q->where('fullname',          'like', "%{$search}%")
+              ->orWhere('address',         'like', "%{$search}%")
+              ->orWhere('phone',           'like', "%{$search}%")
+              ->orWhere('order_code',      'like', "%{$search}%")
+              ->orWhere('tracking_number', 'like', "%{$search}%")
+              // thêm 2 dòng dưới để search cột Thanh toán
+              ->orWhere('payment_method', 'like', "%{$search}%")
+              ->orWhere('bank_ref',        'like', "%{$search}%")
               ->orWhereHas('user', function($q2) use ($search) {
                   $q2->where('email', 'like', "%{$search}%");
               });

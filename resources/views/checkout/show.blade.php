@@ -113,7 +113,16 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Số điện thoại</label>
-          <input type="text" name="phone" class="form-checkout" required>
+          <input
+            type="tel"
+            name="phone"
+            class="form-checkout"
+            required
+            inputmode="numeric"
+            pattern="[0-9]{9,11}"
+            minlength="9"
+            maxlength="11"
+          >
         </div>
         <div class="mb-3">
           <label class="form-label">Địa chỉ</label>
@@ -183,51 +192,74 @@
 
 @push('scripts')
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const codRadio    = document.getElementById('cod');
-    const bankRadio   = document.getElementById('bank');
-    const bankSection = document.getElementById('bankSection');
-    const confirmCod  = document.getElementById('confirmCod');
-    const confirmBank = document.getElementById('confirmBank');
-    const form        = document.getElementById('checkoutForm');
-    const warnEl      = document.getElementById('checkout-validate-warning');
+document.addEventListener('DOMContentLoaded', function() {
+  const codRadio    = document.getElementById('cod');
+  const bankRadio   = document.getElementById('bank');
+  const bankSection = document.getElementById('bankSection');
+  const confirmCod  = document.getElementById('confirmCod');
+  const confirmBank = document.getElementById('confirmBank');
+  const form        = document.getElementById('checkoutForm');
+  const warnEl      = document.getElementById('checkout-validate-warning');
 
-    function validate() {
-      const fields = [
-        { name: 'fullname', label: 'Họ tên' },
-        { name: 'phone',    label: 'Số điện thoại' },
-        { name: 'address',  label: 'Địa chỉ' },
-      ];
-      const missing = fields
-        .filter(f => ! form.querySelector(`[name="${f.name}"]`).value.trim())
-        .map(f => f.label);
-        if (missing.length) {
-          warnEl.textContent = '!!! Vui lòng nhập: ' + missing.join(', ');
-          warnEl.style.display = 'block';
-          // >>> Cuộn nhẹ nhàng xuống chỗ cảnh báo để user khỏi nhảy nhót tìm
-          warnEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return false;
-        }
-      warnEl.style.display = 'none';
-      return true;
+  function validate() {
+    // 1) Kiểm ô bắt buộc
+    const fields = [
+      { name: 'fullname', label: 'Họ tên' },
+      { name: 'phone',    label: 'Số điện thoại' },
+      { name: 'address',  label: 'Địa chỉ' },
+    ];
+    const missing = fields
+      .filter(f => ! form.querySelector(`[name="${f.name}"]`).value.trim())
+      .map(f => f.label);
+    if (missing.length) {
+      warnEl.textContent = '!!! Vui lòng nhập: ' + missing.join(', ');
+      warnEl.style.display = 'block';
+      warnEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
     }
 
-    confirmCod.addEventListener('click', function(e) {
-      if (!validate()) e.preventDefault();
-    });
+    // 2) Kiểm định dạng SĐT (9–11 chữ số)
+    const phoneVal = form.querySelector('[name="phone"]').value.trim();
+    if (!/^[0-9]{9,11}$/.test(phoneVal)) {
+      warnEl.textContent = '!!! Số điện thoại phải là 9–11 chữ số.';
+      warnEl.style.display = 'block';
+      form.querySelector('[name="phone"]').focus();
+      return false;
+    }
 
-    confirmBank.addEventListener('click', function() {
-      if (validate()) form.submit();
-    });
+    // Ẩn cảnh báo nếu hợp lệ
+    warnEl.style.display = 'none';
+    return true;
+  }
 
-    codRadio.addEventListener('change', () => {
-      bankSection.style.display = 'none';
-      confirmCod.style.display  = 'inline-block';
-    });
-    bankRadio.addEventListener('change', () => {
-      bankSection.style.display = 'block';
-      confirmCod.style.display  = 'none';
-    });
+  // Xác nhận COD
+  confirmCod.addEventListener('click', function(e) {
+    if (!validate()) e.preventDefault();
   });
+
+  // Xác nhận Bank
+  confirmBank.addEventListener('click', function() {
+    if (validate()) form.submit();
+  });
+
+  // Chuyển hiển thị giữa COD/Bank
+  codRadio.addEventListener('change', () => {
+    bankSection.style.display = 'none';
+    confirmCod.style.display  = 'inline-block';
+  });
+  bankRadio.addEventListener('change', () => {
+    bankSection.style.display = 'block';
+    confirmCod.style.display  = 'none';
+  });
+
+  // Giữ trạng thái radio & section khi reload có lỗi
+  const oldPayment = '{{ old("payment") }}';
+  if (oldPayment === 'bank') {
+    bankRadio.checked     = true;
+    bankSection.style.display = 'block';
+    confirmCod.style.display  = 'none';
+  }
+});
 </script>
 @endpush
+

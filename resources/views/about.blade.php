@@ -179,13 +179,13 @@
   {{-- 5. Statistics / Partners (Optional) --}}
   <section class="mb-5 text-center">
     <h2 class="section-title">Một Số Con Số Ấn Tượng</h2>
-    <div class="d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center gap-3">
       <div class="col-6 col-md-3 mb-4">
         <h3 class="fw-bold">1K+</h3>
         <p>Khách hàng hài lòng</p>
       </div>
       <div class="col-6 col-md-3 mb-4">
-        <h3 class="fw-bold">500+</h3>
+        <h3 class="fw-bold">1000+</h3>
         <p>Đơn hàng mỗi tháng</p>
       </div>
       <div class="col-6 col-md-3 mb-4">
