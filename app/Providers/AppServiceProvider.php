@@ -13,13 +13,18 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    public function boot(): void
-    {
-        // share menu ra mọi view
-        $menusections = MenuSection::with('groups.products')
-                         ->orderBy('sort_order')
-                         ->get();
+    public function boot()
+{
+    View::composer('partials.mobile-header', function($view){
+        // Cart từ session
+        $cart = session('cart', []);
+        $cartCount = array_sum(array_column($cart, 'quantity'));
 
-        View::share('menusections', $menusections);
-    }
+        // Sections → Groups → Products
+        $sections = MenuSection::with('groups.products')
+                       ->orderBy('sort_order')->get();
+
+        $view->with(compact('cart','cartCount','sections'));
+    });
+}
 }

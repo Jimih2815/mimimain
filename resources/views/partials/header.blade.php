@@ -8,7 +8,7 @@
 
 <header>
   {{-- 1) Top bar --}}
-  <div class="header-top bg-light py-1">
+  <div class="header-top bg-light py-1 an-des">
     <div class="container d-flex justify-content-end small">
       <a href="{{ asset('help') }}" class="me-3 text-decoration-none text-dark" target="_blank">Trợ giúp</a>
 
@@ -39,7 +39,7 @@
   </div>
 
   {{-- 2) Main header --}}
-  <div class="header-main bg-white py-3">
+  <div class="header-main bg-white py-3 an-des">
     <div class="container position-relative d-flex align-items-center">
 
       {{-- Logo trái --}}

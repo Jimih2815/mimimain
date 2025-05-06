@@ -32,6 +32,8 @@
 
   {{-- Header chung --}}
   @include('partials.header')
+  @include('partials.mobile-header')
+
 
   {{-- Nội dung chính --}}
   <main class="container mx-auto">

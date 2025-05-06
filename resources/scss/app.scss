@@ -614,3 +614,17 @@ body {
 .back-to-top-full.active i.fa-angles-up {
   transform: translateY(-3px) scale(1.2);
 }
+.an-mobi {
+  display: none;
+}
+.an-des {
+  display: flex;
+}
+@media (max-width: 767.98px) {
+  .an-mobi {
+    display: flex;
+  }
+  .an-des {
+    display: none;
+  }
+}
