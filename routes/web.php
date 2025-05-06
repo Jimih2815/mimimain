@@ -103,6 +103,18 @@ Route::post('favorites/toggle/{product}', [FavoriteController::class,'toggle'])-
 
 Route::get('/news', [NewsController::class,'index'])->name('news.index');
 Route::get('/news/{slug}', [NewsController::class,'show'])->name('news.show');
+Route::view('/about', 'about')->name('about');
+Route::view('/vision-mission', 'vision-mission')->name('vision-mission');
+Route::view('/commitment', 'commitment')->name('commitment');
+Route::view('/policy/return', 'return-policy')->name('policy.return');
+Route::view('/policy/warranty', 'warranty-policy')->name('policy.warranty');
+Route::view('/policy/shipping', 'shipping-policy')->name('policy.shipping');
+Route::view('/policy/privacy', 'privacy-policy')->name('policy.privacy');
+Route::view('/faq', 'faq')->name('faq');
+Route::view('/how-to-order', 'how-to-order')->name('how-to-order');
+Route::view('/tracking', 'tracking')->name('tracking');
+Route::view('/how-to-pay', 'how-to-pay')->name('how-to-pay');
+
 
 
 
@@ -246,7 +258,4 @@ Route::prefix('admin')
          )->name('news.assignCollection');
 });
 
-// Redirect khi có dấu slash thừa ở cuối URL
-Route::get('{any}/', function () {
-    return redirect(rtrim(request()->getRequestUri(), '/'));
-})->where('any', '.*');
+

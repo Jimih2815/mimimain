@@ -4,12 +4,6 @@ import purgecssPlugin from '@fullhuman/postcss-purgecss';
 
 const purgecss = purgecssPlugin.default ?? purgecssPlugin;
 
-// helper chunk
-const manualChunks = id => {
-  if (id.includes('tinymce')) return 'editor';
-  if (id.includes('swiper'))  return 'swiper';
-};
-
 export default defineConfig({
   plugins: [
     laravel({
@@ -19,20 +13,33 @@ export default defineConfig({
     splitVendorChunkPlugin(),
   ],
 
-  // PostCSS
+  resolve: {
+    // Đảm bảo Vite hiểu import 'swiper'
+    alias: {
+      swiper: 'swiper',
+    },
+  },
+
+  optimizeDeps: {
+    // Bao gồm Swiper và CSS để Vite pre-bundle
+    include: [
+      'swiper',
+      'swiper/css',
+      'swiper/css/navigation',
+    ],
+  },
+
   css: {
     postcss: {
       plugins: [
-        // Chỉ bật PurgeCSS khi build production
         ...(process.env.NODE_ENV === 'production'
           ? [
               purgecss({
                 content: [
                   './resources/**/*.blade.php',
-                  './resources/js/**/*.vue',
-                  './resources/js/**/*.js',
+                  './resources/js/**/*.{vue,js}',
                 ],
-                safelist: [/^swal-/, /^tox-/, /^mce-/],
+                safelist: [/^swal-/, /^tox-/, /^mce-/, /^swiper-/],
                 defaultExtractor: content =>
                   content.match(/[\w-/:]+(?<!:)/g) || [],
               }),
@@ -44,13 +51,35 @@ export default defineConfig({
 
   build: {
     sourcemap: false,
-    rollupOptions: { output: { manualChunks } },
+    rollupOptions: {
+      output: {
+        // Tách bundle cho Swiper và TinyMCE
+        manualChunks(id) {
+          if (id.includes('node_modules/swiper')) {
+            return 'swiper';
+          }
+          if (id.includes('node_modules/tinymce')) {
+            return 'editor';
+          }
+          // Giữ mặc định cho các vendor khác
+        },
+      },
+    },
   },
 
   server: {
-    watch: { usePolling: true, interval: 100 },
+    watch: {
+      usePolling: true,
+      interval: 100,
+      // có thể ignore folder storage nếu cần
+      ignored: ['!**/node_modules/**', 'storage/**'],
+    },
     host: '127.0.0.1',
     port: 5173,
-    hmr: { host: '127.0.0.1', protocol: 'ws', port: 5173 },
+    hmr: {
+      host: '127.0.0.1',
+      protocol: 'ws',
+      port: 5173,
+    },
   },
 });

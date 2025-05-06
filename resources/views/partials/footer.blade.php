@@ -6,17 +6,17 @@
       <div class="footer-danh-sach">
         <h5>Giới thiệu</h5>
         <ul class="list-unstyled">
-          <li><a href="#">Về Mimi Shop</a></li>
-          <li><a href="#">Tầm nhìn, sứ mệnh</a></li>
-          <li><a href="#">Cam kết</a></li>
+          <li><a href="{{ route('about') }}">Về Mimi Shop</a></li>
+          <li><a href="{{ route('vision-mission') }}">Tầm nhìn, sứ mệnh</a></li>
+          <li><a href="{{ route('commitment') }}">Cam kết</a></li>
           <li><a href="{{ route('news.index') }}">Tin tức</a></li>
         </ul>
       </div>
       <div class="footer-danh-sach">
         <h5>Liên hệ</h5>
         <ul class="list-unstyled">
-          <li><a href="#">Địa chỉ</a></li>
-          <li><a href="#">Hotline</a></li>
+          <li><a href="https://maps.app.goo.gl/3V7A9WdkKkVS4x1X8" target="_blank">Địa chỉ</a></li>
+          <li><a href="tel:0354235669">Hotline: 0354 235 669</a></li>
           <li><a href="#">Email</a></li>
           <li>9:00 - 17:30</li>
         </ul>
@@ -24,19 +24,19 @@
       <div class="footer-danh-sach">
         <h5>Chính sách</h5>
         <ul class="list-unstyled">
-          <li><a href="#">Chính sách đổi trả</a></li>
-          <li><a href="#">Chính sách bảo hành</a></li>
-          <li><a href="#">Chính sách vận chuyển giao hàng</a></li>
-          <li><a href="#">Chính sách bảo mật thông tin</a></li>
+          <li><a href="{{ route('policy.return') }}">Chính sách đổi trả</a></li>
+          <li><a href="{{ route('policy.warranty') }}">Chính sách bảo hành</a></li>
+          <li><a href="{{ route('policy.shipping') }}">Chính sách vận chuyển giao hàng</a></li>
+          <li><a href="{{ route('policy.privacy') }}">Chính sách bảo mật thông tin</a></li>
         </ul>
       </div>
       <div class="footer-danh-sach">
         <h5>Hỗ trợ khách hàng</h5>
         <ul class="list-unstyled">
-          <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
-          <li><a href="#">Hướng dẫn đặt hàng</a></li>
-          <li><a href="#">Theo dõi đơn hàng</a></li>
-          <li><a href="#">Hướng dẫn thanh toán</a></li>
+          <li><a href="{{ route('faq') }}">Câu hỏi thường gặp (FAQ)</a></li>
+          <li><a href="{{ route('how-to-order') }}">Hướng dẫn đặt hàng</a></li>
+          <li><a href="{{ route('tracking') }}">Theo dõi đơn hàng</a></li>
+          <li><a href="{{ route('how-to-pay') }}">Hướng dẫn thanh toán</a></li>
         </ul>
       </div>
       <div class="footer-danh-sach">
