@@ -79,15 +79,14 @@
       {{-- Map (≈67% width) --}}
       <div class="col-md-8 mb-4">
         <div class="map-container mb-2">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.034928716555!2d105.7753423154153!3d21.02158289258868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab6f4c9e7a1f%3A0x123456789abcdef!2zVGllbSBob2EgTWltZQ!5e0!3m2!1svi!2s!4v1234567890123"
-            frameborder="0"
-            allowfullscreen
-            loading="lazy"
-            style="width:100%;"
-          ></iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d14896.435121458197!2d105.7425!3d21.028333!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjHCsDAxJzQyLjAiTiAxMDXCsDQ0JzMzLjAiRQ!5e0!3m2!1svi!2sus!4v1746517332466!5m2!1svi!2sus" 
+          width="100%" height="150px" style="border:0;" 
+          allowfullscreen="" loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
+
+      
     </div>
 
 
