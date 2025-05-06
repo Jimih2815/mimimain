@@ -141,7 +141,7 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Mã đơn hàng</th>
               <th>Ảnh</th>
               <th>Sản phẩm</th>
               <th>Thanh toán</th>
@@ -154,7 +154,7 @@
           <tbody>
             @foreach($orders as $o)
               <tr>
-                <td>{{ $o->id }}</td>
+                <td>{{ $o->order_code }}</td>
                 <!-- Ảnh sản phẩm đầu tiên -->
                 <td>
                   @php $it = $o->items->first(); @endphp
@@ -178,13 +178,17 @@
                 <td>{{ number_format($o->total,0,',','.') }}₫</td>
                 <td>{{ $o->payment_method=='cod'?'COD':'Chuyển khoản' }}</td>
                 <td><div class="d-flex  flex-column">{{ $o->tracking_number ?? '—' }} <a style="color:#d1a029;" href="https://spx.vn/track" target="_blank">Tra cứu đơn hàng</a></div></td>
-                <td>
-                  @switch($o->status)
-                    @case('pending') Đã tiếp nhận @break
-                    @case('shipping') Đang giao hàng @break
-                    @case('done') Đã nhận hàng @break
-                    @default {{ ucfirst($o->status) }}
-                  @endswitch
+                @php
+                  $statusLabels = [
+                    'pending'  => 'Đã tiếp nhận',
+                    'shipping' => 'Đang giao hàng',
+                    'done'     => 'Đã nhận hàng',
+                  ];
+                  $statusClass = 'status-' . $o->status;
+                @endphp
+
+                <td class="{{ $statusClass }}">
+                  {{ $statusLabels[$o->status] ?? ucfirst($o->status) }}
                 </td>
                 <td>{{ $o->created_at->format('d/m/Y H:i') }}</td>
               </tr>
@@ -263,3 +267,34 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const hash = window.location.hash;        // ví dụ "#orders"
+    if (!hash) return;
+
+    // Chọn button có data-bs-target trùng hash
+    const btn = document.querySelector(
+      `#profileTabs button[data-bs-target="${hash}"]`
+    );
+    if (btn) {
+      // active tab header
+      document.querySelectorAll('#profileTabs .nav-link').forEach(el => {
+        el.classList.remove('active');
+      });
+      btn.classList.add('active');
+
+      // active tab content
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('show', 'active');
+      });
+      const panel = document.querySelector(hash);
+      if (panel) {
+        panel.classList.add('show', 'active');
+      }
+    }
+  });
+</script>
+@endpush
+

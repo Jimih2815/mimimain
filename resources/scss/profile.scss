@@ -100,7 +100,7 @@
 
     }
   
-    .status-dang-xu-ly   { color: #7c283c;  }
+    .status-dang-xu-ly   { color: #d1a029;  }
     .status-da-tiep-nhan { color: #4ab3af;  }
     .status-hoan-thanh   { color: #3f9426;  }
     .status-hoan-thanh, .status-da-tiep-nhan , .status-dang-xu-ly
@@ -108,4 +108,21 @@
       font-size: 1.2rem;
       font-weight: 700;
     }
+
+
+    .status-pending {
+      color: #4ab3af;           /* Cam đậm */
+      font-weight: bold;
+    }
+    
+    .status-shipping {
+      color: #d1a029;           /* Xanh biển */
+      font-weight: bold;
+    }
+    
+    .status-done {
+      color: #3f9426;           /* Xanh lá */
+      font-weight: bold;
+    }
+    
   }

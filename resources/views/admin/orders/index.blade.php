@@ -28,15 +28,15 @@
   <table class="table table-bordered align-middle">
     <thead class="table-light">
       <tr>
-        <th>#</th><th>Khách</th><th>Điện thoại</th><th>Tổng</th>
+        <th>Mã đơn hàng</th><th>Khách</th><th>Điện thoại</th><th>Tổng</th>
         <th>Thanh toán</th><th>Mã vận đơn</th><th>Trạng thái</th><th>Ngày</th>
       </tr>
     </thead>
     <tbody>
       @foreach($orders as $o)
         <tr>
-          {{-- 1. ID --}}
-          <td>{{ $o->id }}</td>
+          {{-- 1. Mã đơn --}}
+          <td>{{ $o->order_code }}</td>
 
           {{-- 2. Khách & địa chỉ --}}
           <td>

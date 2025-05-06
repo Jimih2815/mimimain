@@ -14,7 +14,7 @@
 
 
   <!-- <h2 class="mb-3">Cảm ơn bạn đã đặt hàng!</h2> -->
-  <p>Mã đơn: <strong>#{{ $order->id }}</strong></p>
+  <p>Mã đơn: <strong>#{{ $order->order_code }}</strong></p>
   <p>Tổng tiền: <strong>{{ number_format($order->total,0,',','.') }}₫</strong></p>
 
   @if($order->payment_method=='cod')
@@ -28,9 +28,16 @@
     </div>
   @endif
 
-  <a href="{{ route('home') }}" class="btn mt-4 nut-tiep-tuc">
+  <div class="text-center mt-4 d-flex gap-3 justify-content-center align-items-center">
+  <a href="{{ route('home') }}" class="btn-mimi nut-vang text-decoration-none">
     Tiếp tục mua hàng
   </a>
+  <a href="{{ route('profile.edit') }}#orders" class="btn-mimi nut-xanh text-decoration-none">
+  Theo dõi đơn hàng
+</a>
+
 </div>
+
+  </div>
 </div>
 @endsection
