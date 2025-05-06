@@ -1,4 +1,4 @@
-<footer class="bg-light pt-5">
+<footer class="bg-light pt-5 an-des">
   <div class="container footer-container">
 
     {{-- 1. Links + Social columns --}}

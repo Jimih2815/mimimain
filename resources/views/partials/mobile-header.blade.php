@@ -65,33 +65,112 @@
   padding:.75rem 1rem;
   border-bottom:1px solid #f1f1f1;
   cursor:pointer;
-  color:#007bff;
+  color: white;
+  font-size: 0.9rem;
+    font-weight: 100;
+    -webkit-text-stroke: 1px #d1a029;
 }
+.so-trong-gio {
+    font-size:0.7rem;
+    font-weight: 100;
+    padding-top: 8px;
+}
+.mh-icons i {
+    font-size:1.3rem;
 
-/* Fix search-button z-index */
-.input-group .btn { z-index:0 !important; }
+}
+/* ==== Search panel slide-in ==== */
+.mh-search-panel {
+  position: fixed;
+  top: 0; right: -100%; left: auto;
+  width: 100%; height: 100%;
+  background: #fff;
+  z-index: 1100;
+  transition: right .3s ease;
+  overflow-y: auto;
+}
+.mh-search-panel.open {
+  right: 0;
+}
+.mh-search-panel .search-header {
+  height: 56px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  padding: 0 .75rem;
+}
+.mh-search-panel .search-header input {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  font-size: 1rem;
+  margin-left: .5rem;
+  flex: 1;
+}
+.icon-cont {
+    width: 10rem;
+    justify-content: space-between;
+}
+.fa-magnifying-glass {
+    color: #fe3b27;
+}
+.bi-bag-fill {
+    color: #d1a029;
+}
+.fa-user {
+    color: #4ab3af;
+}
+.fa-bars {
+    color: #333333;
+}
+.fa-heart {
+    color: #b83232 !important;
+}
+#mh-btn-close .fa-times {
+    font-size: 1.5rem;
+    -webkit-text-stroke: 2px #b83232;
+    color: white;
+}
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: white;                     /* Màu chữ chính */
+  -webkit-text-stroke: 2px #333333; /* Viền xanh (Bootstrap blue) */
+  text-shadow: none;  
+}
+#mh-sec-title {
+    font-size: 1.5rem;
+    color: #b83232;
+    -webkit-text-stroke: 1px #b83232;
+}
+.list-unstyled a {
+    color: #b83232;
+    font-size: 1.4rem;
+    -webkit-text-stroke: 1px #4ab3af;
+}
 </style>
 
 <div class="mobile-header d-block d-lg-none">
   {{-- Top bar --}}
   <div class="mh-top d-flex align-items-center justify-content-between px-3">
-    <a href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}" height="24" alt="Logo"></a>
-    <div class="mh-icons d-flex align-items-center">
+    <a href="{{ url('/') }}"><img style="height:2.5rem;"  src="https://tiemhoamimi.com/image/mimi-logo.webp" height="24" alt="Logo"></a>
+    <div class="mh-icons d-flex align-items-center icon-cont">
       {{-- 1) Search --}}
-      <form action="{{ route('products.index') }}" method="GET" class="d-flex me-2" style="max-width:140px">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Tìm kiếm…" value="{{ request('q') }}">
-          <button class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
-        </div>
-      </form>
+      <button id="mh-search-toggle"
+                class="d-flex justify-content-center align-items-center border-0 bg-transparent p-0 m-0">
+            <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
       {{-- 2) Yêu thích --}}
-      <a href="{{ route('favorites.index') }}" class="text-dark fs-5 me-3"><i class="fas fa-heart text-danger"></i></a>
+      <a href="{{ route('favorites.index') }}" class="d-flex justify-content-center align-items-center "><i class="fas fa-heart"></i></a>
       {{-- 3) Giỏ hàng --}}
-      <div class="dropdown me-3">
-        <a href="#" id="cartDropdownMobile" data-bs-toggle="dropdown" class="text-dark position-relative fs-5">
-          <i class="bi bi-bag-fill"></i>
-          <span id="cart-count-mobile"
-                class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+      <div class="dropdown">
+        <a href="#" id="cartDropdownMobile" data-bs-toggle="dropdown" class="position-relative d-flex justify-content-center align-items-center">
+          <i class="bi bi-bag-fill d-flex justify-content-center align-items-center"></i>
+           <span id="cart-count-mobile"
+                class="badge rounded-pill position-absolute top-50 start-50 translate-middle so-trong-gio"
                 style="{{ $cartCount ? '' : 'display:none' }}">
             {{ $cartCount }}
           </span>
@@ -113,20 +192,20 @@
       </div>
       {{-- 4) Tài khoản --}}
       @guest
-        <a href="{{ route('login') }}" class="text-dark fs-5 me-2"><i class="bi bi-person"></i></a>
+        <a href="{{ route('login') }}" class="d-flex justify-content-center align-items-center"><i class="bi bi-person"></i></a>
       @else
-        <a href="{{ route('profile.edit') }}" class="text-dark fs-5 me-2"><i class="bi bi-person-circle"></i></a>
+        <a href="{{ route('profile.edit') }}" class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-user"></i></a>
       @endguest
       {{-- 5) Hamburger --}}
-      <button id="mh-btn-toggle" class="btn btn-link p-0"><i class="fa fa-bars fa-lg"></i></button>
+      <button id="mh-btn-toggle" class="d-flex justify-content-center align-items-center border-0 bg-transparent"><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 
   {{-- Offcanvas --}}
   <aside id="mh-offcanvas" class="mh-offcanvas">
-    <div class="mh-oc-header d-flex align-items-center px-3">
-      <button id="mh-btn-close" class="btn btn-link p-0 me-2"><i class="fa fa-times fa-lg"></i></button>
-      <h5 class="mb-0">Menu</h5>
+    <div class="mh-oc-header d-flex align-items-center justify-content-end">
+      <button id="mh-btn-close" class="d-flex align-items-center px-3 justify-content-center border-0"><i class="fa fa-times fa-lg"></i></button>
+      <!-- <h5 class="mb-0">Menu</h5> -->
     </div>
 
     {{-- Level 1 --}}
@@ -142,20 +221,76 @@
     {{-- Level 2 --}}
     <div id="mh-level2" class="mh-nav-lvl2">
       <div id="mh-btn-back" class="mh-back"><i class="fa fa-chevron-left me-2"></i>Quay lại</div>
-      <h6 id="mh-sec-title" class="px-3 py-2 mb-0 border-bottom"></h6>
+      <h6 id="mh-sec-title" class="px-3 py-2 pb-4 border-bottom"></h6>
       <ul id="mh-groups" class="list-unstyled mb-0"></ul>
     </div>
   </aside>
+  {{-- Search Offcanvas --}}
+    <aside id="mh-search-panel" class="mh-search-panel">
+        <form id="mh-search-form" action="{{ route('products.index') }}" method="GET">
+            <div class="search-header d-flex align-items-center px-3">
+            <button id="mh-search-close" type="button" class="btn btn-link p-0 me-2">
+                <i class="fa fa-times fa-lg"></i>
+            </button>
+            <div class="input-group w-100">
+                <input type="text"
+                    name="q"
+                    id="mh-search-input"
+                    class="form-control"
+                    placeholder="Search…"
+                    value="{{ request('q') }}">
+                <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i>
+                </button>
+            </div>
+            </div>
+
+            <div class="p-3">
+            <p class="mb-2 fw-bold">Từ Khóa Phổ Biến</p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                class="badge bg-light text-dark">Đèn Ngủ Hoa Tulyp</a>
+                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                class="badge bg-light text-dark">Gấu Bông</a>
+                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                class="badge bg-light text-dark">Hoa Gấu Bông</a>
+                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                class="badge bg-light text-dark">Đèn Ngủ Đám Mây</a>
+                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                class="badge bg-light text-dark">Quạt Mini Tích Điện</a>
+                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                class="badge bg-light text-dark">Phụ Kiện Cute</a>
+            </div>
+            </div>
+        </form>
+    </aside>
+
+
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const sections  = @json($sections);
-  const offcanvas = document.getElementById('mh-offcanvas');
-  const lvl1      = document.getElementById('mh-level1');
-  const lvl2      = document.getElementById('mh-level2');
-  const groupsEl  = document.getElementById('mh-groups');
-  const secTitle  = document.getElementById('mh-sec-title');
+  const sections      = @json($sections);
+  const offcanvas     = document.getElementById('mh-offcanvas');
+  const lvl1          = document.getElementById('mh-level1');
+  const lvl2          = document.getElementById('mh-level2');
+  const groupsEl      = document.getElementById('mh-groups');
+  const secTitle      = document.getElementById('mh-sec-title');
+  const searchToggle  = document.getElementById('mh-search-toggle');
+  const searchPanel   = document.getElementById('mh-search-panel');
+  const searchClose   = document.getElementById('mh-search-close');
+
+  // Mở search panel
+  searchToggle.onclick = () => {
+    // đóng menu đang mở nếu có
+    offcanvas.classList.remove('open', 'show-lvl2');
+    // mở panel tìm kiếm
+    searchPanel.classList.add('open');
+  };
+  // Đóng search panel
+  searchClose.onclick = () => {
+    searchPanel.classList.remove('open');
+  };
 
   // Mở menu
   document.getElementById('mh-btn-toggle').onclick = () => {
@@ -167,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     offcanvas.classList.remove('open', 'show-lvl2');
   };
 
-  // Chọn Section → show Groups
+  // Chọn Section → show Groups (Level 1 → Level 2)
   lvl1.querySelectorAll('li').forEach(li => {
     li.onclick = () => {
       const sec = sections.find(s => s.id == li.dataset.id);
@@ -176,19 +311,19 @@ document.addEventListener('DOMContentLoaded', () => {
       // Build nhóm + sản phẩm
       groupsEl.innerHTML = sec.groups.map(g => `
         <li>
-          <div class="group-header">
+          <div class="group-header d-flex justify-content-between align-items-center py-2 px-3">
             <span>${g.title}</span>
             <i class="fa fa-chevron-down"></i>
           </div>
           <ul class="mh-products list-unstyled mb-0">
-            ${g.products.map(p => 
+            ${g.products.map(p =>
               `<li class="py-1 px-4"><a href="/products/${p.slug}">${p.name}</a></li>`
             ).join('')}
           </ul>
         </li>
       `).join('');
 
-      // Toggle slide sản phẩm
+      // Toggle slide sản phẩm trong group
       groupsEl.querySelectorAll('.group-header').forEach(header => {
         const icon  = header.querySelector('i');
         const prodUl = header.nextElementSibling;
@@ -199,14 +334,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
       });
 
-      // Slide sang Level 2
+      // Hiệu ứng slide sang Level 2
       offcanvas.classList.add('show-lvl2');
     };
   });
 
-  // Back → Level 1
+  // Back → quay lại Level 1
   document.getElementById('mh-btn-back').onclick = () => {
     offcanvas.classList.remove('show-lvl2');
   };
 });
 </script>
+

@@ -93,6 +93,7 @@
 
   {{-- Footer chung --}}
   @include('partials.footer')
+  @include('partials.mobile-footer')
 
   {{-- Nếu có các script cần push từ các view con --}}
   @stack('scripts')
