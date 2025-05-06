@@ -20,6 +20,36 @@
     text-align: left;
     padding-left: 0 !important;
   }
+  /* Base style cho toàn bộ pagination */
+.pagination .page-item .page-link {
+  background-color: #4ab3af;
+  color: white;
+  border: none;              /* nếu không muốn viền */
+  margin: 0 2px;             /* khoảng cách giữa các nút */
+}
+
+/* Hover state */
+.pagination .page-item:not(.active) .page-link:hover {
+  background-color: #3a958f; /* đậm hơn 1 chút khi hover */
+  color: white;
+  text-decoration: none;
+}
+
+/* Style cho nút đang active */
+.pagination .page-item.active .page-link {
+  background-color: white;
+  color: #4ab3af;
+  font-weight: bold;
+  cursor: default; 
+  border:1px solid #4ab3af;        
+}
+
+/* Disabled state (Prev/Next khi hết) */
+.pagination .page-item.disabled .page-link {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 </style>
 
 <div class="container py-4">
@@ -147,7 +177,51 @@
     </tbody>
 
   </table>
+  @php
+    $current = $orders->currentPage();
+    $last    = $orders->lastPage();
+    $pages   = [];
 
-  {{ $orders->links() }}
+    if ($last <= 5) {
+        // nếu tổng trang ≤5 thì show hết
+        for ($i = 1; $i <= $last; $i++) {
+            $pages[] = $i;
+        }
+    } elseif ($current <= 2) {
+        // đang ở trang 1 hoặc 2
+        $pages = [1, 2, 3, $last - 1, $last];
+    } elseif ($current >= $last - 1) {
+        // đang ở trang cuối hoặc trước cuối
+        $pages = [1, 2, $last - 2, $last - 1, $last];
+    } else {
+        // ở giữa
+        $pages = [1, $current - 1, $current, $current + 1, $last];
+    }
+@endphp
+
+<nav>
+  <ul class="pagination justify-content-center">
+    {{-- Prev --}}
+    <li class="page-item {{ $current == 1 ? 'disabled' : '' }}">
+      <a class="page-link" href="{{ $orders->url($current - 1) }}">«</a>
+    </li>
+
+    {{-- Pages --}}
+    @foreach($pages as $p)
+      <li class="page-item {{ $p == $current ? 'active' : '' }}">
+        @if($p == $current)
+          <span class="page-link">{{ $p }}</span>
+        @else
+          <a class="page-link" href="{{ $orders->url($p) }}">{{ $p }}</a>
+        @endif
+      </li>
+    @endforeach
+
+    {{-- Next --}}
+    <li class="page-item {{ $current == $last ? 'disabled' : '' }}">
+      <a class="page-link" href="{{ $orders->url($current + 1) }}">»</a>
+    </li>
+  </ul>
+</nav>
 </div>
 @endsection
