@@ -29,36 +29,85 @@
     <thead class="table-light">
       <tr>
         <th>#</th><th>Khách</th><th>Điện thoại</th><th>Tổng</th>
-        <th>Thanh toán</th><th>Trạng thái</th><th>Ngày</th>
+        <th>Thanh toán</th><th>Mã vận đơn</th><th>Trạng thái</th><th>Ngày</th>
       </tr>
     </thead>
     <tbody>
       @foreach($orders as $o)
         <tr>
+          {{-- 1. ID --}}
           <td>{{ $o->id }}</td>
-          <td>{{ $o->fullname }}<br><small>{{ $o->address }}</small></td>
+
+          {{-- 2. Khách & địa chỉ --}}
+          <td>
+            {{ $o->fullname }}<br>
+            <small>{{ $o->address }}</small>
+          </td>
+
+          {{-- 3. Điện thoại --}}
           <td>{{ $o->phone }}</td>
+
+          {{-- 4. Tổng tiền --}}
           <td>{{ number_format($o->total,0,',','.') }}₫</td>
+
+          {{-- 5. Thanh toán --}}
           <td>
             @if($o->payment_method=='cod')
               COD
             @else
-              CK<br><small>{{ $o->bank_ref }}</small>
+              CK<br>
+              <small>{{ $o->bank_ref }}</small>
             @endif
           </td>
-          <td>{{ ucfirst($o->status) }}</td>
+
+          {{-- 6. Tracking number (inline edit) --}}
+          <td>
+            <form action="{{ route('admin.orders.update', $o) }}" method="POST" class="d-flex">
+              @csrf
+              @method('PUT')
+              <input
+                type="text"
+                name="tracking_number"
+                value="{{ $o->tracking_number }}"
+                class="form-control form-control-sm me-1"
+                placeholder="Mã vận đơn">
+              <button class="btn btn-sm btn-primary">Lưu</button>
+            </form>
+          </td>
+
+          {{-- 7. Status dropdown (auto-submit) --}}
+          <td>
+            <form action="{{ route('admin.orders.update', $o) }}" method="POST">
+              @csrf
+              @method('PUT')
+              <select
+                name="status"
+                class="form-select form-select-sm"
+                onchange="this.form.submit()">
+                <option value="pending"  {{ $o->status=='pending'  ? 'selected' : '' }}>Đã tiếp nhận</option>
+                <option value="shipping" {{ $o->status=='shipping' ? 'selected' : '' }}>Đang giao hàng</option>
+                <option value="done"     {{ $o->status=='done'     ? 'selected' : '' }}>Đã giao hàng</option>
+              </select>
+            </form>
+          </td>
+
+          {{-- 8. Ngày tạo --}}
           <td>{{ $o->created_at->format('d/m H:i') }}</td>
         </tr>
+
+        {{-- Chi tiết các item trong đơn --}}
         <tr>
-          <td colspan="7">
+          <td colspan="8">
             <ul class="mb-0">
               @foreach($o->items as $it)
                 <li>
                   {{ $it->product->name }} × {{ $it->quantity }}
                   @if($it->options)
-                    <ul>
+                    <ul class="mb-0 ps-3">
                       @php
-                        $vals = \App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get();
+                        $vals = \App\Models\OptionValue::whereIn('id', $it->options)
+                                                      ->with('type')
+                                                      ->get();
                       @endphp
                       @foreach($vals as $v)
                         <li>{{ $v->type->name }}: {{ $v->value }}</li>
@@ -72,6 +121,7 @@
         </tr>
       @endforeach
     </tbody>
+
   </table>
 
   {{ $orders->links() }}

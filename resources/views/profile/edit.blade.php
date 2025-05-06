@@ -26,9 +26,7 @@
               data-bs-toggle="tab"
               data-bs-target="#orders"
               type="button"
-              role="tab"
-              aria-controls="orders"
-              aria-selected="false">
+              role="tab">
         Theo dõi đơn hàng
       </button>
     </li>
@@ -133,13 +131,70 @@
     </div>
 
     {{-- Theo dõi đơn hàng --}}
-    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-      <div class="card">
-        <div class="card-body">
-          <p>(Chức năng đang phát triển…)</p>
-        </div>
-      </div>
+    <div style="padding-top:2rem; background-color:#ffffff;" class="tab-pane fade"
+        id="orders"
+        role="tabpanel"
+        aria-labelledby="orders-tab">
+      @if($orders->isEmpty())
+        <p>Chưa có đơn hàng nào.</p>
+      @else
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ảnh</th>
+              <th>Sản phẩm</th>
+              <th>Thanh toán</th>
+              <th>Hình thức</th>
+              <th>Mã vận đơn</th>
+              <th>Trạng thái</th>
+              <th>Ngày đặt</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($orders as $o)
+              <tr>
+                <td>{{ $o->id }}</td>
+                <!-- Ảnh sản phẩm đầu tiên -->
+                <td>
+                  @php $it = $o->items->first(); @endphp
+                  <img src="{{ asset('storage/'.$it->product->img) }}"
+                      style="width:50px;height:50px;object-fit:cover;">
+                </td>
+                <!-- Tên + thuộc tính -->
+                <td>
+                  @foreach($o->items as $it)
+                    {{ $it->product->name }} × {{ $it->quantity }}
+                    @if($it->options)
+                      <ul class="mb-1">
+                        @foreach(\App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get() as $v)
+                          <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                        @endforeach
+                      </ul>
+                    @endif
+                    <hr class="my-1">
+                  @endforeach
+                </td>
+                <td>{{ number_format($o->total,0,',','.') }}₫</td>
+                <td>{{ $o->payment_method=='cod'?'COD':'Chuyển khoản' }}</td>
+                <td><div class="d-flex  flex-column">{{ $o->tracking_number ?? '—' }} <a style="color:#d1a029;" href="https://spx.vn/track" target="_blank">Tra cứu đơn hàng</a></div></td>
+                <td>
+                  @switch($o->status)
+                    @case('pending') Đã tiếp nhận @break
+                    @case('shipping') Đang giao hàng @break
+                    @case('done') Đã nhận hàng @break
+                    @default {{ ucfirst($o->status) }}
+                  @endswitch
+                </td>
+                <td>{{ $o->created_at->format('d/m/Y H:i') }}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+        {{ $orders->links() }}
+      @endif
     </div>
+
 
     
   {{-- Trợ giúp --}}

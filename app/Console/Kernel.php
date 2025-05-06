@@ -13,6 +13,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            Order::where('status', 'shipping')
+                ->where('updated_at', '<=', now()->subDays(10))
+                ->update(['status' => 'done']);
+        })->daily();
     }
 
     /**

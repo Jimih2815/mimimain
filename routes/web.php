@@ -188,7 +188,7 @@ Route::prefix('admin')
 
     // 4.3 Quản lý đơn hàng
     Route::resource('orders', OrderController::class)
-         ->only(['index','show','destroy']);
+     ->only(['index','show','destroy','update']);
 
     // 4.4 Quản lý sản phẩm
     Route::resource('products', AdminProductController::class);

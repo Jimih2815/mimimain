@@ -14,8 +14,17 @@ class ProfileController extends Controller
      */
     public function edit()
     {
+        // Lấy user hiện tại
         $user = Auth::user();
-        return view('profile.edit', compact('user'));
+
+        // Lấy đơn hàng của user, kèm items và product, phân trang 10 đơn/trang
+        $orders = $user->orders()
+                       ->with('items.product')
+                       ->latest()
+                       ->paginate(10);
+
+        // Trả về view profile.edit với biến 'user' và 'orders'
+        return view('profile.edit', compact('user', 'orders'));
     }
 
     /**
