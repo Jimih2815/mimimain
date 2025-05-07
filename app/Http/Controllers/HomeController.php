@@ -7,6 +7,8 @@ use App\Models\CollectionSlider;
 use App\Models\HomeSectionImage;
 use App\Models\ProductSlider;
 
+
+
 class HomeController extends Controller
 {
     /**
@@ -33,7 +35,7 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        return view('home', compact(
+        return $this->renderView('home', compact(
             'home',
             'sliders',
             'sectionImages',

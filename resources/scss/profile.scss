@@ -161,7 +161,7 @@
     // Mobile: gom gọn tab thành cột, đỡ lật mỏi ngón tay
     .trang-thong-tin {
       margin: 3rem 0 !important;
-      padding: 0;
+      padding-bottom: 3rem;
       width: 100% !important;
       #orders-content {
         overflow-x: auto;
@@ -213,6 +213,11 @@
       td {
         white-space: nowrap;
       }
+    }
+    .nut-pagi {
+      position: absolute;
+      left:50%;
+      top: 42%;
     }
   }
   

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Jenssegers\Agent\Agent;    
+use Illuminate\Support\Str; 
 
 class ProfileController extends Controller
 {
@@ -13,19 +15,38 @@ class ProfileController extends Controller
      * Hiển thị form chỉnh sửa hồ sơ
      */
     public function edit()
-    {
-        // Lấy user hiện tại
-        $user = Auth::user();
+{
+    // 1) Lấy user & orders
+    $user = Auth::user();
+    $orders = $user->orders()
+                   ->with('items.product')
+                   ->latest()
+                   ->paginate(10);
 
-        // Lấy đơn hàng của user, kèm items và product, phân trang 10 đơn/trang
-        $orders = $user->orders()
-                       ->with('items.product')
-                       ->latest()
-                       ->paginate(10); //sửa tạm là 1 tí đổi về 10
+    // 2) Lấy và sắp xếp helpRequests giống logic trong Blade
+    $orderedRequests = $user->helpRequests
+        ->sort(function($a, $b) {
+            $aDone = $a->status === 'Hoàn thành';
+            $bDone = $b->status === 'Hoàn thành';
+            if ($aDone !== $bDone) {
+                return $aDone <=> $bDone;
+            }
+            if ($aDone) {
+                return $b->created_at->timestamp <=> $a->created_at->timestamp;
+            }
+            return $a->created_at->timestamp <=> $b->created_at->timestamp;
+        })
+        ->values();
 
-        // Trả về view profile.edit với biến 'user' và 'orders'
-        return view('profile.edit', compact('user', 'orders'));
-    }
+    // 3) Phát hiện mobile vs desktop
+    $agent = new Agent;
+    $view  = $agent->isMobile()
+           ? 'profile.edit-mobile'
+           : 'profile.edit';
+
+    // 4) Trả về view với đủ biến
+    return view($view, compact('user', 'orders', 'orderedRequests'));
+}
 
     /**
      * Xử lý cập nhật thông tin hồ sơ

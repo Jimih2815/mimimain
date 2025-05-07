@@ -221,7 +221,7 @@
     }
       @endphp
 
-      <nav>
+      <nav class="nut-pagi">
         <ul style="gap:2px;" class="pagination justify-content-center ">
           {{-- Nút Prev --}}
           <!-- <li class="page-item {{ $current==1?'disabled':'' }}">

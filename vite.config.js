@@ -7,25 +7,28 @@ const purgecss = purgecssPlugin.default ?? purgecssPlugin;
 export default defineConfig({
   plugins: [
     laravel({
-      input: ['resources/scss/app.scss', 'resources/js/app.js'],
+      input: [
+        'resources/scss/app.scss',
+        'resources/js/app.js',
+        // ➟ Bổ sung mobile bundles
+        'resources/scss/app-mobile.scss',
+        'resources/js/app-mobile.js',
+      ],
       refresh: true,
     }),
     splitVendorChunkPlugin(),
   ],
 
   resolve: {
-    // Đảm bảo Vite hiểu import 'swiper'
     alias: {
+      // để Vite hiểu import 'swiper'
       swiper: 'swiper',
     },
   },
 
   optimizeDeps: {
-    // Bao gồm Swiper và CSS để Vite pre-bundle
     include: [
-      'swiper',
-      'swiper/css',
-      'swiper/css/navigation',
+      'swiper', // pre‐bundle core
     ],
   },
 
@@ -39,8 +42,8 @@ export default defineConfig({
                   './resources/**/*.blade.php',
                   './resources/js/**/*.{vue,js}',
                 ],
-                safelist: [/^swal-/, /^tox-/, /^mce-/, /^swiper-/],
-                defaultExtractor: content =>
+                safelist: [/^swiper-/],
+                defaultExtractor: (content) =>
                   content.match(/[\w-/:]+(?<!:)/g) || [],
               }),
             ]
@@ -50,36 +53,29 @@ export default defineConfig({
   },
 
   build: {
-    sourcemap: false,
     rollupOptions: {
       output: {
-        // Tách bundle cho Swiper và TinyMCE
         manualChunks(id) {
           if (id.includes('node_modules/swiper')) {
             return 'swiper';
           }
-          if (id.includes('node_modules/tinymce')) {
-            return 'editor';
-          }
-          // Giữ mặc định cho các vendor khác
         },
       },
     },
   },
 
   server: {
-    watch: {
-      usePolling: true,
-      interval: 100,
-      // có thể ignore folder storage nếu cần
-      ignored: ['!**/node_modules/**', 'storage/**'],
-    },
     host: '127.0.0.1',
     port: 5173,
     hmr: {
       host: '127.0.0.1',
       protocol: 'ws',
       port: 5173,
+    },
+    watch: {
+      usePolling: true,
+      interval: 100,
+      ignored: ['!**/node_modules/**', 'storage/**'],
     },
   },
 });
