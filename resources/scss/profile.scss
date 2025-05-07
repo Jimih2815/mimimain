@@ -163,10 +163,20 @@
       margin: 3rem 0 !important;
       padding: 0;
       width: 100% !important;
-  
+      #orders-content {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        display: table !important;
+        width: auto !important;       
+        min-width: 100%;              
+        table-layout: auto;           
+        border-collapse: collapse;
+      }
       #profileTabs {
         flex-direction: row;
-  
+        
         .nav-link {
           padding: 0.5rem 0.5rem;
           border-bottom: 0px solid #dee2e6;
@@ -199,7 +209,10 @@
       .nav-item {
         // margin-right: 1rem;
       }
-      
+      th,
+      td {
+        white-space: nowrap;
+      }
     }
   }
   
