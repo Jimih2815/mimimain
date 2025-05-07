@@ -156,3 +156,50 @@
     }
     
   }
+
+  @media (max-width: 768px) {
+    // Mobile: gom gọn tab thành cột, đỡ lật mỏi ngón tay
+    .trang-thong-tin {
+      margin: 3rem 0 !important;
+      padding: 0;
+      width: 100% !important;
+  
+      #profileTabs {
+        flex-direction: row;
+  
+        .nav-link {
+          padding: 0.5rem 0.5rem;
+          border-bottom: 0px solid #dee2e6;
+          border-radius: 0;
+        }
+      }
+  
+      .tab-content > .tab-pane {
+        padding: 0;
+      }
+  
+      .tab-pane {
+        .table {
+          display: block;
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          margin: 0 ;
+          padding: 0;
+        }
+  
+        .card,
+        #orders-content {
+          margin: 0;
+        }
+      }
+  
+      // Nhỏ nhẹ tí chút cho dễ đọc
+      font-size: 0.95rem;
+      .nav-item {
+        // margin-right: 1rem;
+      }
+      
+    }
+  }
+  

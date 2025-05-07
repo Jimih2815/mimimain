@@ -61,6 +61,17 @@
 a {
     text-decoration: none;
 }
+.logo-cont a {
+  display: flex ; 
+  justify-content: center;
+  align-items: center;
+}
+.mobile-footer .list-unstyled a, .mobile-footer .mf-content li {
+  color: white;
+    -webkit-text-stroke: 1px #4ab3af;
+    font-size: 1rem;
+    font-weight: 200;
+}
 </style>
 
 <div class="mobile-footer d-block d-lg-none">
@@ -131,10 +142,10 @@ a {
 
   {{-- Theo dõi chúng tôi --}}
   <div class="mf-section mf-social">
-    <div class="mf-heading" style="cursor:default">
+    <div class="mf-heading p-0" style="cursor:default">
       <span>Theo dõi chúng tôi</span>
     </div>
-    <div class="d-flex pt-2">
+    <div class="d-flex pt-2 logo-cont">
       <a href="https://www.tiktok.com/@tiemhoamimi1" target="_blank" class="icon"><i class="fab fa-tiktok"></i></a>
       <a href="https://facebook.com/yourpage" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
       <a href="https://www.threads.net/@yourprofile" target="_blank" class="icon"><i class="fa-brands fa-threads"></i></a>
@@ -149,8 +160,8 @@ a {
 
   {{-- Địa chỉ --}}
   <div class="mf-address">
-    <h6 class="px-3 pt-3 mb-2">Địa chỉ</h6>
-    <p class="px-3 mb-0">
+    <h6 class="mb-2">Địa chỉ</h6>
+    <p class=" mb-0">
       37 TT11 Foresa 1A, KĐT Foresa Xuân Phương,<br>
       Nam Từ Liêm, Hà Nội<br>
       Liên hệ: <strong>0354.235.669</strong>

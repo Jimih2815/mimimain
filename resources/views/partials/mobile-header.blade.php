@@ -192,7 +192,7 @@
       </div>
       {{-- 4) Tài khoản --}}
       @guest
-        <a href="{{ route('login') }}" class="d-flex justify-content-center align-items-center"><i class="bi bi-person"></i></a>
+        <a href="{{ route('login') }}" class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-user"></i></a>
       @else
         <a href="{{ route('profile.edit') }}" class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-user"></i></a>
       @endguest
