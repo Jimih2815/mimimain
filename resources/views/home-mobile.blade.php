@@ -163,8 +163,8 @@
 
 /* Ảnh chiếm full .section-img */
 .section-images .section-img img {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  height: 100% !important;
   border-radius: 10px;
   object-fit: cover;
 }
@@ -172,7 +172,7 @@
     display: none !important;
   }
   .slider-full-width.mb-5 {
-  height: 500px;
+  height: 38rem;
   /* overflow: hidden;  */
   }
 
@@ -218,6 +218,9 @@
     font-size: 1.2rem;
     font-weight: 500;
   }
-  
+  .mobile-banner-img {
+    height: 100% !important;
+    object-fit: cover ;
+  }
 </style>
 @endpush

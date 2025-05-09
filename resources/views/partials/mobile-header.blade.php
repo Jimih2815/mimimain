@@ -117,13 +117,14 @@
     color: #fe3b27;
 }
 .bi-bag-fill {
-    color: #d1a029;
+    color: #ffba26;
 }
 .fa-user {
     color: #4ab3af;
 }
 .fa-bars {
     color: #333333;
+    background-color: transparent;
 }
 .fa-heart {
     color: #b83232 !important;
@@ -155,6 +156,7 @@
 .dropdown-menu {
   transform: translate3d(80px, 32px, 0px) !important;
 }
+
 .dropdown-menu-mobile {
   /* chuyển sang fixed so với viewport */
   position: fixed !important;
@@ -175,14 +177,19 @@
     opacity 0.3s ease,
     visibility 0.3s;
 }
-
+.fa-question-circle {
+  color: #a3d9d6;
+}
+.fa-box-open {
+  color: #78b865;
+}
 .dropdown-menu-mobile.open {
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
   background-color: #ffffff;
   border-radius: 5px;
-  border: 1px solid #d1a029;
+  border: 1px solid #ffba26;
 }
 .nut-gio-hang {
   padding: 0.3rem 1rem;
@@ -226,6 +233,21 @@
     color: white;
     -webkit-text-stroke: 2px #333333 !important;
     text-shadow: none;
+}
+#mh-btn-close {
+  background-color: transparent;
+}
+.quick-access {
+  margin-top:5rem;
+}
+.quick-access i {
+  width: 2rem;
+}
+.quick-access .fa-heart {
+  color: #fe3b27 !important;
+}
+.quick-access .bi-bag-fill {
+  color: #f3d9a7;
 }
 </style>
 
@@ -274,7 +296,7 @@
         <a href="{{ route('profile.edit') }}" class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-user"></i></a>
       @endguest
       {{-- 5) Hamburger --}}
-      <button id="mh-btn-toggle" class="d-flex justify-content-center align-items-center border-0 bg-transparen p-0 m-0"><i class="fa-solid fa-bars"></i></button>
+      <button style= "background-color: transparent;" id="mh-btn-toggle" class="d-flex justify-content-center align-items-center border-0 bg-transparen p-0 m-0"><i  class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 
@@ -284,9 +306,34 @@
       <button id="mh-btn-close" class="d-flex align-items-center px-3 justify-content-center border-0"><i class="fa fa-times fa-lg"></i></button>
       <!-- <h5 class="mb-0">Menu</h5> -->
     </div>
+    
 
     {{-- Level 1 --}}
     <ul id="mh-level1" class="mh-nav-lvl1 list-unstyled mb-0">
+      <div class="ms-3 me-2 mt-4 mb-5 d-flex justify-content-between align-items-center">
+            @guest
+              <p class="">Tham gia ngay để nhận ưu đãi và quản lý đơn hàng dễ dàng!</p>
+              <div class="d-flex gap-2 mb-5">
+                <a href="{{ route('register') }}"
+                  class="btn btn-primary flex-grow-1">Đăng ký</a>
+                <a href="{{ route('login') }}"
+                  class="btn btn-outline-primary flex-grow-1">Đăng nhập</a>
+              </div>
+            @else
+              <p class="m-0 p-0">Xin chào, <strong>{{ Auth::user()->name }}</strong>!</p>
+            @endguest
+
+            @auth
+            <form method="POST" action="{{ route('logout') }}" class="">
+              @csrf
+              <button type="submit"
+                      class="border-0 bg-transparent">
+                      <i class="fa-solid fa-right-from-bracket"></i>
+              </button>
+            </form>
+          @endauth
+
+      </div>
       @foreach($sections as $sec)
         <li data-id="{{ $sec->id }}" class="d-flex justify-content-between align-items-center px-3 py-2">
           <span>{{ $sec->name }}</span>
@@ -301,6 +348,41 @@
             <i class="fa fa-chevron-right"></i>
           </a>
         </li>
+        {{-- ==== User CTA & Quick Links ==== --}}
+          <div class="px-3 py-3 quick-access">
+            
+
+            <ul class="list-unstyled mb-0">
+              <li class="d-flex align-items-center py-2">
+                <i class="fa fa-question-circle me-2"></i>
+                <a href="/help" class="text-decoration-none">Trợ giúp</a>
+              </li>
+              <li class="d-flex align-items-center py-2">
+                <i class="bi bi-bag-fill me-2"></i>
+                <a href="{{ route('cart.index') }}" class="text-decoration-none">
+                  Giỏ hàng
+                  <!-- @if($cartCount)
+                    <span class="badge bg-danger ms-2">{{ $cartCount }}</span>
+                  @endif -->
+                </a>
+              </li>
+              <li class="d-flex align-items-center py-2">
+                <i class="fas fa-heart me-2"></i>
+                <a href="{{ route('favorites.index') }}" class="text-decoration-none">
+                  Yêu thích
+                </a>
+              </li>
+              @auth
+              <li class="d-flex align-items-center py-2">
+                <i class="fa fa-box-open me-2"></i>
+                <a href="{{ route('profile.edit') }}#orders-m" class="text-decoration-none">
+                  Đơn hàng
+                </a>
+              </li>
+              @endauth
+            </ul>
+          </div>
+          {{-- ==== end User CTA & Quick Links ==== --}}
     </ul>
 
     {{-- Level 2 --}}

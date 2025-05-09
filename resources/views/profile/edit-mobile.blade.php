@@ -171,6 +171,13 @@ document.addEventListener('DOMContentLoaded', () => {
       new bootstrap.Modal(document.getElementById('detailModal')).show();
     });
   });
+  // nếu url chứa hash #orders-m thì click tab Orders
+  if (window.location.hash === '#orders-m') {
+    const ordersTabBtn = document.getElementById('orders-m-tab');
+    if (ordersTabBtn) {
+      ordersTabBtn.click();
+    }
+  }
 });
 </script>
 @endpush
