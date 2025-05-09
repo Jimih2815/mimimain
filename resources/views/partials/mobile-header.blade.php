@@ -128,7 +128,7 @@
 .fa-heart {
     color: #b83232 !important;
 }
-#mh-btn-close .fa-times {
+.fa-times {
     font-size: 1.5rem;
     -webkit-text-stroke: 2px #b83232;
     color: white;
@@ -152,6 +152,72 @@
     font-size: 1rem;
     -webkit-text-stroke: 1px #4ab3af;
 }
+.dropdown-menu {
+  transform: translate3d(80px, 32px, 0px) !important;
+}
+.dropdown-menu-mobile {
+  /* chuyển sang fixed so với viewport */
+  position: fixed !important;
+  /* cách trên đúng bằng chiều cao header (56px) */
+  top: 56px;
+  /* ép sát mép phải màn hình */
+  right: 0;
+  /* không dùng left */
+  left: auto;
+  /* chiều rộng cố định, hoặc bạn có thể dùng ví dụ width: 80vw; */
+  width: 260px;
+  /* các thuộc tính animation giữ nguyên */
+  transform: translateY(-10px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    visibility 0.3s;
+}
+
+.dropdown-menu-mobile.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  background-color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid #d1a029;
+}
+.nut-gio-hang {
+  padding: 0.3rem 1rem;
+  font-size: 0.8rem;
+}
+.input-group {
+  border: 1px solid #4ab3af;
+  border-radius: 100px;
+}
+.input-group input {
+  border-radius: 100px;
+
+}
+.input-group button {
+  border-radius: 100px;
+    background-color: #4ab3af;
+    border-color: #4ab3af;
+    border: 1px solid #4ab3af;
+
+}
+.input-group button i {
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+#mh-search-input::placeholder {
+  color: #4ab3af;
+  font-style: italic;
+}
+.text-goi-y {
+  color: white;
+    background: #4ab3af;
+    border-radius: 50px;
+}
 </style>
 
 <div class="mobile-header d-block d-lg-none">
@@ -169,7 +235,7 @@
       <a href="{{ route('favorites.index') }}" class="d-flex justify-content-center align-items-center "><i class="fas fa-heart"></i></a>
       {{-- 3) Giỏ hàng --}}
       <div class="dropdown">
-        <a href="#" id="cartDropdownMobile" data-bs-toggle="dropdown" class="position-relative d-flex justify-content-center align-items-center">
+        <a href="#" id="cartDropdownMobile" class="position-relative d-flex justify-content-center align-items-center">
           <i class="bi bi-bag-fill d-flex justify-content-center align-items-center"></i>
            <span id="cart-count-mobile"
                 class="badge rounded-pill position-absolute top-50 start-50 translate-middle so-trong-gio"
@@ -177,7 +243,7 @@
             {{ $cartCount }}
           </span>
         </a>
-        <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="cartDropdownMobile" style="min-width:260px; z-index:1200">
+        <div id="cartMenuMobile" class="dropdown-menu-mobile p-3" style="z-index:1200">
           @forelse($cart as $item)
             <li class="d-flex align-items-center mb-2">
               <img src="{{ asset('storage/'.$item['image']) }}"
@@ -188,7 +254,7 @@
             <p class="text-center mb-0">Giỏ hàng trống</p>
           @endforelse
           <div class="mt-3 text-center">
-            <a href="{{ route('cart.index') }}" class="btn btn-sm btn-primary">Xem giỏ hàng</a>
+            <a href="{{ route('cart.index') }}" class="btn-mimi nut-vang mx-auto nut-gio-hang">Xem giỏ hàng</a>
           </div>
         </div>
       </div>
@@ -199,7 +265,7 @@
         <a href="{{ route('profile.edit') }}" class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-user"></i></a>
       @endguest
       {{-- 5) Hamburger --}}
-      <button id="mh-btn-toggle" class="d-flex justify-content-center align-items-center border-0 bg-transparent"><i class="fa-solid fa-bars"></i></button>
+      <button id="mh-btn-toggle" class="d-flex justify-content-center align-items-center border-0 bg-transparen p-0 m-0"><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 
@@ -230,8 +296,8 @@
   {{-- Search Offcanvas --}}
     <aside id="mh-search-panel" class="mh-search-panel">
         <form id="mh-search-form" action="{{ route('products.index') }}" method="GET">
-            <div class="search-header d-flex align-items-center px-3">
-            <button id="mh-search-close" type="button" class="btn btn-link p-0 me-2">
+            <div class="search-header d-flex align-items-center px-3 justify-content-center">
+            <button id="mh-search-close" type="button" class="btn btn-link p-0 me-2 d-flex justify-content-center align-items-center text-decoration-none">
                 <i class="fa fa-times fa-lg"></i>
             </button>
             <div class="input-group w-100">
@@ -241,7 +307,7 @@
                     class="form-control"
                     placeholder="Search…"
                     value="{{ request('q') }}">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="">
                 <i class="bi bi-search"></i>
                 </button>
             </div>
@@ -251,17 +317,17 @@
             <p class="mb-2 fw-bold">Từ Khóa Phổ Biến</p>
             <div class="d-flex flex-wrap gap-2">
                 <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
-                class="badge bg-light text-dark">Đèn Ngủ Hoa Tulyp</a>
+                class="badge text-goi-y">Đèn Ngủ Hoa Tulyp</a>
                 <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
-                class="badge bg-light text-dark">Gấu Bông</a>
+                class="badge text-goi-y">Gấu Bông</a>
                 <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
-                class="badge bg-light text-dark">Hoa Gấu Bông</a>
+                class="badge text-goi-y">Hoa Gấu Bông</a>
                 <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
-                class="badge bg-light text-dark">Đèn Ngủ Đám Mây</a>
+                class="badge text-goi-y">Đèn Ngủ Đám Mây</a>
                 <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
-                class="badge bg-light text-dark">Quạt Mini Tích Điện</a>
+                class="badge text-goi-y">Quạt Mini Tích Điện</a>
                 <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
-                class="badge bg-light text-dark">Phụ Kiện Cute</a>
+                class="badge text-goi-y">Phụ Kiện Cute</a>
             </div>
             </div>
         </form>
@@ -345,6 +411,23 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('mh-btn-back').onclick = () => {
     offcanvas.classList.remove('show-lvl2');
   };
+  const cartToggle = document.getElementById('cartDropdownMobile');
+  const cartMenu   = document.getElementById('cartMenuMobile');
+
+  cartToggle.addEventListener('click', e => {
+    e.preventDefault();
+    cartMenu.classList.toggle('open');
+  });
+
+  // click ngoài để đóng
+  document.addEventListener('click', e => {
+    if (
+      !cartToggle.contains(e.target) &&
+      !cartMenu.contains(e.target)
+    ) {
+      cartMenu.classList.remove('open');
+    }
+  });
 });
 </script>
 

@@ -145,8 +145,11 @@
   overflow-x: auto;             /* cho phép cuộn ngang */
   scroll-snap-type: x mandatory;/* bật scroll-snap */
   padding-left: 1rem;           /* đệm trái để peek rõ hơn */
+  margin-left: 1rem;
 }
-
+.section-images .section-img:last-child {
+    margin-right: 1rem;
+  }
 .section-images .section-img {
   flex: 0 0 85%;                /* mỗi ảnh rộng 85% container */
   scroll-snap-align: start;     /* snap mỗi ảnh khi scroll */
@@ -215,5 +218,6 @@
     font-size: 1.2rem;
     font-weight: 500;
   }
+  
 </style>
 @endpush
