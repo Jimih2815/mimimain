@@ -218,6 +218,15 @@
     background: #4ab3af;
     border-radius: 50px;
 }
+.list-unstyled .mau-den-rong {
+  padding-left: 0;
+    list-style: none;
+    font-size: 1rem;
+    font-weight: 300;
+    color: white;
+    -webkit-text-stroke: 2px #333333 !important;
+    text-shadow: none;
+}
 </style>
 
 <div class="mobile-header d-block d-lg-none">
@@ -284,6 +293,14 @@
           <i class="fa fa-chevron-right"></i>
         </li>
       @endforeach
+      {{-- Thêm mục TOÀN BỘ --}}
+        <li class="px-3 py-2 ">
+          <a href="{{ route('products.index') }}"
+            class="d-flex justify-content-between align-items-center text-dark text-decoration-none mau-den-rong">
+            <span>Toàn bộ sản phẩm</span>
+            <i class="fa fa-chevron-right"></i>
+          </a>
+        </li>
     </ul>
 
     {{-- Level 2 --}}
