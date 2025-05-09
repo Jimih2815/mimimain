@@ -7,28 +7,30 @@ const purgecss = purgecssPlugin.default ?? purgecssPlugin;
 export default defineConfig({
   plugins: [
     laravel({
+      // ⚡ GỌI ĐỦ 4 ENTRY: desktop + mobile
       input: [
         'resources/scss/app.scss',
         'resources/js/app.js',
-        // ➟ Bổ sung mobile bundles
         'resources/scss/app-mobile.scss',
         'resources/js/app-mobile.js',
       ],
-      refresh: true,
+      refresh: true, // tự reload khi blade/js thay đổi
     }),
-    splitVendorChunkPlugin(),
+    splitVendorChunkPlugin(), // tách vendor chunks
   ],
 
   resolve: {
     alias: {
-      // để Vite hiểu import 'swiper'
+      // đảm bảo import 'swiper' ko lỗi
       swiper: 'swiper',
     },
   },
 
   optimizeDeps: {
+    // pre‐bundle Swiper cho dev nhanh hơn
     include: [
-      'swiper', // pre‐bundle core
+      'swiper',
+      'swiper/bundle',
     ],
   },
 
@@ -42,7 +44,7 @@ export default defineConfig({
                   './resources/**/*.blade.php',
                   './resources/js/**/*.{vue,js}',
                 ],
-                safelist: [/^swiper-/],
+                safelist: [/^swiper-/, /^swiper$/, /^swiper\/bundle/],
                 defaultExtractor: (content) =>
                   content.match(/[\w-/:]+(?<!:)/g) || [],
               }),
@@ -55,9 +57,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        // tách riêng bundle Swiper và TinyMCE
         manualChunks(id) {
           if (id.includes('node_modules/swiper')) {
             return 'swiper';
+          }
+          if (id.includes('node_modules/tinymce')) {
+            return 'editor';
           }
         },
       },
@@ -68,8 +74,8 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 5173,
     hmr: {
-      host: '127.0.0.1',
       protocol: 'ws',
+      host: '127.0.0.1',
       port: 5173,
     },
     watch: {

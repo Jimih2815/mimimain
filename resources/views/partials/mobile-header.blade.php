@@ -28,6 +28,7 @@
   position:absolute; top:56px; left:0;
   width:100%;
   transition:left .3s ease;
+  font-size: 1rem;
 }
 #mh-level2 {
   left:100%;
@@ -50,6 +51,7 @@
   justify-content:space-between;
   align-items:center;
   border-bottom:1px solid #f1f1f1;
+  font-size: 1rem;
 }
 .mobile-header .mh-products {
   overflow: hidden;
@@ -68,7 +70,7 @@
   color: white;
   font-size: 0.9rem;
     font-weight: 100;
-    -webkit-text-stroke: 1px #d1a029;
+    -webkit-text-stroke: 1px #4ab3af;
 }
 .so-trong-gio {
     font-size:0.7rem;
@@ -147,7 +149,7 @@
 }
 .list-unstyled a {
     color: #b83232;
-    font-size: 1.4rem;
+    font-size: 1rem;
     -webkit-text-stroke: 1px #4ab3af;
 }
 </style>
@@ -221,7 +223,7 @@
     {{-- Level 2 --}}
     <div id="mh-level2" class="mh-nav-lvl2">
       <div id="mh-btn-back" class="mh-back"><i class="fa fa-chevron-left me-2"></i>Quay lại</div>
-      <h6 id="mh-sec-title" class="px-3 py-2 pb-4 border-bottom"></h6>
+      <h6 id="mh-sec-title" class="px-3 py-2 pb-2 border-bottom"></h6>
       <ul id="mh-groups" class="list-unstyled mb-0"></ul>
     </div>
   </aside>

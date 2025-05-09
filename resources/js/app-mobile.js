@@ -11,10 +11,13 @@ console.log('🔥 app-mobile.js loaded');
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🛠️ DOMContentLoaded mobile');
 
-  // 1) Collection slider
+  // 1) Collection slider với peek next
   new Swiper('.collection-swiper', {
-    slidesPerView: 1,
+    // hiển thị 1.0 slide + 0.15 slide kế bên
+    slidesPerView: 1.15,
+    // khoảng cách giữa các slide
     spaceBetween: 12,
+    // giữ loop nếu bạn muốn vòng lặp vô tận
     loop: true,
     navigation: {
       prevEl: '.slider-full-width .swiper-button-prev',
@@ -22,14 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   });
 
-  // 2) Product slider
-  new Swiper('.product-swiper', {
-    slidesPerView: 1,
-    spaceBetween: 12,
-    loop: true,
-    navigation: {
-      prevEl: '.slider-product .product-slider-prev',
-      nextEl: '.slider-product .product-slider-next',
-    },
-  });
+
+    // 2) Product slider: show 1 slide + peek next
+    new Swiper('.product-swiper', {
+      slidesPerView: 1.15,      // hiển thị 1.0 slide + 0.15 slide kế
+      spaceBetween: 12,         // khoảng cách giữa các slide
+      loop: false,              // thường peek thì không loop
+      navigation: {
+        prevEl: '.slider-product .product-slider-prev',
+        nextEl: '.slider-product .product-slider-next',
+      },
+    });
 });

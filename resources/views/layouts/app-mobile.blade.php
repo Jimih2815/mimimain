@@ -29,13 +29,14 @@
     'resources/js/app-mobile.js',
   ])
   <script>console.log('✅ mobile assets injected');</script>
+  @stack('styles')
 </head>
 <body class="antialiased">
   {{-- Header (mobile) --}}
   @include('partials.mobile-header')
 
   {{-- Nội dung chính --}}
-  <main class="px-3 py-4">
+  <main class="mobi-cont">
     @yield('content')
   </main>
 
