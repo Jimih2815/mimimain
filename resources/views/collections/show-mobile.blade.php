@@ -118,8 +118,9 @@
   color: #6c757d;
 }
 .price-wrapper {
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
 }
 /* 1. Định nghĩa animation slideDown chung */
 @keyframes slideDown {
@@ -244,24 +245,24 @@ document.addEventListener('DOMContentLoaded', () => {
       nameFavDiv.appendChild(nameP);
       nameFavDiv.appendChild(favBtn);
 
-      // tạo div mới cho giá tăng 50%
-      const incDiv = document.createElement('div');
-      incDiv.className = 'text-muted gia-tang';  // bạn có thể đổi class tuỳ ý
-      incDiv.textContent = increasedText;
-  
       // giá gốc
       const priceP = document.createElement('p');
       priceP.className = 'text-danger gia-tien mb-0';
       priceP.textContent = priceText;
 
+      // tạo div mới cho giá tăng 50%
+      const incDiv = document.createElement('div');
+      incDiv.className = 'text-muted gia-tang';
+      incDiv.textContent = increasedText;
+
       infoDiv.appendChild(nameFavDiv);
 
-    // === wrap cả incDiv + priceP vào 1 div ===
-     const priceWrapper = document.createElement('div');
-     priceWrapper.className = 'price-wrapper d-flex '; // tuỳ bạn thêm class
-     priceWrapper.appendChild(incDiv);
-     priceWrapper.appendChild(priceP);
-     infoDiv.appendChild(priceWrapper);
+      // === giờ swap cho giá gốc lên trước ===
+      const priceWrapper = document.createElement('div');
+      priceWrapper.className = 'price-wrapper d-flex';
+      priceWrapper.appendChild(priceP);   // giá gốc
+      priceWrapper.appendChild(incDiv);   // giá tăng
+      infoDiv.appendChild(priceWrapper);
 
       card.appendChild(imgWrapper);
       card.appendChild(infoDiv);

@@ -94,7 +94,7 @@ export default defineConfig({
     // 3) HMR client sử dụng đúng IP dev của bạn
     hmr: {
       protocol: 'ws',
-      host: '192.168.1.15',
+      host: '192.168.2.100',
       port: 5173,
     },
     watch: {

@@ -15,6 +15,8 @@
   background:#fff;
   transition:right .3s ease;
   overflow-y:auto;
+  overflow-x: hidden;    
+  touch-action: pan-y;
 }
 .mobile-header .mh-offcanvas.open { right:0; }
 .mobile-header .mh-oc-header {
@@ -50,7 +52,7 @@
   display:flex;
   justify-content:space-between;
   align-items:center;
-  border-bottom:1px solid #f1f1f1;
+
   font-size: 1rem;
 }
 .mobile-header .mh-products {
@@ -134,25 +136,13 @@
     -webkit-text-stroke: 2px #b83232;
     color: white;
 }
-.list-unstyled {
-    padding-left: 0;
-    list-style: none;
-    font-size: 1.5rem;
-    font-weight: 300;
-    color: white;                     /* Màu chữ chính */
-  -webkit-text-stroke: 2px #333333; /* Viền xanh (Bootstrap blue) */
-  text-shadow: none;  
-}
+
 #mh-sec-title {
     font-size: 1.5rem;
     color: #b83232;
     -webkit-text-stroke: 1px #b83232;
 }
-.list-unstyled a {
-    color: #b83232;
-    font-size: 1rem;
-    -webkit-text-stroke: 1px #4ab3af;
-}
+
 .dropdown-menu {
   transform: translate3d(80px, 32px, 0px) !important;
 }
@@ -178,7 +168,7 @@
     visibility 0.3s;
 }
 .fa-question-circle {
-  color: #a3d9d6;
+  color: #4ab3af;
 }
 .fa-box-open {
   color: #78b865;
@@ -225,15 +215,7 @@
     background: #4ab3af;
     border-radius: 50px;
 }
-.list-unstyled .mau-den-rong {
-  padding-left: 0;
-    list-style: none;
-    font-size: 1rem;
-    font-weight: 300;
-    color: white;
-    -webkit-text-stroke: 2px #333333 !important;
-    text-shadow: none;
-}
+
 #mh-btn-close {
   background-color: transparent;
 }
@@ -242,12 +224,46 @@
 }
 .quick-access i {
   width: 2rem;
+  font-size: 1.5rem;
+}
+.quick-access a {
+  color: #4ab3af;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 .quick-access .fa-heart {
   color: #fe3b27 !important;
 }
 .quick-access .bi-bag-fill {
-  color: #f3d9a7;
+  color: #ffba26;
+}
+.danh-sach-header {
+  font-size: 1.2rem;
+    font-weight: 900;
+    color: #333333; 
+}
+.list-tang-2 {
+  font-weight: 900;
+  color: #333333;
+}
+.list-tang-2-a {
+  color: #4ab3af;
+  font-weight: 700;
+}
+.nut-aside {
+  padding: 0.2rem 1rem;
+    text-align: center;
+    align-items: center;
+    height: 2.3rem;
+    width: 8rem;
+    font-weight: 800;
+}
+.nut-dang-xuat {
+  position: absolute;
+    top: -7%;
+    left: 0.5rem;
+    -webkit-text-stroke: 2px #ffba26;
+    color: white
 }
 </style>
 
@@ -310,38 +326,39 @@
 
     {{-- Level 1 --}}
     <ul id="mh-level1" class="mh-nav-lvl1 list-unstyled mb-0">
-      <div class="ms-3 me-2 mt-4 mb-5 d-flex justify-content-between align-items-center">
+      <div class="ms-3 me-2 mt-4 mb-4 d-flex justify-content-center align-items-center gap-3 flex-column">
             @guest
-              <p class="">Tham gia ngay để nhận ưu đãi và quản lý đơn hàng dễ dàng!</p>
-              <div class="d-flex gap-2 mb-5">
+              <!-- <i class="fa-solid fa-user-plus"></i> -->
+              <div class="d-flex gap-2">
                 <a href="{{ route('register') }}"
-                  class="btn btn-primary flex-grow-1">Đăng ký</a>
+                  class="nut-vang nut-aside">Đăng ký</a>
                 <a href="{{ route('login') }}"
-                  class="btn btn-outline-primary flex-grow-1">Đăng nhập</a>
+                  class="nut-xanh nut-aside">Đăng nhập</a>
               </div>
             @else
-              <p class="m-0 p-0">Xin chào, <strong>{{ Auth::user()->name }}</strong>!</p>
+              <p class="m-0 p-0">Hi, <strong style="color: #4ab3af;">{{ Auth::user()->name }}</strong></p>
+              @auth
+                <form method="POST" action="{{ route('logout') }}" class="">
+                  @csrf
+                  <button type="submit"
+                          class="border-0 bg-transparent nut-dang-xuat">
+                          <i class="fa-solid fa-right-from-bracket fs-4 "></i>
+                  </button>
+                </form>
+              @endauth
             @endguest
 
-            @auth
-            <form method="POST" action="{{ route('logout') }}" class="">
-              @csrf
-              <button type="submit"
-                      class="border-0 bg-transparent">
-                      <i class="fa-solid fa-right-from-bracket"></i>
-              </button>
-            </form>
-          @endauth
+           
 
       </div>
       @foreach($sections as $sec)
-        <li data-id="{{ $sec->id }}" class="d-flex justify-content-between align-items-center px-3 py-2">
+        <li data-id="{{ $sec->id }}" class="d-flex justify-content-between align-items-center px-3 py-2 danh-sach-header">
           <span>{{ $sec->name }}</span>
           <i class="fa fa-chevron-right"></i>
         </li>
       @endforeach
       {{-- Thêm mục TOÀN BỘ --}}
-        <li class="px-3 py-2 ">
+        <li class="px-3 py-2 danh-sach-header">
           <a href="{{ route('products.index') }}"
             class="d-flex justify-content-between align-items-center text-dark text-decoration-none mau-den-rong">
             <span>Toàn bộ sản phẩm</span>
@@ -388,7 +405,7 @@
     {{-- Level 2 --}}
     <div id="mh-level2" class="mh-nav-lvl2">
       <div id="mh-btn-back" class="mh-back"><i class="fa fa-chevron-left me-2"></i>Quay lại</div>
-      <h6 id="mh-sec-title" class="px-3 py-2 pb-2 border-bottom"></h6>
+      <h6 id="mh-sec-title" class="px-3 py-2 pb-2"></h6>
       <ul id="mh-groups" class="list-unstyled mb-0"></ul>
     </div>
   </aside>
@@ -478,13 +495,13 @@ document.addEventListener('DOMContentLoaded', () => {
       // Build nhóm + sản phẩm
       groupsEl.innerHTML = sec.groups.map(g => `
         <li>
-          <div class="group-header d-flex justify-content-between align-items-center py-2 px-3">
+          <div class="group-header d-flex justify-content-between align-items-center py-2 px-3 list-tang-2">
             <span>${g.title}</span>
             <i class="fa fa-chevron-down"></i>
           </div>
           <ul class="mh-products list-unstyled mb-0">
             ${g.products.map(p =>
-              `<li class="py-1 px-4"><a href="/products/${p.slug}">${p.name}</a></li>`
+              `<li class="py-1 px-4"><a class="list-tang-2-a" href="/products/${p.slug}">${p.name}</a></li>`
             ).join('')}
           </ul>
         </li>
