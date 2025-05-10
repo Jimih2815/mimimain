@@ -1,4 +1,7 @@
 {{-- resources/views/profile/partials/info-mobile.blade.php --}}
+<style>
+ 
+</style>
 <div class="card mb-3">
   <div class="card-body">
     <h5 class="card-title">Thông tin tài khoản</h5>
@@ -21,7 +24,7 @@
         @enderror
       </div>
 
-      <div class="mb-2">
+      <div class="mb-4">
         <label class="form-label small" for="email">Email</label>
         <input id="email" name="email" type="email"
                class="form-control form-control-sm @error('email') is-invalid @enderror"
@@ -31,7 +34,7 @@
         @enderror
       </div>
 
-      <button type="submit" class="btn btn-primary btn-sm w-100">Cập nhật</button>
+      <button type="submit" class="btn-mimi nut-xanh w-100">Cập nhật</button>
     </form>
   </div>
 </div>
@@ -68,13 +71,13 @@
         @enderror
       </div>
 
-      <div class="mb-2">
+      <div class="mb-4">
         <label class="form-label small" for="password_confirmation">Xác nhận mật khẩu</label>
         <input id="password_confirmation" name="password_confirmation" type="password"
                class="form-control form-control-sm" required>
       </div>
 
-      <button type="submit" class="btn btn-warning btn-sm w-100">Đổi mật khẩu</button>
+      <button type="submit" class="btn-mimi nut-vang w-100">Đổi mật khẩu</button>
     </form>
   </div>
 </div>
