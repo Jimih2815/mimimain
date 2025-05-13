@@ -16,60 +16,57 @@ class CheckoutController extends Controller
      * GET /checkout
      */
     public function show(Request $request)
-    {
-        $selected = $request->input('selected_ids', []);
-        $cart     = session('cart', []);
+{
+    // ===== 1. Gom item cần thanh toán =====
+    $selected = $request->input('selected_ids', []);
+    $cart     = session('cart', []);
 
-        // Nếu Buy Now thì session('cart') chỉ chứa 1 item, ngược lại dùng selected_ids
-        if (empty($selected) && ! empty($cart)) {
-            $items = $cart;
-        } else {
-            $items = [];
-            foreach ($selected as $key) {
-                if (isset($cart[$key])) {
-                    $items[$key] = $cart[$key];
-                }
-            }
-        }
+    // Nếu Buy-Now thì cart chỉ có 1 item, ngược lại lọc theo selected_ids
+    $items = empty($selected)
+        ? $cart
+        : array_intersect_key($cart, array_flip($selected));
 
-        if (empty($items)) {
-            return redirect()->route('cart.index')
-                             ->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
-        }
-
-        // Tính GRAND = (base_price + extra_price) * quantity
-        $grand = 0;
-        foreach ($items as $item) {
-            $unitPrice = $item['price'] + ($item['extra_price'] ?? 0);
-            $grand    += $unitPrice * $item['quantity'];
-        }
-
-        // Tính phí ship: miễn phí nếu >=199k hoặc giỏ trống
-        $shipping = ($grand === 0 || $grand > 199000) ? 0 : 20000;
-
-        // Tổng thực tế để tạo QR
-        $amountForQr = $grand + $shipping;
-
-        // Tạo mã tham chiếu ngân hàng & QR URL
-        $bankRef = $this->uniqueBankRef();
-        session(['pending_bank_ref' => $bankRef]);
-
-        $bankCode    = 'TCB';
-        $accountNo   = '19032724004016';
-        $accountName = 'PHAN THAO NGUYEN';
-        $qrUrl = "https://img.vietqr.io/image/{$bankCode}-{$accountNo}-compact.png"
-               . "?amount={$amountForQr}"
-               . "&addInfo=" . urlencode($bankRef)
-               . "&accountName=" . urlencode($accountName);
-
-        return view('checkout.show', [
-            'items'       => $items,
-            'grand'       => $grand,
-            'shipping'    => $shipping,
-            'qrUrl'       => $qrUrl,
-            'bankRef'     => $bankRef,
-        ]);
+    if (empty($items)) {
+        return redirect()->route('cart.index')
+                         ->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
     }
+
+    // ===== 2. Tính tiền =====
+    $grand = 0;
+    foreach ($items as $it) {
+        $unit = $it['price'] + ($it['extra_price'] ?? 0);
+        $grand += $unit * $it['quantity'];
+    }
+
+    $shipping = ($grand === 0 || $grand > 199000) ? 0 : 20000;
+    $amountForQr = $grand + $shipping;
+
+    // ===== 3. Tạo ref & QR cho chuyển khoản =====
+    $bankRef = $this->uniqueBankRef();
+    session(['pending_bank_ref' => $bankRef]);
+
+    $bankCode    = 'TCB';
+    $accountNo   = '19032724004016';
+    $accountName = 'PHAN THAO NGUYEN';
+    $qrUrl = "https://img.vietqr.io/image/{$bankCode}-{$accountNo}-compact.png"
+           . "?amount={$amountForQr}"
+           . "&addInfo=" . urlencode($bankRef)
+           . "&accountName=" . urlencode($accountName);
+
+    // ===== 4. Chọn view desktop hay mobile =====
+    $agent = new \Jenssegers\Agent\Agent();
+    $view  = $agent->isMobile()
+            ? 'checkout.show-mobile'   // 👈 bạn chỉ cần copy file desktop và sửa CSS
+            : 'checkout.show';
+
+    return view($view, [
+        'items'    => $items,
+        'grand'    => $grand,
+        'shipping' => $shipping,
+        'qrUrl'    => $qrUrl,
+        'bankRef'  => $bankRef,
+    ]);
+}
 
     /**
      * POST /checkout/buy-now/{product}

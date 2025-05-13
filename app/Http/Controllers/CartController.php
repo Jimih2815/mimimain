@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\OptionValue;
 use Illuminate\Http\Request;
 use App\Services\SyncsCart;
+use Jenssegers\Agent\Agent;  
 
 class CartController extends Controller
 {
@@ -16,41 +17,37 @@ class CartController extends Controller
      */
     public function index()
 {
+    /* 1. Ghép cart DB -> session như cũ */
     $this->mergeDBCartIntoSession();
-
-    // Lấy cart
     $cart = session('cart', []);
 
-    // Gộp các entry có cùng key (trong thực tế session cart đã dùng key=md5, nhưng
-    // mergeDB có thể tạo entry lặp lại, nên chúng ta vẫn gộp lại)
-    $new = [];
+    // Gộp entry trùng key
+    $merged = [];
     foreach ($cart as $entry) {
-        $key = md5($entry['product_id'] . '|' . json_encode($entry['options'] ?? []));
-        if (isset($new[$key])) {
-            $new[$key]['quantity'] += $entry['quantity'];
-        } else {
-            $new[$key] = $entry;
-        }
+        $key = md5($entry['product_id'].'|'.json_encode($entry['options'] ?? []));
+        $merged[$key]['quantity'] = ($merged[$key]['quantity'] ?? 0) + $entry['quantity'];
+        $merged[$key] = array_replace($merged[$key] ?? [], $entry);
     }
-    $cart = $new;
-    session(['cart' => $cart]);
+    $cart = $merged;
 
-    // Bổ sung slug như trước
+    // Thêm slug còn thiếu
     foreach ($cart as $key => $item) {
-        if (!isset($item['slug'])) {
-            $prod = Product::find($item['product_id']);
-            $cart[$key]['slug'] = $prod->slug;
+        if (empty($item['slug'])) {
+            $cart[$key]['slug'] = Product::find($item['product_id'])->slug;
         }
     }
     session(['cart' => $cart]);
 
-    $total = array_reduce(
-        $cart,
-        fn($sum, $item) => $sum + $item['price'] * $item['quantity'],
-        0
-    );
+    /* 2. Tính tổng tiền */
+    $total = array_reduce($cart, fn($s,$i) => $s + $i['price'] * $i['quantity'], 0);
 
-    return view('cart.index', compact('cart','total'));
+    /* 3. Chọn view dựa theo thiết bị */
+    $agent = new Agent;
+    $view  = $agent->isMobile()
+            ? 'cart.index-mobile'   // file mới: copy từ index.blade và chỉnh CSS
+            : 'cart.index';
+
+    return view($view, compact('cart','total'));
 }
 
     /**
