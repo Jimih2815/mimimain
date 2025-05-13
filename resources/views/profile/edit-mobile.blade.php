@@ -34,6 +34,7 @@
     font-weight: bold;
   }
   .btn-detail {
+    width: 25%;
     font-size: 0.9rem;
     color: #4ab3af;
     font-weight: 600;
@@ -74,6 +75,24 @@
     -webkit-text-stroke: 2px #b83232;
     color: white;
 }
+.modal-content {
+  width: 80%;
+}
+/* ==== Slide-in modal từ phải qua trái ==== */
+.modal.modal-slide .modal-dialog{
+  transform: translateX(100%);
+  transition: transform .3s ease;
+  margin: 0;           
+}
+.modal.modal-slide.show .modal-dialog{
+  transform: translateX(0);
+}
+/* Khi đóng – thêm class slide-out để chạy lại về phải */
+.modal.modal-slide.slide-out .modal-dialog{
+  transform: translateX(100%);
+}
+
+
 </style>
 
 <div class="mobile-profile">
@@ -268,12 +287,12 @@
 </div>
 
 {{-- Modal full-screen --}}
-<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+<div class="modal modal-slide" id="detailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen d-flex justify-content-end">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
         <h5 class="modal-title">Chi tiết</h5>
-        <button type="button" class="d-flex bg-transparent align-items-center justify-content-center border-0" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" id="detail-close" class="d-flex bg-transparent align-items-center justify-content-center border-0"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="modal-body"></div>
     </div>
@@ -284,39 +303,75 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Nếu URL có hash #orders-m thì auto chọn tab Đơn hàng
-  if (window.location.hash === '#orders-m') {
+  const modalEl  = document.getElementById('detailModal');
+  // 👉 tạo modal KHÔNG backdrop
+  const bsModal  = new bootstrap.Modal(modalEl, { backdrop: false });
+  const closeBtn = document.getElementById('detail-close');
+
+  /* === Mở === */
+  function openModal(html){
+    modalEl.classList.remove('slide-out');
+    modalEl.querySelector('.modal-body').innerHTML = html;
+    bsModal.show();
+  }
+
+  /* === Đóng: slide-out xong mới hide === */
+  function closeModal(){
+    modalEl.classList.add('slide-out');
+
+    const dlg = modalEl.querySelector('.modal-dialog');
+    const onEnd = (e) => {
+      if (e.propertyName !== 'transform') return;
+      dlg.removeEventListener('transitionend', onEnd);
+      bsModal.hide();          // không còn backdrop để dọn
+    };
+    dlg.addEventListener('transitionend', onEnd);
+  }
+
+  /* Chặn Bootstrap ẩn tức thì khi ESC / click ngoài */
+  modalEl.addEventListener('hide.bs.modal', e => {
+    if (!modalEl.classList.contains('slide-out')) {
+      e.preventDefault();
+      closeModal();
+    }
+  });
+
+  modalEl.addEventListener('hidden.bs.modal', () => {
+    modalEl.classList.remove('slide-out');
+  });
+
+  /* Auto tab */
+  if (location.hash === '#orders-m') {
     document.getElementById('orders-m-tab')?.click();
   }
 
-  // Event delegation cho .btn-detail (Order & Help)
+  /* Delegation */
   document.addEventListener('click', e => {
     const btn = e.target.closest('.btn-detail');
-    if (btn) {
-      const tpl = document.querySelector(btn.getAttribute('data-target'));
-      if (!tpl) return;
-      document.querySelector('#detailModal .modal-body').innerHTML = tpl.innerHTML;
-      new bootstrap.Modal(document.getElementById('detailModal')).show();
+    if (btn){
+      const tpl = document.querySelector(btn.dataset.target);
+      tpl && openModal(tpl.innerHTML);
       return;
     }
 
-    // AJAX pagination trong Đơn hàng
     const link = e.target.closest('#orders-list-mobile a.page-link');
-    if (link) {
+    if (link){
       e.preventDefault();
-      fetch(link.href, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      .then(r => r.text())
-      .then(html => {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const newList = doc.querySelector('#orders-list-mobile');
-        if (newList) {
-          document.querySelector('#orders-list-mobile').innerHTML = newList.innerHTML;
-        }
-      });
+      fetch(link.href, {headers:{'X-Requested-With':'XMLHttpRequest'}})
+        .then(r => r.text())
+        .then(html => {
+          const doc  = new DOMParser().parseFromString(html,'text/html');
+          const list = doc.querySelector('#orders-list-mobile');
+          if (list) document.querySelector('#orders-list-mobile').innerHTML = list.innerHTML;
+        });
     }
   });
+
+  closeBtn.addEventListener('click', closeModal);
 });
 </script>
 @endpush
+
+
+
+
