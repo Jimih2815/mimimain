@@ -66,6 +66,7 @@
   border: 2px solid #d1a029;
 }
 .modal-title {
+  padding-top: 0.5rem;
   color: #4ab3af;
     font-size: 1.5rem;
     font-weight: 800;
@@ -83,6 +84,7 @@
   transform: translateX(100%);
   transition: transform .3s ease;
   margin: 0;           
+  
 }
 .modal.modal-slide.show .modal-dialog{
   transform: translateX(0);
@@ -91,8 +93,20 @@
 .modal.modal-slide.slide-out .modal-dialog{
   transform: translateX(100%);
 }
+.modal-fullscreen .modal-body {
+  border-top: 1px solid #4ab3af;
+}
+.modal-fullscreen .modal-content {
+  border-left: 1px solid #4ab3af;
+}
+.status-help-da-tiep-nhan { color: #4ab3af;font-weight:bold; }
 
+.status-help-dang-xu-ly { color: #fe3b27;font-weight:bold; }
 
+.status-help-hoan-thanh { color: #3f9426;font-weight:bold; }
+.btn-read-more {
+  color: #4ab3af;
+}
 </style>
 
 <div class="mobile-profile">
@@ -253,36 +267,70 @@
       @else
         <ul class="list-group">
           @foreach($orderedRequests as $i => $req)
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <span class="small">{{ $i+1 }}. {{ Str::limit($req->message, 30) }}</span>
+            @php
+              $map = [
+                'received'   => ['label' => 'Đã tiếp nhận', 'class' => 'received'],
+                'processing' => ['label' => 'Đang xử lý',   'class' => 'processing'],
+                'done'       => ['label' => 'Hoàn thành',    'class' => 'done'],
+              ];
+              // $req->status trong DB có thể là 'processing', 'received' ...
+              $state = $map[$req->status] ?? ['label' => $req->status, 'class' => \Illuminate\Support\Str::slug($req->status)];
+            @endphp
+
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <span class="small d-block">{{ $i+1 }}. {{ Str::limit($req->message, 30) }}</span>
+                <span class="small status-help-{{ $state['class'] }}">{{ $state['label'] }}</span>
+              </div>
+
               <button type="button"
-                      class="btn-detail border-0 bg-transparent"
-                      data-target="#help-full-table">
+                      class="btn-detail border-0 bg-transparent ms-2"
+                      data-target="#help-detail-{{ $req->id }}">
                 Chi tiết
               </button>
             </li>
+
+
+            {{-- === template chi tiết ẩn cho từng yêu cầu === --}}
+            <div id="help-detail-{{ $req->id }}" class="d-none">
+              <div class="p-3">
+                {{-- 1) Nội dung --}}
+                <div class="mb-3">
+                  <strong>Nội dung:</strong>
+                  <p class="mt-1 mb-0 truncate">
+                    {{ Str::limit($req->message, 120) }}
+                    @if(strlen($req->message) > 120)
+                      <span class="d-none full-text">{{ $req->message }}</span>
+                      <button class="btn-read-more btn btn-link p-0">Xem thêm</button>
+                    @endif
+                  </p>
+                </div>
+
+                {{-- 2) Phản hồi --}}
+                <div class="mb-3">
+                  <strong>Phản hồi:</strong>
+                  <p class="mt-1 mb-0 truncate">
+                    {{ $req->response ? Str::limit($req->response, 120) : '—' }}
+                    @if($req->response && strlen($req->response) > 120)
+                      <span class="d-none full-text">{{ $req->response }}</span>
+                      <button class="btn-read-more btn btn-link p-0">Xem thêm</button>
+                    @endif
+                  </p>
+                </div>
+
+                {{-- 3) Trạng thái --}}
+                <div>
+                  <strong>Trạng thái:</strong>
+                  <span class="ms-1 status-help-{{ $state['class'] }}">{{ $state['label'] }}</span>
+
+                </div>
+              </div>
+            </div>
           @endforeach
         </ul>
       @endif
-
-      <div id="help-full-table" class="d-none">
-        <table class="table table-bordered text-center mb-0">
-          <thead>
-            <tr><th>#</th><th>Nội dung</th><th>Phản hồi</th><th>Trạng thái</th></tr>
-          </thead>
-          <tbody>
-            @foreach($orderedRequests as $i => $req)
-              <tr>
-                <td>{{ $i+1 }}</td>
-                <td>{{ $req->message }}</td>
-                <td>{{ $req->response?:'—' }}</td>
-                <td>{{ $req->status }}</td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
     </div>
+
   </div>
 </div>
 
@@ -304,73 +352,84 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const modalEl  = document.getElementById('detailModal');
-  // 👉 tạo modal KHÔNG backdrop
   const bsModal  = new bootstrap.Modal(modalEl, { backdrop: false });
   const closeBtn = document.getElementById('detail-close');
 
-  /* === Mở === */
+  /* ====== TOOL: mở modal ====== */
   function openModal(html){
     modalEl.classList.remove('slide-out');
     modalEl.querySelector('.modal-body').innerHTML = html;
     bsModal.show();
   }
 
-  /* === Đóng: slide-out xong mới hide === */
+  /* ====== TOOL: đóng modal (slide) ====== */
   function closeModal(){
     modalEl.classList.add('slide-out');
-
     const dlg = modalEl.querySelector('.modal-dialog');
-    const onEnd = (e) => {
-      if (e.propertyName !== 'transform') return;
-      dlg.removeEventListener('transitionend', onEnd);
-      bsModal.hide();          // không còn backdrop để dọn
+    const end = (e)=>{
+      if(e.propertyName!=='transform') return;
+      dlg.removeEventListener('transitionend',end);
+      bsModal.hide();
     };
-    dlg.addEventListener('transitionend', onEnd);
+    dlg.addEventListener('transitionend',end);
   }
 
-  /* Chặn Bootstrap ẩn tức thì khi ESC / click ngoài */
-  modalEl.addEventListener('hide.bs.modal', e => {
-    if (!modalEl.classList.contains('slide-out')) {
+  /* ESC / click ngoài => slide-out */
+  modalEl.addEventListener('hide.bs.modal', e=>{
+    if(!modalEl.classList.contains('slide-out')){
       e.preventDefault();
       closeModal();
     }
   });
+  modalEl.addEventListener('hidden.bs.modal', ()=>modalEl.classList.remove('slide-out'));
 
-  modalEl.addEventListener('hidden.bs.modal', () => {
-    modalEl.classList.remove('slide-out');
-  });
-
-  /* Auto tab */
-  if (location.hash === '#orders-m') {
-    document.getElementById('orders-m-tab')?.click();
-  }
-
-  /* Delegation */
-  document.addEventListener('click', e => {
+  /* ====== Delegation click toàn trang ====== */
+  document.addEventListener('click', e=>{
+    /* 1) Nút Chi tiết (đơn hàng & trợ giúp) */
     const btn = e.target.closest('.btn-detail');
-    if (btn){
+    if(btn){
       const tpl = document.querySelector(btn.dataset.target);
-      tpl && openModal(tpl.innerHTML);
+      if(tpl) openModal(tpl.innerHTML);
       return;
     }
 
+    /* 2) Phân trang AJAX đơn hàng */
     const link = e.target.closest('#orders-list-mobile a.page-link');
-    if (link){
+    if(link){
       e.preventDefault();
-      fetch(link.href, {headers:{'X-Requested-With':'XMLHttpRequest'}})
-        .then(r => r.text())
-        .then(html => {
-          const doc  = new DOMParser().parseFromString(html,'text/html');
-          const list = doc.querySelector('#orders-list-mobile');
-          if (list) document.querySelector('#orders-list-mobile').innerHTML = list.innerHTML;
+      fetch(link.href,{headers:{'X-Requested-With':'XMLHttpRequest'}})
+        .then(r=>r.text())
+        .then(html=>{
+          const doc=new DOMParser().parseFromString(html,'text/html');
+          const list=doc.querySelector('#orders-list-mobile');
+          if(list) document.querySelector('#orders-list-mobile').innerHTML=list.innerHTML;
         });
+    }
+
+    /* 3) “Xem thêm” trong modal */
+    const more = e.target.closest('.btn-read-more');
+    if(more){
+      const p = more.parentElement;
+      const full = p.querySelector('.full-text');
+      if(!full) return;
+      p.firstChild.textContent = '';          // xoá đoạn rút gọn
+      p.insertBefore(document.createTextNode(full.textContent), more);
+      full.remove();
+      more.remove();                          // bỏ nút
     }
   });
 
+  /* ====== Auto chọn tab Đơn hàng nếu #orders-m ====== */
+  if(location.hash==='#orders-m'){
+    document.getElementById('orders-m-tab')?.click();
+  }
+
+  /* ====== Nút đóng X ====== */
   closeBtn.addEventListener('click', closeModal);
 });
 </script>
 @endpush
+
 
 
 
