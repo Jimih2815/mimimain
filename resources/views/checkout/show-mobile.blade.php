@@ -10,6 +10,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    z-index: 0;
   }
   .trang-checkout-mobile {
   /* height: 100vh;  BỎ đi */
@@ -18,10 +19,10 @@
     flex-direction: column;
   }
   #paymentSummary {
-    height: 7rem;
+    height: 10rem;
   }
   .danh-sach-san-pham {
-    padding: 1rem 1rem 9rem 1rem;
+    padding: 1rem 1rem 12rem 1rem;
      flex: 1 0 auto;             
   overflow: visible;
   }
@@ -29,20 +30,119 @@
   .dien-thong-tin {
     min-height: 100vh;
   }
+  .tong-cong-cont {
+    border: 2px solid #4ab3af;
+    border-radius: 5px;
+    height: 100%;
+    margin: 0px 5px;
+    padding: 10px;
+    background-color: white;
+  }
+  .tong-cong {
+    width: 100%;
+  }
+  #checkout-btn-mobile {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 900;
+  }
+  .anh-qr {
+    width: 100%;
+  }
+  .text-canh-bao {
+    color: #fe3b27;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .text-luu-y {
+     color: #4ab3af;
+        font-size: 0.9rem;
+        font-weight: 600;
+  }
+  .nut-thanh-toan {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 50px;
+    background-color: #4ab3af;
+    font-size: 1.2rem;
+    color: white;
+    padding: 10px 15px;
+    font-weight: 800;
+    }
+    
+    .form-check-input {
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  border: 2px solid #4ab3af;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:hover {
+  box-shadow: 0 0 5px rgba(74, 179, 175, 0.6);
+}
+
+.form-check-input:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: #4ab3af;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-check-input:checked + .form-check-label {
+  color: #4ab3af;
+  font-weight: 600;
+
+}
+.form-check-input:checked {
+  background-color: transparent;
+  border-color: #4ab3af;
+}
+.form-check-label {
+  padding-top: 0.2rem;
+    padding-left: 10px;
+}
+.tieu-de {
+  color: #fe3b27;
+  font-weight: 800;
+}
+.form-checkout {
+    border-bottom: 2px solid #d1a029;
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 0px;
+    border-radius: 0px;
+    background-color: transparent;
+    width: 100%;
+}
+.form-checkout:focus {
+            outline: none; /* Xoá cái viền đen xấu xí */
+            border-color: #4ab3af; /* Thay bằng màu đẹp nhẹ nhàng */
+            box-shadow: 0 0 0 3px rgba(74, 179, 175, 0.25); /* Thêm glow nhẹ nếu thích */
+        }
 </style>
 
 
 <div class="trang-checkout-mobile ">
   {{-- Danh sách sản phẩm xếp dọc --}}
   <div class="d-flex flex-column danh-sach-san-pham">
-    <h4 class="mb-3">Sản phẩm của bạn</h4>
+    <h4 class="mb-3 mt-3 tieu-de">Sản phẩm của bạn</h4>
     @foreach($items as $item)
       @php
         $extra     = $item['extra_price'] ?? 0;
         $unitPrice = $item['price'] + $extra;
         $line      = $unitPrice * $item['quantity'];
       @endphp
-      <div class="mb-3 p-2 border rounded d-flex justify-content-between align-items-center">
+      <div class="mb-3 p-2 border rounded d-flex justify-content-between align-items-center border-0">
         <div class="d-flex align-items-center">
           @if(!empty($item['image']))
             <img src="{{ asset('storage/'.$item['image']) }}"
@@ -56,9 +156,9 @@
   </div>
 
   {{-- Fixed-bottom summary + button --}}
-  <div id="paymentSummary" class="fixed-bottom bg-white p-3 border-top">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="text-end">
+  <div id="paymentSummary" class="fixed-bottom bg-transparent">
+    <div class="d-flex flex-column justify-content-between align-items-center tong-cong-cont">
+      <div class="text-end tong-cong">
         <p class="mb-1 d-flex justify-content-between">
           <span>Thành Tiền</span>
           <strong>{{ number_format($grand,0,',','.') }}₫</strong>
@@ -78,15 +178,15 @@
           <strong>{{ number_format($grand + $shipping,0,',','.') }}₫</strong>
         </p>
       </div>
-      <button id="checkout-btn-mobile" class="btn btn-primary">Thanh toán</button>
+      <button id="checkout-btn-mobile" class="btn-mimi nut-xanh">Thanh toán</button>
     </div>
   </div>
 
 {{-- Offcanvas slide-up thông tin người nhận --}}
 <div class="offcanvas offcanvas-bottom dien-thong-tin" tabindex="-1" id="offcanvasRecipient">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Thông tin người nhận</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  <div class="offcanvas-header d-flex justify-content-between align-items-center">
+    <h5 class="offcanvas-title tieu-de">Thông tin người nhận</h5>
+    <button type="button" class="border-0 bg-transparent d-flex justify-content-center align-items-center" data-bs-dismiss="offcanvas"> <i class="fa fa-times fa-lg"></i></button>
   </div>
   <div class="offcanvas-body">
     <form id="checkoutForm" action="{{ route('checkout.confirm') }}" method="POST">
@@ -146,7 +246,7 @@
       {{-- Box CK (ẩn mặc định) --}}
       <div id="bankSection" style="display:none;">
         <h5>Chuyển khoản ngân hàng</h5>
-        <img src="{{ $qrUrl }}" alt="QR Code" class="mb-3">
+        <img src="{{ $qrUrl }}" alt="QR Code" class="mb-3 anh-qr">
         <p>
           Chủ TK: <strong>PHAN THAO NGUYEN</strong><br>
           Số TK: <strong>19032724004016</strong><br>
@@ -164,7 +264,7 @@
         </p>
         <button type="button"
                 id="confirmBank"
-                class="btn mb-4 nut-thanh-toan">
+                class="mb-4 nut-thanh-toan border-0">
           Xác nhận đã chuyển khoản
         </button>
       </div>

@@ -148,17 +148,11 @@
 }
 
 .dropdown-menu-mobile {
-  /* chuyển sang fixed so với viewport */
   position: fixed !important;
-  /* cách trên đúng bằng chiều cao header (56px) */
   top: 56px;
-  /* ép sát mép phải màn hình */
-  right: 0;
-  /* không dùng left */
+  right: 5px;
   left: auto;
-  /* chiều rộng cố định, hoặc bạn có thể dùng ví dụ width: 80vw; */
   width: 260px;
-  /* các thuộc tính animation giữ nguyên */
   transform: translateY(-10px);
   opacity: 0;
   visibility: hidden;
