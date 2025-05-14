@@ -13,6 +13,7 @@ export default defineConfig({
         'resources/js/app.js',
         'resources/scss/app-mobile.scss',
         'resources/js/app-mobile.js',
+        'resources/scss/cart.scss',
       ],
       refresh: true, // tự reload khi blade/js thay đổi
     }),

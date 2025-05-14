@@ -1,12 +1,21 @@
 {{-- resources/views/cart/index.blade.php --}}
-@extends('layouts.app')
+<link rel="stylesheet" href="{{ Vite::asset('resources/scss/cart.scss') }}">
+
+@extends('layouts.app-mobile')
 
 @section('title', 'Giỏ hàng')
 
 @section('content')
 <style>
-
-
+.trang-gio-hang .anh-san-pham {
+    width: 150px;
+    aspect-ratio: 1 / 1;
+    height: auto;
+}
+.trang-gio-hang .xoa-border {
+    border: 0px solid black !important;
+    margin-bottom: 0;
+}
 </style>
 <div class="container trang-gio-hang">
   @if (count($cart))
@@ -101,7 +110,7 @@
                 {{ $item['name'] }}
               </a>
               </h5>
-                <span class="fw-bold">
+                <span class="fw-bold mt-2">
                   {{ number_format($item['price'],0,',','.') }}₫
                 </span>
               </div>
