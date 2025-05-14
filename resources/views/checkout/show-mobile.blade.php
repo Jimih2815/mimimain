@@ -129,6 +129,20 @@
             border-color: #4ab3af; /* Thay bằng màu đẹp nhẹ nhàng */
             box-shadow: 0 0 0 3px rgba(74, 179, 175, 0.25); /* Thêm glow nhẹ nếu thích */
         }
+.san-pham-cont img {
+  width: 30%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    overflow: hidden;
+  
+}
+.san-pham-cont .mo-ta-san-pham {
+  width: 40%;
+}
+.san-pham-cont .gia-tien {
+width: 30%;
+}
 </style>
 
 
@@ -138,21 +152,37 @@
     <h4 class="mb-3 mt-3 tieu-de">Sản phẩm của bạn</h4>
     @foreach($items as $item)
       @php
-        $extra     = $item['extra_price'] ?? 0;
-        $unitPrice = $item['price'] + $extra;
-        $line      = $unitPrice * $item['quantity'];
+        $extra        = $item['extra_price'] ?? 0;
+        $unitPrice    = $item['price'] + $extra;
+        $line         = $unitPrice * $item['quantity'];
+        $optionValues = \App\Models\OptionValue::whereIn('id', $item['options'] ?? [])
+                          ->with('type')
+                          ->get();
       @endphp
-      <div class="mb-3 p-2 border rounded d-flex justify-content-between align-items-center border-0">
-        <div class="d-flex align-items-center">
+
+      <div class="mb-3 p-2 rounded d-flex justify-content-between align-items-start border-0 san-pham-cont gap-2">
+        {{-- Phần trái: ảnh + tên + các thuộc tính --}}
           @if(!empty($item['image']))
             <img src="{{ asset('storage/'.$item['image']) }}"
-                 width="60" height="60" class="me-2 rounded">
+                width="60" height="60" class="mb-2 rounded">
           @endif
-          <span>{{ $item['name'] }} x{{ $item['quantity'] }}</span>
+        <div class="d-flex flex-column align-items-start mo-ta-san-pham">
+
+
+          <span>{{ $item['name'] }} <h5>x {{ $item['quantity'] }}</h5></span>
+
+          @foreach($optionValues as $val)
+            <span class="text-muted small mt-1">
+              <strong>{{ $val->type->name }}:</strong> {{ $val->value }}
+            </span>
+          @endforeach
         </div>
-        <span class="fw-bold">{{ number_format($line,0,',','.') }}₫</span>
+
+        {{-- Phần phải: giá tiền --}}
+        <span class="fw-bold gia-tien d-flex justify-content-center">{{ number_format($line,0,',','.') }}₫</span>
       </div>
     @endforeach
+
   </div>
 
   {{-- Fixed-bottom summary + button --}}
