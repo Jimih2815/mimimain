@@ -93,48 +93,109 @@
 document.addEventListener('DOMContentLoaded', () => {
   const roots = @json($roots->toArray());
   const allProducts = @json($products->toArray());
+  const favIds     = @json($favIds); 
   const parentBar = document.getElementById('mobile-parent-bar');
   const childBar = document.getElementById('mobile-child-bar');
   const productsContainer = document.getElementById('mobile-collection-products');
 
   // Render cards
   function renderProducts(list) {
-    productsContainer.innerHTML = '';
-    list.forEach(prod => {
-      const col = document.createElement('div');
-      col.className = 'col-6';
-      const card = document.createElement('div');
-      card.className = 'card h-100';
+  productsContainer.innerHTML = '';
 
-      if (prod.img) {
-        const a = document.createElement('a');
-        a.href = `/products/${prod.slug}`;
-        const img = document.createElement('img');
-        img.src = `/storage/${prod.img}`;
-        img.className = 'card-img-top';
-        a.appendChild(img);
-        card.appendChild(a);
-      }
+  list.forEach(prod => {
+    // 1) Column và card
+    const col  = document.createElement('div');
+    col.className = 'col-6';
+    const card = document.createElement('div');
+    card.className = 'card h-100';
 
-      const body = document.createElement('div');
-      body.className = 'card-body p-2';
-      const title = document.createElement('h6');
-      title.className = 'card-title mb-1';
-      title.textContent = prod.name;
-      body.appendChild(title);
-      const price = document.createElement('p');
-      price.className = 'text-danger mb-0';
-      price.textContent = prod.base_price.toLocaleString('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
+    // 2) Ảnh + link
+    if (prod.img) {
+      const a   = document.createElement('a');
+      a.href    = `/products/${prod.slug}`;
+      const img = document.createElement('img');
+      img.src   = `/storage/${prod.img}`;
+      img.className = 'card-img-top';
+      a.appendChild(img);
+      card.appendChild(a);
+    }
+
+    // 3) Info container (giống show-mobile)
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'card-body p-2 text-center small';
+
+    // 3.1) Tên + Fav
+    const nameFavDiv = document.createElement('div');
+    nameFavDiv.className = 'd-flex align-items-start justify-content-between mb-2';
+
+    const nameP = document.createElement('p');
+    nameP.className = 'mb-1 fw-semibold flex-grow-1 text-start';
+    nameP.textContent = prod.name;
+    nameFavDiv.appendChild(nameP);
+
+    // Nút yêu thích
+    const favBtn = document.createElement('button');
+    favBtn.type    = 'button';
+    favBtn.className = 'btn-fav';
+    favBtn.dataset.id = prod.id;
+
+    const favIcon = document.createElement('i');
+    if (favIds.includes(prod.id)) {
+      favIcon.className = 'fas fa-heart text-danger';
+    } else {
+      favIcon.className = 'far fa-heart';
+    }
+    favBtn.appendChild(favIcon);
+    nameFavDiv.appendChild(favBtn);
+
+    infoDiv.appendChild(nameFavDiv);
+
+    // 3.2) Giá gốc và giá tăng 50%
+    const priceText     = new Intl.NumberFormat('vi-VN').format(prod.base_price) + '₫';
+    const increasedText = new Intl.NumberFormat('vi-VN').format(prod.base_price * 1.5) + '₫';
+
+    const priceP = document.createElement('p');
+    priceP.className = 'text-danger gia-tien mb-0';
+    priceP.textContent = priceText;
+
+    const incDiv = document.createElement('div');
+    incDiv.className = 'text-muted gia-tang';
+    incDiv.textContent = increasedText;
+
+    const priceWrapper = document.createElement('div');
+    priceWrapper.className = 'price-wrapper d-flex';
+    priceWrapper.appendChild(priceP);
+    priceWrapper.appendChild(incDiv);
+    infoDiv.appendChild(priceWrapper);
+
+    // 4) Kết nối thẻ
+    card.appendChild(infoDiv);
+    col.appendChild(card);
+    productsContainer.appendChild(col);
+  });
+
+  // 5) Gắn sự kiện toggle favorite
+  productsContainer.querySelectorAll('.btn-fav').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      fetch(`/favorites/toggle/${id}`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      })
+      .then(r => r.json())
+      .then(json => {
+        const icon = btn.querySelector('i');
+        icon.classList.toggle('fas', json.added);
+        icon.classList.toggle('far', !json.added);
+        icon.classList.toggle('text-danger', json.added);
       });
-      body.appendChild(price);
-
-      card.appendChild(body);
-      col.appendChild(card);
-      productsContainer.appendChild(col);
     });
-  }
+  });
+}
+
+
 
   // Highlight parent
   function setActiveParent(item) {
