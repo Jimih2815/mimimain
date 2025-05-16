@@ -15,7 +15,7 @@
   <!-- 1) Parent categories -->
   <div id="mobile-parent-bar" class="d-flex overflow-auto">
     @foreach($roots as $parent)
-      <div class="mobile-parent-item" data-id="{{ $parent->id }}">
+      <div class="mobile-parent-item me-3" data-id="{{ $parent->id }}">
         <h3 class="m-0" style="font-size:1.2rem;">{{ $parent->name }}</h3>
       </div>
     @endforeach
@@ -37,7 +37,9 @@
 .mobile-parent-item,
 .mobile-child-item {
   flex: 0 0 auto;
-  padding: .5rem 1rem;
+  padding-right: 1.5rem;
+  padding-bottom: 0.5rem;
+  /* padding: .5rem 1rem; */
   /* background: #f8f9fa; */
   border-radius: .25rem;
   cursor: pointer;
@@ -46,14 +48,14 @@
 .mobile-child-item {
     font-size: 1rem;
     font-weight: 600;
-    padding: 1rem 0.7rem;
+    /* padding: 1rem 0.7rem; */
 }
 .mobile-parent-item {
     color: #333333;
     /* -webkit-text-stroke: 2px #333333 !important; */
     font-size: 1.2rem;
     font-weight: 600;
-    padding: 0.2rem 0.6rem;
+    /* padding: 0.2rem 0.6rem; */
 }
 .mobile-parent-item.active,
 .mobile-child-item.active {

@@ -5,29 +5,40 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\OptionType;
 use Illuminate\Http\Request;
+use App\Models\SidebarItem;
+
 
 class ProductController extends Controller
 {
     /**
      * Hiển thị danh sách sản phẩm và search
      */
+   
     public function index(Request $request)
-    {
-        $q = $request->input('q');
-    
-        // chỉ load optionValues với type cho mỗi product
-        $query = Product::with('optionValues.type');
-    
-        if ($q) {
-            $query->where('name','like',"%{$q}%")
-                  ->orWhere('description','like',"%{$q}%");
-        }
-    
-        $products = $query->paginate(12)
-                          ->appends(['q'=>$q]);
-    
-        return view('products.index', compact('products','q'));
+{
+    // nhận biết mobile: bạn có thể dùng package Jenssegers/Agent hoặc native
+    $isMobile = preg_match('/Mobile|Android|iPhone/', $request->header('User-Agent'));
+
+    if ($isMobile) {
+        $roots    = SidebarItem::with('children.collection.products')
+                      ->whereNull('parent_id')
+                      ->orderBy('sort_order')
+                      ->get();
+        $products = Product::all();
+        return view('products.index-mobile', compact('roots','products'));
     }
+
+    // ======== phần cũ ========
+    $q = $request->input('q');
+    $query = Product::with('optionValues.type');
+    if ($q) {
+        $query->where('name','like',"%{$q}%")
+              ->orWhere('description','like',"%{$q}%");
+    }
+    $products = $query->paginate(12)->appends(['q'=>$q]);
+    return view('products.index', compact('products','q'));
+}
+
 
     /**
      * Hiển thị chi tiết sản phẩm theo slug
