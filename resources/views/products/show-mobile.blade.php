@@ -13,7 +13,8 @@
 
   /* Slider overflow */
   .slider-product, .slider-related { overflow: hidden; }
-  .slider-product .swiper, .slider-related .swiper { width: 100%; overflow: visible; }
+  .slider-product .swiper,
+  .slider-related .swiper { width: 100%; overflow: visible; }
 
   /* Overlay fullscreen */
   #mobile-overlay {
@@ -25,145 +26,173 @@
   }
   #mobile-overlay.open { display: block; }
 
-  /* Panel slide-up */
-  #mobile-cart-panel {
-    position: fixed; bottom: 0; left: 0; width: 100%;
-    background: #fff; box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-    transform: translateY(100%); transition: transform 0.3s ease;
-    z-index: 100; max-height: 100%; display: flex; flex-direction: column;
+  /* ===== Slide-up cart panel ===== */
+  #mobile-cart-panel{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 80vh;                   /* Giới hạn 80% màn hình */
+    background:#fff;
+    box-shadow:0 -2px 8px rgba(0,0,0,.1);
+    transform:translateY(100%);
+    transition:transform .3s ease;
+    z-index:100;
+    display:flex;                       /* Flex cột */
+    flex-direction:column;
   }
-  #mobile-cart-panel.open { transform: translateY(0); }
+  #mobile-cart-panel.open{ transform:translateY(0); }
 
-  /* Panel header */
-  #mobile-panel-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem; border-bottom: 1px solid #eee;
+  /* Header – dính mép trên */
+  #mobile-panel-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:1rem;
+    border-bottom:1px solid #eee;
+    flex:0 0 auto;                      /* Không cuộn */
   }
-  #mobile-panel-header img {
-    width: 80px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover; 
-    margin-right: 0.75rem;
+  #mobile-panel-header img{
+    width:80px;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    margin-right:.75rem;
   }
-  #mobile-panel-header .header-info {
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 0.25rem;
-    height: 80px;
+  #mobile-panel-header .header-info{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:.25rem;
+    height:80px;
   }
-  #mobile-panel-header button {
-    background: transparent; border: none;
-    font-size: 1.5rem; line-height: 1; padding: 0;
-  }
-
-  /* Panel content scroll */
-  #mobile-cart-panel .panel-content {
-    flex: 1; overflow-y: auto; padding: 1rem;
-  }
-
-  /* Panel footer */
-  #mobile-cart-panel .panel-footer {
-    display: flex; gap: 0.5rem;
-    padding: 0.75rem; border-top: 1px solid #eee; background: #fff;
+  #mobile-panel-header button{
+    background:transparent;
+    border:none;
+    font-size:1.5rem;
+    line-height:1;
+    padding:0;
   }
 
-  /* Sticky bottom bar */
-  #mobile-cart-bar {
-  /* position: fixed; bottom: 0; */
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  border-top: 1px solid #ddd;
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  z-index: 99;
-  justify-content: space-between;
-}
+  /* Nội dung – cuộn khi dài */
+    #mobile-cart-panel .panel-content{
+    flex:1 1 auto;          /* đã có */
+    min-height:0;           /* thêm để Safari/Chrome mobile tuân thủ */
+    overflow-y:auto;        /* cuộn dọc */
+  }
+  /* Footer – dính mép dưới */
+  #mobile-cart-panel .panel-footer{
+    flex:0 0 auto;                      /* Không cuộn */
+    display:flex;
+    gap:.5rem;
+    padding:.75rem;
+    border-top:1px solid #eee;
+    background:#fff;
+  }
+
+  /* ===== Sticky bottom bar ngoài panel ===== */
+  #mobile-cart-bar{
+    position:sticky;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#fff;
+    border-top:1px solid #ddd;
+    display:flex;
+    gap:.5rem;
+    padding:.5rem 1rem;
+    z-index:99;
+    justify-content:space-between;
+  }
 
   /* Option items */
-  .panel-content .option-item-show {
-    border: 1px solid #ccc; 
+  .panel-content .option-item-show{
+    border:1px solid #ccc;
+    padding:.5rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    border-radius:.25rem;
+    width: auto;
+    margin-top:.5rem;
+    margin-left: 0.15rem;
     padding: 0.5rem;
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 0.5rem;
-    border-radius: 0.25rem;
-    width: 100%;
-    margin-top: 0.5rem;
   }
-  .panel-content .option-item-show:not(.selected) { background: #f8f8f8; }
-  .panel-content .option-item-show.selected { border-color: #4ab3af; }
-  .panel-content .option-item-show img { width: 24px; height: 24px; object-fit: cover; }
-  #option-thumb-bar {
-  overflow: hidden;
-}
-#option-thumb-bar .thumb-scroll {
-  overflow-x: auto;
-  /* ẩn scrollbar nếu muốn */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-#option-thumb-bar .thumb-scroll::-webkit-scrollbar {
-  display: none;
-}
-.ten-mobile {
-    display: none;
-}
-.card-img, .card-img-top, .card-img-bottom {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-        border-radius: 0px;
-}
-.card-body {
-    padding: 0.3rem 0 !important;
-}
-.card {
-    border-radius: 0px !important;
-    border: 0px solid red;
-    background-color: transparent;
-}
-.product-long-description span {
-  display: block;
-  white-space: normal;
-  overflow-wrap: break-word; 
-}
-.fa-heart {
-    font-size: 1.5rem;
-}
-.swiper-pagination-bullet-active {
-    color: #4ab3af !important;
-    background: #4ab3af !important;
-}
-#total-price {
-    color: #fe3b27;
-}
-.icon-xanh {
-    color: #4ab3af;
-    font-size: 1.3rem;
-}
-.border-top-icon {
-    border-top: 1px solid #4ab3af;
-    padding-top: 0.3rem;
-}
-.border-bot-icon {
-    border-bottom: 1px solid #4ab3af;
-    padding-bottom: 0.3rem;
-}
-.guarantee-item {
-  padding: 0.5rem 0;
-  border-bottom: 1px dashed #ccc;
-}
-.guarantee-item:last-child {
-  border-bottom: none;
-}
+  .panel-content .option-item-show:not(.selected){ background:#f8f8f8; }
+  .panel-content .option-item-show.selected   { border-color:#4ab3af; }
+  .panel-content .option-item-show img {
+      width: 40px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+  }
+
+  #option-thumb-bar{ overflow:hidden; }
+  #option-thumb-bar .thumb-scroll{
+    overflow-x:auto;
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+  }
+  #option-thumb-bar .thumb-scroll::-webkit-scrollbar{ display:none; }
+
+  /* ===== Card & misc ===== */
+  .ten-mobile{ display:none; }
+
+  .card-img,
+  .card-img-top,
+  .card-img-bottom{
+    width:100%;
+    height:auto;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:0;
+  }
+  .card-body{ padding:.3rem 0 !important; }
+  .card{
+    border-radius:0 !important;
+    border:0;
+    background-color:transparent;
+  }
+
+  .product-long-description span{
+    display:block;
+    white-space:normal;
+    overflow-wrap:break-word;
+  }
+
+  .fa-heart{ font-size:1.5rem; }
+
+  .swiper-pagination-bullet-active{
+    color:#4ab3af !important;
+    background:#4ab3af !important;
+  }
+
+  #total-price{ color:#fe3b27; }
+  /* Form bao nội dung & footer – co giãn trong panel */
+  #add-to-cart-form-mobile{
+    display:flex;           /* biến form thành flex-column */
+    flex-direction:column;
+    flex:1 1 auto;          /* chiếm phần còn lại của panel */
+    min-height:0;           /* <— chìa khóa: cho phép co */
+  }
+
+  .icon-xanh{ color:#4ab3af; font-size:1.3rem; }
+
+  .border-top-icon{
+    border-top:1px solid #4ab3af;
+    padding-top:.3rem;
+  }
+  .border-bot-icon{
+    border-bottom:1px solid #4ab3af;
+    padding-bottom:.3rem;
+  }
+
+  .guarantee-item{
+    padding:.5rem 0;
+    border-bottom:1px dashed #ccc;
+  }
+  .guarantee-item:last-child{ border-bottom:none; }
 </style>
+
 
 {{-- 1) Slider ảnh chính --}}
   @php
@@ -316,7 +345,7 @@
 
 {{-- Slide-up options panel --}}
 <div id="mobile-cart-panel">
-  <div id="mobile-panel-header">
+  <div id="mobile-panel-header" class="d-flex align-items-start">
     <div class="d-flex align-items-center">
       <img
         id="panel-img"
@@ -331,7 +360,7 @@
         <div id="panel-selected-names" class="small text-muted"></div>
       </div>
     </div>
-    <button id="close-cart-panel">&times;</button>
+    <button id="close-cart-panel"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
   </div>
 
   <form id="add-to-cart-form-mobile"
@@ -345,11 +374,11 @@
       @foreach ($optionTypes as $type)
         @php $isFirstType = $loop->first; @endphp
         <div class="mb-3">
-          <label class="form-label">{{ $type->name }}</label>
-          <div class="d-flex flex-wrap mb-2">
+          <label class="form-label mt-3 mb-0 ms-3">{{ $type->name }}</label>
+          <div class="d-flex flex-wrap mb-2 gap-2  ms-2">
             @foreach ($type->values as $val)
               <div
-                class="option-item-show me-2 p-2 border rounded"
+                class="option-item-show border rounded"
                 data-type-id="{{ $type->id }}"
                 data-val-id="{{ $val->id }}"
                 data-extra="{{ $val->extra_price }}"
@@ -357,6 +386,7 @@
               >
                 @if($isFirstType && $val->option_img)
                   <img
+                    class="rounded"
                     src="{{ asset('storage/'.$val->option_img) }}"
                     alt=""
                   >
