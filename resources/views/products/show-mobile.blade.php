@@ -78,6 +78,19 @@
   .panel-content .option-item-show:not(.selected) { background: #f8f8f8; }
   .panel-content .option-item-show.selected { border-color: #4ab3af; }
   .panel-content .option-item-show img { width: 24px; height: 24px; object-fit: cover; }
+  #option-thumb-bar {
+  overflow: hidden;
+}
+#option-thumb-bar .thumb-scroll {
+  overflow-x: auto;
+  /* ẩn scrollbar nếu muốn */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+#option-thumb-bar .thumb-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 </style>
 
 <div class="product-show-mobile px-3">
@@ -117,6 +130,49 @@
   <div class="mb-3">
     <h2 class="mb-0">{{ $product->name }}</h2>
   </div>
+
+    @php
+    $today = now();
+    $start = $today->copy()->addDays(5);
+    $end   = $today->copy()->addDays(6);
+    @endphp
+
+    <div class="mb-2 d-flex align-items-center">
+    <i class="fas fa-truck me-2 text-primary"></i>
+    <span class="text-primary">Miễn phí vận chuyển</span>
+    <span class="ms-2">– Đảm bảo giao vào ngày {{ $start->format('d') }}-{{ $end->format('d') }} tháng {{ $start->format('n') }}</span>
+    </div>
+
+    <div class="mb-3 d-flex align-items-center">
+    <i class="fas fa-shield-alt me-2"></i>
+    <span>Thanh toán khi giao – Đổi trả miễn phí 14 ngày</span>
+    </div>
+    {{-- 8) Thumb các option của nhóm đầu tiên, ngang scroll --}}
+    <div id="option-thumb-bar"
+        class="d-flex align-items-center mb-3"
+        style="cursor:pointer;">
+    <i class="fa-solid fa-list-ol me-2 text-secondary"></i>
+
+    <div class="thumb-scroll d-flex flex-grow-1 align-items-center">
+        @foreach($optionTypes->first()->values as $val)
+        @if($val->option_img)
+            <img src="{{ asset('storage/'.$val->option_img) }}"
+                alt="{{ $val->value }}"
+                class="me-2 rounded"
+                style="width:40px;height:40px;object-fit:cover;">
+        @endif
+        @endforeach
+
+        <span class="text-muted">
+        Có {{ $optionTypes->first()->values->count() }} lựa chọn
+        </span>
+    </div>
+
+    <i class="fa-solid fa-chevron-right ms-2 text-secondary"></i>
+    </div>
+
+
+
 
   {{-- 4) Slider “Có thể bạn cũng thích” --}}
   <div class="mt-4">
@@ -274,7 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
   openBtn.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
   overlay.addEventListener('click', closePanel);
-
+  
+ const thumbBar = document.getElementById('option-thumb-bar');
+  if (thumbBar) thumbBar.addEventListener('click', openPanel);
   function renderPanelHeader() {
     // Tính tổng giá và cập nhật
     const sumExtra = Object.values(selected).reduce((a, b) => a + b, 0);
