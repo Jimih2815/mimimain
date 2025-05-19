@@ -100,7 +100,7 @@
     display:flex;
     gap:.5rem;
     padding:.5rem 1rem;
-    z-index:99;
+    z-index: 1;
     justify-content:space-between;
   }
 
