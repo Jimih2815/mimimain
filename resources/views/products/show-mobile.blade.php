@@ -90,11 +90,61 @@
 #option-thumb-bar .thumb-scroll::-webkit-scrollbar {
   display: none;
 }
-
+.ten-mobile {
+    display: none;
+}
+.card-img, .card-img-top, .card-img-bottom {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+        border-radius: 0px;
+}
+.card-body {
+    padding: 0.3rem 0 !important;
+}
+.card {
+    border-radius: 0px !important;
+    border: 0px solid red;
+    background-color: transparent;
+}
+.product-long-description span {
+  display: block;
+  white-space: normal;
+  overflow-wrap: break-word; 
+}
+.fa-heart {
+    font-size: 1.5rem;
+}
+.swiper-pagination-bullet-active {
+    color: #4ab3af !important;
+    background: #4ab3af !important;
+}
+#total-price {
+    color: #fe3b27;
+}
+.icon-xanh {
+    color: #4ab3af;
+    font-size: 1.3rem;
+}
+.border-top-icon {
+    border-top: 1px solid #4ab3af;
+    padding-top: 0.3rem;
+}
+.border-bot-icon {
+    border-bottom: 1px solid #4ab3af;
+    padding-bottom: 0.3rem;
+}
+.guarantee-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #ccc;
+}
+.guarantee-item:last-child {
+  border-bottom: none;
+}
 </style>
 
-<div class="product-show-mobile px-3">
-  {{-- 1) Slider ảnh chính --}}
+{{-- 1) Slider ảnh chính --}}
   @php
     $slides = [];
     if ($product->img) $slides[] = asset('storage/'.$product->img);
@@ -119,39 +169,60 @@
     </div>
   </div>
 
+<div class="product-show-mobile px-3">
+  
+
   {{-- 2) Giá --}}
-  <div class="mb-2">
-    <p class="fs-4 mb-0">
-      Giá: <strong id="total-price">{{ number_format($product->base_price,0,',','.') }}₫</strong>
-    </p>
-  </div>
+    <div class="mb-3 d-flex align-items-baseline">
+    <span class="fs-4 fw-bold me-3 d-flex justify-content-start align-items-center">
+        Giá: <strong class="ms-2" id="total-price">{{ number_format($product->base_price,0,',','.') }}₫</strong>
+    </span>
+    <span class="text-muted d-flex justify-content-start align-items-center" style="text-decoration: line-through;">
+        {{ number_format($product->base_price * 1.5,0,',','.') }}₫
+    </span>
+    </div>
+
 
   {{-- 3) Tên --}}
   <div class="mb-3">
-    <h2 class="mb-0">{{ $product->name }}</h2>
+    @php
+    $isFav = auth()->check()
+        ? auth()->user()->favorites->contains($product->id)
+        : in_array($product->id, session('favorites', []));
+    @endphp
+
+    <div class="mb-3 d-flex align-items-center justify-content-between">
+        <h2 class="mb-0">{{ $product->name }}</h2>
+        <button type="button"
+                class="btn-favorite border-0 p-0 bg-transparent"
+                data-id="{{ $product->id }}">
+            <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
+        </button>
+    </div>
   </div>
 
+    {{-- 3.2) miễn phí vận chuyển các thứ --}}
     @php
     $today = now();
     $start = $today->copy()->addDays(5);
     $end   = $today->copy()->addDays(6);
     @endphp
 
-    <div class="mb-2 d-flex align-items-center">
-    <i class="fas fa-truck me-2 text-primary"></i>
-    <span class="text-primary">Miễn phí vận chuyển</span>
-    <span class="ms-2">– Đảm bảo giao vào ngày {{ $start->format('d') }}-{{ $end->format('d') }} tháng {{ $start->format('n') }}</span>
+    <div class="mb-2 d-flex align-items-center border-top-icon pt-2">
+    <i class="fas fa-truck me-2 icon-xanh"></i>
+    <span class="text-center">Miễn phí vận chuyển</span>
+    <span class="ms-2 text-center">Đảm bảo giao hàng vào ngày {{ $start->format('d') }}-{{ $end->format('d') }} tháng {{ $start->format('n') }}</span>
     </div>
 
-    <div class="mb-3 d-flex align-items-center">
-    <i class="fas fa-shield-alt me-2"></i>
+    <div class="mb-2 d-flex align-items-center border-top-icon pt-2">
+    <i class="fas fa-shield-alt me-2 icon-xanh"></i>
     <span>Thanh toán khi giao – Đổi trả miễn phí 14 ngày</span>
     </div>
     {{-- 8) Thumb các option của nhóm đầu tiên, ngang scroll --}}
     <div id="option-thumb-bar"
-        class="d-flex align-items-center mb-3"
+        class="d-flex align-items-center mb-3 border-top-icon border-bot-icon pt-2 pb-2"
         style="cursor:pointer;">
-    <i class="fa-solid fa-list-ol me-2 text-secondary"></i>
+    <i class="fa-solid fa-list-ol me-2 icon-xanh"></i>
 
     <div class="thumb-scroll d-flex flex-grow-1 align-items-center">
         @foreach($optionTypes->first()->values as $val)
@@ -192,32 +263,36 @@
 
   {{-- 5) Mô tả dài --}}
   @if ($product->long_description)
-    <div class="product-long-description mb-4">
+    <div class="product-long-description mb-4 pt-4">
       {!! $product->long_description !!}
     </div>
   @endif
 
-  {{-- 6) Mimi Cam kết --}}
-  <div class="product-guarantees d-flex flex-wrap gap-3 mb-4">
+    {{-- 6) Mimi Cam kết --}}
+    <div class="product-guarantees row text-center mb-4 px-2">
+    <h3 class="w-100 mb-3 icon-xanh">MiMi Cam Kết</h3>
+
     @foreach ([
-      ['fa-truck-fast','Giao hàng toàn quốc — Nhanh chóng - An toàn - Đúng hẹn'],
-      ['fa-arrow-rotate-left','Đổi trả miễn phí 7 ngày — Dù bất kỳ lý do gì'],
-      ['fa-shield','Lỗi 1 đổi 1 trong vòng 7 ngày'],
-      ['fa-credit-card','Thanh toán linh hoạt — Nhận hàng trả tiền hoặc chuyển khoản'],
-      ['fa-headset','Hỗ trợ khách hàng 24/7 — Chat, gọi điện trực tiếp'],
-      ['fa-gift','Ưu đãi quà tặng kèm đơn hàng mỗi tuần'],
-      ['fa-leaf','Bao bì thân thiện môi trường — Tiêu dùng bền vững'],
-      ['fa-plane','Ship nhanh 1-2 ngày toàn quốc'],
-      ['fa-truck','Miễn phí vận chuyển từ 199.000₫'],
-      ['fa-tags','Giảm 5% cho khách hàng thân thiết'],
-      ['fa-bolt','Giao hỏa tốc Hà Nội trong vòng 2 giờ'],
+        ['fa-truck-fast','Giao hàng nhanh chóng'],
+        ['fa-arrow-rotate-left','Đổi trả mọi lý do 7 ngày'],
+        ['fa-shield','Lỗi 1 đổi 1'],
+        ['fa-credit-card','Thanh toán linh hoạt'],
+        ['fa-headset','Hỗ trợ 24/7'],
+        ['fa-gift','Quà tặng theo chủ đề'],
+        ['fa-leaf','Đóng gói chắc chắn'],
+        ['fa-plane','Ship nhanh 1-2 ngày'],
+        ['fa-truck','Freeship đơn từ 199K'],
+        ['fa-tags','Giảm 5% với hội viên'],
+        ['fa-bolt','Giao hỏa tốc Hà Nội 2 giờ'],
     ] as $g)
-      <div class="d-flex align-items-center">
-        <i class="fas {{ $g[0] }} me-2"></i>
-        <span>{{ $g[1] }}</span>
-      </div>
+        <div class="col-6 col-md-4 mb-4 d-flex flex-column align-items-center justify-content-start">
+        <i class="fas {{ $g[0] }} fs-4 icon-xanh mb-2"></i>
+        <span class="small">{{ $g[1] }}</span>
+        </div>
     @endforeach
-  </div>
+    </div>
+
+
 </div>
 
 <div id="mobile-overlay"></div>
@@ -404,6 +479,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+  const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        fetch(`/favorites/toggle/${id}`, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': csrf }
+        })
+        .then(r => r.json())
+        .then(json => {
+        const icon = btn.querySelector('i.fa-heart');
+        icon.classList.toggle('fas', json.added);
+        icon.classList.toggle('far', !json.added);
+        icon.classList.toggle('text-danger', json.added);
+        icon.classList.toggle('text-muted', !json.added);
+        })
+        .catch(console.error);
+    });
+    });
+
 });
 </script>
 @endpush
