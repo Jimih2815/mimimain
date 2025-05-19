@@ -106,7 +106,7 @@
 
   /* Option items */
   .panel-content .option-item-show{
-    border:1px solid #ccc;
+    border:1px solid #4ab3af !important;
     padding:.5rem;
     display:flex;
     align-items:center;
@@ -117,9 +117,14 @@
     margin-top:.5rem;
     margin-left: 0.15rem;
     padding: 0.5rem;
+    background-color: transparent;
   }
   .panel-content .option-item-show:not(.selected){ background:#f8f8f8; }
-  .panel-content .option-item-show.selected   { border-color:#4ab3af; }
+  .panel-content .option-item-show.selected   { 
+    border-color:#4ab3af !important; 
+    background-color: #4ab3af;
+    color: white;
+  }
   .panel-content .option-item-show img {
       width: 40px;
       aspect-ratio: 1 / 1;
@@ -191,6 +196,42 @@
     border-bottom:1px dashed #ccc;
   }
   .guarantee-item:last-child{ border-bottom:none; }
+
+  #img-zoom-overlay{
+    position:fixed; inset:0;                /* phủ full viewport */
+    display:none; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0);              /* sẽ fade-in */
+    z-index:999;                            /* cao hẳn */
+    animation:overlayFadeOut .35s forwards; /* default */
+  }
+  #img-zoom-overlay.open{                  /* khi mở */
+    display:flex;
+    animation:overlayFadeIn .35s forwards;
+  }
+
+  /* Ảnh bên trong overlay */
+  #img-zoom{
+    max-width:90vw; max-height:90vh;
+    object-fit:contain;
+    animation:zoomOut .35s forwards;        /* default (thu nhỏ) */
+  }
+  #img-zoom-overlay.open #img-zoom{        /* khi mở */
+    animation:zoomIn .35s forwards;
+  }
+
+  /* ===== Keyframes ===== */
+  @keyframes overlayFadeIn  { from{background:rgba(0,0,0,0);}   to{background:rgba(0,0,0,.9);} }
+  @keyframes overlayFadeOut { from{background:rgba(0,0,0,.9);}  to{background:rgba(0,0,0,0);}  }
+  @keyframes zoomIn  { from{transform:scale(.3); opacity:.2;} to{transform:scale(1); opacity:1;} }
+  @keyframes zoomOut { from{transform:scale(1);  opacity:1;}  to{transform:scale(.3); opacity:0;} }
+
+  #img-zoom-close{
+    position:absolute; top:1rem; right:1rem;
+    background:transparent; border:none;
+    color:#fff; font-size:2rem; line-height:1;
+  }
+
+
 </style>
 
 
@@ -276,12 +317,12 @@
             <img src="{{ asset('storage/'.$val->option_img) }}"
                 alt="{{ $val->value }}"
                 class="me-2 rounded"
-                style="width:40px;height:40px;object-fit:cover;">
+                style="width:40px;height:40px;object-fit:cover;    aspect-ratio: 1 / 1;">
         @endif
         @endforeach
 
-        <span class="text-muted">
-        Có {{ $optionTypes->first()->values->count() }} lựa chọn
+        <span class="text-muted text-nowrap">
+            Có {{ $optionTypes->first()->values->count() }} lựa chọn
         </span>
     </div>
 
@@ -363,6 +404,7 @@
     <button id="close-cart-panel"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
   </div>
 
+  
   <form id="add-to-cart-form-mobile"
         action="{{ route('cart.add', $product->id) }}"
         method="POST"
@@ -378,7 +420,7 @@
           <div class="d-flex flex-wrap mb-2 gap-2  ms-2">
             @foreach ($type->values as $val)
               <div
-                class="option-item-show border rounded"
+                class="option-item-show rounded"
                 data-type-id="{{ $type->id }}"
                 data-val-id="{{ $val->id }}"
                 data-extra="{{ $val->extra_price }}"
@@ -416,6 +458,11 @@
   </form>
 </div>
 
+{{-- Zoom overlay – phải nằm ngoài panel để thoát khỏi transform --}}
+<div id="img-zoom-overlay">
+  <img id="img-zoom" src="" alt="Zoom">
+  <button id="img-zoom-close">&times;</button>
+</div>
 {{-- Sticky bottom bar --}}
 <div id="mobile-cart-bar">
     <button type="button"
@@ -560,6 +607,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // sau khi đã lấy openBtn
     const buyPanelBtn = document.getElementById('open-panel-buy');
     buyPanelBtn.addEventListener('click', openPanel);
+
+// ==== Zoom ảnh panel-img ====
+const zoomOverlay = document.getElementById('img-zoom-overlay');
+const zoomImg     = document.getElementById('img-zoom');
+const zoomClose   = document.getElementById('img-zoom-close');
+
+function openZoom(){
+  zoomImg.src = panelImg.src;
+  zoomOverlay.style.display = 'flex';      // ★ reset display
+  // delay 1 frame để CSS animation chạy mượt
+  requestAnimationFrame(()=> zoomOverlay.classList.add('open'));
+}
+
+function closeZoom(){
+  zoomOverlay.classList.remove('open');
+  // Ẩn hẳn sau khi animation kết thúc (0.35s)
+  setTimeout(()=> zoomOverlay.style.display = 'none', 350);
+}
+
+panelImg.addEventListener('click', openZoom);
+zoomClose.addEventListener('click', closeZoom);
+zoomOverlay.addEventListener('click', e=>{
+  if(e.target === zoomOverlay) closeZoom();
+});
+
+
 
 });
 </script>
