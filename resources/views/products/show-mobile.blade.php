@@ -30,7 +30,7 @@
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: #fff; box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
     transform: translateY(100%); transition: transform 0.3s ease;
-    z-index: 100; max-height: 80%; display: flex; flex-direction: column;
+    z-index: 100; max-height: 100%; display: flex; flex-direction: column;
   }
   #mobile-cart-panel.open { transform: translateY(0); }
 
@@ -40,10 +40,17 @@
     padding: 1rem; border-bottom: 1px solid #eee;
   }
   #mobile-panel-header img {
-    width: 48px; height: 48px; object-fit: cover; margin-right: 0.75rem;
+    width: 80px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover; 
+    margin-right: 0.75rem;
   }
   #mobile-panel-header .header-info {
-    flex: 1; display: flex; flex-direction: column; gap: 0.25rem;
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.25rem;
+    height: 80px;
   }
   #mobile-panel-header button {
     background: transparent; border: none;
@@ -63,17 +70,31 @@
 
   /* Sticky bottom bar */
   #mobile-cart-bar {
-    position: fixed; bottom: 0; left: 0; width: 100%;
-    background: #fff; border-top: 1px solid #ddd;
-    display: flex; gap: 0.5rem; padding: 0.5rem; z-index: 99;
-  }
-  #mobile-cart-bar button { flex: 1; }
+  /* position: fixed; bottom: 0; */
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  z-index: 99;
+  justify-content: space-between;
+}
 
   /* Option items */
   .panel-content .option-item-show {
-    flex: 1; border: 1px solid #ccc; padding: 0.5rem;
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    border: 1px solid #ccc; 
+    padding: 0.5rem;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 0.5rem;
     border-radius: 0.25rem;
+    width: 100%;
+    margin-top: 0.5rem;
   }
   .panel-content .option-item-show:not(.selected) { background: #f8f8f8; }
   .panel-content .option-item-show.selected { border-color: #4ab3af; }
@@ -193,11 +214,7 @@
 
     <div class="mb-3 d-flex align-items-center justify-content-between">
         <h2 class="mb-0">{{ $product->name }}</h2>
-        <button type="button"
-                class="btn-favorite border-0 p-0 bg-transparent"
-                data-id="{{ $product->id }}">
-            <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
-        </button>
+        
     </div>
   </div>
 
@@ -307,7 +324,10 @@
         alt="Chọn thuộc tính">
       <div class="header-info">
         <div id="panel-total-price" class="fw-bold">{{ number_format($product->base_price,0,',','.') }}₫</div>
-        <p class="mb-1 small">Freeship đơn hàng 199.000₫</p>
+        <div class="d-flex" style="color: #4ab3af; font-style: italic;">
+            <i style="font-size: 0.8rem;" class="fa-solid fa-truck-fast me-2 d-flex justofy-content-center align-items-center"></i>
+            <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
+        </div>
         <div id="panel-selected-names" class="small text-muted"></div>
       </div>
     </div>
@@ -358,19 +378,27 @@
         Vui lòng chọn đầy đủ thuộc tính.
       </div>
     </div>
-
-    <div class="panel-footer">
-      <button type="submit" class="btn btn-success flex-fill">Thêm vào giỏ</button>
-      <button type="button" id="buy-now-btn-mobile" class="btn btn-warning flex-fill">Mua ngay</button>
+ 
+    <div class="panel-footer d-flex justify-content-around align-items-center">
+      <button type="submit" class="btn-mimi nut-vang">Thêm vào giỏ</button>
+      <button type="button" id="buy-now-btn-mobile" class="btn-mimi nut-xanh">Mua ngay</button>
     </div>
   </form>
 </div>
 
 {{-- Sticky bottom bar --}}
 <div id="mobile-cart-bar">
-  <button id="open-cart-panel" class="btn btn-outline-primary">Chọn thuộc tính</button>
-  <button onclick="document.getElementById('add-to-cart-form-mobile').submit()" class="btn btn-success">Thêm vào giỏ</button>
+    <button type="button"
+                class="btn-favorite border-0 p-0 bg-transparent"
+                data-id="{{ $product->id }}">
+            <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
+        </button>
+    <div class="d-flex gap-2">
+        <button id="open-cart-panel" class="btn-mimi nut-vang">Thêm vào giỏ</button>
+        <button id="open-panel-buy" class="btn-mimi nut-xanh">Mua ngay</button>
+    </div>
 </div>
+
 @endsection
 
 @push('scripts')
@@ -499,6 +527,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(console.error);
     });
     });
+    // sau khi đã lấy openBtn
+    const buyPanelBtn = document.getElementById('open-panel-buy');
+    buyPanelBtn.addEventListener('click', openPanel);
 
 });
 </script>
