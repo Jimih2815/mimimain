@@ -117,12 +117,11 @@
     margin-top:.5rem;
     margin-left: 0.15rem;
     padding: 0.5rem;
-    background-color: transparent;
+    background-color: transparent !important;
   }
-  .panel-content .option-item-show:not(.selected){ background:#f8f8f8; }
   .panel-content .option-item-show.selected   { 
     border-color:#4ab3af !important; 
-    background-color: #4ab3af;
+    background-color: #4ab3af !important;
     color: white;
   }
   .panel-content .option-item-show img {
