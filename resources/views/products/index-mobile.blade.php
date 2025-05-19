@@ -49,22 +49,60 @@
             border-bottom: 1px solid #4ab3af;
 
     }
-    /* 1) Định nghĩa keyframes */
-    @keyframes slideDown {
+    .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+.btn-fav {
+    top: 0.5rem;
+    right: 0.5rem;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    padding: 0;
+    background: transparent;
+}
+.btn-fav i {
+    font-size: 1.5rem;
+    color: #e63946;
+}
+.price-wrapper {
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.gia-tien {
+    text-align: start;
+    font-size: 1.2rem;
+    color: #e63946 !important;
+}
+.gia-tang {
+    text-decoration: line-through;
+    opacity: 0.7;
+    font-size: 0.9rem;
+    color: #888; /* hoặc màu bạn muốn */
+  } /* Đóng hết .gia-tang ở đây! */
+
+  /* 1) Định nghĩa keyframes ở cấp gốc */
+  @keyframes slideDown {
     from {
-        opacity: 0;
-        transform: translateY(-15px);
+      opacity: 0;
+      transform: translateY(-15px);
     }
     to {
-        opacity: 1;
-        transform: translateY(0);
+      opacity: 1;
+      transform: translateY(0);
     }
-    }
+  }
 
-    /* 2) Áp animation cho mỗi item khi được chèn */
-    #mobile-child-bar .mobile-child-item {
-    animation: slideDown 0.3s ease both;
-    }
+  /* 2) Áp animation cho mỗi item */
+  #mobile-child-bar .mobile-child-item {
+    animation: slideDown 0.2s ease both;
+  }
 
 </style>
 
