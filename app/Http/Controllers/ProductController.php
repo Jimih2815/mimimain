@@ -7,6 +7,7 @@ use App\Models\OptionType;
 use Illuminate\Http\Request;
 use App\Models\SidebarItem;
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;  
 
 
 class ProductController extends Controller
@@ -57,12 +58,12 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        // 1) Lấy product với optionValues.type
+        // 1) Lấy product kèm optionValues.type
         $product = Product::where('slug', $slug)
                           ->with('optionValues.type')
                           ->firstOrFail();
 
-        // 2) Lấy các OptionType thực sự dùng cho product này
+        // 2) Lấy những OptionType thực sự dùng cho sản phẩm này
         $optionTypes = OptionType::whereHas('values.products', function ($q) use ($product) {
                 $q->where('product_id', $product->id);
             })
@@ -73,7 +74,7 @@ class ProductController extends Controller
             }])
             ->get();
 
-        // 3) Related products: ưu tiên cùng collection mới nhất, fallback random
+        // 3) Lấy related products: ưu tiên cùng collection mới nhất, fallback random
         $latestCollection = $product->collections()
                                     ->orderBy('created_at', 'desc')
                                     ->first();
@@ -90,6 +91,13 @@ class ProductController extends Controller
                 ->get();
         }
 
-        return view('products.show', compact('product', 'optionTypes', 'relatedProducts'));
+        // 4) Phân biệt mobile vs desktop để chọn view
+        $agent = new Agent();
+        $view  = $agent->isMobile()
+            ? 'products.show-mobile'
+            : 'products.show';
+
+        // 5) Trả về view với đầy đủ dữ liệu
+        return view($view, compact('product', 'optionTypes', 'relatedProducts'));
     }
 }
