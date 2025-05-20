@@ -238,7 +238,16 @@
   transition: all 0.8s ease;
   pointer-events: none;
 }
-
+.swiper-backface-hidden .swiper-slide {
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
 
 </style>
 
