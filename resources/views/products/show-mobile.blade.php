@@ -528,7 +528,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const cartCountEl = document.getElementById('cart-count-mobile')
                          || document.getElementById('cart-count');
       if(cartCountEl) cartCountEl.textContent=json.total_items;
-
+      const cartMenu = document.getElementById('cartMenuMobile');
+      fetch("{{ route('cart.menu-mobile') }}")
+        .then(res => res.text())
+        .then(html => {
+          cartMenu.innerHTML = html;
+        });
       // 2) Hiệu ứng bay
       if(panelImg && cartCountEl){
         const fly = panelImg.cloneNode(true);

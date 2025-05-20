@@ -187,4 +187,12 @@ public function update(Request $request, $key)
 
     return back()->with('success', 'Cập nhật giỏ hàng thành công.');
 }
+   public function menuMobile(Request $request)
+    {
+        // Giả sử bạn lưu giỏ hàng trong session('cart')
+        $cart  = session('cart', []);
+        $count = array_sum(array_column($cart, 'quantity'));
+
+        return view('partials.mobile-cart-menu', compact('cart', 'count'));
+    }
 }

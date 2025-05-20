@@ -68,6 +68,10 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post ('add/{id}',     [CartController::class,'add'])->name('add');
     Route::post ('remove/{k}',   [CartController::class,'remove'])->name('remove');
     Route::post ('update/{key}', [CartController::class,'update'])->name('update');
+
+    // ← chèn route menu-mobile ngay trong đây
+    Route::get('menu-mobile', [CartController::class, 'menuMobile'])
+         ->name('menu-mobile');
 });
 
 Route::prefix('checkout')->name('checkout.')->group(function () {
@@ -114,6 +118,7 @@ Route::view('/faq', 'faq')->name('faq');
 Route::view('/how-to-order', 'how-to-order')->name('how-to-order');
 Route::view('/tracking', 'tracking')->name('tracking');
 Route::view('/how-to-pay', 'how-to-pay')->name('how-to-pay');
+
 
 
 
