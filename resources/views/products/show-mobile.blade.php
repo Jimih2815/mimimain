@@ -248,7 +248,12 @@
     aspect-ratio: 1 / 1;
     object-fit: cover;
 }
-
+#option-error {
+  text-align: center;
+    padding-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
 </style>
 
 
@@ -421,7 +426,7 @@
           <input type="hidden" name="options[{{ $type->id }}]" id="option-input-{{ $type->id }}" required>
         </div>
       @endforeach
-      <div id="option-error" class="text-danger small" style="display:none;">Vui lòng chọn đầy đủ thuộc tính.</div>
+      <div id="option-error" class="text-danger small" style="display:none;">Bạn vui lòng chọn các thuộc tính nha!!!</div>
     </div>
 
     <div class="panel-footer d-flex justify-content-around align-items-center">
@@ -511,7 +516,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   buyBtn.addEventListener('click', ()=>{
     const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]')).some(i=>!i.value);
-    if(missing){ errorEl.style.display='block'; return; }
+    if (missing) {
+    errorEl.style.display = 'block';
+    // Cuộn đến error cho người dùng thấy
+    errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Sau 5s ẩn luôn
+    setTimeout(() => {
+      errorEl.style.display = 'none';
+    }, 5000);
+    return;
+  }
     form.action="{{ route('checkout.buyNow',$product->id) }}";
     form.submit();
   });
@@ -519,7 +533,16 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', e=>{
     e.preventDefault();
     const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]')).some(i=>!i.value);
-    if(missing){ errorEl.style.display='block'; return; }
+    if (missing) {
+    errorEl.style.display = 'block';
+    // Cuộn đến error cho người dùng thấy
+    errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Sau 5s ẩn luôn
+    setTimeout(() => {
+      errorEl.style.display = 'none';
+    }, 5000);
+    return;
+  }
 
     fetch(form.action, {
       method:'POST',
@@ -535,36 +558,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 1) Cập nhật badge
       const cartCountEl = document.getElementById('cart-count-mobile')
-                         || document.getElementById('cart-count');
-      if(cartCountEl) cartCountEl.textContent=json.total_items;
+                   || document.getElementById('cart-count');
+      if (cartCountEl) {
+        cartCountEl.textContent = json.total_items;
+        // nếu mới thêm thành 1+, bỏ display:none
+        if (json.total_items > 0) {
+          cartCountEl.style.display = 'inline-block';
+        }
+      }
       const cartMenu = document.getElementById('cartMenuMobile');
       fetch("{{ route('cart.menu-mobile') }}")
         .then(res => res.text())
         .then(html => {
           cartMenu.innerHTML = html;
         });
-      // 2) Hiệu ứng bay
-      if(panelImg && cartCountEl){
+      // 2) Chọn target cho hiệu ứng bay
+      if (panelImg) {
         const fly = panelImg.cloneNode(true);
         fly.classList.add('flying-img');
         const start = panelImg.getBoundingClientRect();
-        Object.assign(fly.style,{
-          left:start.left+'px', top:start.top+'px',
-          width:start.width+'px', height:start.height+'px'
+        Object.assign(fly.style, {
+          left:  start.left  + 'px',
+          top:   start.top   + 'px',
+          width: start.width + 'px',
+          height:start.height+ 'px'
         });
         document.body.appendChild(fly);
 
-        const endRect = cartCountEl.getBoundingClientRect();
+        // nếu badge đã hiện (kích thước >0), dùng nó; ngược lại fallback về icon giỏ hàng
+        const targetEl = (cartCountEl && cartCountEl.offsetWidth > 0)
+                        ? cartCountEl
+                        : document.getElementById('cartDropdownMobile');
+        const endRect = targetEl.getBoundingClientRect();
+
         const targetX = endRect.left + endRect.width/2 - start.width/4;
-        const targetY = endRect.top  + endRect.height/2- start.height/4;
-        requestAnimationFrame(()=>{
-          Object.assign(fly.style,{
-            left:targetX+'px', top:targetY+'px',
-            width:(start.width/2)+'px', height:(start.height/2)+'px',
+        const targetY = endRect.top  + endRect.height/2 - start.height/4;
+
+        requestAnimationFrame(() => {
+          Object.assign(fly.style, {
+            left:   targetX + 'px',
+            top:    targetY + 'px',
+            width:  (start.width/2) + 'px',
+            height: (start.height/2)+ 'px',
             opacity:'0.7'
           });
         });
-        fly.addEventListener('transitionend',()=>{
+
+        fly.addEventListener('transitionend', () => {
           fly.remove();
           closePanel();
         });
