@@ -45,8 +45,8 @@
     @endif
 
     {{-- 3) Collection Slider --}}
-    <div class="slider-full-width mb-5 ms-3 pt-5 pb-3">
-      <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class="slider-full-width mb-5 ms-1 me-1 pt-5 pb-3">
+      <div class="d-flex justify-content-between ms-2 align-items-center mb-2">
         <h3 class="mb-0">{{ $home->collection_slider_title ?: 'Khám phá bộ sưu tập' }}</h3>
         <div class="nut-navi">
           <button class="btn btn-outline-secondary me-2 swiper-button-prev">
@@ -85,36 +85,39 @@
       </div>
     @endif
 
-    {{-- 4B) Section Images --}}
-    <div class="section-images mb-4">
+  {{-- 4B) Section Images slider tự động --}}
+  <div class="swiper section-images-swiper mb-4 ms-1 me-1">
+    <div class="swiper-wrapper">
       @foreach($sectionImages as $img)
-        <div class="section-img">
+        <div class="swiper-slide section-img">
           <a href="{{ $img->collection
-                          ? route('collections.show', $img->collection->slug)
-                          : '#' }}">
+                        ? route('collections.show', $img->collection->slug)
+                        : '#' }}">
             <img src="{{ asset('storage/'.$img->image) }}"
-                 alt="Section Image {{ $loop->iteration }}"
-                 class="w-100 rounded">
+                alt="Section Image {{ $loop->iteration }}"
+                class="w-100 rounded">
           </a>
         </div>
       @endforeach
     </div>
+  </div>
+
     
 
     {{-- 5) Product Slider --}}
-    <div class="slider-product mb-5 ms-3">
-      <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class="slider-home-product mb-5 ms-1 me-1">
+      <div class="d-flex justify-content-between align-items-center ms-2 mb-2">
         <h3 class="mb-0">{{ $home->product_slider_title ?: 'Sản phẩm nổi bật' }}</h3>
         <div class="nut-navi">
-          <button class="btn btn-outline-secondary me-2 product-slider-prev">
-            <i class="bi bi-chevron-left fs-4"></i>
+          <button class="btn btn-outline-secondary me-2 home-product-prev">
+             <i class="bi bi-chevron-left fs-4"></i>
           </button>
-          <button class="btn btn-outline-secondary product-slider-next">
+          <button class="btn btn-outline-secondary home-product-next">
             <i class="bi bi-chevron-right fs-4"></i>
           </button>
         </div>
       </div>
-      <div class="swiper product-swiper">
+      <div class="swiper home-product-swiper">
         <div class="swiper-wrapper">
           @foreach($productSliders as $ps)
             <div class="swiper-slide">
@@ -144,12 +147,9 @@
   gap: 12px;                    /* khoảng cách giữa các ảnh */
   overflow-x: auto;             /* cho phép cuộn ngang */
   scroll-snap-type: x mandatory;/* bật scroll-snap */
-  padding-left: 1rem;           /* đệm trái để peek rõ hơn */
-  margin-left: 1rem;
+  
 }
-.section-images .section-img:last-child {
-    margin-right: 1rem;
-  }
+
 .section-images .section-img {
   flex: 0 0 85%;                /* mỗi ảnh rộng 85% container */
   scroll-snap-align: start;     /* snap mỗi ảnh khi scroll */
