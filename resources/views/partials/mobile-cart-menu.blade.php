@@ -12,7 +12,7 @@
         <img src="{{ asset('storage/'.$item['image']) }}"
              style="width:40px;height:40px;object-fit:cover;border-radius:4px"
              class="me-2">
-        <span>{{ $item['name'] }} x{{ $item['quantity'] }}</span>
+        <span>{{ $item['name'] }}</span> <span style="color: #fe3b27; font-size: 1.2rem; font-weight: 700;" class="ms-auto pe-3">x{{ $item['quantity'] }}</span>
       </li>
     @empty
       <p class="text-center mb-0">Giỏ hàng trống</p>
