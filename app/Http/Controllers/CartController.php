@@ -21,14 +21,25 @@ class CartController extends Controller
     $this->mergeDBCartIntoSession();
     $cart = session('cart', []);
 
-    // Gộp entry trùng key
+    //  ● Gộp entry trùng key (sắp xếp options để JSON luôn giống nhau)
     $merged = [];
     foreach ($cart as $entry) {
-        $key = md5($entry['product_id'].'|'.json_encode($entry['options'] ?? []));
+        $options = $entry['options'] ?? [];
+        if (is_array($options)) {
+            ksort($options);
+        }
+        $key = md5($entry['product_id'] . '|' . json_encode($options));
+
+        // cộng dồn quantity
         $merged[$key]['quantity'] = ($merged[$key]['quantity'] ?? 0) + $entry['quantity'];
+        // và dùng thông tin item (name, price, v.v.) từ entry
         $merged[$key] = array_replace($merged[$key] ?? [], $entry);
     }
     $cart = $merged;
+
+    // **(tuỳ chọn)** cập nhật luôn session & DB theo cart đã gộp
+    session(['cart' => $cart]);
+    $this->syncCartToDB($cart);
 
     // Thêm slug còn thiếu
     foreach ($cart as $key => $item) {
@@ -62,7 +73,11 @@ class CartController extends Controller
 public function add(Request $request, $id)
 {
     $product = Product::with('optionValues')->findOrFail($id);
-    $chosen  = $request->input('options', []);
+        // 0) Lấy và sort options để key deterministic
+    $chosen = $request->input('options', []);
+    if (is_array($chosen)) {
+        ksort($chosen);
+    }
 
     // 1) Tính tổng extra price
     $extra = OptionValue::whereIn('id', array_values($chosen))
@@ -80,7 +95,8 @@ public function add(Request $request, $id)
     }
     $imageUrl = asset('storage/' . $imagePath);
 
-    // 3) Thêm / cập nhật session cart
+
+     // 3) Lấy session cart & tạo key gộp
     $cart = session('cart', []);
     $key  = md5($id . '|' . json_encode($chosen));
 

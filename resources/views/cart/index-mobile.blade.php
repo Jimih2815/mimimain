@@ -11,6 +11,7 @@
     width: 150px;
     aspect-ratio: 1 / 1;
     height: auto;
+    object-fit: cover;
 }
 .trang-gio-hang .xoa-border {
     border: 0px solid black !important;
