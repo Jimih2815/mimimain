@@ -230,108 +230,99 @@
     color:#fff; font-size:2rem; line-height:1;
   }
 
+/* ==== Hiệu ứng ảnh bay vào giỏ ==== */
+.flying-img {
+  position: fixed;
+  border-radius: 50%;
+  z-index: 9999;
+  transition: all 0.8s ease;
+  pointer-events: none;
+}
+
 
 </style>
 
 
 {{-- 1) Slider ảnh chính --}}
-  @php
-    $slides = [];
-    if ($product->img) $slides[] = asset('storage/'.$product->img);
-    $subImgs = is_string($product->sub_img)
-             ? json_decode($product->sub_img, true) ?: []
-             : (array)$product->sub_img;
-    foreach ($subImgs as $p) {
-      $slides[] = asset('storage/'.$p);
-    }
-  @endphp
-
-  <div class="slider-product mb-3">
-    <div class="swiper product-swiper">
-      <div class="swiper-wrapper">
-        @foreach ($slides as $url)
-          <div class="swiper-slide">
-            <img src="{{ $url }}" class="img-fluid w-100" alt="">
-          </div>
-        @endforeach
-      </div>
-      <div class="swiper-pagination product-swiper-pagination"></div>
+@php
+  $slides = [];
+  if ($product->img) $slides[] = asset('storage/'.$product->img);
+  $subImgs = is_string($product->sub_img)
+           ? json_decode($product->sub_img, true) ?: []
+           : (array)$product->sub_img;
+  foreach ($subImgs as $p) {
+    $slides[] = asset('storage/'.$p);
+  }
+@endphp
+<div class="slider-product mb-3">
+  <div class="swiper product-swiper">
+    <div class="swiper-wrapper">
+      @foreach ($slides as $url)
+        <div class="swiper-slide">
+          <img src="{{ $url }}" class="img-fluid w-100" alt="">
+        </div>
+      @endforeach
     </div>
+    <div class="swiper-pagination product-swiper-pagination"></div>
   </div>
+</div>
 
 <div class="product-show-mobile px-3">
-  
-
   {{-- 2) Giá --}}
-    <div class="mb-3 d-flex align-items-baseline">
-    <span class="fs-4 fw-bold me-3 d-flex justify-content-start align-items-center">
-        Giá: <strong class="ms-2" id="total-price">{{ number_format($product->base_price,0,',','.') }}₫</strong>
+  <div class="mb-3 d-flex align-items-baseline">
+    <span class="fs-4 fw-bold me-3 d-flex align-items-center">
+      Giá: <strong id="total-price" class="ms-2">{{ number_format($product->base_price,0,',','.') }}₫</strong>
     </span>
-    <span class="text-muted d-flex justify-content-start align-items-center" style="text-decoration: line-through;">
-        {{ number_format($product->base_price * 1.5,0,',','.') }}₫
+    <span class="text-muted d-flex align-items-center" style="text-decoration: line-through;">
+      {{ number_format($product->base_price * 1.5,0,',','.') }}₫
     </span>
-    </div>
-
-
-  {{-- 3) Tên --}}
-  <div class="mb-3">
-    @php
-    $isFav = auth()->check()
-        ? auth()->user()->favorites->contains($product->id)
-        : in_array($product->id, session('favorites', []));
-    @endphp
-
-    <div class="mb-3 d-flex align-items-center justify-content-between">
-        <h2 class="mb-0">{{ $product->name }}</h2>
-        
-    </div>
   </div>
 
-    {{-- 3.2) miễn phí vận chuyển các thứ --}}
-    @php
-    $today = now();
-    $start = $today->copy()->addDays(5);
-    $end   = $today->copy()->addDays(6);
-    @endphp
+  {{-- 3) Tên --}}
+  @php
+    $isFav = auth()->check()
+      ? auth()->user()->favorites->contains($product->id)
+      : in_array($product->id, session('favorites', []));
+  @endphp
+  <div class="mb-3 d-flex align-items-center justify-content-between">
+    <h2 class="mb-0">{{ $product->name }}</h2>
+  </div>
 
-    <div class="mb-2 d-flex align-items-center border-top-icon pt-2">
+  {{-- 3.2) Vận chuyển & đổi trả --}}
+  @php
+    $start = now()->addDays(5);
+    $end   = now()->addDays(6);
+  @endphp
+  <div class="mb-2 d-flex align-items-center border-top-icon pt-2">
     <i class="fas fa-truck me-2 icon-xanh"></i>
-    <span class="text-center">Miễn phí vận chuyển</span>
-    <span class="ms-2 text-center">Đảm bảo giao hàng vào ngày {{ $start->format('d') }}-{{ $end->format('d') }} tháng {{ $start->format('n') }}</span>
-    </div>
-
-    <div class="mb-2 d-flex align-items-center border-top-icon pt-2">
+    <span>Miễn phí vận chuyển</span>
+    <span class="ms-2">Đảm bảo giao hàng {{ $start->format('d') }}-{{ $end->format('d') }} tháng {{ $start->format('n') }}</span>
+  </div>
+  <div class="mb-2 d-flex align-items-center border-top-icon pt-2">
     <i class="fas fa-shield-alt me-2 icon-xanh"></i>
     <span>Thanh toán khi giao – Đổi trả miễn phí 14 ngày</span>
-    </div>
-    {{-- 8) Thumb các option của nhóm đầu tiên, ngang scroll --}}
-    <div id="option-thumb-bar"
-        class="d-flex align-items-center mb-3 border-top-icon border-bot-icon pt-2 pb-2"
-        style="cursor:pointer;">
+  </div>
+
+  {{-- 8) Thumb options --}}
+  <div id="option-thumb-bar" class="d-flex align-items-center mb-3 border-top-icon border-bot-icon pt-2 pb-2" style="cursor:pointer;">
     <i class="fa-solid fa-list-ol me-2 icon-xanh"></i>
-
     <div class="thumb-scroll d-flex flex-grow-1 align-items-center">
-        @foreach($optionTypes->first()->values as $val)
+      @foreach($optionTypes->first()->values as $val)
         @if($val->option_img)
-            <img src="{{ asset('storage/'.$val->option_img) }}"
-                alt="{{ $val->value }}"
-                class="me-2 rounded"
-                style="width:40px;height:40px;object-fit:cover;    aspect-ratio: 1 / 1;">
+          <img src="{{ asset('storage/'.$val->option_img) }}"
+               alt="{{ $val->value }}"
+               class="me-2 rounded"
+               style="width:40px;height:40px;object-fit:cover;aspect-ratio:1/1;">
         @endif
-        @endforeach
-
-        <span class="text-muted text-nowrap">
-            Có {{ $optionTypes->first()->values->count() }} lựa chọn
-        </span>
+      @endforeach
+      <span class="text-muted text-nowrap">
+        Có {{ $optionTypes->first()->values->count() }} lựa chọn
+      </span>
     </div>
-
     <i class="fa-solid fa-chevron-right ms-2 text-secondary"></i>
-    </div>
+  </div>
 
-
-
-
-  {{-- 4) Slider “Có thể bạn cũng thích” --}}
+  {{-- 4) “Có thể bạn cũng thích” --}}
   <div class="mt-4">
     <h3 class="h5">Có thể bạn cũng thích</h3>
     <div class="slider-related mb-3">
@@ -354,102 +345,76 @@
     </div>
   @endif
 
-    {{-- 6) Mimi Cam kết --}}
-    <div class="product-guarantees row text-center mb-4 px-2">
+  {{-- 6) MiMi Cam Kết --}}
+  <div class="product-guarantees row text-center mb-4 px-2">
     <h3 class="w-100 mb-3 icon-xanh">MiMi Cam Kết</h3>
-
     @foreach ([
-        ['fa-truck-fast','Giao hàng nhanh chóng'],
-        ['fa-arrow-rotate-left','Đổi trả mọi lý do 7 ngày'],
-        ['fa-shield','Lỗi 1 đổi 1'],
-        ['fa-credit-card','Thanh toán linh hoạt'],
-        ['fa-headset','Hỗ trợ 24/7'],
-        ['fa-gift','Quà tặng theo chủ đề'],
-        ['fa-leaf','Đóng gói chắc chắn'],
-        ['fa-plane','Ship nhanh 1-2 ngày'],
-        ['fa-truck','Freeship đơn từ 199K'],
-        ['fa-tags','Giảm 5% với hội viên'],
-        ['fa-bolt','Giao hỏa tốc Hà Nội 2 giờ'],
+      ['fa-truck-fast','Giao hàng nhanh chóng'],
+      ['fa-arrow-rotate-left','Đổi trả mọi lý do 7 ngày'],
+      ['fa-shield','Lỗi 1 đổi 1'],
+      ['fa-credit-card','Thanh toán linh hoạt'],
+      ['fa-headset','Hỗ trợ 24/7'],
+      ['fa-gift','Quà tặng theo chủ đề'],
+      ['fa-leaf','Đóng gói chắc chắn'],
+      ['fa-plane','Ship nhanh 1-2 ngày'],
+      ['fa-truck','Freeship đơn từ 199K'],
+      ['fa-tags','Giảm 5% với hội viên'],
+      ['fa-bolt','Giao hỏa tốc Hà Nội 2 giờ'],
     ] as $g)
-        <div class="col-6 col-md-4 mb-4 d-flex flex-column align-items-center justify-content-start">
+      <div class="col-6 col-md-4 mb-4 d-flex flex-column align-items-center justify-content-start">
         <i class="fas {{ $g[0] }} fs-4 icon-xanh mb-2"></i>
         <span class="small">{{ $g[1] }}</span>
-        </div>
+      </div>
     @endforeach
-    </div>
-
-
+  </div>
 </div>
 
 <div id="mobile-overlay"></div>
 
-{{-- Slide-up options panel --}}
+{{-- Slide-up cart panel --}}
 <div id="mobile-cart-panel">
   <div id="mobile-panel-header" class="d-flex align-items-start">
     <div class="d-flex align-items-center">
-      <img
-        id="panel-img"
-        src="{{ asset('storage/'.$optionTypes->first()->values->first()->option_img) }}"
-        alt="Chọn thuộc tính">
+      <img id="panel-img" src="{{ asset('storage/'.$optionTypes->first()->values->first()->option_img) }}" alt="Chọn thuộc tính">
       <div class="header-info">
         <div id="panel-total-price" class="fw-bold">{{ number_format($product->base_price,0,',','.') }}₫</div>
-        <div class="d-flex" style="color: #4ab3af; font-style: italic;">
-            <i style="font-size: 0.8rem;" class="fa-solid fa-truck-fast me-2 d-flex justofy-content-center align-items-center"></i>
-            <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
+        <div class="d-flex" style="color:#4ab3af;font-style:italic;">
+          <i class="fa-solid fa-truck-fast me-2"></i>
+          <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
         </div>
         <div id="panel-selected-names" class="small text-muted"></div>
       </div>
     </div>
-    <button id="close-cart-panel"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+    <button id="close-cart-panel"><i class="fa fa-times fa-lg"></i></button>
   </div>
 
-  
-  <form id="add-to-cart-form-mobile"
-        action="{{ route('cart.add', $product->id) }}"
-        method="POST"
-        class="d-flex flex-column h-100"
-  >
+  <form id="add-to-cart-form-mobile" action="{{ route('cart.add', $product->id) }}" method="POST" class="d-flex flex-column h-100">
     @csrf
-
     <div class="panel-content">
       @foreach ($optionTypes as $type)
         @php $isFirstType = $loop->first; @endphp
         <div class="mb-3">
           <label class="form-label mt-3 mb-0 ms-3">{{ $type->name }}</label>
-          <div class="d-flex flex-wrap mb-2 gap-2  ms-2">
+          <div class="d-flex flex-wrap mb-2 gap-2 ms-2">
             @foreach ($type->values as $val)
-              <div
-                class="option-item-show rounded"
-                data-type-id="{{ $type->id }}"
-                data-val-id="{{ $val->id }}"
-                data-extra="{{ $val->extra_price }}"
-                data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}"
-              >
+              <div class="option-item-show rounded"
+                   data-type-id="{{ $type->id }}"
+                   data-val-id="{{ $val->id }}"
+                   data-extra="{{ $val->extra_price }}"
+                   data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
                 @if($isFirstType && $val->option_img)
-                  <img
-                    class="rounded"
-                    src="{{ asset('storage/'.$val->option_img) }}"
-                    alt=""
-                  >
+                  <img src="{{ asset('storage/'.$val->option_img) }}" class="rounded" alt="">
                 @endif
                 <span>{{ $val->value }}</span>
               </div>
             @endforeach
           </div>
-          <input
-            type="hidden"
-            name="options[{{ $type->id }}]"
-            id="option-input-{{ $type->id }}"
-            required
-          >
+          <input type="hidden" name="options[{{ $type->id }}]" id="option-input-{{ $type->id }}" required>
         </div>
       @endforeach
-
-      <div id="option-error" class="text-danger small" style="display:none;">
-        Vui lòng chọn đầy đủ thuộc tính.
-      </div>
+      <div id="option-error" class="text-danger small" style="display:none;">Vui lòng chọn đầy đủ thuộc tính.</div>
     </div>
- 
+
     <div class="panel-footer d-flex justify-content-around align-items-center">
       <button type="submit" class="btn-mimi nut-vang">Thêm vào giỏ</button>
       <button type="button" id="buy-now-btn-mobile" class="btn-mimi nut-xanh">Mua ngay</button>
@@ -457,43 +422,41 @@
   </form>
 </div>
 
-{{-- Zoom overlay – phải nằm ngoài panel để thoát khỏi transform --}}
+{{-- Zoom overlay --}}
 <div id="img-zoom-overlay">
   <img id="img-zoom" src="" alt="Zoom">
   <button id="img-zoom-close">&times;</button>
 </div>
+
 {{-- Sticky bottom bar --}}
 <div id="mobile-cart-bar">
-    <button type="button"
-                class="btn-favorite border-0 p-0 bg-transparent"
-                data-id="{{ $product->id }}">
-            <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
-        </button>
-    <div class="d-flex gap-2">
-        <button id="open-cart-panel" class="btn-mimi nut-vang">Thêm vào giỏ</button>
-        <button id="open-panel-buy" class="btn-mimi nut-xanh">Mua ngay</button>
-    </div>
+  <button class="btn-favorite border-0 p-0 bg-transparent" data-id="{{ $product->id }}">
+    <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
+  </button>
+  <div class="d-flex gap-2">
+    <button id="open-cart-panel" class="btn-mimi nut-vang">Thêm vào giỏ</button>
+    <button id="open-panel-buy" class="btn-mimi nut-xanh">Mua ngay</button>
+  </div>
 </div>
-
 @endsection
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const panel    = document.getElementById('mobile-cart-panel');
-  const overlay  = document.getElementById('mobile-overlay');
-  const openBtn  = document.getElementById('open-cart-panel');
-  const closeBtn = document.getElementById('close-cart-panel');
-  const form     = document.getElementById('add-to-cart-form-mobile');
-  const buyBtn   = document.getElementById('buy-now-btn-mobile');
-  const items    = panel.querySelectorAll('.option-item-show');
-  const panelImg = document.getElementById('panel-img');
+  const panel      = document.getElementById('mobile-cart-panel');
+  const overlay    = document.getElementById('mobile-overlay');
+  const openBtn    = document.getElementById('open-cart-panel');
+  const closeBtn   = document.getElementById('close-cart-panel');
+  const form       = document.getElementById('add-to-cart-form-mobile');
+  const buyBtn     = document.getElementById('buy-now-btn-mobile');
+  const items      = panel.querySelectorAll('.option-item-show');
+  const panelImg   = document.getElementById('panel-img');
   const panelPrice = document.getElementById('panel-total-price');
   const panelNames = document.getElementById('panel-selected-names');
-  const errorEl = document.getElementById('option-error');
-  const basePrice = {{ $product->base_price }};
-  const firstTypeId = '{{ $optionTypes->first()->id }}';
-  const selected = {};
+  const errorEl    = document.getElementById('option-error');
+  const basePrice  = {{ $product->base_price }};
+  const firstTypeId= '{{ $optionTypes->first()->id }}';
+  const selected   = {};
 
   function openPanel() {
     panel.classList.add('open');
@@ -509,130 +472,136 @@ document.addEventListener('DOMContentLoaded', () => {
   openBtn.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
   overlay.addEventListener('click', closePanel);
-  
- const thumbBar = document.getElementById('option-thumb-bar');
-  if (thumbBar) thumbBar.addEventListener('click', openPanel);
+
+  document.getElementById('option-thumb-bar')?.addEventListener('click', openPanel);
+
   function renderPanelHeader() {
-    // Tính tổng giá và cập nhật
-    const sumExtra = Object.values(selected).reduce((a, b) => a + b, 0);
+    const sumExtra = Object.values(selected).reduce((a,b)=>a+b,0);
     panelPrice.textContent = (basePrice + sumExtra).toLocaleString('vi-VN') + '₫';
-    // Cập nhật tên đã chọn
     const names = [];
-    panel.querySelectorAll('.option-item-show.selected').forEach(el => {
+    panel.querySelectorAll('.option-item-show.selected').forEach(el=>{
       names.push(el.textContent.trim());
     });
     panelNames.textContent = names.join(', ');
   }
 
-  items.forEach(el => {
-    el.addEventListener('click', () => {
+  items.forEach(el=>{
+    el.addEventListener('click', ()=>{
       const typeId = el.dataset.typeId;
-      const extra = parseInt(el.dataset.extra) || 0;
-
-      // Chọn nhóm
+      const extra  = parseInt(el.dataset.extra)||0;
       panel.querySelectorAll(`.option-item-show[data-type-id="${typeId}"]`)
-           .forEach(x => x.classList.remove('selected'));
+           .forEach(x=>x.classList.remove('selected'));
       el.classList.add('selected');
-
-      // Nếu nhóm đầu tiên, đổi ảnh
-      if (typeId == firstTypeId && el.dataset.img) {
-        panelImg.src = el.dataset.img;
-      }
-
-      selected[typeId] = extra;
-      document.getElementById(`option-input-${typeId}`).value = el.dataset.valId;
-      errorEl.style.display = 'none';
+      if(typeId==firstTypeId&&el.dataset.img) panelImg.src=el.dataset.img;
+      selected[typeId]=extra;
+      document.getElementById(`option-input-${typeId}`).value=el.dataset.valId;
+      errorEl.style.display='none';
       renderPanelHeader();
     });
   });
 
-  buyBtn.addEventListener('click', () => {
-    const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]'))
-                         .some(i => !i.value);
-    if (missing) {
-      errorEl.style.display = 'block';
-      return;
-    }
-    form.action = "{{ route('checkout.buyNow', $product->id) }}";
+  buyBtn.addEventListener('click', ()=>{
+    const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]')).some(i=>!i.value);
+    if(missing){ errorEl.style.display='block'; return; }
+    form.action="{{ route('checkout.buyNow',$product->id) }}";
     form.submit();
   });
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', e=>{
     e.preventDefault();
-    const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]'))
-                         .some(i => !i.value);
-    if (missing) {
-      errorEl.style.display = 'block';
-      return;
-    }
+    const missing = Array.from(form.querySelectorAll('input[id^="option-input-"]')).some(i=>!i.value);
+    if(missing){ errorEl.style.display='block'; return; }
+
     fetch(form.action, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        'X-Requested-With': 'XMLHttpRequest'
+      method:'POST',
+      headers:{
+        'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,
+        'X-Requested-With':'XMLHttpRequest'
       },
-      body: new FormData(form)
+      body:new FormData(form)
     })
-    .then(r => r.json())
-    .then(json => {
-      if (json.success) {
-        document.getElementById('cart-count').textContent = json.total_items;
-        closePanel();
-      } else {
-        alert(json.message || 'Thêm thất bại');
+    .then(r=>r.json())
+    .then(json=>{
+      if(!json.success) return alert(json.message||'Thêm thất bại');
+
+      // 1) Cập nhật badge
+      const cartCountEl = document.getElementById('cart-count-mobile')
+                         || document.getElementById('cart-count');
+      if(cartCountEl) cartCountEl.textContent=json.total_items;
+
+      // 2) Hiệu ứng bay
+      if(panelImg && cartCountEl){
+        const fly = panelImg.cloneNode(true);
+        fly.classList.add('flying-img');
+        const start = panelImg.getBoundingClientRect();
+        Object.assign(fly.style,{
+          left:start.left+'px', top:start.top+'px',
+          width:start.width+'px', height:start.height+'px'
+        });
+        document.body.appendChild(fly);
+
+        const endRect = cartCountEl.getBoundingClientRect();
+        const targetX = endRect.left + endRect.width/2 - start.width/4;
+        const targetY = endRect.top  + endRect.height/2- start.height/4;
+        requestAnimationFrame(()=>{
+          Object.assign(fly.style,{
+            left:targetX+'px', top:targetY+'px',
+            width:(start.width/2)+'px', height:(start.height/2)+'px',
+            opacity:'0.7'
+          });
+        });
+        fly.addEventListener('transitionend',()=>{
+          fly.remove();
+          closePanel();
+        });
+        return;
       }
+
+      // 3) Fallback
+      closePanel();
     });
   });
-  const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
-    document.querySelectorAll('.btn-favorite').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        fetch(`/favorites/toggle/${id}`, {
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrf }
-        })
-        .then(r => r.json())
-        .then(json => {
-        const icon = btn.querySelector('i.fa-heart');
+  // Favorite toggle
+  const csrf = document.querySelector('meta[name="csrf-token"]').content;
+  document.querySelectorAll('.btn-favorite').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id=btn.dataset.id;
+      fetch(`/favorites/toggle/${id}`,{
+        method:'POST',
+        headers:{'X-CSRF-TOKEN':csrf}
+      })
+      .then(r=>r.json())
+      .then(json=>{
+        const icon=btn.querySelector('i.fa-heart');
         icon.classList.toggle('fas', json.added);
         icon.classList.toggle('far', !json.added);
         icon.classList.toggle('text-danger', json.added);
         icon.classList.toggle('text-muted', !json.added);
-        })
-        .catch(console.error);
+      });
     });
-    });
-    // sau khi đã lấy openBtn
-    const buyPanelBtn = document.getElementById('open-panel-buy');
-    buyPanelBtn.addEventListener('click', openPanel);
+  });
 
-// ==== Zoom ảnh panel-img ====
-const zoomOverlay = document.getElementById('img-zoom-overlay');
-const zoomImg     = document.getElementById('img-zoom');
-const zoomClose   = document.getElementById('img-zoom-close');
+  // Mở panel mua ngay
+  document.getElementById('open-panel-buy').addEventListener('click', openPanel);
 
-function openZoom(){
-  zoomImg.src = panelImg.src;
-  zoomOverlay.style.display = 'flex';      // ★ reset display
-  // delay 1 frame để CSS animation chạy mượt
-  requestAnimationFrame(()=> zoomOverlay.classList.add('open'));
-}
+  // Zoom ảnh
+  const zoomOverlay = document.getElementById('img-zoom-overlay');
+  const zoomImg     = document.getElementById('img-zoom');
+  const zoomClose   = document.getElementById('img-zoom-close');
 
-function closeZoom(){
-  zoomOverlay.classList.remove('open');
-  // Ẩn hẳn sau khi animation kết thúc (0.35s)
-  setTimeout(()=> zoomOverlay.style.display = 'none', 350);
-}
-
-panelImg.addEventListener('click', openZoom);
-zoomClose.addEventListener('click', closeZoom);
-zoomOverlay.addEventListener('click', e=>{
-  if(e.target === zoomOverlay) closeZoom();
-});
-
-
-
+  function openZoom(){
+    zoomImg.src=panelImg.src;
+    zoomOverlay.style.display='flex';
+    requestAnimationFrame(()=>zoomOverlay.classList.add('open'));
+  }
+  function closeZoom(){
+    zoomOverlay.classList.remove('open');
+    setTimeout(()=>zoomOverlay.style.display='none',350);
+  }
+  panelImg.addEventListener('click',openZoom);
+  zoomClose.addEventListener('click',closeZoom);
+  zoomOverlay.addEventListener('click',e=>{ if(e.target===zoomOverlay) closeZoom() });
 });
 </script>
 @endpush

@@ -36,7 +36,7 @@
   @include('partials.mobile-header')
 
   {{-- Nội dung chính --}}
-  <main class="mobi-cont">
+  <main style="padding-top: 60px;" class="mobi-cont">
     @yield('content')
   </main>
 

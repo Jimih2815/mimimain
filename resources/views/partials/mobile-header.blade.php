@@ -3,10 +3,11 @@
 <style>
 /* ==== Mobile Header CSS ==== */
 .mobile-header {
-  position: relative; 
-  z-index: 2;
-  background:#fff;
-  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  position: fixed;
+    z-index: 2;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 .mobile-header .mh-top { height:56px; }
 .mobile-header .mh-offcanvas {
