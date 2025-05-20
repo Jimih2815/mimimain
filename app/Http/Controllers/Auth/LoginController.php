@@ -54,4 +54,9 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect('/');
     }
+    protected function authenticated(Request $request, $user)
+    {
+        // Gọi mergeDBCartIntoSession từ CartController
+        (new CartController())->mergeDBCartIntoSession();
+    }
 }

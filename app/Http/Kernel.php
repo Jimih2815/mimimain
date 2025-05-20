@@ -34,6 +34,8 @@ class Kernel extends HttpKernel
 
             // —✨ MỚI: Tự gán loading="lazy" cho <img> —
             \App\Http\Middleware\AddLazyLoadingToImages::class,
+            \App\Http\Middleware\SyncCartMiddleware::class,
+
         ],
 
         'api' => [

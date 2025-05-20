@@ -9,84 +9,90 @@ use App\Models\OptionValue;
 trait SyncsCart
 {
     /**
-     * Lưu session cart xuống DB (kèm options)
+     * Merge toàn bộ CartItem trong DB của user vào session['cart']
      */
-    protected function syncCartToDB(array $cart): void
+      protected function mergeDBCartIntoSession(): void
     {
         if (! Auth::check()) {
             return;
         }
 
-        $userId     = Auth::id();
-        $productIds = array_map(fn($row) => $row['product_id'], $cart);
+        $newSession = [];   // reset hoàn toàn
 
-        // Xóa những item đã bị remove khỏi session
-        CartItem::where('user_id', $userId)
-                ->whereNotIn('product_id', $productIds)
-                ->delete();
-
-        // Cập nhật hoặc tạo mới
-        foreach ($cart as $row) {
-            CartItem::updateOrCreate(
-                [
-                    'user_id'    => $userId,
-                    'product_id' => $row['product_id'],
-                ],
-                [
-                    'quantity' => $row['quantity'],
-                    'options'  => $row['options'] ?? null,
-                ]
-            );
-        }
-    }
-
-    /**
-     * Merge DB cart vào session khi user đã login
-     * — recalc price = base_price + extra_price(options)
-     * — **LẤY ẢNH OPTION** thay vì ảnh gốc
-     */
-    protected function mergeDBCartIntoSession(): void
-    {
-        if (! Auth::check()) {
-            return;
-        }
-
-        $session = session('cart', []);
         $dbItems = CartItem::with('product')
-                    ->where('user_id', Auth::id())
-                    ->get();
+                   ->where('user_id', Auth::id())
+                   ->get();
 
         foreach ($dbItems as $it) {
             $optIds = $it->options ?? [];
 
-            // 1) Tính extra price
+            // 1) tính price
             $extra = OptionValue::whereIn('id', $optIds)->sum('extra_price');
-
             $price = $it->product->base_price + $extra;
-            $key   = md5($it->product_id . '|' . json_encode($optIds));
 
-            // 2) CHỌN ẢNH: ưu tiên ảnh của option đầu tiên
-            $imagePath = $it->product->img;  // default
+            // 2) sinh key duy nhất
+            $key = md5($it->product_id . '|' . json_encode($optIds));
+
+            // 3) chọn ảnh (option ưu tiên)
+            $image = $it->product->img;
             if (! empty($optIds)) {
-                // Lấy ID của option đầu tiên (bất kể key gì)
-                $firstValId = array_values($optIds)[0];
-                $firstVal   = OptionValue::find($firstValId);
-                if ($firstVal && $firstVal->option_img) {
-                    $imagePath = $firstVal->option_img;
+                $first = OptionValue::find(array_values($optIds)[0]);
+                if ($first && $first->option_img) {
+                    $image = $first->option_img;
                 }
             }
 
-            // 3) Gán vào session
-            $session[$key] = [
+            // 4) gán vào mảng mới
+            $newSession[$key] = [
                 'product_id' => $it->product_id,
                 'quantity'   => $it->quantity,
                 'price'      => $price,
                 'options'    => $optIds,
                 'name'       => $it->product->name,
-                'image'      => $imagePath,   // ← ảnh đã được chọn ở bước 2
+                'image'      => $image,
             ];
         }
 
-        session(['cart' => $session]);
+        // 5) ghi đè session cũ
+        session(['cart' => $newSession]);
+    }
+    /**
+     * Đồng bộ session['cart'] → bảng cart_items (DB):
+     * - Xóa những mục DB không còn trong session
+     * - Tạo / cập nhật những mục session mới
+     */
+    protected function syncCartToDB(array $sessionCart): void
+    {
+        if (! Auth::check()) {
+            return;
+        }
+
+        $userId      = Auth::id();
+        $dbItems     = CartItem::where('user_id', $userId)->get();
+        $sessionKeys = array_keys($sessionCart);
+
+        // Xóa DB items không còn trong session
+        foreach ($dbItems as $db) {
+            $optIds = $db->options ?? [];
+            $key    = md5($db->product_id . '|' . json_encode($optIds));
+
+            if (! in_array($key, $sessionKeys, true)) {
+                $db->delete();
+            }
+        }
+
+        // Cập nhật hoặc tạo mới
+        foreach ($sessionCart as $key => $row) {
+            CartItem::updateOrCreate(
+                [
+                    'user_id'    => $userId,
+                    'product_id' => $row['product_id'],
+                    'options'    => $row['options'] ?? [],
+                ],
+                [
+                    'quantity'   => $row['quantity'],
+                ]
+            );
+        }
     }
 }
