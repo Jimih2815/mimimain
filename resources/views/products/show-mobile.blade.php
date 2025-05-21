@@ -35,7 +35,7 @@
     max-height: 80vh;                   /* Giới hạn 80% màn hình */
     background:#fff;
     box-shadow:0 -2px 8px rgba(0,0,0,.1);
-    transform:translateY(100%);
+    transform:translateY(150%);
     transition:transform .3s ease;
     z-index:100;
     display:flex;                       /* Flex cột */
