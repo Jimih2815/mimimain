@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;
 
 class FavoriteController extends Controller
 {
@@ -14,16 +15,18 @@ class FavoriteController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
+        $agent = new Agent();
+        // Nếu mobile thì delegate sang indexMobile()
+        if ($agent->isMobile()) {
+            return $this->indexMobile($request);
+        }
+
+        // ===== NỘI DUNG CỦA index() HIỆN TẠI =====
         if (Auth::check()) {
-            // Logged-in user: fetch favorites from database
-            $ids = Auth::user()
-                      ->favorites()
-                      ->pluck('product_id')
-                      ->toArray();
+            $ids = Auth::user()->favorites()->pluck('product_id')->toArray();
         } else {
-            // Guest user: fetch favorites from session
             $ids = session('favorites', []);
         }
 
@@ -82,5 +85,19 @@ class FavoriteController extends Controller
             'added' => $added,
             'count' => $count,
         ]);
+    }
+    public function indexMobile(Request $request)
+    {
+        if (Auth::check()) {
+            $favIds = auth()->user()->favorites->pluck('id')->toArray();
+        } else {
+            $favIds = session('favorites', []);
+        }
+
+        $products = Product::with('optionValues.type')
+                           ->whereIn('id', $favIds)
+                           ->get();
+
+        return view('favorites.index-mobile', compact('products','favIds'));
     }
 }

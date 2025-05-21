@@ -88,11 +88,14 @@ Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.sho
 Route::post('/checkout/buy-now/{product}', [CheckoutController::class, 'buyNow'])
      ->name('checkout.buyNow');
 
+
+// trang desktop favorites
 Route::get('/favorites', [FavoriteController::class, 'index'])
      ->name('favorites.index');
-// toggle favorite qua AJAX
+
 Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])
      ->name('favorites.toggle');
+
 
 Route::view('/help', 'help')->name('help');
 Route::middleware('auth')->group(function () {
