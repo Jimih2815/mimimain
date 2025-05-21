@@ -9,17 +9,16 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\OptionValue;
-use Jenssegers\Agent\Agent; 
-
+use Jenssegers\Agent\Agent;
 
 class CheckoutController extends Controller
 {
     /**
      * GET /checkout
      */
-       public function show(Request $request)
+    public function show(Request $request)
     {
-        // 1. Lấy danh sách sản phẩm được chọn từ giỏ
+        // 1. Lấy danh sách sản phẩm được chọn (nếu có) từ giỏ
         $selected = $request->input('selected_ids', []);
         $cart     = session('cart', []);
         $items    = empty($selected)
@@ -39,11 +38,11 @@ class CheckoutController extends Controller
             $grand    += $unitPrice * $item['quantity'];
         }
 
-        // 3. Tính phí ship: miễn phí nếu 0₫ hoặc >=200.000₫
-        $shipping     = ($grand > 0 && $grand < 200_000) ? 20_000 : 0;
-        $amountForQr  = $grand + $shipping;
+        // 3. Tính phí ship: nếu >0 và <=199.000 thì +20k, ngược lại miễn phí
+        $shipping    = ($grand > 0 && $grand <= 199_000) ? 20_000 : 0;
+        $amountForQr = $grand + $shipping;
 
-        // 4. Sinh mã tham chiếu ngân hàng và lưu tạm vào session
+        // 4. Sinh mã tham chiếu ngân hàng và lưu tạm
         $bankRef = $this->uniqueBankRef();
         session(['pending_bank_ref' => $bankRef]);
 
@@ -62,21 +61,22 @@ class CheckoutController extends Controller
                ? 'checkout.show-mobile'
                : 'checkout.show';
 
-        // Trả về dữ liệu cho Blade
         return view($view, compact('items', 'grand', 'shipping', 'qrUrl', 'bankRef'));
     }
 
-    
-
-
     /**
      * POST /checkout/buy-now/{product}
+     * → Xoá toàn bộ cart cũ, chỉ push mỗi sản phẩm này
      */
     public function buyNow(Request $request, Product $product)
     {
+        // Đánh dấu để middleware skip merge DB cart ở lần redirect kế tiếp
+        $request->session()->put('skip_cart_sync', true);
+
         $options = $request->input('options', []);
         session()->forget('cart');
 
+        // Tính tổng extra_price
         $sumExtra = 0;
         foreach ($options as $typeId => $valId) {
             if ($opt = OptionValue::find($valId)) {
@@ -84,6 +84,7 @@ class CheckoutController extends Controller
             }
         }
 
+        // Chọn ảnh hiển thị
         $imgPath = $product->img;
         if ($first = reset($options)) {
             if ($opt = OptionValue::find($first) and $opt->option_img) {
@@ -91,6 +92,7 @@ class CheckoutController extends Controller
             }
         }
 
+        // Push duy nhất món này vào session cart
         session()->push('cart', [
             'product_id'  => $product->id,
             'name'        => $product->name,
@@ -164,7 +166,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * POST /checkout/bank-ref
+     * POST /checkout/bank-ref (AJAX)
      */
     public function ajaxBankRef(Request $r)
     {

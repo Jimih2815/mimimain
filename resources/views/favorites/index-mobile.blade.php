@@ -269,9 +269,12 @@ body.no-scroll { overflow: hidden; }
            >
              Thêm vào giỏ
            </button>
-        <button type="button"
-                class="btn-mimi nut-do"
-                onclick="/* nếu có buyNow tương tự */">
+        <button 
+            type="button"
+            class="btn-mimi nut-do btn-buy-now mt-2"
+            data-id="{{ $p->id }}"
+            data-buy-url="{{ route('checkout.buyNow', $p->id) }}"
+        >
         Mua ngay
         </button>
     </div>
@@ -444,6 +447,47 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+    // 4) Mua ngay – đẩy thẳng lên checkout
+  document.querySelectorAll('.btn-buy-now').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pid     = btn.dataset.id;
+      const panel   = document.getElementById('detail-' + pid);
+      const inputs  = Array.from(panel.querySelectorAll('input[type="hidden"][id^="opt-"]'));
+      // 4.1) Validate đã chọn đủ
+      const missing = inputs.some(i => !i.value);
+      if (missing) {
+        return alert('Vui lòng chọn đầy đủ các phân loại');
+      }
+      // 4.2) Tính tổng giá cơ bản + extras
+      let base    = parseInt({{ $products->first()->base_price }}, 10);
+      let sumExtra = inputs.reduce((s,i) => s + parseInt(i.value) * 0 + /* mình lấy extra*/ 0, 0);
+      // THỰC TẾ: ta đã lưu extra ở controller, frontend không cần tính lại để checkout xử lý
+      // 4.3) Tạo form động gửi POST tới buyNow
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = btn.dataset.buyUrl;
+      form.style.display = 'none';
+      // CSRF
+      const token = document.querySelector('meta[name="csrf-token"]').content;
+      const inpCsrf = document.createElement('input');
+      inpCsrf.name  = '_token';
+      inpCsrf.value = token;
+      form.appendChild(inpCsrf);
+      // Options
+      inputs.forEach(i => {
+        // id format: opt-<pid>-<typeId>
+        const typeId = i.id.split('-').pop();
+        const inp    = document.createElement('input');
+        inp.type     = 'hidden';
+        inp.name     = `options[${typeId}]`;
+        inp.value    = i.value;
+        form.appendChild(inp);
+      });
+      document.body.appendChild(form);
+      form.submit();
+    });
+  });
+
 });
 </script>
 @endpush
