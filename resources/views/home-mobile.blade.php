@@ -90,7 +90,7 @@
     <div class="swiper-wrapper">
       @foreach($sectionImages as $img)
         <div class="swiper-slide section-img">
-          <a href="{{ $img->collection
+          <a class ="img-cont" href="{{ $img->collection
                         ? route('collections.show', $img->collection->slug)
                         : '#' }}">
             <img src="{{ asset('storage/'.$img->image) }}"
@@ -221,6 +221,16 @@
   .mobile-banner-img {
     height: 100% !important;
     object-fit: cover ;
+  }
+  .img-cont {
+    width: 100%;
+    display: flex;
+    aspect-ratio: 5 / 3;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
   }
 </style>
 @endpush
