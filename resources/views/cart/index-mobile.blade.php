@@ -7,6 +7,9 @@
 
 @section('content')
 <style>
+  .trang-gio-hang {
+    padding: 1rem;
+}
 .trang-gio-hang .anh-san-pham {
     width: 150px;
     aspect-ratio: 1 / 1;
@@ -16,6 +19,26 @@
 .trang-gio-hang .xoa-border {
     border: 0px solid black !important;
     margin-bottom: 0;
+}
+.item-qty-input {
+  padding: 0;
+  text-align: center;
+}
+    .order-summary {
+      position: sticky;
+      bottom: 0;
+      z-index: 1;
+      background: #fff;          
+      padding-top: 0.5rem;       
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    }
+    .card-body {
+    flex: 1 1 auto;
+    color: var(--bs-card-color);
+    padding: 0.5rem;
+}
+hr {
+  margin: 0.2rem 0 ;
 }
 </style>
 <div class="container trang-gio-hang">
@@ -48,10 +71,10 @@
             </a>
 
               <div class="d-flex tang-giam-va-tim">
-                <div class="tang-giam-cont">
+                <div class="tang-giam-cont ">
                   <form action="{{ route('cart.update', $key) }}"
                         method="POST"
-                        class="d-inline-block xoa-border">
+                        class="d-flex xoa-border">
                     @csrf
                     <button
                       type="button"
@@ -66,11 +89,17 @@
                       @endif
                     </button>
 
-                    <span
-                      class="item-qty btn btn-outline-secondary btn-sm mx-1 disabled xoa-border"
-                    >
-                      {{ $item['quantity'] }}
-                    </span>
+                    <input
+                      type="number"
+                      name="quantity"
+                      value="{{ $item['quantity'] }}"
+                      min="1"
+                      class="item-qty-input btn btn-outline-secondary btn-sm mx-1 xoa-border text-center"
+                      style="width: 100%;"
+                      onchange="this.form.submit()"
+                      onkeydown="if(event.key === 'Enter'){ event.preventDefault(); this.form.submit(); }"
+                    />
+
 
                     <button
                       type="button"
@@ -134,7 +163,7 @@
 
       {{-- ===== Cột phải: Summary + form thanh toán ===== --}}
       <div class="col-md-4 order-summary">
-        <h3 class="mb-4">Thanh Toán</h3>
+        <h3 class="mb-1">Thanh Toán</h3>
         <form id="checkout-form"
               action="{{ route('checkout.show') }}"
               method="GET">
@@ -143,13 +172,13 @@
           <div class="card">
             <div class="card-body">
             {{-- Thành Tiền --}}
-            <p class="d-flex justify-content-between">
+            <p class="d-flex justify-content-between mb-1">
               <span>Thành Tiền</span>
               <span id="summary-subtotal">0₫</span>
             </p>
 
             {{-- Phí Ship --}}
-            <p class="d-flex justify-content-between">
+            <p class="d-flex justify-content-between mb-1">
               <span>Phí Ship</span>
               <span id="summary-shipping">0₫</span>
             </p>
@@ -163,7 +192,7 @@
             <hr>
 
             {{-- Tổng Cộng --}}
-            <p class="d-flex justify-content-between fw-bold">
+            <p class="d-flex justify-content-between mb-1 fw-bold">
               <span>Tổng Cộng</span>
               <span id="summary-grandtotal">0₫</span>
             </p>
@@ -242,89 +271,113 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   // === 2) AJAX update quantity & remove ===
-  const token = document.querySelector('meta[name="csrf-token"]').content;
-  const updateUrl = "{{ url('/cart/update') }}"; 
+  const token     = document.querySelector('meta[name="csrf-token"]').content;
+  const updateUrl = "{{ url('/cart/update') }}";
 
-  document.querySelectorAll('.qty-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const rowKey = btn.dataset.key;
-      const action = btn.dataset.action;
+  // chung function gọi AJAX
+  async function updateCart({ rowKey, action = null, quantity = null }) {
+    try {
+      const payload = action
+        ? { action }
+        : { quantity };
+      const res = await fetch(`${updateUrl}/${rowKey}`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN':     token,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type':     'application/json',
+          'Accept':           'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('Network error');
+      const data = await res.json();
+      if (data.success) {
+        // tìm lại dòng tương ứng
+        const btnDec = document.querySelector(`.qty-btn[data-key="${rowKey}"].minus`);
+        const row    = btnDec.closest('.d-flex.align-items-start');
+        const inputEl = row.querySelector('.item-qty-input');
 
-      try {
-        const res = await fetch(`${updateUrl}/${rowKey}`, {
-          method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN':     token,
-            'X-Requested-With': 'XMLHttpRequest',
-            'Content-Type':     'application/json',
-            'Accept':           'application/json',
-          },
-          body: JSON.stringify({ action })
-        });
+        // cập nhật input và dataset
+        inputEl.value = data.quantity;
+        const cb = row.querySelector('input.rowCheck');
+        if (cb) cb.dataset.qty = data.quantity;
 
-        if (!res.ok) throw new Error('Network error');
-        const data = await res.json();
-        if (data.success) {
-          const row   = btn.closest('.d-flex.align-items-start');
-          const qtyEl = row.querySelector('.item-qty');
-          qtyEl.textContent = data.quantity;
-
-          // Cập nhật dataset.qty để summary đúng
-          const cb = row.querySelector('input.rowCheck');
-          if (cb) cb.dataset.qty = data.quantity;
-
-          // **MỚI**: Cập nhật icon cho nút "minus" / "trash"
-          const decBtn = row.querySelector('.qty-btn.minus');
-          if (data.quantity > 1) {
-            decBtn.innerHTML = '&minus;';                     // hiển dấu trừ
-          } else {
-            decBtn.innerHTML = '<i class="fa fa-trash"></i>'; // hiển icon thùng rác
-          }
-
-          // Nếu quantity = 0 thì remove mục
-          if (data.quantity === 0) {
-            row.remove();
-          }
-
-          // Cập nhật lại summary
-          recalcSummary();
+        // cập nhật biểu tượng nút giảm
+        if (data.quantity > 1) {
+          btnDec.innerHTML = '&minus;';
+        } else {
+          btnDec.innerHTML = '<i class="fa fa-trash"></i>';
         }
-      } catch (err) {
-        console.error('Lỗi cập nhật giỏ hàng:', err);
+
+        // nếu = 0 thì remove luôn
+        if (data.quantity === 0) {
+          row.remove();
+        }
+
+        // và summary
+        recalcSummary();
+      }
+    } catch (err) {
+      console.error('Lỗi cập nhật giỏ hàng:', err);
+    }
+  }
+
+  // 2.1) xử lý inc/dec qua nút bấm
+  document.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const rowKey = btn.dataset.key;
+      const action = btn.dataset.action; // "inc" hoặc "dec"
+      updateCart({ rowKey, action });
+    });
+  });
+
+  // 2.2) xử lý khi blur hoặc Enter trên ô input
+  document.querySelectorAll('.item-qty-input').forEach(input => {
+    // khi mất focus, gửi giá trị mới
+    input.addEventListener('blur', () => {
+      const raw = parseInt(input.value);
+      const newQty = isNaN(raw) || raw < 1 ? 1 : raw;
+      const rowKey = input.closest('form').querySelector('.qty-btn').dataset.key;
+      updateCart({ rowKey, quantity: newQty });
+    });
+    // khi bấm Enter, prevent default và trigger blur luôn
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.blur();
       }
     });
   });
 
-
-
-  const csrf = document.querySelector('meta[name="csrf-token"]').content;
-
-  // === Xử lý nút favorite trên trang Cart ===
+  // === 3) Xử lý nút favorite như cũ ===
   document.querySelectorAll('.btn-favorite').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
       fetch(`/favorites/toggle/${id}`, {
         method: 'POST',
         headers: {
-          'X-CSRF-TOKEN': csrf,
-          'Accept': 'application/json',
+          'X-CSRF-TOKEN': token,
+          'Accept':       'application/json',
         },
       })
       .then(res => res.json())
       .then(json => {
         const icon = btn.querySelector('i.fa-heart');
         if (json.added) {
-          icon.classList.replace('far', 'fas');
+          icon.classList.replace('far','fas');
         } else {
-          icon.classList.replace('fas', 'far');
+          icon.classList.replace('fas','far');
         }
       })
       .catch(console.error);
     });
   });
+
 });
 </script>
 @endpush
+
 
 
 

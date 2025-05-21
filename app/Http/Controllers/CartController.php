@@ -179,21 +179,34 @@ public function update(Request $request, $key)
         return back()->with('error', 'Mục không tồn tại trong giỏ hàng.');
     }
 
-    $action = $request->input('action');
-    if ($action === 'inc') {
-        $cart[$key]['quantity']++;
-    } elseif ($action === 'dec') {
-        if ($cart[$key]['quantity'] > 1) {
-            $cart[$key]['quantity']--;
+    // 1) Nếu frontend gửi quantity thẳng
+    if ($request->filled('quantity')) {
+        $qty = intval($request->input('quantity'));
+        if ($qty > 0) {
+            $cart[$key]['quantity'] = $qty;
         } else {
             unset($cart[$key]);
         }
+
+    // 2) Ngược lại, xử lý inc/dec như trước
+    } else {
+        $action = $request->input('action');
+        if ($action === 'inc') {
+            $cart[$key]['quantity']++;
+        } elseif ($action === 'dec') {
+            if ($cart[$key]['quantity'] > 1) {
+                $cart[$key]['quantity']--;
+            } else {
+                unset($cart[$key]);
+            }
+        }
     }
 
+    // Lưu session + DB
     session(['cart' => $cart]);
     $this->syncCartToDB($cart);
 
-    // **Nếu AJAX, trả về JSON chỉ gồm success + quantity**
+    // Trả về JSON cho Ajax
     if ($request->ajax()) {
         return response()->json([
             'success'  => true,
@@ -203,6 +216,7 @@ public function update(Request $request, $key)
 
     return back()->with('success', 'Cập nhật giỏ hàng thành công.');
 }
+
    public function menuMobile(Request $request)
 {
     // Nếu user đã login, merge DB→session để bắt kịp mọi thay đổi (add, update, delete)

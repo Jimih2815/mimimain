@@ -74,7 +74,7 @@ a {
 }
 </style>
 
-<div id="siteFooter" class="mobile-footer d-block d-lg-none">
+<div id="siteFooter" class="mobile-footer d-block d-lg-none mt-5">
 
   {{-- Giới thiệu --}}
   <div class="mf-section">
