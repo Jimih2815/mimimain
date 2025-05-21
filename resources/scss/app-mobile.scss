@@ -12,7 +12,14 @@ html, body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.img-tu-co-vuong {
 
+    display: flex;
+    aspect-ratio: 1 / 1;
+
+    object-fit: cover;
+    overflow: hidden;
+}
 .btn-mimi {
     border: 1px solid;
     border-radius: 50px;

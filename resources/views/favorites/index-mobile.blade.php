@@ -137,8 +137,25 @@ body.no-scroll { overflow: hidden; }
   background: #fff;
   display: flex;
   gap: .5rem;
+  justify-content: space-around;
+  align-items: center;
 }
-
+.bg-primary {
+    --bs-bg-opacity: 1;
+    background-color: #4ab3af !important;
+}
+.fa-times {
+    font-size: 1.5rem;
+    -webkit-text-stroke: 2px #b83232;
+    color: white;
+}
+  .flying-img {
+    position: fixed;
+    border-radius: 50%;
+    z-index: 9999;
+    transition: all 0.8s ease;
+    pointer-events: none;
+  }
 </style>
 <div class="trang-yeu-thich-mobile ms-1 me-1 pt-3 pb-3">
     <h1 class="pb-3 ps-1">Sản phẩm yêu thích</h1>
@@ -181,16 +198,20 @@ body.no-scroll { overflow: hidden; }
     <div id="detail-{{ $p->id }}" class="detail-panel">
     {{-- Header giống #mobile-panel-header --}}
     <div class="panel-header">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-start">
         @if($p->img)
             <img src="{{ asset('storage/'.$p->img) }}" alt="{{ $p->name }}">
         @endif
         <div class="header-info">
             <h5 class="m-0">{{ $p->name }}</h5>
+            <div class="d-flex" style="color:#4ab3af;font-style:italic;">
+                <i class="fa-solid fa-truck-fast me-2"></i>
+                <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
+            </div>
             <div class="fw-bold">{{ number_format($p->base_price,0,',','.') }}₫</div>
         </div>
         </div>
-        <button class="panel-close" data-id="{{ $p->id }}">&times;</button>
+        <button class="panel-close" data-id="{{ $p->id }}"><i class="fa fa-times fa-lg"></i></button>
     </div>
 
     {{-- Content cuộn được --}}
@@ -216,12 +237,12 @@ body.no-scroll { overflow: hidden; }
                         data-val="{{ $val->id }}"
                         data-extra="{{ $val->extra_price }}"
                         data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}"
-                        style="padding:.3rem .6rem; border:1px solid #ccc; border-radius:.25rem; margin:.2rem; cursor:pointer; display:flex; align-items:center;">
+                        style="padding:0.2rem .3rem; border:1px solid #4ab3af; border-radius: 5px; margin:.2rem; cursor:pointer; display:flex; align-items:center;">
                     
                     @if($isFirst && $val->option_img)
                         <img src="{{ asset('storage/'.$val->option_img) }}"
                             alt="{{ $val->value }}"
-                            style="width:40px; height:40px; object-fit:cover; margin-right:.3rem;">
+                            style="width:40px; height:40px; object-fit:cover; margin-right:.3rem; border-radius: 5px;">
                     @endif
                     
                     <span>{{ $val->value }}</span>
@@ -241,13 +262,15 @@ body.no-scroll { overflow: hidden; }
 
     {{-- Footer với nút Thêm/Mua --}}
     <div class="panel-footer">
+         <button
+             class="btn-mimi nut-xanh btn-add-fav-cart mt-2"
+             data-id="{{ $p->id }}"
+             data-url="{{ route('cart.add', $p->id) }}"
+           >
+             Thêm vào giỏ
+           </button>
         <button type="button"
-                class="btn btn-primary flex-fill"
-                onclick="document.getElementById('detail-form-{{ $p->id }}').submit()">
-        Thêm vào giỏ
-        </button>
-        <button type="button"
-                class="btn btn-success flex-fill"
+                class="btn-mimi nut-do"
                 onclick="/* nếu có buyNow tương tự */">
         Mua ngay
         </button>
@@ -261,95 +284,171 @@ body.no-scroll { overflow: hidden; }
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const csrf    = document.querySelector('meta[name="csrf-token"]').content;
   const overlay = document.getElementById('detail-overlay');
+  const panels  = document.querySelectorAll('.detail-panel');
+  const openBtns  = document.querySelectorAll('.btn-detail');
+  const closeBtns = document.querySelectorAll('.panel-close');
 
-  // Mở panel
-  function openPanel(id) {
+  // 1) Hàm mở/đóng panel chi tiết
+  function openDetail(id) {
     const panel = document.getElementById('detail-' + id);
     panel.classList.add('open');
     overlay.classList.add('open');
     document.body.classList.add('no-scroll');
   }
-  // Đóng panel
-  function closePanel(id) {
-    const panel = document.getElementById('detail-' + id);
-    panel.classList.remove('open');
+  function closeAllDetails() {
+    panels.forEach(p => p.classList.remove('open'));
     overlay.classList.remove('open');
     document.body.classList.remove('no-scroll');
   }
+  openBtns.forEach(b => b.addEventListener('click', () => openDetail(b.dataset.id)));
+  closeBtns.forEach(b => b.addEventListener('click', closeAllDetails));
+  overlay.addEventListener('click', closeAllDetails);
 
-  // Gán sự kiện cho nút Chi Tiết
-  document.querySelectorAll('.btn-detail').forEach(btn => {
-    btn.addEventListener('click', () => openPanel(btn.dataset.id));
-  });
-  // Gán cho nút đóng
-  document.querySelectorAll('.panel-close').forEach(btn => {
-    btn.addEventListener('click', () => closePanel(btn.dataset.id));
-  });
-  // Click overlay đóng hết
-  overlay.addEventListener('click', () => {
-    document.querySelectorAll('.detail-panel.open')
-            .forEach(panel => panel.classList.remove('open'));
-    overlay.classList.remove('open');
-    document.body.classList.remove('no-scroll');
-  });
-
-  // Logic chọn option, cập nhật ảnh và giá
-  @foreach($products as $p)
-  (function(){
-    const pid         = '{{ $p->id }}';
-    const panel       = document.getElementById('detail-' + pid);
-    const form        = document.getElementById('detail-form-' + pid);
+  // 2) Với mỗi detail-panel, khởi tạo chọn tuỳ chọn, AJAX form và nút “Thêm vào giỏ”
+  panels.forEach(panel => {
+    const pid         = panel.id.replace('detail-','');
+    const form        = panel.querySelector('form');
     const opts        = panel.querySelectorAll('.option-item');
     const headerImg   = panel.querySelector('.panel-header img');
     const headerPrice = panel.querySelector('.panel-header .header-info .fw-bold');
-    const basePrice   = {{ $p->base_price }};
-    const selectedExtras = {}; // lưu extra_price từng loại
+    const basePrice   = {{ $products->first()->base_price }}; // Thay bằng giá gốc nếu cần
+    const selectedExtras = {};
 
+    // 2.1) Chọn tuỳ chọn
     opts.forEach(el => {
       el.addEventListener('click', () => {
         const type  = el.dataset.type;
         const val   = el.dataset.val;
         const extra = parseInt(el.dataset.extra) || 0;
 
-        // 1) Highlight lựa chọn
+        // highlight
         panel.querySelectorAll(`.option-item[data-type="${type}"]`)
              .forEach(x => x.classList.remove('bg-primary','text-white'));
         el.classList.add('bg-primary','text-white');
 
-        // 2) Cập nhật hidden input
+        // cập nhật hidden input
         panel.querySelector(`#opt-${pid}-${type}`).value = val;
 
-        // 3) Nếu là nhóm đầu tiên, đổi ảnh header
-        const groupEl = el.closest('.option-group');
-        if (groupEl.dataset.first === '1' && el.dataset.img && headerImg) {
+        // đổi ảnh nếu là nhóm đầu
+        if (el.closest('.option-group').dataset.first === '1' && el.dataset.img) {
           headerImg.src = el.dataset.img;
         }
 
-        // 4) Cập nhật extra_price đã chọn
+        // cập nhật giá
         selectedExtras[type] = extra;
-
-        // 5) Tính tổng và cập nhật giá trong header
-        const sumExtra = Object.values(selectedExtras).reduce((a, b) => a + b, 0);
+        const sumExtra = Object.values(selectedExtras).reduce((a,b)=>a+b,0);
         headerPrice.textContent = (basePrice + sumExtra).toLocaleString('vi-VN') + '₫';
       });
     });
 
-    // Validate trước khi submit
-    form.addEventListener('submit', e => {
+    // 2.2) Hàm AJAX chung
+    function ajaxAdd() {
+      // validate
       const missing = Array.from(panel.querySelectorAll('input[type="hidden"]'))
                            .some(i => !i.value);
       if (missing) {
-        e.preventDefault();
-        alert('Vui lòng chọn đủ tuỳ chọn trước khi thêm vào giỏ!');
+        return alert('Vui lòng chọn đủ tuỳ chọn trước khi thêm vào giỏ!');
       }
-    });
-  })();
-  @endforeach
 
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: new FormData(form)
+      })
+      .then(r => r.json())
+      .then(json => {
+        if (!json.success) {
+          return alert(json.message || 'Thêm thất bại 😢');
+        }
+
+        // cập nhật badge
+        const cartCountEl = document.getElementById('cart-count-mobile')
+                           || document.getElementById('cart-count');
+        if (cartCountEl) {
+          cartCountEl.textContent = json.total_items;
+          if (json.total_items > 0) cartCountEl.style.display = 'inline-block';
+        }
+        // cập nhật menu mobile nếu có
+        const cartMenu = document.getElementById('cartMenuMobile');
+        if (cartMenu) {
+          fetch("{{ route('cart.menu-mobile') }}")
+            .then(r => r.text())
+            .then(html => cartMenu.innerHTML = html);
+        }
+
+        // hiệu ứng ảnh bay
+        const fly = headerImg.cloneNode(true);
+        fly.classList.add('flying-img');
+        const start = headerImg.getBoundingClientRect();
+        Object.assign(fly.style, {
+          left:  start.left  + 'px',
+          top:   start.top   + 'px',
+          width: start.width + 'px',
+          height:start.height+ 'px'
+        });
+        document.body.appendChild(fly);
+
+        const targetEl = (cartCountEl && cartCountEl.offsetWidth>0)
+                          ? cartCountEl
+                          : document.getElementById('cartDropdownMobile');
+        const end = targetEl.getBoundingClientRect();
+        requestAnimationFrame(() => {
+          Object.assign(fly.style, {
+            left:   (end.left + end.width/2 - start.width/4) + 'px',
+            top:    (end.top  + end.height/2 - start.height/4) + 'px',
+            width:  (start.width/2) + 'px',
+            height: (start.height/2)+ 'px',
+            opacity:'0.7'
+          });
+        });
+        fly.addEventListener('transitionend', () => fly.remove());
+
+        // đóng panel
+        closeAllDetails();
+      })
+      .catch(() => alert('Không thể kết nối máy chủ 😵'));
+    }
+
+    // 2.3) Bắt sự kiện form submit (nếu vẫn còn)
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      ajaxAdd();
+    });
+
+    // 2.4) Bắt sự kiện nút “Thêm vào giỏ” mới
+    const addBtn = panel.querySelector('.btn-add-fav-cart');
+    if (addBtn) {
+      addBtn.addEventListener('click', ajaxAdd);
+    }
+  });
+
+  // 3) Toggle yêu thích
+  document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', () => {
+      fetch(`/favorites/toggle/${btn.dataset.id}`, {
+        method:'POST',
+        headers:{ 'X-CSRF-TOKEN': csrf }
+      })
+      .then(r => r.json())
+      .then(json => {
+        const ic = btn.querySelector('i.fa-heart');
+        ic.classList.toggle('fas', json.added);
+        ic.classList.toggle('far', !json.added);
+        ic.classList.toggle('text-danger', json.added);
+        ic.classList.toggle('text-muted', !json.added);
+      });
+    });
+  });
 });
 </script>
 @endpush
+
+
 
 
 

@@ -113,7 +113,6 @@ background-color: #4ab3af;
     font-size: 1.5rem;
     -webkit-text-stroke: 2px #b83232;
     color: white;
-    padding-top: 1rem;
 }
 
 #checkout-toggle {
@@ -128,7 +127,10 @@ background-color: #4ab3af;
   z-index: 1;
 }
 
-
+.img-cont {
+  width: 150px;
+  height: 150px;
+}
 </style>
 <div class="cart-wrapper">
   
@@ -155,7 +157,7 @@ background-color: #4ab3af;
 
             {{-- Ảnh + nút tăng/giảm --}}
             <div class="text-center">
-            <a href="{{ route('products.show', $item['slug']) }}">
+            <a class="img-tu-co-vuong img-cont" href="{{ route('products.show', $item['slug']) }}">
               <img src="{{ asset('storage/'.$item['image']) }}"
                   class="img-fluid rounded anh-san-pham"
                   alt="{{ $item['name'] }}">
@@ -254,7 +256,7 @@ background-color: #4ab3af;
   <div id="checkout-overlay" class="checkout-overlay"></div>
   {{-- Slide-up panel chứa toàn bộ summary --}}
   <div id="checkout-panel" class="checkout-panel">
-    <button id="checkout-close" class="checkout-close"><i class="fa fa-times fa-lg"></i></button>
+    <button id="checkout-close" class="checkout-close"><i class="fa fa-times fa-lg pt-3"></i></button>
     <h3 class="mb-3">Thanh Toán</h3>
     <form id="checkout-form" action="{{ route('checkout.show') }}" method="GET">
       @csrf
