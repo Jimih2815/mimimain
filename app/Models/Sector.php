@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sector extends Model
 {
-    protected $fillable = ['name', 'image', 'collection_id', 'sort_order'];
+    protected $fillable = [
+        'name',
+        'slug',
+        'image',
+        'sort_order',
+    ];
 
-    public function collection()
+    /**
+     * Các collection được gắn vào sector này
+     */
+    public function collections()
     {
-        return $this->belongsTo(Collection::class);
+        return $this->belongsToMany(\App\Models\Collection::class, 'sector_collection')
+                    ->withPivot(['custom_name','custom_image','sort_order'])
+                    ->withTimestamps();
     }
 }

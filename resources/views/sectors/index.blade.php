@@ -6,10 +6,13 @@
   <div class="row g-4">
     @foreach($sectors as $s)
       <div class="col-6 col-md-4 col-lg-3 text-center">
-        <a href="{{ route('collections.show',$s->collection->slug) }}" class="text-decoration-none text-dark">
+        <!-- Link về trang /sector/{slug} -->
+        <a href="{{ route('sector.show', $s->slug) }}"
+           class="text-decoration-none text-dark">
           <div class="card border-0 shadow-sm">
             <img src="{{ asset('storage/'.$s->image) }}"
-                 class="card-img-top" alt="{{ $s->name }}">
+                 class="card-img-top"
+                 alt="{{ $s->name }}">
             <div class="card-body p-2">
               <h5 class="card-title mb-0">{{ $s->name }}</h5>
             </div>

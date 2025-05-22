@@ -23,7 +23,18 @@
       <td>{{ $s->id }}</td>
       <td><img src="{{ asset('storage/'.$s->image) }}" width="60"></td>
       <td>{{ $s->name }}</td>
-      <td>{{ $s->collection->name }}</td>
+      <td>
+  @if($s->collections->isEmpty())
+    <em>Chưa có collection</em>
+  @else
+    @foreach($s->collections as $col)
+      <span class="badge bg-secondary">
+        {{ $col->pivot->custom_name ?? $col->name }}
+      </span>
+    @endforeach
+  @endif
+</td>
+
       <td>{{ $s->sort_order }}</td>
       <td>
         <a href="{{ route('admin.sectors.edit',$s) }}" class="btn btn-sm btn-warning">Sửa</a>
