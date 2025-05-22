@@ -261,6 +261,23 @@
     -webkit-text-stroke: 2px #ffba26;
     color: white
 }
+/* ==== Overlay cho aside ==== */
+.mh-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;          /* Thấp hơn aside nhưng cao hơn nội dung */
+  display: none;
+}
+.mh-overlay.show {
+  display: block;
+}
+/* Đẩy aside lên trên overlay */
+.mh-offcanvas {
+  z-index: 1001;
+}
+
 </style>
 
 <div class="mobile-header d-block d-lg-none">
@@ -303,6 +320,8 @@
   </div>
 
   {{-- Offcanvas --}}
+  {{-- Lớp phủ tối mờ khi mở menu --}}
+  <div id="mh-overlay" class="mh-overlay"></div>
   <aside id="mh-offcanvas" class="mh-offcanvas">
     <div class="mh-oc-header d-flex align-items-center justify-content-end">
       <button id="mh-btn-close" class="d-flex align-items-center px-3 justify-content-center border-0"><i class="fa fa-times fa-lg"></i></button>
@@ -440,41 +459,75 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const sections      = @json($sections);
-  const offcanvas     = document.getElementById('mh-offcanvas');
-  const lvl1          = document.getElementById('mh-level1');
-  const lvl2          = document.getElementById('mh-level2');
-  const groupsEl      = document.getElementById('mh-groups');
-  const secTitle      = document.getElementById('mh-sec-title');
-  const searchToggle  = document.getElementById('mh-search-toggle');
-  const searchPanel   = document.getElementById('mh-search-panel');
-  const searchClose   = document.getElementById('mh-search-close');
+  const sections     = @json($sections);
+  const offcanvas    = document.getElementById('mh-offcanvas');
+  const overlay      = document.getElementById('mh-overlay');
+  const lvl1         = document.getElementById('mh-level1');
+  const lvl2         = document.getElementById('mh-level2');
+  const groupsEl     = document.getElementById('mh-groups');
+  const secTitle     = document.getElementById('mh-sec-title');
+  const btnToggle    = document.getElementById('mh-btn-toggle');
+  const btnClose     = document.getElementById('mh-btn-close');
+  const btnBack      = document.getElementById('mh-btn-back');
+  const searchToggle = document.getElementById('mh-search-toggle');
+  const searchPanel  = document.getElementById('mh-search-panel');
+  const searchClose  = document.getElementById('mh-search-close');
+  const cartToggle   = document.getElementById('cartDropdownMobile');
+  const cartMenu     = document.getElementById('cartMenuMobile');
 
-  // Mở search panel
-  searchToggle.onclick = () => {
-    // đóng menu đang mở nếu có
-    offcanvas.classList.remove('open', 'show-lvl2');
-    // mở panel tìm kiếm
-    searchPanel.classList.add('open');
-  };
-  // Đóng search panel
-  searchClose.onclick = () => {
-    searchPanel.classList.remove('open');
-  };
-
-  // Mở menu
-  document.getElementById('mh-btn-toggle').onclick = () => {
+  // --- Hàm điều khiển menu ---
+  function openMenu() {
     offcanvas.classList.add('open');
     offcanvas.classList.remove('show-lvl2');
-  };
-  // Đóng menu
-  document.getElementById('mh-btn-close').onclick = () => {
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
     offcanvas.classList.remove('open', 'show-lvl2');
-  };
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
 
-  // Chọn Section → show Groups (Level 1 → Level 2)
-  lvl1.querySelectorAll('li').forEach(li => {
-    li.onclick = () => {
+  // --- Hàm điều khiển search panel ---
+  function openSearch() {
+    closeMenu();
+    searchPanel.classList.add('open');
+  }
+  function closeSearch() {
+    searchPanel.classList.remove('open');
+  }
+
+  // --- Sự kiện mở/đóng menu & overlay ---
+  btnToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    openMenu();
+  });
+  btnClose.addEventListener('click', e => {
+    e.stopPropagation();
+    closeMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // --- Sự kiện mở/đóng search panel ---
+  searchToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    openSearch();
+  });
+  searchClose.addEventListener('click', closeSearch);
+
+  // --- Click ngoài để đóng menu & search ---
+  document.addEventListener('click', e => {
+    if (!offcanvas.contains(e.target) && !btnToggle.contains(e.target)) {
+      closeMenu();
+    }
+    if (!searchPanel.contains(e.target) && !searchToggle.contains(e.target)) {
+      closeSearch();
+    }
+  });
+
+  // --- Chuyển Level 1 → Level 2 ---
+  lvl1.querySelectorAll('li[data-id]').forEach(li => {
+    li.addEventListener('click', () => {
       const sec = sections.find(s => s.id == li.dataset.id);
       secTitle.textContent = sec.name;
 
@@ -493,43 +546,36 @@ document.addEventListener('DOMContentLoaded', () => {
         </li>
       `).join('');
 
-      // Toggle slide sản phẩm trong group
+      // Toggle slide sản phẩm trong mỗi nhóm
       groupsEl.querySelectorAll('.group-header').forEach(header => {
-        const icon  = header.querySelector('i');
-        const prodUl = header.nextElementSibling;
-        header.onclick = () => {
+        header.addEventListener('click', () => {
+          const icon = header.querySelector('i');
+          const prodUl = header.nextElementSibling;
           const expanded = prodUl.classList.toggle('expand');
           icon.classList.toggle('fa-chevron-up', expanded);
           icon.classList.toggle('fa-chevron-down', !expanded);
-        };
+        });
       });
 
-      // Hiệu ứng slide sang Level 2
       offcanvas.classList.add('show-lvl2');
-    };
+    });
   });
 
-  // Back → quay lại Level 1
-  document.getElementById('mh-btn-back').onclick = () => {
+  // Back button quay lại Level 1
+  btnBack.addEventListener('click', () => {
     offcanvas.classList.remove('show-lvl2');
-  };
-  const cartToggle = document.getElementById('cartDropdownMobile');
-  const cartMenu   = document.getElementById('cartMenuMobile');
+  });
 
+  // --- Cart dropdown trên mobile ---
   cartToggle.addEventListener('click', e => {
     e.preventDefault();
+    e.stopPropagation();
     cartMenu.classList.toggle('open');
   });
-
-  // click ngoài để đóng
   document.addEventListener('click', e => {
-    if (
-      !cartToggle.contains(e.target) &&
-      !cartMenu.contains(e.target)
-    ) {
+    if (!cartToggle.contains(e.target) && !cartMenu.contains(e.target)) {
       cartMenu.classList.remove('open');
     }
   });
 });
 </script>
-
