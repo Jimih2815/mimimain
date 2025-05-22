@@ -276,6 +276,7 @@ Route::prefix('admin')
          )->name('news.assignCollection');
 
      Route::resource('sectors', AdminSectorController::class);
+     Route::post('sectors/reorder', [AdminSectorController::class, 'reorder'])->name('sectors.reorder');
 
 });
 

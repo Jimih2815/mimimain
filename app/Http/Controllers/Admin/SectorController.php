@@ -175,4 +175,14 @@ class SectorController extends Controller
                ->route('admin.sectors.index')
                ->with('success', 'Xóa sector thành công.');
     }
+    public function reorder(Request $request)
+{
+    foreach ($request->input('order') as $item) {
+        \App\Models\Sector::where('id', $item['id'])
+            ->update(['sort_order' => $item['sort_order']]);
+    }
+
+    return response()->json(['success' => true]);
+}
+
 }
