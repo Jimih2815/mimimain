@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\HandlesWebpUpload;
 use App\Models\Sector;
 use App\Models\Collection;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 
 class SectorController extends Controller
 {
+    use HandlesWebpUpload; 
+
     public function index()
     {
         $sectors = Sector::with('collections')->orderBy('sort_order')->get();
@@ -29,7 +32,7 @@ class SectorController extends Controller
         $data = $request->validate([
             'name'                        => 'required|string|max:255',
             'slug'                        => 'required|string|max:255|unique:sectors,slug',
-            'image'                       => 'required|image',
+            'image'                       => 'required|image|max:4096',
             'sort_order'                  => 'nullable|integer',
             'collections'                 => 'nullable|array',
             'collections.*.collection_id' => 'required|integer|exists:collections,id',
@@ -38,8 +41,11 @@ class SectorController extends Controller
             'collections.*.sort_order'    => 'nullable|integer',
         ]);
 
-        // Upload ảnh chính
-        $data['image'] = $request->file('image')->store('sectors', 'public');
+        // Upload & convert ảnh chính sang WebP
+       $data['image'] = $this->uploadAsWebp(
+           $request->file('image'),
+           'sectors'
+       );
 
         // Tạo sector
         $sector = Sector::create([
@@ -60,12 +66,13 @@ class SectorController extends Controller
                     'custom_name' => $info['custom_name'] ?? null,
                     'sort_order'  => $info['sort_order']  ?? 0,
                 ];
-                // upload ảnh tuỳ chỉnh nếu có
-                if ($request->hasFile("collections.{$idx}.custom_image")) {
-                    $pivot['custom_image'] = $request
-                        ->file("collections.{$idx}.custom_image")
-                        ->store('sector_collections', 'public');
-                }
+                   // upload & convert ảnh tuỳ chỉnh nếu có
+               if ($request->hasFile("collections.{$idx}.custom_image")) {
+                   $pivot['custom_image'] = $this->uploadAsWebp(
+                       $request->file("collections.{$idx}.custom_image"),
+                       'sector_collections'
+                   );
+               }
                 $syncData[ $info['collection_id'] ] = $pivot;
             }
         }
@@ -89,7 +96,7 @@ class SectorController extends Controller
         $data = $request->validate([
             'name'                        => 'required|string|max:255',
             'slug'                        => "required|string|max:255|unique:sectors,slug,{$sector->id}",
-            'image'                       => 'nullable|image',
+            'image'                       => 'nullable|image|max:4096',
             'sort_order'                  => 'nullable|integer',
             'collections'                 => 'nullable|array',
             'collections.*.collection_id' => 'required|integer|exists:collections,id',
@@ -101,7 +108,10 @@ class SectorController extends Controller
         // Cập nhật ảnh chính nếu upload mới
         if ($request->hasFile('image')) {
             Storage::disk('public')->delete($sector->image);
-            $data['image'] = $request->file('image')->store('sectors', 'public');
+            $data['image'] = $this->uploadAsWebp(
+               $request->file('image'),
+               'sectors'
+           );
         }
 
         // Update sector
@@ -131,9 +141,10 @@ class SectorController extends Controller
                     if ($old) {
                         Storage::disk('public')->delete($old);
                     }
-                    $pivot['custom_image'] = $request
-                        ->file("collections.{$idx}.custom_image")
-                        ->store('sector_collections', 'public');
+                     $pivot['custom_image'] = $this->uploadAsWebp(
+                       $request->file("collections.{$idx}.custom_image"),
+                       'sector_collections'
+                   );
                 }
                 $syncData[ $info['collection_id'] ] = $pivot;
             }

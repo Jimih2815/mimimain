@@ -68,7 +68,7 @@
               <td>
                 <input type="hidden"
                       name="collections[{{ $index }}][collection_id]"
-                      value="{{ $col['id'] }}">
+                      value="{{ $col['collection_id'] ?? $col['id'] }}">
                 {{ $col['name'] }}
               </td>
               <td>
