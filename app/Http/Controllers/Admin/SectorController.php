@@ -16,123 +16,152 @@ class SectorController extends Controller
         return view('admin.sectors.index', compact('sectors'));
     }
 
-public function create()
-{
-    $sector      = new Sector();
-    $collections = Collection::orderBy('name')->pluck('name','id');
-    return view('admin.sectors.form', compact('sector','collections'))
-           ->with('isEdit', false);
-}
-
+    public function create()
+    {
+        $sector      = new Sector();
+        $collections = Collection::orderBy('name')->pluck('name','id');
+        return view('admin.sectors.form', compact('sector','collections'))
+               ->with('isEdit', false);
+    }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
-            'slug'        => 'required|string|max:255|unique:sectors,slug',
-            'image'       => 'required|image',
-            'sort_order'  => 'nullable|integer',
-            'collections' => 'nullable|array', // mảng [id => [active, custom_name, custom_image, sort_order]]
+            'name'                        => 'required|string|max:255',
+            'slug'                        => 'required|string|max:255|unique:sectors,slug',
+            'image'                       => 'required|image',
+            'sort_order'                  => 'nullable|integer',
+            'collections'                 => 'nullable|array',
+            'collections.*.collection_id' => 'required|integer|exists:collections,id',
+            'collections.*.custom_name'   => 'nullable|string|max:255',
+            'collections.*.custom_image'  => 'nullable|image',
+            'collections.*.sort_order'    => 'nullable|integer',
         ]);
 
-        // Upload sector image
-        $data['image'] = $request->file('image')->store('sectors','public');
+        // Upload ảnh chính
+        $data['image'] = $request->file('image')->store('sectors', 'public');
 
         // Tạo sector
-        $sector = Sector::create($data);
+        $sector = Sector::create([
+            'name'       => $data['name'],
+            'slug'       => $data['slug'],
+            'image'      => $data['image'],
+            'sort_order' => $data['sort_order'] ?? 0,
+        ]);
 
-        // Xử lý pivot
-        if ($request->has('collections')) {
-            $sync = [];
-            foreach ($request->input('collections') as $colId => $info) {
-                if (empty($info['active'])) {
-                    continue; // không chọn
+        // Build mảng sync pivot
+        $syncData = [];
+        if (!empty($data['collections'])) {
+            foreach ($data['collections'] as $idx => $info) {
+                if (empty($info['collection_id'])) {
+                    continue;
                 }
                 $pivot = [
-                    'custom_name'  => $info['custom_name'] ?? null,
-                    'sort_order'   => $info['sort_order'] ?? 0,
+                    'custom_name' => $info['custom_name'] ?? null,
+                    'sort_order'  => $info['sort_order']  ?? 0,
                 ];
-                // upload hình tuỳ chỉnh
-                if ($request->hasFile("collections.{$colId}.custom_image")) {
-                    $pivot['custom_image'] = 
-                        $request->file("collections.{$colId}.custom_image")
-                                ->store('sector_collections','public');
+                // upload ảnh tuỳ chỉnh nếu có
+                if ($request->hasFile("collections.{$idx}.custom_image")) {
+                    $pivot['custom_image'] = $request
+                        ->file("collections.{$idx}.custom_image")
+                        ->store('sector_collections', 'public');
                 }
-                $sync[$colId] = $pivot;
+                $syncData[ $info['collection_id'] ] = $pivot;
             }
-            $sector->collections()->sync($sync);
         }
 
+        $sector->collections()->sync($syncData);
+
         return redirect()
-            ->route('admin.sectors.index')
-            ->with('success', 'Tạo sector thành công.');
+               ->route('admin.sectors.index')
+               ->with('success', 'Tạo sector thành công.');
     }
 
     public function edit(Sector $sector)
     {
         $collections = Collection::orderBy('name')->pluck('name','id');
-        // Lấy id các collection đã gắn
-        $selected = $sector->collections->pluck('pivot.collection_id')->toArray();
-        return view('admin.sectors.form', compact('sector','collections','selected'));
+        return view('admin.sectors.form', compact('sector','collections'))
+               ->with('isEdit', true);
     }
 
     public function update(Request $request, Sector $sector)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
-            'slug'        => "required|string|max:255|unique:sectors,slug,{$sector->id}",
-            'image'       => 'nullable|image',
-            'sort_order'  => 'nullable|integer',
-            'collections' => 'nullable|array',
+            'name'                        => 'required|string|max:255',
+            'slug'                        => "required|string|max:255|unique:sectors,slug,{$sector->id}",
+            'image'                       => 'nullable|image',
+            'sort_order'                  => 'nullable|integer',
+            'collections'                 => 'nullable|array',
+            'collections.*.collection_id' => 'required|integer|exists:collections,id',
+            'collections.*.custom_name'   => 'nullable|string|max:255',
+            'collections.*.custom_image'  => 'nullable|image',
+            'collections.*.sort_order'    => 'nullable|integer',
         ]);
 
+        // Cập nhật ảnh chính nếu upload mới
         if ($request->hasFile('image')) {
             Storage::disk('public')->delete($sector->image);
-            $data['image'] = $request->file('image')->store('sectors','public');
+            $data['image'] = $request->file('image')->store('sectors', 'public');
         }
 
-        $sector->update($data);
+        // Update sector
+        $sector->update([
+            'name'       => $data['name'],
+            'slug'       => $data['slug'],
+            'image'      => $data['image'] ?? $sector->image,
+            'sort_order' => $data['sort_order'] ?? $sector->sort_order,
+        ]);
 
-        // Sync pivot
-        if ($request->has('collections')) {
-            $sync = [];
-            foreach ($request->input('collections') as $colId => $info) {
-                if (empty($info['active'])) {
+        // Build mảng sync pivot
+        $syncData = [];
+        if (!empty($data['collections'])) {
+            foreach ($data['collections'] as $idx => $info) {
+                if (empty($info['collection_id'])) {
                     continue;
                 }
                 $pivot = [
                     'custom_name' => $info['custom_name'] ?? null,
-                    'sort_order'  => $info['sort_order'] ?? 0,
+                    'sort_order'  => $info['sort_order']  ?? 0,
                 ];
-                if ($request->hasFile("collections.{$colId}.custom_image")) {
-                    // xóa hình cũ nếu có
-                    Storage::disk('public')
-                        ->delete($sector->collections()->where('collection_id',$colId)->first()->pivot->custom_image);
-                    $pivot['custom_image'] = 
-                        $request->file("collections.{$colId}.custom_image")
-                                ->store('sector_collections','public');
+                // upload ảnh tuỳ chỉnh mới, xóa ảnh cũ nếu có
+                if ($request->hasFile("collections.{$idx}.custom_image")) {
+                    $old = $sector->collections()
+                        ->wherePivot('collection_id', $info['collection_id'])
+                        ->first()?->pivot->custom_image;
+                    if ($old) {
+                        Storage::disk('public')->delete($old);
+                    }
+                    $pivot['custom_image'] = $request
+                        ->file("collections.{$idx}.custom_image")
+                        ->store('sector_collections', 'public');
                 }
-                $sync[$colId] = $pivot;
+                $syncData[ $info['collection_id'] ] = $pivot;
             }
-            $sector->collections()->sync($sync);
         }
 
+        $sector->collections()->sync($syncData);
+
         return redirect()
-            ->route('admin.sectors.index')
-            ->with('success', 'Cập nhật sector thành công.');
+               ->route('admin.sectors.index')
+               ->with('success', 'Cập nhật sector thành công.');
     }
 
     public function destroy(Sector $sector)
     {
+        // Xóa ảnh chính
         Storage::disk('public')->delete($sector->image);
-        // xóa ảnh pivot nếu cần
+
+        // Xóa ảnh pivot
         foreach ($sector->collections as $col) {
-            Storage::disk('public')->delete($col->pivot->custom_image);
+            if ($col->pivot->custom_image) {
+                Storage::disk('public')->delete($col->pivot->custom_image);
+            }
         }
+
         $sector->delete();
 
         return redirect()
-            ->route('admin.sectors.index')
-            ->with('success', 'Xóa sector thành công.');
+               ->route('admin.sectors.index')
+               ->with('success', 'Xóa sector thành công.');
     }
 }
