@@ -22,6 +22,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsCtrl;
+use App\Http\Controllers\SectorController;
 
 // AUTH CONTROLLERS
 use App\Http\Controllers\Auth\RegisterController;
@@ -46,6 +47,8 @@ use App\Http\Controllers\Admin\WidgetController;
 use App\Http\Controllers\Admin\WidgetPlacementController;
 use App\Http\Controllers\Admin\SidebarItemController;
 use App\Http\Controllers\Admin\HelpRequestController as AdminHelpRequestController;
+use App\Http\Controllers\Admin\SectorController as AdminSectorController;
+
 
 
 /*
@@ -122,6 +125,9 @@ Route::view('/how-to-order', 'how-to-order')->name('how-to-order');
 Route::view('/tracking', 'tracking')->name('tracking');
 Route::view('/how-to-pay', 'how-to-pay')->name('how-to-pay');
 
+
+
+Route::get('/sectors', [SectorController::class, 'index'])->name('sectors.index');
 
 
 
@@ -264,6 +270,9 @@ Route::prefix('admin')
      Route::post('news/{news}/assign-collection',
              [AdminNewsCtrl::class, 'assignCollection']
          )->name('news.assignCollection');
+
+     Route::resource('sectors', AdminSectorController::class);
+
 });
 
 
