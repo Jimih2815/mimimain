@@ -1,6 +1,16 @@
 @extends('layouts.app') {{-- layout sẵn có của bạn --}}
 
 @section('content')
+<style>
+    @media (max-width: 767px) {
+        main {
+        padding-top: 4rem;
+        }
+        .mc-floating-panel {
+        display: none !important;
+        }
+    }
+</style>
 <div class="trang-dang-ky-cont">
     <div class="max-w-md mx-auto mt-10 trang-dang-ky">
         <h1 class="text-2xl font-bold mb-6">Đăng ký</h1>

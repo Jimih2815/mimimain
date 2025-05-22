@@ -221,7 +221,7 @@ background-color: #4ab3af;
               <div class="d-flex flex-column justify-content-between">
               <h5 class="mb-1">
               <a href="{{ route('products.show', $item['slug']) }}"
-                class="text-decoration-none ten-san-pham-an-duoc w-100">
+                class="text-decoration-none ten-san-pham-an-duoc w-100 xuong-2-dong">
                 {{ $item['name'] }}
               </a>
               

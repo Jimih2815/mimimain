@@ -4,6 +4,16 @@
 @section('title','Đăng nhập')
 
 @section('content')
+<style>
+  @media (max-width: 767px) {
+    main {
+      padding-top: 4rem;
+    }
+ .mc-floating-panel {
+  display: none !important;
+}
+}
+</style>
 <div class="trang-dang-nhap-cont">
   <div class="container py-5">
     <div class="row justify-content-center">

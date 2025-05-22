@@ -169,7 +169,7 @@ width: 30%;
         <div class="d-flex flex-column align-items-start mo-ta-san-pham">
 
 
-          <span>{{ $item['name'] }} <h5>x {{ $item['quantity'] }}</h5></span>
+          <span style="max-width: 100%" class="xuong-2-dong">{{ $item['name'] }} <h5>x {{ $item['quantity'] }}</h5></span>
 
           @foreach($optionValues as $val)
             <span class="text-muted small mt-1">
