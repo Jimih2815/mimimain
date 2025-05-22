@@ -39,6 +39,14 @@
   .help-form-container .btn-submit:hover {
     background-color:rgb(231, 195, 110);
   }
+    @media (max-width: 767px) {
+    main {
+      padding-top: 4rem;
+    }
+ .mc-floating-panel {
+  display: none !important;
+}
+}
 </style>
 
 <div class="help-form-container">

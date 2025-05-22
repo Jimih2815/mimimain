@@ -8,6 +8,7 @@
     background: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
+    top: 0px;
 }
 .mobile-header .mh-top { height:56px; }
 .mobile-header .mh-offcanvas {
