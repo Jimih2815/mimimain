@@ -49,6 +49,16 @@
       </a>
     </div> 
 
+    {{-- Sectors --}}
+    <div class="col-md-3 danh-sach">
+      <a href="{{ route('admin.sectors.index') }}" class="card h-100 text-center text-decoration-none">
+        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+          <i class="bi bi-diagram-3 fs-1"></i>
+          <h5 class="mt-2">Sectors</h5>
+        </div>
+      </a>
+    </div>
+
     {{-- Collections --}}
     <div class="col-md-3 danh-sach">
       <a href="{{ route('admin.collections.index') }}" class="card h-100 text-center text-decoration-none">

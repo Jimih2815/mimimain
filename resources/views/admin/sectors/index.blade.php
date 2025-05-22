@@ -1,26 +1,32 @@
 @extends('layouts.admin')
 
 @section('content')
+<style>
+   .container-fluid {
+        width: 60%;
+    }
+
+</style>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1>Ngành hàng</h1>
-  <a href="{{ route('admin.sectors.create') }}" class="btn btn-primary">Thêm mới</a>
+  <a href="{{ route('admin.sectors.create') }}" class="btn-mimi nut-xanh text-decoration-none">Thêm mới</a>
 </div>
 
 <table class="table table-bordered" id="sortable-sector-table">
   <thead>
     <tr>
-      <th>#</th>
-      <th>Ảnh</th>
+      <th style="width: 5rem;">Thứ tự</th>
+      <th style="width: 9rem;">Ảnh</th>
       <th>Tên</th>
       <th>Collection</th>
-      <th>Thứ tự</th>
-      <th>Hành động</th>
+      
+      <th style="width: 8rem;">Hành động</th>
     </tr>
   </thead>
   <tbody id="sortable-sector-body">
     @foreach($sectors as $s)
     <tr data-id="{{ $s->id }}">
-      <td>{{ $s->id }}</td>
+      <td>{{ $s->sort_order }}</td>
       <td><img src="{{ asset('storage/'.$s->image) }}" width="60"></td>
       <td>{{ $s->name }}</td>
       <td>
@@ -34,12 +40,12 @@
           @endforeach
         @endif
       </td>
-      <td>{{ $s->sort_order }}</td>
+      
       <td>
-        <a href="{{ route('admin.sectors.edit',$s) }}" class="btn btn-sm btn-warning">Sửa</a>
+        <a href="{{ route('admin.sectors.edit',$s) }}" class="btn-mimi nut-sua">Sửa</a>
         <form action="{{ route('admin.sectors.destroy', $s) }}" method="POST" class="d-inline">
           @csrf @method('DELETE')
-          <button onclick="return confirm('Xác nhận xoá?')" class="btn btn-sm btn-danger">Xóa</button>
+          <button onclick="return confirm('Xác nhận xoá?')" class="btn-mimi nut-xoa">Xóa</button>
         </form>
       </td>
     </tr>

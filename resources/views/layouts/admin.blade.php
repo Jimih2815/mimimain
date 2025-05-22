@@ -53,6 +53,32 @@
 
   {{-- Cho phép các trang con push thêm style --}}
   @stack('styles')
+  <style>
+    .nut-xoa {
+      background-color: #b83232;
+      text-decoration: none;
+      padding: 0.2rem 0.7rem;
+
+    }
+    .nut-sua {
+    background-color: #3f9426;
+    text-decoration: none;
+    padding: 0.2rem 0.7rem;
+    }
+    .nut-sua:hover {
+      background-color:rgb(130, 196, 110);
+
+     }
+    .nut-xoa:hover {
+      background-color:rgb(206, 113, 113);
+
+      }
+    #sortable-sector-table td,
+    #sortable-sector-table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+  </style>
 </head>
 <body class="bg-light">
 
