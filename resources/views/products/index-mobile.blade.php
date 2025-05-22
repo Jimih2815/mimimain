@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     nameFavDiv.className = 'd-flex align-items-start justify-content-between mb-2';
 
     const nameP = document.createElement('p');
-    nameP.className = 'mb-1 fw-semibold flex-grow-1 text-start';
+    nameP.className = 'mb-1 fw-semibold flex-grow-1 text-start xuong-2-dong';
     nameP.textContent = prod.name;
     nameFavDiv.appendChild(nameP);
 

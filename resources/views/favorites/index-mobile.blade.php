@@ -203,7 +203,7 @@ body.no-scroll { overflow: hidden; }
             <img src="{{ asset('storage/'.$p->img) }}" alt="{{ $p->name }}">
         @endif
         <div class="header-info">
-            <h5 class="m-0">{{ $p->name }}</h5>
+            <h5 style="max-width: 88%;" class="m-0 xuong-2-dong">{{ $p->name }}</h5>
             <div class="d-flex" style="color:#4ab3af;font-style:italic;">
                 <i class="fa-solid fa-truck-fast me-2"></i>
                 <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
