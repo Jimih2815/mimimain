@@ -159,131 +159,107 @@ body.no-scroll { overflow: hidden; }
 </style>
 <div class="trang-yeu-thich-mobile ms-1 me-1 pt-3 pb-3">
     <h1 class="pb-3 ps-1">Sản phẩm yêu thích</h1>
-    <div class="cart-wrapper">
-    <div class="row-products">
-        @foreach($products as $p)
-            <div class="product-card" data-id="{{ $p->id }}">
-                @if($p->img)
-                <a href="{{ route('products.show', $p->slug) }}" class="d-block">
-                    <img src="{{ asset('storage/'.$p->img) }}" alt="{{ $p->name }}">
-                </a>
-                @endif
-                <div class="product-body">
-                <h6 class="xuong-2-dong m-0">{{ $p->name }}</h6>
-                <div class="d-flex align-items-center mt-2">
-                    <!-- Giá sale (giá gốc bạn muốn hiển thị) -->
-                    <div class="price">
-                    {{ number_format($p->base_price, 0, ',', '.') }}₫
-                    </div>
-                    <!-- Giá “đắt xắt ra miếng” cộng thêm 40%, gạch ngang -->
-                    <div class="original-price ms-2 text-muted" style="text-decoration: line-through;">
-                    {{ number_format($p->base_price * 1.4, 0, ',', '.') }}₫
-                    </div>
-                </div>
-                <button class="nut-xem border-0 bg-transparent btn-detail d-flex justify-content-center align-items-center mt-auto" data-id="{{ $p->id }}">
-                    <p class="m-0 p-0 d-flex justify-content-center align-items-center">Chi Tiết</p>
-                    <i class="ms-2 fa-solid fa-arrow-right d-flex justify-content-center align-items-center"></i>
-                </button>
-                </div>
-            </div>
-        @endforeach
 
-    </div>
-    </div>
+    {{-- 1) Khi chưa có sản phẩm yêu thích --}}
+    @if($products->isEmpty())
+        <p class="text-center mt-5 fw-bold">Không có sản phẩm trong mục yêu thích</p>
 
-    <div id="detail-overlay" class="detail-overlay"></div>
-
-    @foreach($products as $p)
-    {{-- Panel riêng cho mỗi sản phẩm --}}
-    <div id="detail-{{ $p->id }}" class="detail-panel">
-    {{-- Header giống #mobile-panel-header --}}
-    <div class="panel-header">
-        <div class="d-flex align-items-start">
-        @if($p->img)
-            <img src="{{ asset('storage/'.$p->img) }}" alt="{{ $p->name }}">
-        @endif
-        <div class="header-info">
-            <h5 style="max-width: 88%;" class="m-0 xuong-2-dong">{{ $p->name }}</h5>
-            <div class="d-flex" style="color:#4ab3af;font-style:italic;">
-                <i class="fa-solid fa-truck-fast me-2"></i>
-                <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
-            </div>
-            <div class="fw-bold">{{ number_format($p->base_price,0,',','.') }}₫</div>
-        </div>
-        </div>
-        <button class="panel-close" data-id="{{ $p->id }}"><i class="fa fa-times fa-lg"></i></button>
-    </div>
-
-    {{-- Content cuộn được --}}
-    <div class="panel-content">
-        <form id="detail-form-{{ $p->id }}"
-            action="{{ route('cart.add', $p->id) }}"
-            method="POST"
-            class="d-flex flex-column h-100">
-        @csrf
-
-        {{-- Options như cũ --}}
-        @foreach($p->optionValues->groupBy(fn($v)=>$v->type->name) as $typeName => $vals)
-            @php 
-                $typeId  = $vals->first()->type->id; 
-                $isFirst = $loop->first;
-            @endphp
-            <div class="mb-2">
-                <label class="form-label">{{ $typeName }}</label>
-                <div class="d-flex flex-wrap option-group" data-first="{{ $isFirst?1:0 }}">
-                @foreach($vals as $val)
-                    <div class="option-item"
-                        data-type="{{ $typeId }}"
-                        data-val="{{ $val->id }}"
-                        data-extra="{{ $val->extra_price }}"
-                        data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}"
-                        style="padding:0.2rem .3rem; border:1px solid #4ab3af; border-radius: 5px; margin:.2rem; cursor:pointer; display:flex; align-items:center;">
-                    
-                    @if($isFirst && $val->option_img)
-                        <img src="{{ asset('storage/'.$val->option_img) }}"
-                            alt="{{ $val->value }}"
-                            style="width:40px; height:40px; object-fit:cover; margin-right:.3rem; border-radius: 5px;">
-                    @endif
-                    
-                    <span>{{ $val->value }}</span>
+    {{-- 2) Ngược lại: hiển thị list và panels --}}
+    @else
+        <div class="cart-wrapper">
+            <div class="row-products">
+                @foreach($products as $p)
+                    <div class="product-card" data-id="{{ $p->id }}">
+                        @if($p->img)
+                            <a href="{{ route('products.show', $p->slug) }}" class="d-block">
+                                <img src="{{ asset('storage/'.$p->img) }}" alt="{{ $p->name }}">
+                            </a>
+                        @endif
+                        <div class="product-body">
+                            <h6 class="xuong-2-dong m-0">{{ $p->name }}</h6>
+                            <div class="d-flex align-items-center mt-2">
+                                <div class="price">
+                                    {{ number_format($p->base_price, 0, ',', '.') }}₫
+                                </div>
+                                <div class="original-price ms-2 text-muted">
+                                    {{ number_format($p->base_price * 1.4, 0, ',', '.') }}₫
+                                </div>
+                            </div>
+                            <button class="nut-xem border-0 bg-transparent btn-detail d-flex justify-content-center align-items-center mt-auto" data-id="{{ $p->id }}">
+                                <p class="m-0">Chi Tiết</p>
+                                <i class="ms-2 fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 @endforeach
+            </div>
+        </div>
+
+        <div id="detail-overlay" class="detail-overlay"></div>
+
+        @foreach($products as $p)
+            <div id="detail-{{ $p->id }}" class="detail-panel">
+                <div class="panel-header">
+                    <div class="d-flex align-items-start">
+                        @if($p->img)
+                            <img src="{{ asset('storage/'.$p->img) }}" alt="{{ $p->name }}">
+                        @endif
+                        <div class="header-info">
+                            <h5 class="m-0 xuong-2-dong" style="max-width:88%;">{{ $p->name }}</h5>
+                            <div class="d-flex" style="color:#4ab3af;font-style:italic;">
+                                <i class="fa-solid fa-truck-fast me-2"></i>
+                                <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
+                            </div>
+                            <div class="fw-bold">{{ number_format($p->base_price,0,',','.') }}₫</div>
+                        </div>
+                    </div>
+                    <button class="panel-close" data-id="{{ $p->id }}"><i class="fa fa-times"></i></button>
                 </div>
-                <input type="hidden"
-                    name="options[{{ $typeId }}]"
-                    id="opt-{{ $p->id }}-{{ $typeId }}"
-                    required>
+                <div class="panel-content">
+                    <form id="detail-form-{{ $p->id }}" action="{{ route('cart.add', $p->id) }}" method="POST" class="d-flex flex-column h-100">
+                        @csrf
+                        @foreach($p->optionValues->groupBy(fn($v)=>$v->type->name) as $typeName => $vals)
+                            @php 
+                                $typeId  = $vals->first()->type->id; 
+                                $isFirst = $loop->first;
+                            @endphp
+                            <div class="mb-2">
+                                <label class="form-label">{{ $typeName }}</label>
+                                <div class="d-flex flex-wrap option-group" data-first="{{ $isFirst?1:0 }}">
+                                    @foreach($vals as $val)
+                                        <div class="option-item"
+                                             data-type="{{ $typeId }}"
+                                             data-val="{{ $val->id }}"
+                                             data-extra="{{ $val->extra_price }}"
+                                             data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}"
+                                             style="padding:.2rem .3rem; border:1px solid #4ab3af; border-radius:5px; margin:.2rem; cursor:pointer; display:flex; align-items:center;">
+                                            @if($isFirst && $val->option_img)
+                                                <img src="{{ asset('storage/'.$val->option_img) }}" alt="" style="width:40px;height:40px;object-fit:cover;margin-right:.3rem;border-radius:5px;">
+                                            @endif
+                                            <span>{{ $val->value }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <input type="hidden" name="options[{{ $typeId }}]" id="opt-{{ $p->id }}-{{ $typeId }}" required>
+                            </div>
+                        @endforeach
+                    </form>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn-mimi nut-xanh btn-add-fav-cart" data-id="{{ $p->id }}" data-url="{{ route('cart.add', $p->id) }}">
+                        Thêm vào giỏ
+                    </button>
+                    <button type="button" class="btn-mimi nut-do btn-buy-now" data-id="{{ $p->id }}" data-buy-url="{{ route('checkout.buyNow', $p->id) }}">
+                        Mua ngay
+                    </button>
+                </div>
             </div>
         @endforeach
 
-
-        </form>
-    </div>
-
-    {{-- Footer với nút Thêm/Mua --}}
-    <div class="panel-footer">
-         <button
-             class="btn-mimi nut-xanh btn-add-fav-cart mt-2"
-             data-id="{{ $p->id }}"
-             data-url="{{ route('cart.add', $p->id) }}"
-           >
-             Thêm vào giỏ
-           </button>
-        <button 
-            type="button"
-            class="btn-mimi nut-do btn-buy-now mt-2"
-            data-id="{{ $p->id }}"
-            data-buy-url="{{ route('checkout.buyNow', $p->id) }}"
-        >
-        Mua ngay
-        </button>
-    </div>
-    </div>
-
-    @endforeach
-
-@endsection
-
+    @endif
+</div>
+{{-- Chỉ nạp script khi có sản phẩm --}}
+@if($products->isNotEmpty())
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -491,6 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
+
+
+@endif
+@endsection
 
 
 

@@ -11,23 +11,26 @@ class FavoriteController extends Controller
 {
     /**
      * GET /favorites
-     * Display the list of favorited products (DB for auth, session for guest)
-     *
-     * @return \Illuminate\View\View
+     * Hiển thị danh sách sản phẩm yêu thích
      */
     public function index(Request $request)
     {
         $agent = new Agent();
-        // Nếu mobile thì delegate sang indexMobile()
         if ($agent->isMobile()) {
             return $this->indexMobile($request);
         }
 
-        // ===== NỘI DUNG CỦA index() HIỆN TẠI =====
+        // với desktop
         if (Auth::check()) {
-            $ids = Auth::user()->favorites()->pluck('product_id')->toArray();
+            $ids = Auth::user()
+                       ->favorites()
+                       ->pluck('product_id')
+                       ->map(fn($id) => (int)$id)
+                       ->toArray();
         } else {
-            $ids = session('favorites', []);
+            $ids = collect(session('favorites', []))
+                   ->map(fn($id) => (int)$id)
+                   ->toArray();
         }
 
         $products = Product::whereIn('id', $ids)
@@ -39,15 +42,12 @@ class FavoriteController extends Controller
 
     /**
      * POST /favorites/toggle/{product}
-     * Toggle the favorite status of a product
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\JsonResponse
+     * Toggle trạng thái yêu thích của một sản phẩm
      */
     public function toggle(Product $product)
     {
         if (Auth::check()) {
-            $user = Auth::user();
+            $user   = Auth::user();
             $exists = $user->favorites()
                            ->where('product_id', $product->id)
                            ->exists();
@@ -60,44 +60,50 @@ class FavoriteController extends Controller
                 $added = true;
             }
 
-            // Total favorites count for user
             $count = $user->favorites()->count();
         } else {
+            // guest lưu vào session
             $favorites = session('favorites', []);
 
             if (in_array($product->id, $favorites)) {
-                // Remove from session
                 $favorites = array_filter($favorites, fn($id) => $id != $product->id);
                 $added = false;
             } else {
-                // Add to session
                 $favorites[] = $product->id;
                 $added = true;
             }
 
-            // Update session key
             session(['favorites' => array_values($favorites)]);
-            // Total favorites count for guest
             $count = count($favorites);
         }
 
         return response()->json([
-            'added' => $added,
-            'count' => $count,
+            'added'       => $added,
+            'total_items' => $count,
         ]);
     }
+
+    /**
+     * GET /favorites (mobile)
+     */
     public function indexMobile(Request $request)
     {
         if (Auth::check()) {
-            $favIds = auth()->user()->favorites->pluck('id')->toArray();
+            $favIds = Auth::user()
+                          ->favorites()
+                          ->pluck('product_id')
+                          ->map(fn($id) => (int)$id)
+                          ->toArray();
         } else {
-            $favIds = session('favorites', []);
+            $favIds = collect(session('favorites', []))
+                          ->map(fn($id) => (int)$id)
+                          ->toArray();
         }
 
         $products = Product::with('optionValues.type')
                            ->whereIn('id', $favIds)
                            ->get();
 
-        return view('favorites.index-mobile', compact('products','favIds'));
+        return view('favorites.index-mobile', compact('products', 'favIds'));
     }
 }

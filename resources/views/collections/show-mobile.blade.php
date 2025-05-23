@@ -200,25 +200,26 @@
 </style>
 @endpush
 
-{{-- resources/views/collections/show-mobile.blade.php --}}
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const roots             = @json($roots);
+  // Ép về số để includes() luôn đúng
+  const favIds            = (@json($favIds) || []).map(id => parseInt(id, 10));
+
   const parentBar         = document.getElementById('mobile-parent-bar');
   const childBar          = document.getElementById('mobile-child-bar');
   const productsContainer = document.getElementById('mobile-collection-products');
-  const favIds            = @json($favIds);
 
-  // ID của collection khi click trực tiếp vào link
-  const pageCollectionId = {{ $collection->id }};
-  // Mảng products của collection đó
-  const pageProducts     = @json($collection->products);
+  // ID & products khi bấm trực tiếp link collection
+  const pageCollectionId  = {{ $collection->id }};
+  const pageProducts      = @json($collection->products);
 
+  // 1) Render thanh con
   function renderChildren(parentId) {
     childBar.innerHTML = '';
     productsContainer.innerHTML = '';
-    const parent = roots.find(p => p.id == parentId);
+    const parent = roots.find(p => p.id === parseInt(parentId, 10));
     if (!parent || !parent.children.length) {
       childBar.style.display = 'none';
       return;
@@ -230,139 +231,130 @@ document.addEventListener('DOMContentLoaded', () => {
       div.dataset.id = child.id;
       div.textContent = child.name;
       div.addEventListener('click', () => {
-        childBar.querySelectorAll('.mobile-child-item')
-                .forEach(i => i.classList.remove('active'));
+        childBar.querySelectorAll('.mobile-child-item').forEach(i => i.classList.remove('active'));
         div.classList.add('active');
         renderProducts(child);
       });
       childBar.appendChild(div);
     });
-    // auto-click child đầu tiên
     childBar.querySelector('.mobile-child-item').click();
   }
 
+  // 2) Render sản phẩm
   function renderProducts(source) {
-    // source có thể là `child` (vừa click) hoặc object giả { collection:{ products: [...] } }
     const prods = source.collection.products;
     productsContainer.innerHTML = '';
 
     prods.forEach(prod => {
-      const priceText = new Intl.NumberFormat('vi-VN').format(prod.base_price) + '₫';
-      // 1.5. Giá tăng 50%
-      const increasedText = new Intl.NumberFormat('vi-VN')
-      .format(prod.base_price * 1.5) + '₫';
+      const pid            = parseInt(prod.id, 10);
+      const priceText      = new Intl.NumberFormat('vi-VN').format(prod.base_price) + '₫';
+      const increasedText  = new Intl.NumberFormat('vi-VN').format(prod.base_price * 1.5) + '₫';
+
+      // build card
       const col = document.createElement('div');
       col.className = 'col-6';
-
       const card = document.createElement('div');
       card.className = 'card h-100';
 
+      // ảnh
       const imgWrapper = document.createElement('div');
       imgWrapper.className = 'position-relative';
-
       const link = document.createElement('a');
       link.href = `/products/${prod.slug}`;
-
       const img = document.createElement('img');
-      img.src = `/storage/${prod.img||''}`;
-      img.id = `prod-img-${prod.id}`;
+      img.src = `/storage/${prod.img || ''}`;
       img.className = 'card-img-top';
       img.alt = prod.name;
-
       link.appendChild(img);
       imgWrapper.appendChild(link);
 
+      // body
       const infoDiv = document.createElement('div');
       infoDiv.className = 'card-body p-2 text-center small';
 
+      // tên + fav
       const nameFavDiv = document.createElement('div');
       nameFavDiv.className = 'd-flex align-items-start justify-content-between mb-2';
-
       const nameP = document.createElement('p');
       nameP.className = 'mb-1 fw-semibold flex-grow-1 text-start';
       nameP.textContent = prod.name;
 
+      // nút favorite
       const favBtn = document.createElement('button');
       favBtn.type = 'button';
       favBtn.className = 'btn-fav';
-      favBtn.dataset.id = prod.id;
-
+      favBtn.dataset.id = pid;
       const favIcon = document.createElement('i');
-      if (favIds.includes(prod.id)) {
+      if (favIds.includes(pid)) {
         favIcon.className = 'fas fa-heart text-danger';
       } else {
-        favIcon.className = 'far fa-heart';
+        favIcon.className = 'far fa-heart text-muted';
       }
-
       favBtn.appendChild(favIcon);
+
       nameFavDiv.appendChild(nameP);
       nameFavDiv.appendChild(favBtn);
 
-      // giá gốc
+      // giá
       const priceP = document.createElement('p');
       priceP.className = 'text-danger gia-tien mb-0';
       priceP.textContent = priceText;
-
-      // tạo div mới cho giá tăng 50%
       const incDiv = document.createElement('div');
       incDiv.className = 'text-muted gia-tang';
       incDiv.textContent = increasedText;
-
-      infoDiv.appendChild(nameFavDiv);
-
-      // === giờ swap cho giá gốc lên trước ===
       const priceWrapper = document.createElement('div');
       priceWrapper.className = 'price-wrapper d-flex';
-      priceWrapper.appendChild(priceP);   // giá gốc
-      priceWrapper.appendChild(incDiv);   // giá tăng
+      priceWrapper.appendChild(priceP);
+      priceWrapper.appendChild(incDiv);
+
+      infoDiv.appendChild(nameFavDiv);
       infoDiv.appendChild(priceWrapper);
 
+      // ghép DOM
       card.appendChild(imgWrapper);
       card.appendChild(infoDiv);
       col.appendChild(card);
       productsContainer.appendChild(col);
-    });
 
-    // gán lại sự kiện toggle favorite
-    productsContainer.querySelectorAll('.btn-fav').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        fetch(`/favorites/toggle/${id}`, {
+      // toggle favorite
+      favBtn.addEventListener('click', () => {
+        fetch(`/favorites/toggle/${pid}`, {
           method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN':
-              document.querySelector('meta[name="csrf-token"]').content
-          }
+          headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
         })
         .then(r => r.json())
         .then(json => {
-          const icon = btn.querySelector('i');
-          icon.classList.toggle('fas', json.added);
-          icon.classList.toggle('far', !json.added);
-          icon.classList.toggle('text-danger', json.added);
+          // update icon
+          favIcon.classList.toggle('fas', json.added);
+          favIcon.classList.toggle('far', !json.added);
+          favIcon.classList.toggle('text-danger', json.added);
+          favIcon.classList.toggle('text-muted', !json.added);
+          // cập nhật favIds để lần render sau vẫn đúng
+          if (json.added && !favIds.includes(pid)) favIds.push(pid);
+          if (!json.added) {
+            const idx = favIds.indexOf(pid);
+            if (idx > -1) favIds.splice(idx, 1);
+          }
         });
       });
     });
   }
 
-  // gắn sự kiện cho Parent items
+  // 3) Parent click
   parentBar.querySelectorAll('.mobile-parent-item').forEach(item => {
     item.addEventListener('click', () => {
-      parentBar.querySelectorAll('.mobile-parent-item')
-               .forEach(i => i.classList.remove('active'));
+      parentBar.querySelectorAll('.mobile-parent-item').forEach(i => i.classList.remove('active'));
       item.classList.add('active');
       renderChildren(item.dataset.id);
     });
   });
 
-  // === Phần quan trọng: nếu vào từ link collection cụ thể ===
+  // 4) Nếu vào thẳng collection thì chỉ render products
   if (pageCollectionId) {
     parentBar.style.display = 'none';
     childBar.style.display = 'none';
-    // gọi lại renderProducts với object giả để chạy đúng code cũ:
     renderProducts({ collection: { products: pageProducts } });
   } else {
-    // logic mặc định: click parent đầu tiên
     if (roots.length) {
       parentBar.querySelector('.mobile-parent-item').click();
     }
@@ -370,5 +362,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
-
-
