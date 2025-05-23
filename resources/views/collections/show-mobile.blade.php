@@ -3,6 +3,31 @@
 @section('title', 'Bộ Sưu Tập Mobile')
 
 @section('content')
+
+@php
+  // Lấy sector đầu tiên của collection (nếu có)
+  $sector = $collection->sectors->first();
+@endphp
+
+<nav aria-label="breadcrumb" class="mb-3 px-3">
+  <ol class="breadcrumb bg-transparent rounded">
+    <li class="breadcrumb-item">
+      <a href="{{ route('sector.index') }}">Danh mục</a>
+    </li>
+    @if($sector)
+      <li class="breadcrumb-item">
+        <a href="{{ route('sector.show', $sector->slug) }}">
+          {{ $sector->name }}
+        </a>
+      </li>
+    @endif
+    <li class="breadcrumb-item active" aria-current="page">
+      {{ $collection->name }}
+    </li>
+  </ol>
+</nav>
+
+
 @php
     // Lấy danh sách mục cha kèm con → collection → products
     $roots = \App\Models\SidebarItem::with('children.collection.products')
@@ -11,7 +36,7 @@
              ->get();
 @endphp
 
-<div class="px-3 py-4">
+<div class="px-3 pb-4 pt-2">
   <!-- 1) Parent categories -->
   <div id="mobile-parent-bar" class="d-flex overflow-auto">
     @foreach($roots as $parent)
@@ -145,7 +170,33 @@
 #mobile-child-bar.tang-2 .mobile-child-item {
   animation: slideDown 0.2s ease-out;
 }
+  .breadcrumb-item {
+  font-style: italic;
+  margin-top: 2rem;
+}
+.breadcrumb {
+  padding-top: 1rem;
+}
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #4ab3af;
+}
+.breadcrumb-item {
+    margin: 0 !important;
+}
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
 
+.breadcrumb-item li {
+  color: #4ab3af;
+}
+.breadcrumb-item+.breadcrumb-item::before {
+    float: left;
+    padding-right: var(--bs-breadcrumb-item-padding-x);
+    color: #4ab3af;
+    content: var(--bs-breadcrumb-divider, "/");
+}
 </style>
 @endpush
 
