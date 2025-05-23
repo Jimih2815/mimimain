@@ -64,13 +64,7 @@
 
   {{-- Floating Contact Panel --}}
   <div class="mc-floating-panel expanded text-decoration-none" id="mcFloatingPanel">
-    <button type="button"
-            style="margin-bottom:6rem;"
-            class="mc-floating-toggle"
-            id="mcToggleBtn"
-            aria-label="Mở / Đóng liên hệ">
-      <i class="fas fa-chevron-left"></i>
-    </button>
+
     <div class="mc-floating-contact">
       <a href="tel:0354235669"
          class="mc-floating-contact__btn mc-phone-btn text-decoration-none"
@@ -90,6 +84,12 @@
         <i class="fab fa-facebook-messenger"></i>
       </a>
     </div>
+        <button type="button"
+            class="mc-floating-toggle mb-0 mt-3"
+            id="mcToggleBtn"
+            aria-label="Mở / Đóng liên hệ">
+      <i class="fas fa-chevron-left"></i>
+    </button>
   </div>
 
   {{-- Footer: desktop hoặc mobile --}}
