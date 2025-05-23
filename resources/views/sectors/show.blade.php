@@ -1,6 +1,20 @@
 @extends('layouts.app')
 
+{{-- ▼ BẮT ĐẦU CHÈN SIDEBAR --}}
+@section('sidebar')
+  @include('components.sidebar')
+@endsection
+{{-- ▲ KẾT THÚC CHÈN SIDEBAR --}}
+
+
 @section('content')
+<style>
+h1 {
+    font-weight: 700;
+    font-size: 3rem;
+    color: #b83232;
+}
+</style>
   <div class="container py-4">
     <h1>{{ $sector->name }}</h1>
     <div class="row">

@@ -50,10 +50,10 @@
   <main class="container mx-auto">
     @hasSection('sidebar')
       <div class="row">
-        <aside class="col-md-3 mb-4">
+        <aside style="width: auto;" class="phan-side-bar">
           @yield('sidebar')
         </aside>
-        <section class="col-md-9">
+        <section style="width: calc(98% - 250px);" class="phan-trang">
           @yield('content')
         </section>
       </div>

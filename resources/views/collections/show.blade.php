@@ -7,6 +7,8 @@
 {{-- ▲ KẾT THÚC CHÈN SIDEBAR --}}
 
 @section('content')
+
+
 <div class="py-4 tat-ca-san-pham-cont">
   <h1 class="mb-4">{{ $collection->name }}</h1>
 
