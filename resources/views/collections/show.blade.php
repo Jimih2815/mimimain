@@ -47,7 +47,11 @@
       <div class="col-md-4 mb-4">
         <div class="card h-100">
           @if($product->img)
-            <a href="{{ route('products.show', $product->slug) }}">
+            <a href="{{ route('products.show', [
+                      'slug'            => $product->slug,
+                      'from_collection' => $collection->slug
+                    ]) }}">
+
               <img 
                 src="{{ asset('storage/'.$product->img) }}" 
                 class="card-img-top anh-chinh-san-pham" 

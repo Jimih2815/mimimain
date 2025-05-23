@@ -56,61 +56,71 @@ class ProductController extends Controller
     /**
      * Hiển thị chi tiết sản phẩm theo slug.
      */
-    public function show($slug)
-    {
-        // 1) Lấy product kèm optionValues.type và collections → sectors
-        $product = Product::with([
-                            'optionValues.type',
-                            'collections.sectors'
-                        ])
-                        ->where('slug', $slug)
-                        ->firstOrFail();
+    public function show($slug, Request $request)
+{
+    // 1) Lấy product kèm optionValues.type và collections → sectors
+    $product = Product::with([
+                        'optionValues.type',
+                        'collections.sectors'
+                    ])
+                    ->where('slug', $slug)
+                    ->firstOrFail();
 
-        // 2) Chọn OptionType thực sự dùng cho product
-        $optionTypes = OptionType::whereHas('values.products', function ($q) use ($product) {
-                $q->where('product_id', $product->id);
-            })
-            ->with(['values' => function ($q) use ($product) {
-                $q->whereHas('products', function ($qq) use ($product) {
-                    $qq->where('product_id', $product->id);
-                });
-            }])
-            ->get();
+    // 2) Chọn OptionType thực sự dùng cho product
+    $optionTypes = OptionType::whereHas('values.products', function($q) use($product) {
+            $q->where('product_id', $product->id);
+        })
+        ->with(['values' => function($q) use($product) {
+            $q->whereHas('products', function($qq) use($product) {
+                $qq->where('product_id', $product->id);
+            });
+        }])
+        ->get();
 
-        // 3) Tính breadcrumb:
-        //    - Lấy collection đầu tiên (nếu có nhiều)
-        //    - Lấy sector đầu tiên trong collection đó
+    // 3) Xác định collection ưu tiên:
+    //    nếu có ?from_collection và product thực sự thuộc collection đó → lấy nó
+    //    ngược lại → fallback về collection đầu tiên
+    $fromSlug = $request->query('from_collection');
+    if ($fromSlug
+        && $product->collections->pluck('slug')->contains($fromSlug)
+    ) {
+        $firstCollection = $product->collections
+                                   ->firstWhere('slug', $fromSlug);
+    } else {
         $firstCollection = $product->collections->first();
-        $sector          = $firstCollection
-                           ? $firstCollection->sectors->first()
-                           : null;
-
-        // 4) Lấy related products: ưu tiên cùng collection mới nhất, fallback random
-        if ($firstCollection) {
-            $relatedProducts = $firstCollection->products()
-                ->where('id', '<>', $product->id)
-                ->take(15)
-                ->get();
-        } else {
-            $relatedProducts = Product::where('id', '<>', $product->id)
-                ->inRandomOrder()
-                ->take(15)
-                ->get();
-        }
-
-        // 5) Phát hiện mobile để chọn view
-        $agent = new Agent();
-        $view  = $agent->isMobile()
-            ? 'products.show-mobile'
-            : 'products.show';
-
-        // 6) Trả về view với tất cả biến cần thiết
-        return view($view, compact(
-            'product',
-            'optionTypes',
-            'relatedProducts',
-            'firstCollection',
-            'sector'
-        ));
     }
+
+    // 4) Lấy sector đầu tiên của collection vừa chọn (nếu có)
+    $sector = $firstCollection
+              ? $firstCollection->sectors->first()
+              : null;
+
+    // 5) Lấy related products: ưu tiên cùng collection, fallback random
+    if ($firstCollection) {
+        $relatedProducts = $firstCollection->products()
+            ->where('id', '<>', $product->id)
+            ->take(15)
+            ->get();
+    } else {
+        $relatedProducts = Product::where('id', '<>', $product->id)
+            ->inRandomOrder()
+            ->take(15)
+            ->get();
+    }
+
+    // 6) Chọn view desktop/mobile
+    $agent = new Agent();
+    $view  = $agent->isMobile()
+             ? 'products.show-mobile'
+             : 'products.show';
+
+    // 7) Trả về view với đầy đủ dữ liệu
+    return view($view, compact(
+        'product',
+        'optionTypes',
+        'relatedProducts',
+        'firstCollection',
+        'sector'
+    ));
+}
 }
