@@ -3,8 +3,8 @@
   $roots = SidebarItem::with('children')->whereNull('parent_id')->orderBy('sort_order')->get();
 @endphp
 
-<div class="sb-sidebar quan-ly-side-bar">
-  <ul class="sb-list">
+<div class="sb-sidebar quan-ly-side-bar border-0 bg-transparent">
+  <ul class="sb-list ">
     @foreach($roots as $item)
       <li class="sb-parent">
         <div class="cha-va-btn">

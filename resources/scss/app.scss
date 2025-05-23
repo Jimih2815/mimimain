@@ -620,6 +620,32 @@ body {
 .an-des {
   display: flex;
 }
+.breadcrumb {
+  padding-left: 1.5rem !important;
+}
+.breadcrumb-item {
+  font-style: italic;
+  margin-top: 2rem;
+
+  a {
+    text-decoration: none;
+        color: #4ab3af;
+        &:hover {
+              text-decoration: underline;
+
+        }
+
+  }
+  li {
+    color: #4ab3af;
+  }
+}
+.breadcrumb-item+.breadcrumb-item::before {
+    float: left;
+    padding-right: var(--bs-breadcrumb-item-padding-x);
+    color: #4ab3af;
+    content: var(--bs-breadcrumb-divider, "/");
+}
 @media (max-width: 767.98px) {
   .an-mobi {
     display: flex;

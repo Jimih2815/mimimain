@@ -7,9 +7,29 @@
 {{-- ▲ KẾT THÚC CHÈN SIDEBAR --}}
 
 @section('content')
+<style>
+  .quan-ly-side-bar {
+    border: 0;
+    background: transparent;
+    padding-top: 4rem;
+  }
+  .breadcrumb {
+    position: absolute;
+    left: 21px;
+    z-index: 2000;
+  }
+  .sector-tieu-de {
+  text-align: center;
+  }
+  .sector-cont {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+
+  } 
+</style>
   {{-- Breadcrumb: Danh mục > Tên Sector --}}
   <nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb bg-white px-0">
+    <ol class="breadcrumb bg-transparent px-0 text-decoration-none">
       <li class="breadcrumb-item">
         <a href="{{ route('sector.index') }}">Danh mục</a>
       </li>
@@ -27,8 +47,8 @@
     }
   </style>
 
-  <div class="container py-4">
-    <h1>{{ $sector->name }}</h1>
+  <div class="container sector-cont">
+    <h1 class="sector-tieu-de">{{ $sector->name }}</h1>
     <div class="row">
       @foreach($sector->collections as $col)
         <div class="col-6 col-md-4 col-lg-3 text-center mb-4">

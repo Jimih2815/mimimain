@@ -5,44 +5,52 @@
 
 
 {{-- Breadcrumb: Danh mục > (Sector > Collection) > Product --}}
-@php
-  $hasCol = isset($firstCollection);
-  $hasSec = isset($sector);
-@endphp
-
-<nav aria-label="breadcrumb" class="mb-4">
-  <ol class="breadcrumb bg-white px-3 py-2">
-    <li class="breadcrumb-item">
-      <a href="{{ route('sector.index') }}">Danh mục</a>
-    </li>
-
-    @if($hasSec)
-      <li class="breadcrumb-item">
-        <a href="{{ route('sector.show', $sector->slug) }}">
-          {{ $sector->name }}
-        </a>
-      </li>
-    @endif
-
-    @if($hasCol)
-      <li class="breadcrumb-item">
-        <a href="{{ route('collections.show', $firstCollection->slug) }}">
-          {{ $firstCollection->name }}
-        </a>
-      </li>
-    @endif
-
-    <li class="breadcrumb-item active" aria-current="page">
-      {{ $product->name }}
-    </li>
-  </ol>
-</nav>
+<style>
+  .chi-tiet-san-pham-cont {
+    flex-direction: column;
+  }
+.chi-tiet-san-pham-cont .breadcrumb {
+  padding-left: 0 !important;
+}
+</style>
 
 
 <div class="flex-can-giua">
   <div class="chi-tiet-san-pham-cont">
+  @php
+    $hasCol = isset($firstCollection);
+    $hasSec = isset($sector);
+  @endphp
 
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-transparent p-0 m-0 text-decoration-none">
+      <li class="breadcrumb-item">
+        <a href="{{ route('sector.index') }}">Danh mục</a>
+      </li>
+
+      @if($hasSec)
+        <li class="breadcrumb-item">
+          <a href="{{ route('sector.show', $sector->slug) }}">
+            {{ $sector->name }}
+          </a>
+        </li>
+      @endif
+
+      @if($hasCol)
+        <li class="breadcrumb-item">
+          <a href="{{ route('collections.show', $firstCollection->slug) }}">
+            {{ $firstCollection->name }}
+          </a>
+        </li>
+      @endif
+
+      <li class="breadcrumb-item active" aria-current="page">
+      {{ Str::limit($product->name, 25, '...') }}
+      </li>
+    </ol>
+  </nav>
     <div class="thong-tin-chi-tiet-cont">
+      
       {{-- Cột thumbnails --}}
       @php
         // Lấy sub_img: nếu lưu dưới dạng JSON string, decode; nếu đã là array thì dùng luôn
@@ -87,13 +95,7 @@
 
       <div class="trai-tim-cont d-flex align-items-center justify-content-between gap-2">
         <h2 class="mb-0">{{ $product->name }}</h2>
-        <button
-          type="button"
-          class="btn-favorite trai-tim"
-          data-id="{{ $product->id }}"
-        >
-          <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
-        </button>
+
       </div>
 
       <p class="text-muted">{{ $product->description }}</p>
@@ -138,6 +140,14 @@
             !!!Vui lòng chọn các tuỳ chọn.
           </div>
           <div class="d-flex gap-2 nut-mua-ngay-cont">
+          <button
+          type="button"
+          style="font-size: 2rem;"
+          class="btn-favorite trai-tim border-0 bg-transparent d-flex justify-content-center align-items-center"
+          data-id="{{ $product->id }}"
+        >
+          <i class="{{ $isFav ? 'fas text-danger' : 'far text-muted' }} fa-heart"></i>
+        </button>
             <!-- Nút Thêm vào giỏ hàng -->
             <button type="submit"
                     class="btn-them-gio-trang-chi-tiet">

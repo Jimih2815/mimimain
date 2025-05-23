@@ -8,12 +8,31 @@
 
 @section('content')
 
+<style>
+  .quan-ly-side-bar {
+    border: 0;
+    background: transparent;
+    padding-top: 4rem;
+  }
+  .breadcrumb {
+    position: absolute;
+    left: 21px;
+    z-index: 2000;
+  }
+  h1.mb-4 {
+text-align: center;
+  }
+  .tat-ca-san-pham-cont {
+        padding-top: 2rem;
+        padding-bottom: 2rem;  }
+</style>
+
 @php
     $sector = $collection->sectors->first();
 @endphp
 
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb bg-white px-0">
+  <ol class="breadcrumb bg-transparent px-0">
     {{-- Luôn có Danh mục đầu --}}
     <li class="breadcrumb-item">
       <a href="{{ route('sector.index') }}">Danh mục</a>
@@ -35,12 +54,12 @@
   </ol>
 </nav>
 
-<div class="py-4 tat-ca-san-pham-cont">
+<div class=" tat-ca-san-pham-cont">
   <h1 class="mb-4">{{ $collection->name }}</h1>
 
-  @if($collection->description)
+  <!-- @if($collection->description)
     <p class="text-muted mb-4">{{ $collection->description }}</p>
-  @endif
+  @endif -->
 
   <div class="row">
     @forelse($collection->products as $product)

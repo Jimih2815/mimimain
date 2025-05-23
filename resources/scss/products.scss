@@ -99,10 +99,9 @@
 
 
 .chi-tiet-san-pham-cont {
-  width: 70%;
+  width: 60%;
   display: flex;
   justify-content: center;
-  padding: 3rem 0;
   #total-price {
     color: #b83232;
     font-size: 2rem;
@@ -111,9 +110,9 @@
     display: flex;
     align-items: flex-start;
 
-
+    width: 100%;
     .option-san-pham {
-      width: 380px;
+      width: 45%;
       margin-left: 2rem;
 
 
@@ -125,7 +124,7 @@
       }
     }
     .main-img-container {
-      width: 600px;
+      width: 50%;
       position: sticky;
       top: 2rem;              
       align-self: flex-start;
@@ -238,7 +237,7 @@
   
   
   .cot-anh-phu {
-    width: 100px;
+    width: 10%;
     height: auto;
     position: sticky;
     top: 2rem;              
@@ -348,7 +347,7 @@ $transition-duration: 0.2s;          // thời gian chuyển đổi
 // 2. Container cho tiêu đề + nút tim
 .trai-tim-cont {
   display: flex;
-  align-items: center;
+  align-items: flex-start !important;
   gap: 0.5rem;
 
   h2 {
