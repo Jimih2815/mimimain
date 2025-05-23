@@ -8,7 +8,9 @@
     font-size: 2rem;
     color: #b83232;
 }
-
+.card-title {
+    font-weight: 600;
+}
 </style>
 <div class="container py-4 ">
   <h1 class="h3 mb-4 chu-do">Danh mục</h1>

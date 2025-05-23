@@ -365,12 +365,14 @@
       @endforeach
       {{-- Thêm mục TOÀN BỘ --}}
         <li class="px-3 py-2 danh-sach-header">
-          <a href="{{ route('products.index') }}"
+          <a href="{{ route('sector.index') }}"
             class="d-flex justify-content-between align-items-center text-dark text-decoration-none mau-den-rong">
-            <span>Toàn bộ sản phẩm</span>
+            <span>Danh mục sản phẩm</span>
             <i class="fa fa-chevron-right"></i>
           </a>
         </li>
+
+
         {{-- ==== User CTA & Quick Links ==== --}}
           <div class="px-3 py-3 quick-access">
             
