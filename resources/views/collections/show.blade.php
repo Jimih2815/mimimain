@@ -8,7 +8,32 @@
 
 @section('content')
 
+  @php
+      // Lấy sector đầu tiên nếu collection thuộc nhiều sector
+      $sector = $collection->sectors->first();
+  @endphp
 
+  {{-- breadcrumb navigation --}}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white px-0">
+      <li class="breadcrumb-item">
+        <a href="{{ route('sector.index') }}">Danh mục</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ $sector 
+              ? route('sector.show', $sector->slug) 
+              : route('sector.index') }}">
+          {{ $sector 
+              ? $sector->name 
+              : 'Danh mục' }}
+        </a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ $collection->name }}
+      </li>
+    </ol>
+  </nav>
+  
 <div class="py-4 tat-ca-san-pham-cont">
   <h1 class="mb-4">{{ $collection->name }}</h1>
 

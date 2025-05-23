@@ -128,7 +128,8 @@ Route::view('/how-to-pay', 'how-to-pay')->name('how-to-pay');
 
 
 
-Route::get('/sectors', [SectorController::class, 'index'])->name('sectors.index');
+Route::get('/sectors', [SectorController::class, 'index'])
+      ->name('sector.index');
 
 Route::get('/sector/{slug}', [SectorFrontController::class,'show'])
      ->name('sector.show');

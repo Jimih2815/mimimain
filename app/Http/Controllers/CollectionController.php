@@ -11,34 +11,31 @@ class CollectionController extends Controller
 {
     public function show($slug, Request $request)
     {
-        $collection = Collection::where('slug', $slug)
-                                ->with('products')
+        // 1) Lấy collection kèm products + sectors
+        $collection = Collection::with(['products', 'sectors'])
+                                ->where('slug', $slug)
                                 ->firstOrFail();
 
-        // Phát hiện mobile
+        // 2) Sector đầu tiên (nếu collection có nhiều sector)
+        $sector = $collection->sectors->first();
+
+        // 3) Phân mobile vs desktop
         $agent = new Agent();
         if ($agent->isMobile()) {
-            // Lấy cây menu bên mobile (nếu bạn đã dùng SidebarItem như trước)
             $roots = SidebarItem::with('children.collection.products')
-                       ->whereNull('parent_id')
-                       ->orderBy('sort_order')
-                       ->get();
+                        ->whereNull('parent_id')
+                        ->orderBy('sort_order')
+                        ->get();
 
-            // Thêm check auth:
-            if (auth()->check()) {
-                $favIds = auth()->user()->favorites()->pluck('product_id')->toArray();
-            } else {
-                $favIds = [];  // chưa login thì cho mảng rỗng
-            }
+            $favIds = auth()->check()
+                ? auth()->user()->favorites()->pluck('product_id')->toArray()
+                : [];
 
             return view('collections.show-mobile', compact(
-                'collection',
-                'roots',
-                'favIds'
+                'collection', 'roots', 'favIds', 'sector'
             ));
         }
 
-        // Desktop fallback
-        return view('collections.show', compact('collection'));
+        return view('collections.show', compact('collection', 'sector'));
     }
 }
