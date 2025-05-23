@@ -58,12 +58,15 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        // 1) Lấy product kèm optionValues.type
-        $product = Product::where('slug', $slug)
-                          ->with('optionValues.type')
-                          ->firstOrFail();
+        // 1) Lấy product kèm optionValues.type và collections → sectors
+        $product = Product::with([
+                            'optionValues.type',
+                            'collections.sectors'
+                        ])
+                        ->where('slug', $slug)
+                        ->firstOrFail();
 
-        // 2) Lấy những OptionType thực sự dùng cho sản phẩm này
+        // 2) Chọn OptionType thực sự dùng cho product
         $optionTypes = OptionType::whereHas('values.products', function ($q) use ($product) {
                 $q->where('product_id', $product->id);
             })
@@ -74,13 +77,17 @@ class ProductController extends Controller
             }])
             ->get();
 
-        // 3) Lấy related products: ưu tiên cùng collection mới nhất, fallback random
-        $latestCollection = $product->collections()
-                                    ->orderBy('created_at', 'desc')
-                                    ->first();
+        // 3) Tính breadcrumb:
+        //    - Lấy collection đầu tiên (nếu có nhiều)
+        //    - Lấy sector đầu tiên trong collection đó
+        $firstCollection = $product->collections->first();
+        $sector          = $firstCollection
+                           ? $firstCollection->sectors->first()
+                           : null;
 
-        if ($latestCollection) {
-            $relatedProducts = $latestCollection->products()
+        // 4) Lấy related products: ưu tiên cùng collection mới nhất, fallback random
+        if ($firstCollection) {
+            $relatedProducts = $firstCollection->products()
                 ->where('id', '<>', $product->id)
                 ->take(15)
                 ->get();
@@ -91,13 +98,19 @@ class ProductController extends Controller
                 ->get();
         }
 
-        // 4) Phân biệt mobile vs desktop để chọn view
+        // 5) Phát hiện mobile để chọn view
         $agent = new Agent();
         $view  = $agent->isMobile()
             ? 'products.show-mobile'
             : 'products.show';
 
-        // 5) Trả về view với đầy đủ dữ liệu
-        return view($view, compact('product', 'optionTypes', 'relatedProducts'));
+        // 6) Trả về view với tất cả biến cần thiết
+        return view($view, compact(
+            'product',
+            'optionTypes',
+            'relatedProducts',
+            'firstCollection',
+            'sector'
+        ));
     }
 }

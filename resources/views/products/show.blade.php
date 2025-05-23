@@ -2,6 +2,42 @@
 @extends('layouts.app')
 
 @section('content')
+
+
+{{-- Breadcrumb: Danh mục > (Sector > Collection) > Product --}}
+@php
+  $hasCol = isset($firstCollection);
+  $hasSec = isset($sector);
+@endphp
+
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb bg-white px-3 py-2">
+    {{-- 1) Luôn có Danh mục --}}
+    <li class="breadcrumb-item">
+      <a href="{{ route('sector.index') }}">Danh mục</a>
+    </li>
+
+    {{-- 2) Nếu có sector và collection thì show thêm --}}
+    @if($hasCol && $hasSec)
+      <li class="breadcrumb-item">
+        <a href="{{ route('sector.show', $sector->slug) }}">
+          {{ $sector->name }}
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ route('collections.show', $firstCollection->slug) }}">
+          {{ $firstCollection->name }}
+        </a>
+      </li>
+    @endif
+
+    {{-- 3) Luôn có tên sản phẩm --}}
+    <li class="breadcrumb-item active" aria-current="page">
+      {{ $product->name }}
+    </li>
+  </ol>
+</nav>
+
 <div class="flex-can-giua">
   <div class="chi-tiet-san-pham-cont">
 

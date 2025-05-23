@@ -57,8 +57,13 @@ class Product extends Model
     /**
      * Quan hệ many-to-many tới Collection
      */
-    public function collections()
+     public function collections()
     {
-        return $this->belongsToMany(Collection::class, 'collection_product');
+        return $this->belongsToMany(
+            \App\Models\Collection::class,
+            'collection_product',    // tên bảng pivot
+            'product_id',            // khóa ngoại trên pivot trỏ về product
+            'collection_id'          // khóa ngoại trên pivot trỏ về collection
+        );
     }
 }
