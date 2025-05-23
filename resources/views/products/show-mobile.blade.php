@@ -229,7 +229,11 @@
     background:transparent; border:none;
     color:#fff; font-size:2rem; line-height:1;
   }
-
+.img-fluid {
+      height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
 /* ==== Hiệu ứng ảnh bay vào giỏ ==== */
 .flying-img {
   position: fixed;
