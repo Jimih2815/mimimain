@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .wp-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 5rem 1rem;
@@ -40,6 +40,57 @@
   .wp-section ol {
     padding-left: 1.25rem;
   }
+  @media (max-width: 760px) {
+  /* === Global Overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === Warranty Policy – Mobile styles === */
+  /* Hero */
+  .wp-hero {
+    padding: 3rem 1rem;       /* giảm padding dọc */
+  }
+  .wp-hero h1 {
+    font-size: 1.8rem;        /* chữ vừa đủ nổi bật */
+  }
+  .wp-hero p.lead {
+    font-size: .95rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;    /* tận dụng không gian */
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .wp-section {
+    padding: 1.5rem 0.5rem;
+  }
+  .wp-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .wp-section p,
+  .wp-section li {
+    font-size: . Nine五rem;   /* ~0.95rem */
+    line-height: 1.6;
+  }
+  .wp-section ul,
+  .wp-section ol {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+  .wp-section ul li,
+  .wp-section ol li {
+    margin-bottom: .5rem;
+  }
+}
+
 </style>
 
 <div class="wp-hero">

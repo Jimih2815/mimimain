@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .tracking-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -42,6 +42,64 @@
   .tracking-section.bg-light {
     background: #f8f9fa;
   }
+  @media (max-width: 760px) {
+  /* === Global overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === Tracking – Mobile styles === */
+  /* Hero */
+  .tracking-hero {
+    padding: 3rem 1rem;       /* giảm padding dọc */
+  }
+  .tracking-hero h1 {
+    font-size: 1.8rem;        /* tiêu đề vừa phải */
+  }
+  .tracking-hero p.lead {
+    font-size: .95rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;    /* tận dụng không gian */
+    margin: 0 auto;
+  }
+
+  /* Section */
+  .tracking-section {
+    padding: 1.5rem 0.5rem;
+  }
+  .tracking-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .tracking-section p,
+  .tracking-section li {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .tracking-section ul,
+  .tracking-section ol {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+  .tracking-section ul li,
+  .tracking-section ol li {
+    margin-bottom: .5rem;
+  }
+
+  /* Liên kết nhanh */
+  .tracking-section a {
+    font-size: .95rem;
+    text-decoration: underline;
+  }
+}
+
 </style>
 
 <div class="tracking-hero">

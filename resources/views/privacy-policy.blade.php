@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .pp-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -41,6 +41,58 @@
   .pp-section.bg-light {
     background: #f8f9fa;
   }
+  @media (max-width: 760px) {
+  /* === Global Overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === Privacy Policy – Mobile styles === */
+  /* Hero */
+  .pp-hero {
+    padding: 3rem 1rem;     /* giảm lại cho vừa màn nhỏ */
+  }
+  .pp-hero h1 {
+    font-size: 1.8rem;      /* chữ to mà không lấn át */
+  }
+  .pp-hero p.lead {
+    font-size: .95rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;  /* tận dụng hết không gian */
+    margin: 0 auto;
+  }
+
+  /* Section */
+  .pp-section {
+    padding: 1.5rem 0.5rem;
+  }
+  .pp-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .pp-section p,
+  .pp-section li {
+    font-size: . Nine五rem; /* ~0.95rem */
+    line-height: 1.6;
+  }
+  .pp-section ul {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+
+  /* Khoảng cách giữa các mục li */
+  .pp-section ul li {
+    margin-bottom: .5rem;
+  }
+}
+
 </style>
 
 <div class="pp-hero">

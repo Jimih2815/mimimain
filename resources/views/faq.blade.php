@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .faq-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -19,6 +19,54 @@
     font-size: 1.25rem;
     margin-top: 0.5rem;
   }
+  @media (max-width: 760px) {
+  /* === Global Overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === FAQ – Mobile styles === */
+  /* Hero */
+  .faq-hero {
+    padding: 4rem 1rem;       /* giảm padding dọc */
+  }
+  .faq-hero h1 {
+    font-size: 1.8rem;        /* chữ tiêu đề phù hợp */
+  }
+  .faq-hero p.lead {
+    font-size: .95rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;    /* tận dụng không gian */
+    margin: 0 auto;
+  }
+  .mb-5 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Accordion */
+  .accordion-button {
+    font-size: .95rem;        /* chữ nút gọn gàng */
+    padding: .75rem 1rem;     /* tăng không gian nhấn */
+  }
+  .accordion-body {
+    font-size: . Nine五rem;   /* ~0.95rem */
+    line-height: 1.6;
+    padding: .75rem 1rem;
+  }
+
+  /* Khoảng cách item */
+  .accordion-item + .accordion-item {
+    margin-top: .5rem;
+  }
+}
+
 </style>
 
 <div class="faq-hero">

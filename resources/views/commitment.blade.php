@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .cm-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -59,11 +59,78 @@
     font-size: 1rem;
     color: #555;
   }
+  /* Mobile styles (<=576px) */
+@media (max-width: 760px) {
+  /* Hero */
+   main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+  .cm-hero {
+    padding: 4rem 1rem;               /* giảm padding dọc */
+  }
+  .cm-hero h1 {
+    font-size: 2rem;                  /* chữ nhỏ gọn hơn */
+  }
+  .cm-hero p.lead {
+    font-size: 1rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper */
+  .w-70 {
+    width: 90% !important;
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .cm-section {
+    padding: 2rem 0.5rem;
+  }
+  .cm-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: .75rem;
+  }
+  .cm-section p {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+
+  /* Commitment Grid xuống 2 cột */
+  .commitment-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .commitment-item i {
+    font-size: 2rem;
+  }
+  .commitment-item h5 {
+    font-size: 1rem;
+    margin: .5rem 0;
+  }
+  .commitment-item p {
+    font-size: .875rem;
+  }
+
+  /* CTA Button */
+  .btn-mimi.nut-xanh {
+    display: block;
+    width: 100%;
+    padding: .75rem;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
 </style>
 
 <div class="cm-hero">
   <div class="container">
-    <h1>Cam kết của MimiMain</h1>
+    <h1>Cam kết của MiMi</h1>
     <p class="lead">Chất lượng – An toàn – Tận tâm trong từng sản phẩm</p>
   </div>
 </div>
@@ -72,7 +139,7 @@
   {{-- Quality Commitment --}}
   <section class="cm-section">
     <h2>Cam kết Chất Lượng</h2>
-    <p>Mỗi sản phẩm của MimiMain đều trải qua quy trình kiểm định nghiêm ngặt, từ khâu chọn nguyên liệu đến khâu thành phẩm, nhằm đảm bảo chất lượng vượt trội và độ bền lâu dài.</p>
+    <p>Mỗi sản phẩm của MiMi đều trải qua quy trình kiểm định nghiêm ngặt, từ khâu chọn nguyên liệu đến khâu thành phẩm, nhằm đảm bảo chất lượng vượt trội và độ bền lâu dài.</p>
   </section>
 
   {{-- Safety & Environment --}}
@@ -140,7 +207,7 @@
 
   {{-- CTA Section --}}
   <section class="cm-section text-center">
-    <h2>Đặt trọn niềm tin vào MimiMain</h2>
+    <h2>Đặt trọn niềm tin vào MiMi</h2>
     <p>Hãy để chúng tôi đồng hành cùng khoảnh khắc ý nghĩa của bạn với cam kết chất lượng và dịch vụ hàng đầu.</p>
     <a href="{{ route('products.index') }}" class="btn-mimi nut-xanh text-decoration-none">Khám phá ngay</a>
   </section>

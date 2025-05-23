@@ -6,7 +6,7 @@
   /* Hero Section */
   .about-hero {
     position: relative;
-    background: url('/images/about-hero.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     padding: 8rem 0;
     text-align: center;
@@ -15,7 +15,7 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
   }
   .about-hero .container {
     position: relative;
@@ -90,6 +90,117 @@
     border-radius: 50%;
     margin-bottom: 1rem;
   }
+
+  /* Mobile styles (<=576px) */
+@media (max-width: 760px) {
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+  /* Hero */
+  .about-hero {
+    padding: 4rem 0;               /* giảm padding để nội dung không quá “khổng lồ” */
+  }
+  .about-hero h1 {
+    font-size: 2rem;               /* chữ nhỏ lại cho vừa màn hình */
+  }
+  .about-hero p.lead {
+    font-size: 1rem;
+    margin-top: .5rem;
+  }
+
+  /* Container chung */
+  .w-70 {
+    width: 90% !important;         /* mở rộng thành 90% để tận dụng không gian */
+    margin: 0 auto;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Core Values: 2 cột thay vì 4 */
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .value-item i {
+    font-size: 2rem;
+  }
+  .value-item h5 {
+    font-size: 1rem;
+  }
+  .value-item p {
+    font-size: .875rem;
+  }
+
+  /* Timeline: thu gọn, đỡ chiếm chỗ */
+  .timeline {
+    padding-left: 1.5rem;
+  }
+  .timeline::before {
+    left: .75rem;
+    width: 3px;
+  }
+  .timeline-item {
+    margin-bottom: 1.5rem;
+    padding-left: .75rem;
+  }
+  .timeline-item h5 {
+    font-size: 1rem;
+  }
+  .timeline-item p {
+    font-size: .875rem;
+  }
+
+  /* Team: 2 cột, avatar nhỏ hơn */
+  .team-member {
+    flex: 0 0 48%;
+    max-width: 48%;
+    margin-bottom: 1.5rem;
+  }
+  .team-member img {
+    width: 80px;
+    height: 80px;
+  }
+  .team-member h5 {
+    font-size: 1rem;
+  }
+  .team-member p {
+    font-size: .875rem;
+  }
+
+  /* Statistics */
+  .d-flex.justify-content-center {
+    flex-wrap: wrap;
+  }
+  .d-flex.justify-content-center > div {
+    flex: 0 0 45%;
+    max-width: 45%;
+    margin-bottom: 1rem;
+  }
+  .d-flex.justify-content-center h3 {
+    font-size: 1.5rem;
+  }
+  .d-flex.justify-content-center p {
+    font-size: .875rem;
+  }
+
+  /* CTA */
+  .btn-mimi.nut-xanh {
+    display: block;
+    width: 100%;
+    padding: .75rem;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
 </style>
 
 <div class="about-hero">

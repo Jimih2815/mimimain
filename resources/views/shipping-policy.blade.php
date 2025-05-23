@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .sp-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -41,6 +41,58 @@
   .sp-section.bg-light {
     background: #f8f9fa;
   }
+  @media (max-width: 760px) {
+  /* === Global overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === Shipping Policy – Mobile styles === */
+  /* Hero */
+  .sp-hero {
+    padding: 3rem 1rem;       /* giảm padding dọc cho vừa màn hình */
+  }
+  .sp-hero h1 {
+    font-size: 1.8rem;        /* chữ tiêu đề vừa phải */
+  }
+  .sp-hero p.lead {
+    font-size: .95rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;    /* tận dụng không gian rộng hơn */
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .sp-section {
+    padding: 1.5rem 0.5rem;
+  }
+  .sp-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .sp-section p,
+  .sp-section li {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .sp-section ul {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+
+  /* Khoảng cách giữa các mục li */
+  .sp-section ul li {
+    margin-bottom: .5rem;
+  }
+}
+
 </style>
 
 <div class="sp-hero">

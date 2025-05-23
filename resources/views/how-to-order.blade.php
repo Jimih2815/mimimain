@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .ho-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -40,6 +40,62 @@
   .ho-section.bg-light {
     background: #f8f9fa;
   }
+  @media (max-width: 760px) {
+  /* === Global overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === How To Order – Mobile styles === */
+  /* Hero */
+  .ho-hero {
+    padding: 4rem 1rem;        /* gọn gàng hơn trên màn nhỏ */
+  }
+  .ho-hero h1 {
+    font-size: 1.8rem;         /* vừa đủ nổi bật */
+  }
+  .ho-hero p.lead {
+    font-size: .95rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;     /* tận dụng không gian */
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .ho-section {
+    padding: 1.5rem 0.5rem;
+  }
+  .ho-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .ho-section p,
+  .ho-section li {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .ho-section ul {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+  .ho-section ul li {
+    margin-bottom: .5rem;
+  }
+
+  /* Nút và liên kết */
+  .ho-section a {
+    font-size: .95rem;
+    text-decoration: underline;
+  }
+}
+
 </style>
 
 <div class="ho-hero">
@@ -100,7 +156,7 @@
   </section>
 
   {{-- 7. Theo dõi & hỗ trợ --}}
-  <section class="ho-section text-center">
+  <section class="ho-section">
     <h2>7. Theo dõi & Hỗ trợ</h2>
     <p>Vào <a href="{{ route('profile.edit') }}">Trang Cá Nhân</a> hoặc <a href="{{ route('faq') }}">FAQ</a> để theo dõi đơn hàng và nhận trợ giúp.</p>
     <p>Hotline hỗ trợ: <strong>0354235669</strong></p>

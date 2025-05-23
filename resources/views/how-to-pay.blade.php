@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .pay-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -42,6 +42,64 @@
   .pay-section.bg-light {
     background: #f8f9fa;
   }
+  @media (max-width: 760px) {
+  /* === Global Overrides cho mọi trang trên điện thoại === */
+  main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+
+  /* === How To Pay – Mobile styles === */
+  /* Hero */
+  .pay-hero {
+    padding: 3rem 1rem;        /* giảm padding dọc cho vừa màn hình */
+  }
+  .pay-hero h1 {
+    font-size: 1.8rem;         /* tiêu đề vừa mắt */
+  }
+  .pay-hero p.lead {
+    font-size: .95rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper chung */
+  .w-50 {
+    width: 90% !important;     /* tận dụng không gian rộng hơn */
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .pay-section {
+    padding: 1.5rem 0.5rem;
+  }
+  .pay-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .pay-section p,
+  .pay-section li {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .pay-section ul,
+  .pay-section ol {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+  .pay-section ul li,
+  .pay-section ol li {
+    margin-bottom: .5rem;
+  }
+
+  /* Liên kết và nút nhấn */
+  .pay-section a {
+    font-size: .95rem;
+    text-decoration: underline;
+  }
+}
+
 </style>
 
 <div class="pay-hero">

@@ -50,6 +50,78 @@
     color: #4ab3af;
     margin-bottom: 0.5rem;
   }
+  /* Mobile styles (<=576px) */
+@media (max-width: 760px) {
+  /* Hero */
+   main {
+    padding: 4rem 0 0 0 !important;
+  }
+  #mcFloatingPanel {
+    display: none;
+  }
+  .vm-hero {
+    padding: 4rem 1rem;               /* gọn gàng hơn */
+  }
+  .vm-hero h1 {
+    font-size: 2rem;                  /* vừa đủ nổi bật */
+  }
+  .vm-hero p.lead {
+    font-size: 1rem;
+    margin-top: .5rem;
+  }
+
+  /* Wrapper */
+  .w-70 {
+    width: 90% !important;
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .vm-section {
+    padding: 2rem 0.5rem;
+  }
+  .vm-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: .75rem;
+  }
+  .vm-section p,
+  .vm-section li {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .vm-section ul {
+    padding-left: 1.2rem;
+    margin-top: .5rem;
+  }
+
+  /* Values Grid xuống 2 cột */
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .value-item i {
+    font-size: 2rem;
+  }
+  .value-item h5 {
+    font-size: 1rem;
+    margin: .5rem 0;
+  }
+  .value-item p {
+    font-size: .875rem;
+  }
+
+  /* CTA Button */
+  .btn-mimi.nut-xanh {
+    display: block;
+    width: 100%;
+    padding: .75rem;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
 </style>
 
 <div class="vm-hero">
