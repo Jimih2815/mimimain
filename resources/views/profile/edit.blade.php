@@ -148,6 +148,24 @@
     font-size: 1.5rem;
     font-weight: 700;
 }
+.note-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.note-body::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Màu nền thanh trượt */
+  border-radius: 4px;
+}
+
+.note-body::-webkit-scrollbar-thumb {
+  background:rgb(122, 207, 204); /* Màu chính của trang */
+  border-radius: 4px;
+}
+
+.note-body::-webkit-scrollbar-thumb:hover {
+  background: #369a98; /* Hover: tối hơn 1 tí */
+}
+
 </style>
 <div class="w-70 mx-auto mt-5 mb-5 trang-thong-tin">
 
