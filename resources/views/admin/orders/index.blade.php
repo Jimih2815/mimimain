@@ -49,7 +49,10 @@
   opacity: 0.5;
   pointer-events: none;
 }
-
+  .status-cancelled {
+    background-color: #f8d7da !important;  /* đỏ nhạt */
+    color: #721c24     !important;          /* đỏ đậm chữ */
+  }
 </style>
 
 <div class="container py-4">
@@ -114,44 +117,52 @@
             @endif
           </td>
 
-          {{-- 6. Tracking number (inline edit) --}}
-          <td>
+               {{-- 6. Mã vận đơn (inline edit) --}}
+        <td class="{{ $o->status === 'cancelled' ? 'bg-light' : '' }}">
+          @if($o->status !== 'cancelled')
             <form action="{{ route('admin.orders.update', $o) }}" method="POST" class="d-flex">
-              @csrf
-              @method('PUT')
+              @csrf @method('PUT')
               <input
                 type="text"
                 name="tracking_number"
                 value="{{ $o->tracking_number }}"
                 class="form-control form-control-sm me-1"
                 placeholder="Mã vận đơn">
-              <button style="padding: 0.4rem 1rem; font-size: 1rem;" class="btn-mimi nut-xanh-la">Lưu</button>
+              <button class="btn-mimi nut-xanh-la" style="padding:0.4rem 1rem;font-size:1rem">
+                Lưu
+              </button>
             </form>
-          </td>
+          @else
+            <input
+              type="text"
+              class="form-control form-control-sm text-muted"
+              disabled
+              value="{{ $o->tracking_number ?? '-' }}">
+          @endif
+        </td>
 
-          {{-- 7. Status dropdown (auto-submit) --}}
-          <td>
-            <form action="{{ route('admin.orders.update', $o) }}" method="POST">
-              @csrf
-              @method('PUT')
-              <select
-                name="status"
-                class="form-select form-select-sm"
-                onchange="this.form.submit()">
-                <option value="pending"  {{ $o->status=='pending'  ? 'selected' : '' }}>Đã tiếp nhận</option>
-                <option value="shipping" {{ $o->status=='shipping' ? 'selected' : '' }}>Đang giao hàng</option>
-                <option value="done"     {{ $o->status=='done'     ? 'selected' : '' }}>Đã giao hàng</option>
-              </select>
-            </form>
-          </td>
+        {{-- 7. Status dropdown --}}
+        <td>
+          <form action="{{ route('admin.orders.update', $o) }}" method="POST">
+            @csrf @method('PUT')
+            <select
+              name="status"
+              class="form-select form-select-sm {{ $o->status==='cancelled'?'status-cancelled':'' }}"
+              onchange="this.form.submit()">
+              <option value="pending"   {{ $o->status=='pending'   ? 'selected':'' }}>Đã tiếp nhận</option>
+              <option value="shipping"  {{ $o->status=='shipping'  ? 'selected':'' }}>Đang giao hàng</option>
+              <option value="done"      {{ $o->status=='done'      ? 'selected':'' }}>Đã giao hàng</option>
+              <option value="cancelled" {{ $o->status=='cancelled' ? 'selected':'' }}>Đã hủy</option>
+            </select>
+          </form>
+        </td>
 
-          {{-- 8. Ngày tạo --}}
-          <td>{{ $o->created_at->format('d/m H:i') }}</td>
-        </tr>
-
+        {{-- 8. Ngày tạo --}}
+        <td>{{ $o->created_at->format('d/m H:i') }}</td>
+      </tr>
         {{-- Chi tiết các item trong đơn --}}
         <tr>
-          <td colspan="8">
+          <td colspan="9">
             <ul class="mb-0">
               @foreach($o->items as $it)
                 <li>

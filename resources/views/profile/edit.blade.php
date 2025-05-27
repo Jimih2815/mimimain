@@ -4,6 +4,42 @@
 @section('title','Hồ sơ của tôi')
 
 @section('content')
+<style>
+  .nut-huy {
+
+    font-size: 1rem !important;
+    font-weight: 600;
+    width: auto;
+    padding: 0.2rem 0.5rem !important;
+    white-space: nowrap;
+    border-radius: 50px !important;
+    color: white;
+    background-color: #b83232;
+
+  }
+  .nut-huy:hover {
+        background-color:rgb(231, 135, 135);
+
+  }
+  .da-huy {
+        font-size: 1rem;
+    font-weight: 600;
+    width: auto;
+    padding: 0.2rem 0.5rem !important;
+    white-space: nowrap;
+    border-radius: 50px !important;
+    color: white;
+    background-color:rgb(167, 157, 157);
+  }
+  .trang-thong-tin form {
+    padding: 0;
+  }
+  .table td, .table th {
+  vertical-align: middle !important;
+  text-align: center;
+}
+
+</style>
 <div class="w-70 mx-auto mt-5 mb-5 trang-thong-tin">
 
   {{-- Nav tabs --}}
@@ -132,70 +168,106 @@
 
     {{-- Theo dõi đơn hàng --}}
     <div style="padding-top:2rem; background-color:#ffffff;" class="tab-pane fade"
-        id="orders"
-        role="tabpanel"
-        aria-labelledby="orders-tab">
+         id="orders"
+         role="tabpanel"
+         aria-labelledby="orders-tab">
       @if($orders->isEmpty())
         <p>Chưa có đơn hàng nào.</p>
       @else
-      <div id="orders-content">
-        <table class="table table-bordered text-center">
-          <thead>
-            <tr>
-              <th>Mã đơn hàng</th>
-              <th>Ảnh</th>
-              <th>Sản phẩm</th>
-              <th>Thanh toán</th>
-              <th>Hình thức</th>
-              <th>Mã vận đơn</th>
-              <th>Trạng thái</th>
-              <th>Ngày đặt</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($orders as $o)
+        <div id="orders-content">
+          <table class="table table-bordered text-center">
+            <thead>
               <tr>
-                <td>{{ $o->order_code }}</td>
-                <!-- Ảnh sản phẩm đầu tiên -->
-                <td>
-                  @php $it = $o->items->first(); @endphp
-                  <img src="{{ asset('storage/'.$it->product->img) }}"
-                      style="width:50px;height:50px;object-fit:cover;">
-                </td>
-                <!-- Tên + thuộc tính -->
-                <td>
-                  @foreach($o->items as $it)
-                    {{ $it->product->name }} × {{ $it->quantity }}
-                    @if($it->options)
-                      <ul class="mb-1">
-                        @foreach(\App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get() as $v)
-                          <li>{{ $v->type->name }}: {{ $v->value }}</li>
-                        @endforeach
-                      </ul>
-                    @endif
-                    <hr class="my-1">
-                  @endforeach
-                </td>
-                <td>{{ number_format($o->total,0,',','.') }}₫</td>
-                <td>{{ $o->payment_method=='cod'?'COD':'Chuyển khoản' }}</td>
-                <td><div class="d-flex  flex-column">{{ $o->tracking_number ?? '—' }} <a style="color:#d1a029;" href="https://spx.vn/track" target="_blank">Tra cứu đơn hàng</a></div></td>
-                @php
-                  $statusLabels = [
-                    'pending'  => 'Đã tiếp nhận',
-                    'shipping' => 'Đang giao hàng',
-                    'done'     => 'Đã nhận hàng',
-                  ];
-                  $statusClass = 'status-' . $o->status;
-                @endphp
-
-                <td class="{{ $statusClass }}">
-                  {{ $statusLabels[$o->status] ?? ucfirst($o->status) }}
-                </td>
-                <td>{{ $o->created_at->format('d/m/Y H:i') }}</td>
+                <th >Mã đơn hàng</th>
+                <th>Ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Thanh toán</th>
+                <th>Hình thức</th>
+                <th>Mã vận đơn</th>
+                <th>Trạng thái</th>
+                <th>Ngày đặt</th>
+                <th style="width: 1rem;">Thao tác</th> 
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach($orders as $o)
+                <tr>
+                  <td>{{ $o->order_code }}</td>
+                  <!-- Ảnh -->
+                  <td>
+                    @php $it = $o->items->first(); @endphp
+                    <img src="{{ asset('storage/'.$it->product->img) }}"
+                         style="width:50px;height:50px;object-fit:cover;">
+                  </td>
+                  <!-- Tên + thuộc tính -->
+                  <td>
+                    @foreach($o->items as $it)
+                      {{ $it->product->name }} × {{ $it->quantity }}
+                      @if($it->options)
+                        <ul class="mb-1">
+                          @foreach(\App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get() as $v)
+                            <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                          @endforeach
+                        </ul>
+                      @endif
+                      <hr class="my-1">
+                    @endforeach
+                  </td>
+                  <td>{{ number_format($o->total,0,',','.') }}₫</td>
+                  <td>{{ $o->payment_method=='cod'?'COD':'Chuyển khoản' }}</td>
+                  <td>
+                    <div class="d-flex flex-column">
+                      {{ $o->tracking_number ?? '—' }}
+                      <a style="color:#d1a029;" href="https://spx.vn/track" target="_blank">Tra cứu đơn hàng</a>
+                    </div>
+                  </td>
+                  @php
+                    $statusLabels = [
+                      'pending'   => 'Đã tiếp nhận',
+                      'shipping'  => 'Đang giao hàng',
+                      'done'      => 'Đã nhận hàng',
+                      'cancelled' => 'Đã hủy',       // Thêm nhãn mới
+                    ];
+                    $statusClass = 'status-' . $o->status;
+                  @endphp
+                  <td class="{{ $statusClass }}">
+                    {{ $statusLabels[$o->status] ?? ucfirst($o->status) }}
+                  </td>
+                  <td>{{ $o->created_at->format('d/m/Y H:i') }}</td>
+                  {{-- Thao tác --}}
+                  <td>
+                    @if($o->status === 'pending')
+                  {{-- Nút hủy bình thường --}}
+                  <form method="POST"
+                        action="{{ route('orders.cancel', $o->id) }}"
+                        onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn #{{ $o->order_code }}?');">
+                    @csrf
+                    <button type="submit" class="btn-mimi nut-huy">
+                      Hủy đơn
+                    </button>
+                  </form>
+
+                @elseif($o->status === 'cancelled')
+                  {{-- Đã hủy rồi: disable --}}
+                  <button type="button"
+                          class="btn-mimi da-huy"
+                          disabled>
+                    Đã hủy
+                  </button>
+
+                @else
+                  {{-- Đang giao hoặc đã nhận: chỉ show alert --}}
+                  <button type="button"
+                          class="btn-mimi nut-huy"
+                          onclick="alert('Đơn hàng đã được bàn giao cho Shipper - không thể hủy đơn');">
+                    Hủy đơn
+                  </button>
+                @endif
+              </td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
       
         @php
     $current = $orders->currentPage();

@@ -97,4 +97,29 @@ class ProfileController extends Controller
 
         return back()->with('password_status', 'Đổi mật khẩu thành công!');
     }
+public function cancelOrder(\App\Models\Order $order)
+{
+    if ($order->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    // flash key riêng để khỏi lẫn với profile-update
+    $flashKey = 'order_status';
+
+    if ($order->status === 'pending') {
+        $order->status = 'cancelled';
+        $order->save();
+
+        // redirect về /profile#orders với flash order_status
+        return redirect()
+            ->to(route('profile.edit') . '#orders')
+            ->with($flashKey, 'Đơn hàng đã được hủy thành công.');
+    }
+
+    return redirect()
+        ->to(route('profile.edit') . '#orders')
+        ->with($flashKey, 'Đơn hàng đã được bàn giao cho Shipper - không thể hủy đơn');
+}
+
+
 }

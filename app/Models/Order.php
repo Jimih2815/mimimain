@@ -18,6 +18,7 @@ class Order extends Model
         'bank_ref',
         'total',
         'order_code', 
+        'status', 
     ];
     protected static function boot(): void
     {
