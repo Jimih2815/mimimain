@@ -3,6 +3,32 @@
 @section('title','Đặt hàng thành công')
 
 @section('content')
+<style>
+  @media (max-width: 760px) { 
+    .trang-cam-on {
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+}
+.anh-cam-on-mua-hang-cont img {
+    width: 100%;
+}
+.nut-vang, .nut-xanh {
+    font-size: 1rem;
+    width: 11rem;
+}
+#mcFloatingPanel {
+  display: none;
+}
+.anh-cam-on-mua-hang-cont {
+    margin-top: 4rem;
+}
+.py-5 {
+    padding-top: 0rem !important;
+    padding-bottom: 3rem !important;
+}
+  }
+</style>
 <div class="fex-can-giua bat-col">
   <div class="anh-cam-on-mua-hang-cont">
     <img src="{{ asset('hinhanh/anh-cam-on.png') }}" 
