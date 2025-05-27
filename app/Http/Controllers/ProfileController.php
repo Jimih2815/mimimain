@@ -23,9 +23,13 @@ class ProfileController extends Controller
     // 1) Lấy user & orders
     $user = Auth::user();
     $orders = $user->orders()
-               ->with('items.product','notes.user')
-               ->latest()
-               ->paginate(10);
+    ->with('items.product','notes.user')
+    // Đặt tất cả những order có status = 'cancelled' về cuối (false = 0, true = 1)
+    ->orderByRaw("CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END ASC")
+    // Trong mỗi nhóm (chưa hủy / đã hủy), sort theo created_at desc
+    ->orderBy('created_at','desc')
+    ->paginate(10);
+
 
 
     // 2) Lấy và sắp xếp helpRequests giống logic trong Blade

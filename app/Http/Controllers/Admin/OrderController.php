@@ -18,8 +18,10 @@ public function index(Request $request)
     $search = $request->input('q');
 
     // 1) Khởi tạo query với eager-load user và items.product
-    $query = Order::with(['user', 'items.product'])
-                  ->latest();
+    $query = Order::with(['user','items.product'])
+    ->orderByRaw("CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END ASC")
+    ->orderBy('created_at','desc');
+
 
     // 2) Nếu có search thì filter theo fullname, address, phone, order_code,
     //    tracking_number và email của user liên quan

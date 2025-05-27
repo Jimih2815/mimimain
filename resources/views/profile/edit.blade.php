@@ -376,7 +376,7 @@
                             data-order-id="{{ $o->id }}"
                             data-order-code="{{ $o->order_code }}"
                             data-note="{{ $o->note }}">
-                      Ghi chú
+                      Chat
                     </button>
                     <div id="notes-data-{{ $o->id }}" style="display:none;">
                       @foreach($o->notes as $n)
