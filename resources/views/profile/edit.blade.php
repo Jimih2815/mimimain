@@ -9,12 +9,27 @@
 
     font-size: 1rem !important;
     font-weight: 600;
-    width: auto;
+    width: 5rem;
     padding: 0.2rem 0.5rem !important;
     white-space: nowrap;
     border-radius: 50px !important;
     color: white;
     background-color: #b83232;
+
+  }
+  .btn-note {
+        font-size: 1rem !important;
+    font-weight: 600;
+ width: 5rem;
+    padding: 0.2rem 0.5rem !important;
+    white-space: nowrap;
+    border-radius: 50px !important;
+    color: white;
+    background-color: #4ab3af;
+    margin-bottom: 1rem;
+  }
+  .btn-note:hover {
+        background-color:rgb(158, 228, 225);
 
   }
   .nut-huy:hover {
@@ -24,7 +39,7 @@
   .da-huy {
         font-size: 1rem;
     font-weight: 600;
-    width: auto;
+    width: 5rem;
     padding: 0.2rem 0.5rem !important;
     white-space: nowrap;
     border-radius: 50px !important;
@@ -40,26 +55,99 @@
 }
 .note-modal {
   position: fixed;
-  bottom: 1rem; right: 1rem;
-  transform: translate(100%,100%);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* ban đầu dịch phải 100% (ẩn ngoài view) */
+  transform: translateX(100%);
   transition: transform .3s ease;
   z-index: 2000;
 }
-.note-modal.open { transform: translate(0,0); }
+.note-modal.open {
+  transform: translateX(0);
+}
 .note-content {
   background: #fff;
-  border:1px solid #ccc;
+  border: 1px solid #ccc;
   border-radius: .25rem;
   box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  width: 50%;           /* bạn có thể tăng/giảm */
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
-  width: 320px;
   position: relative;
 }
+
+/* nút đóng */
 .note-content .close {
-  position: absolute; top: .25rem; right: .5rem;
-  border:none; background:transparent; font-size:1.2rem;
+  position: absolute;
+  top: .5rem; right: .5rem;
+  font-size: 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
+/* vùng hội thoại scroll */
+.note-body {
+  flex: 1;                /* chiếm hết không gian còn lại */
+  overflow-y: auto;
+  max-height: 500px;
+  margin-bottom: .75rem;
+  padding-right: .5rem;   /* dư ra 1 chút để scrollbar */
+}
+.customer-note {
+  align-self: flex-start;
+  background: #78b865;       /* Vàng - dễ thương, thân thiện */
+  color: #ffffff;             /* Nâu đậm để chữ dễ đọc trên nền vàng */
+  max-width: 50%;
+  width: fit-content;
+  word-break: break-word;
+  border-radius: 25px;
+  padding: 8px 12px;
+  margin-left: auto;
+  font-size: 1.2rem; 
+  font-weight: 600;
+}
+
+.admin-note {
+  align-self: flex-end;
+  background: #4ab3af;       /* Xanh ngọc - màu chủ đạo */
+  color: #ffffff;            /* Trắng cho nổi bật */
+  max-width: 50%;
+  width: fit-content;
+  word-break: break-word;
+  border-radius: 25px;
+  padding: 8px 12px;
+    font-size: 1.2rem; 
+  font-weight: 600;
+}
+#nm-form {
+      height: 40px;
+
+}
+.nut-gui {
+  background: #ffba26;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nut-gui:hover {
+    background:rgb(247, 216, 150);
+
+}
+.chu-do {
+  color: #b83232;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
 </style>
 <div class="w-70 mx-auto mt-5 mb-5 trang-thong-tin">
 
@@ -266,7 +354,7 @@
                   <td>
                     {{-- nút Ghi chú --}}
                     <button type="button"
-                            class="btn btn-sm btn-info btn-note"
+                            class="btn-mimi btn-note"
                             data-order-id="{{ $o->id }}"
                             data-order-code="{{ $o->order_code }}"
                             data-note="{{ $o->note }}">
@@ -274,9 +362,11 @@
                     </button>
                     <div id="notes-data-{{ $o->id }}" style="display:none;">
                       @foreach($o->notes as $n)
-                        <div class="{{ $n->is_admin? 'admin-note':'customer-note' }} mb-2 p-2 rounded">
-                          <small>{{ $n->created_at->format('H:i d/m') }} — {{ $n->is_admin? 'Admin':'Bạn' }}</small>
-                          <p class="mb-0">{{ $n->message }}</p>
+                        <div class="{{ $n->is_admin? 'admin-note':'customer-note' }} mb-2 p-2 ">
+                         
+                            <small class="ps-2">{{ $n->created_at->format('H:i d/m') }} — {{ $n->is_admin? 'Admin':'Bạn' }}</small>
+                            <p class="mb-0 ps-2">{{ $n->message }}</p>
+                          
                         </div>
                       @endforeach
                     </div>
@@ -435,23 +525,25 @@
 </div>
 @endsection
 
-{{-- Ở sau </div> của #profileTabsContent --}}
+
+{{-- nội dung chat --}}
 <div id="note-modal" class="note-modal">
   <div class="note-content">
     <button class="close">&times;</button>
-    <h5>Đơn #<span id="nm-code"></span></h5>
-    <div id="nm-old" class="mb-2"><!-- JS sẽ inject cuộc hội thoại vào đây --></div>
-    <form id="nm-form" method="POST" action="">
+    <h5 class="chu-do">Đơn #<span id="nm-code"></span></h5>
+    <div id="nm-old" class="note-body"><!-- JS sẽ inject cuộc hội thoại vào đây --></div>
+    <form id="nm-form" class="d-flex gap-2" method="POST" action="">
       @csrf
       <textarea name="note"
                 id="nm-input"
                 class="form-control"
                 rows="3"
                 placeholder="Nhập ghi chú…"></textarea>
-      <button type="submit" class="btn btn-sm btn-success mt-2">Gửi</button>
+      <button type="submit" class="btn-mimi nut-gui">Gửi</button>
     </form>
   </div>
 </div>
+
 
 @push('scripts')
 <script>
@@ -506,25 +598,29 @@ document.addEventListener('DOMContentLoaded', function () {
   const nmInput = document.getElementById('nm-input');
   const nmForm  = document.getElementById('nm-form');
 
+  // Mở modal khi click nút Ghi chú
   document.querySelectorAll('.btn-note').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id   = btn.dataset.orderId;
+      const id      = btn.dataset.orderId;
       nmCode.textContent = btn.dataset.orderCode;
-
-      // Lấy toàn bộ conversation HTML đã render ẩn sẵn
       const convoHtml = document.getElementById(`notes-data-${id}`).innerHTML;
-      nmOld.innerHTML = convoHtml || '<em>—</em>';
-
-      // Reset input và set đúng action
-      nmInput.value   = '';
-      nmForm.action   = `/profile/orders/${id}/note`;
+      nmOld.innerHTML    = convoHtml || '<em>—</em>';
+      nmInput.value      = '';
+      nmForm.action      = `/profile/orders/${id}/note`;
       modal.classList.add('open');
     });
   });
 
-  // Đóng modal
+  // Đóng modal khi click nút ×
   modal.querySelector('.close').addEventListener('click', () => {
     modal.classList.remove('open');
+  });
+
+  // Đóng modal khi click ra ngoài .note-content
+  modal.addEventListener('click', e => {
+    if (e.target === modal) {
+      modal.classList.remove('open');
+    }
   });
 });
 </script>
