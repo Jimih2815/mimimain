@@ -59,6 +59,10 @@
 }
 .customer-note { background:#e9f7ef; }
 .admin-note    { background:#fce8e6; }
+.conversation-messages {
+  max-height: 200px;
+  overflow-y: auto;
+}
 
 </style>
 
@@ -133,7 +137,7 @@
 
         {{-- 2) Row danh sách sản phẩm + options --}}
         <tr>
-          <td colspan="8">
+          <td colspan="5">
             <ul class="mb-0">
               @foreach($o->items as $it)
                 <li>
@@ -149,31 +153,38 @@
               @endforeach
             </ul>
           </td>
-        </tr>
+          {{-- 3) Row conversation (ghi chú khách – phản hồi admin) --}}
 
-        {{-- 3) Row conversation (ghi chú khách – phản hồi admin) --}}
-        <tr>
-          <td colspan="8">
-            <div class="conversation">
-              @foreach($o->notes as $n)
-                <div class="msg {{ $n->is_admin? 'admin-note':'customer-note' }} mb-2 p-2 rounded">
-                  <small>
-                    {{ $n->created_at->format('H:i d/m') }} —
-                    {{ $n->is_admin? 'Admin':'Khách' }}
-                  </small>
-                  <p class="mb-0">{{ $n->message }}</p>
-                </div>
-              @endforeach
-
-              {{-- form phản hồi mới --}}
-              <form action="{{ route('admin.orders.reply', $o) }}" method="POST" class="mt-2">
+          <td colspan="4">
+            <div class="conversation-container">
+              <!-- vùng messages scroll -->
+              <div class="conversation-messages">
+                @foreach($o->notes as $n)
+                  <div class="msg {{ $n->is_admin ? 'admin-note' : 'customer-note' }} mb-2 p-2 rounded">
+                    <small>
+                      {{ $n->created_at->format('H:i d/m') }} —
+                      {{ $n->is_admin ? 'Admin' : 'Khách' }}
+                    </small>
+                    <p class="mb-0">{{ $n->message }}</p>
+                  </div>
+                @endforeach
+              </div>
+              <!-- form luôn ở đáy -->
+              <form action="{{ route('admin.orders.reply', $o) }}"
+                    method="POST"
+                    class="conversation-form mt-2 d-flex gap-3">
                 @csrf
-                <textarea name="admin_note" class="form-control form-control-sm" rows="2" placeholder="Nhập phản hồi…"></textarea>
-                <button class="btn btn-sm btn-primary mt-1">Gửi</button>
+                <textarea name="admin_note"
+                          class="form-control form-control-sm"
+                          rows="2"
+                          placeholder="Nhập phản hồi…"></textarea>
+                <button class="btn-mimi nut-xanh">Gửi</button>
               </form>
             </div>
           </td>
         </tr>
+
+
       @endforeach
     </tbody>
   </table>
