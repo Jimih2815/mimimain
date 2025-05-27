@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;                 
 use Illuminate\Validation\Rule;
+use App\Models\OrderNote;
+
 
 class OrderController extends Controller
 {
@@ -66,5 +68,18 @@ public function index(Request $request)
         $order->save();
         return back();
     }
-    
+
+
+public function replyNote(Request $req, Order $order)
+{
+    $req->validate(['admin_note'=>'nullable|string']);
+    $order->notes()->create([
+        'user_id'  => auth()->id(),
+        'is_admin' => true,
+        'message'  => $req->admin_note,
+    ]);
+    return back()->with('reply_status','Đã gửi phản hồi.');
+}
+
+
 }

@@ -38,6 +38,27 @@
   vertical-align: middle !important;
   text-align: center;
 }
+.note-modal {
+  position: fixed;
+  bottom: 1rem; right: 1rem;
+  transform: translate(100%,100%);
+  transition: transform .3s ease;
+  z-index: 2000;
+}
+.note-modal.open { transform: translate(0,0); }
+.note-content {
+  background: #fff;
+  border:1px solid #ccc;
+  border-radius: .25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  padding: 1rem;
+  width: 320px;
+  position: relative;
+}
+.note-content .close {
+  position: absolute; top: .25rem; right: .5rem;
+  border:none; background:transparent; font-size:1.2rem;
+}
 
 </style>
 <div class="w-70 mx-auto mt-5 mb-5 trang-thong-tin">
@@ -171,6 +192,13 @@
          id="orders"
          role="tabpanel"
          aria-labelledby="orders-tab">
+         @if(session('order_status'))
+            <div class="alert alert-success">{{ session('order_status') }}</div>
+          @endif
+          @if(session('note_status'))
+            <div class="alert alert-success">{{ session('note_status') }}</div>
+          @endif
+
       @if($orders->isEmpty())
         <p>Chưa có đơn hàng nào.</p>
       @else
@@ -236,6 +264,23 @@
                   <td>{{ $o->created_at->format('d/m/Y H:i') }}</td>
                   {{-- Thao tác --}}
                   <td>
+                    {{-- nút Ghi chú --}}
+                    <button type="button"
+                            class="btn btn-sm btn-info btn-note"
+                            data-order-id="{{ $o->id }}"
+                            data-order-code="{{ $o->order_code }}"
+                            data-note="{{ $o->note }}">
+                      Ghi chú
+                    </button>
+                    <div id="notes-data-{{ $o->id }}" style="display:none;">
+                      @foreach($o->notes as $n)
+                        <div class="{{ $n->is_admin? 'admin-note':'customer-note' }} mb-2 p-2 rounded">
+                          <small>{{ $n->created_at->format('H:i d/m') }} — {{ $n->is_admin? 'Admin':'Bạn' }}</small>
+                          <p class="mb-0">{{ $n->message }}</p>
+                        </div>
+                      @endforeach
+                    </div>
+
                     @if($o->status === 'pending')
                   {{-- Nút hủy bình thường --}}
                   <form method="POST"
@@ -390,69 +435,97 @@
 </div>
 @endsection
 
+{{-- Ở sau </div> của #profileTabsContent --}}
+<div id="note-modal" class="note-modal">
+  <div class="note-content">
+    <button class="close">&times;</button>
+    <h5>Đơn #<span id="nm-code"></span></h5>
+    <div id="nm-old" class="mb-2"><!-- JS sẽ inject cuộc hội thoại vào đây --></div>
+    <form id="nm-form" method="POST" action="">
+      @csrf
+      <textarea name="note"
+                id="nm-input"
+                class="form-control"
+                rows="3"
+                placeholder="Nhập ghi chú…"></textarea>
+      <button type="submit" class="btn btn-sm btn-success mt-2">Gửi</button>
+    </form>
+  </div>
+</div>
+
 @push('scripts')
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const hash = window.location.hash;        // ví dụ "#orders"
-    if (!hash) return;
-
-    // Chọn button có data-bs-target trùng hash
-    const btn = document.querySelector(
-      `#profileTabs button[data-bs-target="${hash}"]`
-    );
+document.addEventListener('DOMContentLoaded', function () {
+  //
+  // 1) Giữ tab khi reload URL có #orders
+  //
+  const hash = window.location.hash;
+  if (hash) {
+    const btn = document.querySelector(`#profileTabs button[data-bs-target="${hash}"]`);
     if (btn) {
-      // active tab header
-      document.querySelectorAll('#profileTabs .nav-link').forEach(el => {
-        el.classList.remove('active');
-      });
+      document.querySelectorAll('#profileTabs .nav-link').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
-
-      // active tab content
-      document.querySelectorAll('.tab-pane').forEach(pane => {
-        pane.classList.remove('show', 'active');
-      });
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show','active'));
       const panel = document.querySelector(hash);
-      if (panel) {
-        panel.classList.add('show', 'active');
-      }
+      if (panel) panel.classList.add('show','active');
     }
+  }
+
+  //
+  // 2) AJAX pagination cho đơn hàng
+  //
+  const ordersContent = document.getElementById('orders-content');
+  ordersContent.addEventListener('click', e => {
+    const a = e.target.closest('a.page-link');
+    if (!a) return;
+    e.preventDefault();
+    fetch(a.href, { headers:{ 'X-Requested-With':'XMLHttpRequest' } })
+      .then(r => r.text())
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newContent = doc.querySelector('#orders-content');
+        ordersContent.innerHTML = newContent.innerHTML;
+      })
+      .catch(console.error);
   });
-  document.addEventListener('DOMContentLoaded', () => {
-  // delegate click vào các link trong #orders-content
-  document
-    .querySelector('#orders-content')
-    .addEventListener('click', e => {
-      const a = e.target.closest('a.page-link');
-      if (!a) return;
-      const url = a.href;
-      // ngăn reload
-      e.preventDefault();
-
-      fetch(url, { headers: { 'X-Requested-With':'XMLHttpRequest' } })
-        .then(r => r.text())
-        .then(html => {
-          // parse HTML response
-          const doc = new DOMParser().parseFromString(html, 'text/html');
-          const newContent = doc.querySelector('#orders-content');
-          // thay luôn nội dung
-          document.querySelector('#orders-content').innerHTML = newContent.innerHTML;
-          // cập nhật browser URL (optional)
-          history.pushState(null, '', url);
-        })
-        .catch(console.error);
-    });
-
-  // bắt back/forward để load lại nội dung đúng fragment
   window.addEventListener('popstate', () => {
     fetch(location.href, { headers:{ 'X-Requested-With':'XMLHttpRequest' } })
       .then(r => r.text())
       .then(html => {
         const doc = new DOMParser().parseFromString(html, 'text/html');
-        document.querySelector('#orders-content').innerHTML =
-          doc.querySelector('#orders-content').innerHTML;
+        ordersContent.innerHTML = doc.querySelector('#orders-content').innerHTML;
       });
+  });
+
+  //
+  // 3) Modal “Ghi chú”
+  //
+  const modal   = document.getElementById('note-modal');
+  const nmCode  = document.getElementById('nm-code');
+  const nmOld   = document.getElementById('nm-old');
+  const nmInput = document.getElementById('nm-input');
+  const nmForm  = document.getElementById('nm-form');
+
+  document.querySelectorAll('.btn-note').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id   = btn.dataset.orderId;
+      nmCode.textContent = btn.dataset.orderCode;
+
+      // Lấy toàn bộ conversation HTML đã render ẩn sẵn
+      const convoHtml = document.getElementById(`notes-data-${id}`).innerHTML;
+      nmOld.innerHTML = convoHtml || '<em>—</em>';
+
+      // Reset input và set đúng action
+      nmInput.value   = '';
+      nmForm.action   = `/profile/orders/${id}/note`;
+      modal.classList.add('open');
+    });
+  });
+
+  // Đóng modal
+  modal.querySelector('.close').addEventListener('click', () => {
+    modal.classList.remove('open');
   });
 });
 </script>
 @endpush
-

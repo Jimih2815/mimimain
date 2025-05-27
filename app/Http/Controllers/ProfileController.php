@@ -8,6 +8,10 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Jenssegers\Agent\Agent;    
 use Illuminate\Support\Str; 
+use App\Models\Order;
+use App\Models\OrderNote;
+
+
 
 class ProfileController extends Controller
 {
@@ -19,9 +23,10 @@ class ProfileController extends Controller
     // 1) Lấy user & orders
     $user = Auth::user();
     $orders = $user->orders()
-                   ->with('items.product')
-                   ->latest()
-                   ->paginate(10);
+               ->with('items.product','notes.user')
+               ->latest()
+               ->paginate(10);
+
 
     // 2) Lấy và sắp xếp helpRequests giống logic trong Blade
     $orderedRequests = $user->helpRequests
@@ -121,5 +126,17 @@ public function cancelOrder(\App\Models\Order $order)
         ->with($flashKey, 'Đơn hàng đã được bàn giao cho Shipper - không thể hủy đơn');
 }
 
+public function updateNote(Request $req, Order $order)
+{
+    abort_if($order->user_id !== auth()->id(),403);
+    $req->validate(['note'=>'nullable|string']);
+    $order->notes()->create([
+        'user_id'  => auth()->id(),
+        'is_admin' => false,
+        'message'  => $req->note,
+    ]);
+    return redirect()->to(route('profile.edit').'#orders')
+                     ->with('note_status','Cập nhật ghi chú thành công.');
+}
 
 }

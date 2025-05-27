@@ -177,6 +177,9 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 // Xử lý lưu mật khẩu mới
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])
      ->name('password.update');
+Route::post('/profile/orders/{order}/note', [App\Http\Controllers\ProfileController::class, 'updateNote'])
+     ->name('orders.note');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -280,6 +283,11 @@ Route::prefix('admin')
 
      Route::resource('sectors', AdminSectorController::class);
      Route::post('sectors/reorder', [AdminSectorController::class, 'reorder'])->name('sectors.reorder');
+     // ✅ Trong group ->name('admin.') thì chỉ đặt 'orders.reply' để ra 'admin.orders.reply'
+     Route::post('orders/{order}/reply', [App\Http\Controllers\Admin\OrderController::class, 'replyNote'])
+          ->name('orders.reply');
+
+
 
 });
 
