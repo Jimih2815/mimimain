@@ -446,30 +446,33 @@
     }
       @endphp
 
-      <nav class="nut-pagi">
-        <ul style="gap:2px;" class="pagination justify-content-center ">
-          {{-- Nút Prev --}}
-          <!-- <li class="page-item {{ $current==1?'disabled':'' }}">
-            <a class="page-link" href="{{ $orders->url($current-1) }}">«</a>
-          </li> -->
-
-          {{-- Các trang --}}
-          @foreach($pages as $p)
-            <li class="page-item {{ $p==$current?'active':'' }}">
-              @if($p == $current)
-                <span class="page-link">{{ $p }}</span>
-              @else
-                <a class="page-link" href="{{ $orders->url($p) }}">{{ $p }}</a>
-              @endif
+            @if($orders->lastPage() > 1)
+        <nav class="nut-pagi pb-3">
+          <ul style="gap:2px;" class="pagination justify-content-center ">
+            {{-- Prev --}}
+            <li class="page-item {{ $orders->currentPage() == 1 ? 'disabled' : '' }}">
+              <a class="page-link" href="{{ $orders->url($orders->currentPage() - 1) }}">«</a>
             </li>
-          @endforeach
 
-          {{-- Nút Next --}}
-          <!-- <li class="page-item {{ $current==$last?'disabled':'' }}">
-            <a class="page-link" href="{{ $orders->url($current+1) }}">»</a>
-          </li> -->
-        </ul>
-      </nav>
+            {{-- Pages --}}
+            @foreach($pages as $p)
+              <li class="page-item {{ $p == $orders->currentPage() ? 'active' : '' }}">
+                @if($p == $orders->currentPage())
+                  <span class="page-link">{{ $p }}</span>
+                @else
+                  <a class="page-link" href="{{ $orders->url($p) }}">{{ $p }}</a>
+                @endif
+              </li>
+            @endforeach
+
+            {{-- Next --}}
+            <li class="page-item {{ $orders->currentPage() == $orders->lastPage() ? 'disabled' : '' }}">
+              <a class="page-link" href="{{ $orders->url($orders->currentPage() + 1) }}">»</a>
+            </li>
+          </ul>
+        </nav>
+      @endif
+
     </div>
       @endif
     </div>
