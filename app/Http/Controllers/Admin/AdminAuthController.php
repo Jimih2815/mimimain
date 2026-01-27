@@ -20,8 +20,9 @@ class AdminAuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $u = env('ADMIN_USERNAME');
-        $hash = env('ADMIN_PASSWORD_HASH'); // dùng HASH đúng nghĩa
+        $u = config('admin.username');
+        $hash = config('admin.password_hash');
+
 
         $okUser = hash_equals((string)$u, (string)$request->username);
         $okPass = $hash && Hash::check($request->password, $hash);
