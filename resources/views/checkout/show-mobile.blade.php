@@ -28,7 +28,7 @@
   }
 
   .dien-thong-tin {
-    min-height: 100vh;
+    min-height: 80vh;
   }
   .tong-cong-cont {
     border: 2px solid #4ab3af;
