@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const parentBar         = document.getElementById('mobile-parent-bar');
   const childBar          = document.getElementById('mobile-child-bar');
   const productsContainer = document.getElementById('mobile-collection-products');
-  const favIds            = @json($favIds);
+  let favIds            = @json($favIds);
 
   // ID của collection khi click trực tiếp vào link
   const pageCollectionId = {{ $collection->id }};
@@ -276,11 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
     productsContainer.querySelectorAll('.btn-fav').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.id;
-        fetch(`/favorites/toggle/${id}`, {
+        fetch(`{{ url('/favorites/toggle') }}/${id}`, {
           method: 'POST',
+          credentials: 'same-origin',
           headers: {
-            'X-CSRF-TOKEN':
-              document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
           }
         })
         .then(r => r.json())
@@ -289,7 +289,16 @@ document.addEventListener('DOMContentLoaded', () => {
           icon.classList.toggle('fas', json.added);
           icon.classList.toggle('far', !json.added);
           icon.classList.toggle('text-danger', json.added);
-        });
+
+          // Giữ trạng thái đúng khi render lại list
+          const n = parseInt(id, 10);
+          if (json.added) {
+            if (!favIds.includes(n)) favIds.push(n);
+          } else {
+            favIds = favIds.filter(x => x !== n);
+          }
+        })
+        .catch(() => alert('Không thể cập nhật yêu thích 😵'));
       });
     });
   }

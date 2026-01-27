@@ -394,8 +394,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3) Toggle favorite
   document.querySelectorAll('.btn-favorite').forEach(btn =>
     btn.addEventListener('click', () => {
-      fetch(`/favorites/toggle/${btn.dataset.id}`, {
+      fetch(`{{ url('/favorites/toggle') }}/${btn.dataset.id}`, {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'X-CSRF-TOKEN': token }
       })
       .then(r=>r.json())
@@ -404,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.toggle('far', !json.added);
         icon.classList.toggle('fas', json.added);
       })
-      .catch(console.error);
+      .catch(() => alert('Không thể cập nhật yêu thích 😵'));
     })
   );
 

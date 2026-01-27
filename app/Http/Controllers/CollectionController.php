@@ -28,8 +28,9 @@ class CollectionController extends Controller
             if (auth()->check()) {
                 $favIds = auth()->user()->favorites()->pluck('product_id')->toArray();
             } else {
-                $favIds = [];  // chưa login thì cho mảng rỗng
+                $favIds = session('favorites', []);
             }
+
 
             return view('collections.show-mobile', compact(
                 'collection',

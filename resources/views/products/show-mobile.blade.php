@@ -621,8 +621,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.btn-favorite').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const id=btn.dataset.id;
-      fetch(`/favorites/toggle/${id}`,{
+      fetch(`{{ url('/favorites/toggle') }}/${id}`,{
         method:'POST',
+        credentials: 'same-origin',
         headers:{'X-CSRF-TOKEN':csrf}
       })
       .then(r=>r.json())
@@ -632,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.toggle('far', !json.added);
         icon.classList.toggle('text-danger', json.added);
         icon.classList.toggle('text-muted', !json.added);
-      });
+      }).catch(()=>alert('Không thể cập nhật yêu thích 😵'));
     });
   });
 

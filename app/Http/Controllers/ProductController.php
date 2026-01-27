@@ -32,7 +32,8 @@ class ProductController extends Controller
             // Lấy mảng ID sản phẩm user đã favorite
             $favIds = Auth::check()
             ? Auth::user()->favorites()->pluck('product_id')->toArray()
-            : [];
+            : session('favorites', []);
+
 
             // Trả view mobile với favIds
             return view('products.index-mobile', compact('roots', 'products', 'favIds'));

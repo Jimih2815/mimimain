@@ -131,7 +131,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const roots = @json($roots->toArray());
   const allProducts = @json($products->toArray());
-  const favIds     = @json($favIds); 
+  let favIds     = @json($favIds);
   const parentBar = document.getElementById('mobile-parent-bar');
   const childBar = document.getElementById('mobile-child-bar');
   const productsContainer = document.getElementById('mobile-collection-products');
@@ -216,8 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
   productsContainer.querySelectorAll('.btn-fav').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
-      fetch(`/favorites/toggle/${id}`, {
+      fetch(`{{ url('/favorites/toggle') }}/${id}`, {
         method: 'POST',
+        credentials: 'same-origin',
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         }
@@ -228,7 +229,23 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.toggle('fas', json.added);
         icon.classList.toggle('far', !json.added);
         icon.classList.toggle('text-danger', json.added);
-      });
+
+        // Giữ trạng thái đúng khi render lại list (đổi tab/collection)
+        const n = parseInt(id, 10);
+        if (json.added) {
+          if (!favIds.includes(n)) favIds.push(n);
+        } else {
+          favIds = favIds.filter(x => x !== n);
+        }
+        const pid = parseInt(id, 10);
+
+        if (json.added) {
+          if (!favIds.includes(pid)) favIds.push(pid);
+        } else {
+          favIds = favIds.filter(x => x !== pid);
+        }
+      })
+      .catch(() => alert('Không thể cập nhật yêu thích 😵'));
     });
   });
 }

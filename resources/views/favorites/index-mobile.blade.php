@@ -159,6 +159,13 @@ body.no-scroll { overflow: hidden; }
 </style>
 <div class="trang-yeu-thich-mobile ms-1 me-1 pt-3 pb-3">
     <h1 class="pb-3 ps-1">Sản phẩm yêu thích</h1>
+    @if($products->isEmpty())
+      <div class="p-3 bg-white rounded-3 ms-1 me-1">
+        <p class="m-0" style="font-weight:600;">Chưa có sản phẩm yêu thích nào.</p>
+        <p class="mb-0 text-muted">Bấm vào biểu tượng ❤️ ở trang sản phẩm để lưu lại nha.</p>
+        <a class="btn-mimi nut-xanh mt-3 d-inline-block" href="{{ route('products.index') }}">Đi xem sản phẩm</a>
+      </div>
+    @endif
     <div class="cart-wrapper">
     <div class="row-products">
         @foreach($products as $p)
@@ -195,7 +202,7 @@ body.no-scroll { overflow: hidden; }
 
     @foreach($products as $p)
     {{-- Panel riêng cho mỗi sản phẩm --}}
-    <div id="detail-{{ $p->id }}" class="detail-panel">
+    <div id="detail-{{ $p->id }}" class="detail-panel" data-base-price="{{ $p->base_price }}">
     {{-- Header giống #mobile-panel-header --}}
     <div class="panel-header">
         <div class="d-flex align-items-start">
@@ -316,7 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const opts        = panel.querySelectorAll('.option-item');
     const headerImg   = panel.querySelector('.panel-header img');
     const headerPrice = panel.querySelector('.panel-header .header-info .fw-bold');
-    const basePrice   = {{ $products->first()->base_price }}; // Thay bằng giá gốc nếu cần
+    // Lấy base price theo từng panel (tránh lỗi khi danh sách favorites rỗng)
+    const basePrice   = parseInt(panel.dataset.basePrice || '0', 10);
     const selectedExtras = {};
 
     // 2.1) Chọn tuỳ chọn
@@ -433,8 +441,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3) Toggle yêu thích
   document.querySelectorAll('.btn-favorite').forEach(btn => {
     btn.addEventListener('click', () => {
-      fetch(`/favorites/toggle/${btn.dataset.id}`, {
+      fetch(`{{ url('/favorites/toggle') }}/${btn.dataset.id}`, {
         method:'POST',
+        credentials: 'same-origin',
         headers:{ 'X-CSRF-TOKEN': csrf }
       })
       .then(r => r.json())
@@ -444,7 +453,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ic.classList.toggle('far', !json.added);
         ic.classList.toggle('text-danger', json.added);
         ic.classList.toggle('text-muted', !json.added);
-      });
+      })
+      .catch(() => alert('Không thể cập nhật yêu thích 😵'));
     });
   });
     // 4) Mua ngay – đẩy thẳng lên checkout
@@ -459,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return alert('Vui lòng chọn đầy đủ các phân loại');
       }
       // 4.2) Tính tổng giá cơ bản + extras
-      let base    = parseInt({{ $products->first()->base_price }}, 10);
+      let base    = parseInt(panel.dataset.basePrice || '0', 10);
       let sumExtra = inputs.reduce((s,i) => s + parseInt(i.value) * 0 + /* mình lấy extra*/ 0, 0);
       // THỰC TẾ: ta đã lưu extra ở controller, frontend không cần tính lại để checkout xử lý
       // 4.3) Tạo form động gửi POST tới buyNow
