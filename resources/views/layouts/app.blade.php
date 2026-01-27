@@ -11,8 +11,8 @@
   <title>@yield('title', 'MimiMain')</title>
 
   {{-- 1) Google Font: Baloo 2 --}}
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   >
 
@@ -24,7 +24,7 @@
 
   {{-- 3) Vite: chọn assets dựa trên thiết bị --}}
   @if($agent->isMobile())
-  @vite([
+    @vite([
       'resources/scss/app.scss',
       'resources/scss/app-mobile.scss',
       'resources/js/app.js',
@@ -62,35 +62,37 @@
     @endif
   </main>
 
-  {{-- Floating Contact Panel --}}
-  <div class="mc-floating-panel expanded text-decoration-none" id="mcFloatingPanel">
-    <button type="button"
-            style="margin-bottom:6rem;"
-            class="mc-floating-toggle"
-            id="mcToggleBtn"
-            aria-label="Mở / Đóng liên hệ">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <div class="mc-floating-contact">
-      <a href="tel:0354235669"
-         class="mc-floating-contact__btn mc-phone-btn text-decoration-none"
-         title="Gọi: 0354 235 669">
-        <i class="fas fa-phone"></i>
-      </a>
-      <a href="https://zalo.me/0354235669"
-         class="mc-floating-contact__btn mc-zalo-btn text-decoration-none" 
-         target="_blank" rel="noopener"
-         title="Chat Zalo: 0354 235 669">
-        <img style="width:100%" src="/logochat/logo-zalo-chat.webp" alt="Zalo">
-      </a>
-      <a href="https://m.me/61560867710445"
-         class="mc-floating-contact__btn mc-messenger-btn text-decoration-none"
-         target="_blank" rel="noopener"
-         title="Chat Facebook">
-        <i class="fab fa-facebook-messenger"></i>
-      </a>
+  {{-- Floating Contact Panel: CHỈ HIỆN TRÊN PC --}}
+  @if(!$agent->isMobile())
+    <div class="mc-floating-panel expanded text-decoration-none" id="mcFloatingPanel">
+      <button type="button"
+              style="margin-bottom:6rem;"
+              class="mc-floating-toggle"
+              id="mcToggleBtn"
+              aria-label="Mở / Đóng liên hệ">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="mc-floating-contact">
+        <a href="tel:0354235669"
+           class="mc-floating-contact__btn mc-phone-btn text-decoration-none"
+           title="Gọi: 0354 235 669">
+          <i class="fas fa-phone"></i>
+        </a>
+        <a href="https://zalo.me/0354235669"
+           class="mc-floating-contact__btn mc-zalo-btn text-decoration-none"
+           target="_blank" rel="noopener"
+           title="Chat Zalo: 0354 235 669">
+          <img style="width:100%" src="/logochat/logo-zalo-chat.webp" alt="Zalo">
+        </a>
+        <a href="https://m.me/61560867710445"
+           class="mc-floating-contact__btn mc-messenger-btn text-decoration-none"
+           target="_blank" rel="noopener"
+           title="Chat Facebook">
+          <i class="fab fa-facebook-messenger"></i>
+        </a>
+      </div>
     </div>
-  </div>
+  @endif
 
   {{-- Footer: desktop hoặc mobile --}}
   @if($agent->isMobile())
@@ -102,34 +104,37 @@
   {{-- Scripts từ view con --}}
   @stack('scripts')
 
+  {{-- Script điều khiển floating panel: CHỈ CHẠY TRÊN PC --}}
+  @if(!$agent->isMobile())
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const panel    = document.getElementById('mcFloatingPanel');
-    const toggle   = document.getElementById('mcToggleBtn');
-    const phoneBtn = document.querySelector('.mc-phone-btn');
+    document.addEventListener('DOMContentLoaded', () => {
+      const panel    = document.getElementById('mcFloatingPanel');
+      const toggle   = document.getElementById('mcToggleBtn');
+      const phoneBtn = document.querySelector('.mc-phone-btn');
 
-    // Desktop: hiển thị số khi hover/click
-    if (!/Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) && phoneBtn) {
-      phoneBtn.addEventListener('click', e => {
-        e.preventDefault();
-        phoneBtn.removeAttribute('href');
-        phoneBtn.classList.add('mc-phone-text');
-        phoneBtn.innerText = '0354 235 669';
-      });
-      phoneBtn.addEventListener('mouseleave', () => {
-        if (phoneBtn.classList.contains('mc-phone-text')) {
-          phoneBtn.classList.remove('mc-phone-text');
-          phoneBtn.setAttribute('href', 'tel:0354235669');
-          phoneBtn.innerHTML = '<i class="fas fa-phone"></i>';
-        }
-      });
-    }
+      // Desktop: hiển thị số khi hover/click
+      if (!/Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) && phoneBtn) {
+        phoneBtn.addEventListener('click', e => {
+          e.preventDefault();
+          phoneBtn.removeAttribute('href');
+          phoneBtn.classList.add('mc-phone-text');
+          phoneBtn.innerText = '0354 235 669';
+        });
+        phoneBtn.addEventListener('mouseleave', () => {
+          if (phoneBtn.classList.contains('mc-phone-text')) {
+            phoneBtn.classList.remove('mc-phone-text');
+            phoneBtn.setAttribute('href', 'tel:0354235669');
+            phoneBtn.innerHTML = '<i class="fas fa-phone"></i>';
+          }
+        });
+      }
 
-    // Tự thu gọn sau 15s
-    setTimeout(() => panel.classList.remove('expanded'), 15000);
-    toggle.addEventListener('click', () => panel.classList.toggle('expanded'));
-  });
+      // Tự thu gọn sau 15s
+      if (panel) setTimeout(() => panel.classList.remove('expanded'), 15000);
+      if (toggle && panel) toggle.addEventListener('click', () => panel.classList.toggle('expanded'));
+    });
   </script>
+  @endif
 
 </body>
 </html>
