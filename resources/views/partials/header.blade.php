@@ -44,7 +44,8 @@
 
       {{-- Logo trái --}}
       <a href="{{ route('home') }}" class="me-4 logo-cong-ty">
-        <img src="https://tiemhoamimi.com/image/mimi-logo.webp" alt="Logo MiMi" height="50">
+        <img src="{{ asset('image/mimi-logo.webp') }}
+" alt="Logo MiMi" height="50">
       </a>
 
       {{-- NAV – Mega menu --}}

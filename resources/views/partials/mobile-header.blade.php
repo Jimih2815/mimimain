@@ -284,7 +284,8 @@
 <div class="mobile-header d-block d-lg-none">
   {{-- Top bar --}}
   <div class="mh-top d-flex align-items-center justify-content-between px-3">
-    <a href="{{ url('/') }}"><img style="height:2.5rem;"  src="https://tiemhoamimi.com/image/mimi-logo.webp" height="24" alt="Logo"></a>
+    <a href="{{ url('/') }}"><img style="height:2.5rem;"  src="{{ asset('image/mimi-logo.webp') }}
+" height="24" alt="Logo"></a>
     <div class="mh-icons d-flex align-items-center icon-cont">
       {{-- 1) Search --}}
       <button id="mh-search-toggle"

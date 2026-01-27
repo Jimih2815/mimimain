@@ -25,7 +25,8 @@
 
   <div class="container py-5" style="max-width: 460px;">
     <div class="text-center mb-4">
-      <img src="https://tiemhoamimi.com/image/mimi-logo.webp" alt="MiMi" style="height:70px;object-fit:contain;">
+      <img src="{{ asset('image/mimi-logo.webp') }}
+" alt="MiMi" style="height:70px;object-fit:contain;">
       <h4 class="mt-3">Đăng nhập Admin</h4>
     </div>
 

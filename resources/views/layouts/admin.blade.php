@@ -91,7 +91,8 @@
 
       {{-- Logo ở giữa --}}
       <a href="{{ route('admin.dashboard') }}" class="mx-auto d-block">
-        <img src="https://tiemhoamimi.com/image/mimi-logo.webp"
+        <img src="{{ asset('image/mimi-logo.webp') }}
+"
             alt="Mimi Admin"
             style="height: 60px; object-fit: contain;">
       </a>
