@@ -48,8 +48,10 @@ class Kernel extends HttpKernel
     /**
      * ALIASES (gắn tên ngắn cho middleware)
      */
-    protected $middlewareAliases = [
+    protected $middlewareAliases = [              
         'auth'             => \App\Http\Middleware\Authenticate::class,
+        'admin'            => \App\Http\Middleware\AdminAuth::class,
+        'admin.auth' => \App\Http\Middleware\AdminAuth::class,
         'auth.basic'       => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session'     => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers'    => \Illuminate\Http\Middleware\SetCacheHeaders::class,

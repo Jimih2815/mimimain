@@ -84,14 +84,31 @@
 
   {{-- Header chỉ còn logo ở giữa --}}
   <nav class="navbar bg-white py-3 mb-4">
-    <div class="container">
+    <div class="container position-relative">
+
+      {{-- Logo ở giữa --}}
       <a href="{{ route('admin.dashboard') }}" class="mx-auto d-block">
         <img src="https://tiemhoamimi.com/image/mimi-logo.webp"
-             alt="Mimi Admin"
-             style="height: 60px; object-fit: contain;">
+            alt="Mimi Admin"
+            style="height: 60px; object-fit: contain;">
       </a>
+
+      @if(session()->has('admin_logged_in') && session('admin_logged_in') === true)
+        <div class="position-absolute end-0 top-50 translate-middle-y">
+          <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
+            @csrf
+            <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Đăng xuất</span>
+            </button>
+          </form>
+        </div>
+      @endif
+
+
     </div>
   </nav>
+
 
   {{-- Success Modal toàn cục --}}
   @if(session('success'))

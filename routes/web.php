@@ -49,6 +49,8 @@ use App\Http\Controllers\Admin\WidgetPlacementController;
 use App\Http\Controllers\Admin\SidebarItemController;
 use App\Http\Controllers\Admin\HelpRequestController as AdminHelpRequestController;
 use App\Http\Controllers\Admin\SectorController as AdminSectorController;
+use App\Http\Controllers\Admin\AdminAuthController;
+
 
 
 
@@ -179,106 +181,95 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
 |--------------------------------------------------------------------------
 | 4. ADMIN ROUTES
 |--------------------------------------------------------------------------
-|
-| Prefix:        /admin
-| Name prefix:   admin.
-| Middleware:    auth (và role-check nếu cần)
 */
-Route::prefix('admin')
-     ->name('admin.')
-     // ->middleware(['auth', 'is_admin'])
-     ->group(function () {
-     
-    // 4.1 Dashboard
-    Route::get('/', fn() => view('admin.dashboard'))->name('dashboard');
 
-    // 4.2 Mega‐menu
-    Route::controller(MenuController::class)->group(function () {
-        Route::get   ('menu',                         'index')->name('menu.index');
-        Route::post  ('menu/section',                 'storeSection')->name('menu.section.store');
-        Route::put   ('menu/section/{section}',       'updateSection')->name('menu.section.update');
-        Route::delete('menu/section/{section}',       'destroySection')->name('menu.section.destroy');
-        Route::post  ('menu/section/{section}/group', 'storeGroup')->name('menu.group.store');
-        Route::put   ('menu/group/{group}',           'updateGroup')->name('menu.group.update');
-        Route::delete('menu/group/{group}',           'destroyGroup')->name('menu.group.destroy');
-        Route::post  ('menu/group/{group}/product',   'addProductToGroup')->name('menu.group.product.add');
-        Route::delete('menu/group/{group}/product/{pid}', 'removeProductFromGroup')->name('menu.group.product.remove');
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // ✅ 4.0 Admin Auth (KHÔNG khóa) - để còn vào được trang login
+    Route::get('login',  [AdminAuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [AdminAuthController::class, 'login'])->name('login.submit');
+    Route::post('logout',[AdminAuthController::class, 'logout'])->name('logout');
+
+    // ✅ 4.x Tất cả route admin còn lại => BỊ KHÓA
+    Route::middleware('admin.auth')->group(function () {
+
+        // 4.1 Dashboard
+        Route::get('/', fn() => view('admin.dashboard'))->name('dashboard');
+
+        // 4.2 Mega-menu
+        Route::controller(MenuController::class)->group(function () {
+            Route::get   ('menu',                         'index')->name('menu.index');
+            Route::post  ('menu/section',                 'storeSection')->name('menu.section.store');
+            Route::put   ('menu/section/{section}',       'updateSection')->name('menu.section.update');
+            Route::delete('menu/section/{section}',       'destroySection')->name('menu.section.destroy');
+            Route::post  ('menu/section/{section}/group', 'storeGroup')->name('menu.group.store');
+            Route::put   ('menu/group/{group}',           'updateGroup')->name('menu.group.update');
+            Route::delete('menu/group/{group}',           'destroyGroup')->name('menu.group.destroy');
+            Route::post  ('menu/group/{group}/product',   'addProductToGroup')->name('menu.group.product.add');
+            Route::delete('menu/group/{group}/product/{pid}', 'removeProductFromGroup')->name('menu.group.product.remove');
+        });
+
+        // 4.3 Quản lý đơn hàng
+        Route::resource('orders', OrderController::class)
+            ->only(['index','show','destroy','update']);
+
+        // 4.4 Quản lý sản phẩm
+        Route::resource('products', AdminProductController::class);
+        Route::post('products/upload-image', [AdminProductController::class, 'uploadImage'])
+            ->name('products.uploadImage');
+
+        // 4.6 Quản lý người dùng
+        Route::controller(AdminUserController::class)->group(function () {
+            Route::get   ('users',                       'index')->name('users.index');
+            Route::get   ('users/{user}',                'show')->name('users.show');
+            Route::post  ('users/{user}/reset-password', 'resetPassword')->name('users.resetPassword');
+            Route::delete('users/{user}',                'destroy')->name('users.destroy');
+        });
+
+        // 4.7 Collections
+        Route::resource('collections', AdminCollectionController::class);
+
+        // Collection-Sliders
+        Route::post('collection-sliders/reorder', [CollectionSliderController::class, 'reorder'])
+            ->name('collection-sliders.reorder');
+        Route::post('collection-sliders/{collection_slider}/move', [CollectionSliderController::class,'move'])
+            ->name('collection-sliders.move');
+        Route::resource('collection-sliders', CollectionSliderController::class)
+            ->except(['show']);
+
+        // 4.8 Home Page & Home Section Images
+        Route::get  ('home',                [HomePageController::class,'edit'])->name('home.edit');
+        Route::post ('home',                [HomePageController::class,'update'])->name('home.update');
+        Route::get  ('home-section-images', [HomeSectionImageController::class,'index'])->name('home-section-images.index');
+        Route::post ('home-section-images', [HomeSectionImageController::class,'update'])->name('home-section-images.update');
+
+        // 4.9 Product Sliders
+        Route::resource('product-sliders', ProductSliderController::class)
+            ->only(['index','create','store','edit','update','destroy']);
+        Route::post('product-sliders/reorder', [ProductSliderController::class, 'reorder'])
+            ->name('product-sliders.reorder');
+
+        // 4.10 Widgets & Placements
+        Route::resource('widgets',       WidgetController::class);
+        Route::resource('placements',    WidgetPlacementController::class);
+        Route::resource('sidebar-items', SidebarItemController::class);
+
+        // Help Requests
+        Route::post('help-requests/{helpRequest}/update', [AdminHelpRequestController::class, 'update'])
+            ->name('help_requests.update');
+
+        // News
+        Route::resource('news', AdminNewsCtrl::class)->except(['show']);
+        Route::post('news/upload-image', [AdminNewsCtrl::class, 'uploadImage'])->name('news.uploadImage');
+        Route::post('news/select-collection', [AdminNewsCtrl::class, 'selectCollection'])->name('news.selectCollection');
+        Route::post('news/{news}/assign-collection', [AdminNewsCtrl::class, 'assignCollection'])->name('news.assignCollection');
+
+        // Sectors
+        Route::resource('sectors', AdminSectorController::class);
+        Route::post('sectors/reorder', [AdminSectorController::class, 'reorder'])->name('sectors.reorder');
+
     });
-
-    // 4.3 Quản lý đơn hàng
-    Route::resource('orders', OrderController::class)
-     ->only(['index','show','destroy','update']);
-
-    // 4.4 Quản lý sản phẩm
-    Route::resource('products', AdminProductController::class);
-    // route để TinyMCE upload ảnh
-    Route::post('products/upload-image', [AdminProductController::class, 'uploadImage'])
-         ->name('products.uploadImage');
-
-    // 4.6 Quản lý người dùng
-    Route::controller(AdminUserController::class)->group(function () {
-        Route::get   ('users',                       'index')->name('users.index');
-        Route::get   ('users/{user}',                'show')->name('users.show');
-        Route::post  ('users/{user}/reset-password', 'resetPassword')->name('users.resetPassword');
-        Route::delete('users/{user}',                'destroy')->name('users.destroy');
-    });
-
-    // 4.7 Collections
-    Route::resource('collections', AdminCollectionController::class);
-
-    // Collection‐Sliders: reorder AJAX
-    Route::post('collection-sliders/reorder', [CollectionSliderController::class, 'reorder'])
-         ->name('collection-sliders.reorder');
-    // Collection‐Sliders: move up/down
-    Route::post('collection-sliders/{collection_slider}/move',
-         [CollectionSliderController::class,'move'])
-         ->name('collection-sliders.move');
-    // Collection‐Sliders: CRUD (except show)
-    Route::resource('collection-sliders', CollectionSliderController::class)
-         ->except(['show']);
-
-    // 4.8 Home Page & Home Section Images
-    Route::get  ('home',                [HomePageController::class,'edit'])->name('home.edit');
-    Route::post ('home',                [HomePageController::class,'update'])->name('home.update');
-    Route::get  ('home-section-images', [HomeSectionImageController::class,'index'])->name('home-section-images.index');
-    Route::post ('home-section-images', [HomeSectionImageController::class,'update'])->name('home-section-images.update');
-
-    // 4.9 Product Sliders
-    Route::resource('product-sliders', ProductSliderController::class)
-         ->only(['index','create','store','edit','update','destroy']);
-    Route::post('product-sliders/reorder', [ProductSliderController::class, 'reorder'])
-         ->name('product-sliders.reorder');
-
-    // 4.10 Widgets & Placements
-    Route::resource('widgets',         WidgetController::class);
-    Route::resource('placements',      WidgetPlacementController::class);
-    Route::resource('sidebar-items',   SidebarItemController::class);
-
-    Route::post(
-     'help-requests/{helpRequest}/update',
-     [AdminHelpRequestController::class, 'update']
-     )->name('help_requests.update');
-     // Admin (nằm ngoài auth nếu bạn có group admin riêng, hoặc để trong middleware('auth','is_admin'))
-         // 4.x Quản lý News
-     Route::resource('news', AdminNewsCtrl::class)
-          ->except(['show']);
-     // Tuỳ Im­age upload cho TinyMCE
-     Route::post('news/upload-image', [AdminNewsCtrl::class, 'uploadImage'])
-          ->name('news.uploadImage'); 
-          
-     // chọn collection global cho news/index
-     Route::post('news/select-collection',
-             [AdminNewsCtrl::class, 'selectCollection']
-         )->name('news.selectCollection');
-
-     // assign từng tin tức vào collection
-     Route::post('news/{news}/assign-collection',
-             [AdminNewsCtrl::class, 'assignCollection']
-         )->name('news.assignCollection');
-
-     Route::resource('sectors', AdminSectorController::class);
-     Route::post('sectors/reorder', [AdminSectorController::class, 'reorder'])->name('sectors.reorder');
-
 });
+
 
 
