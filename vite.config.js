@@ -61,7 +61,7 @@ export default defineConfig({
         // tách riêng bundle Swiper và TinyMCE
         manualChunks(id) {
           if (id.includes('node_modules/swiper')) {
-            return 'swiper';
+            return 'swiper';``
           }
           if (id.includes('node_modules/tinymce')) {
             return 'editor';
@@ -86,22 +86,13 @@ export default defineConfig({
   //   },
   // },
   server: {
-    // 1) Lắng nghe mọi interface
-    host: '0.0.0.0',
+  host: '127.0.0.1',
+  port: 5173,
+  strictPort: true,
+  hmr: {
+    protocol: 'ws',
+    host: '127.0.0.1',
     port: 5173,
-    strictPort: true,
-    // 2) Cho phép CORS để thiết bị khác load được script
-    cors: true,
-    // 3) HMR client sử dụng đúng IP dev của bạn
-    hmr: {
-      protocol: 'ws',
-      host: '192.168.1.16',
-      port: 5173,
-    },
-    watch: {
-      usePolling: true,
-      interval: 100,
-      ignored: ['!**/node_modules/**', 'storage/**'],
-    },
   },
+},
 });
