@@ -78,6 +78,9 @@
         vertical-align: middle;
         text-align: center;
     }
+    .nut-dang-xuat {
+      right: 16%;
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -93,8 +96,8 @@
             style="height: 60px; object-fit: contain;">
       </a>
 
-      @if(session()->has('admin_logged_in') && session('admin_logged_in') === true)
-        <div class="position-absolute end-0 top-50 translate-middle-y">
+      @if(session('is_admin') === true)
+        <div class="nut-dang-xuat position-absolute top-50 translate-middle-y">
           <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
             @csrf
             <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">

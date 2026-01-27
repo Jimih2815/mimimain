@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AdminAuthController extends Controller
 {
@@ -20,9 +21,12 @@ class AdminAuthController extends Controller
         ]);
 
         $u = env('ADMIN_USERNAME');
-        $p = env('ADMIN_PASSWORD');
+        $hash = env('ADMIN_PASSWORD_HASH'); // dùng HASH đúng nghĩa
 
-        if ($request->username === $u && $request->password === $p) {
+        $okUser = hash_equals((string)$u, (string)$request->username);
+        $okPass = $hash && Hash::check($request->password, $hash);
+
+        if ($okUser && $okPass) {
             $request->session()->put('is_admin', true);
             $request->session()->regenerate();
             return redirect()->route('admin.dashboard');

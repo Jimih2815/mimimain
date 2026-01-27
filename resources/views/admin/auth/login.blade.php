@@ -4,9 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Admin Login – MiMi</title>
+  <title>Admin Login</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .nut-dang-nhap {
+            border-radius: 50px;
+    background-color: #4ab3af;
+    color: white;
+    font-size: 1.1rem;
+    border-color: #4ab3af;
+    }
+    .nut-dang-nhap:hover {
+        background-color: #65b6b3ff
+    }
+  </style>
 </head>
 <body class="bg-light">
 
@@ -47,7 +60,7 @@
             <input type="password" name="password" class="form-control" autocomplete="current-password" required>
           </div>
 
-          <button class="btn btn-primary w-100">Vào admin</button>
+          <button class="nut-dang-nhap w-100">Đăng nhập</button>
         </form>
       </div>
     </div>
