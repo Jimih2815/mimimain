@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .wp-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 5rem 1rem;
@@ -40,6 +40,87 @@
   .wp-section ol {
     padding-left: 1.25rem;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 quá hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .wp-hero {
+    padding: 3.75rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top:4rem;
+  }
+  .wp-hero h1 {
+    font-size: 1.9rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.4rem;
+  }
+  .wp-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  /* Section spacing */
+  .wp-section {
+    padding: 1.5rem 0.85rem !important;
+  }
+  .wp-section h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.25;
+  }
+
+  /* Text readability */
+  .wp-section p,
+  .wp-section li {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Lists/Ordered lists: dễ đọc hơn */
+  .wp-section ul,
+  .wp-section ol {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .wp-section li {
+    margin-bottom: 0.55rem;
+  }
+
+  /* Links/email: tránh tràn dòng */
+  .wp-section a {
+    word-break: break-word;
+  }
+
+  /* bg-light section: bo góc như card */
+  .wp-section.bg-light {
+    border-radius: 16px;
+  }
+
+  /* Contact section: chữ không bị dồn */
+  .wp-section.text-center p {
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Extra small phones (<= 380px): giảm padding thêm chút */
+@media (max-width: 380px) {
+  .wp-section {
+    padding: 1.35rem 0.75rem !important;
+  }
+  .wp-hero h1 {
+    font-size: 1.75rem !important;
+  }
+}
+
 </style>
 
 <div class="wp-hero">

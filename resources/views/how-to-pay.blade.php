@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .pay-hero {
-    background: #4ab3af;
+     background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -42,6 +42,88 @@
   .pay-section.bg-light {
     background: #f8f9fa;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 quá hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .pay-hero {
+    padding: 3.9rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top: 4rem;
+  }
+  .pay-hero h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+  }
+  .pay-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+    margin-top: 0.65rem !important;
+    margin-bottom: 0;
+  }
+
+  /* Section spacing */
+  .pay-section {
+    padding: 1.5rem 0.85rem !important;
+  }
+  .pay-section h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.25;
+  }
+
+  /* Text readability */
+  .pay-section p,
+  .pay-section li {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Lists/ol: dễ đọc, đỡ chật */
+  .pay-section ul,
+  .pay-section ol {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .pay-section li {
+    margin-bottom: 0.55rem;
+  }
+
+  /* bg-light section: bo góc như card */
+  .pay-section.bg-light {
+    border-radius: 16px;
+  }
+
+  /* Link: tránh tràn dòng */
+  .pay-section a {
+    word-break: break-word;
+  }
+
+  /* Text-center section spacing */
+  .pay-section.text-center p {
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Extra small phones (<= 380px) */
+@media (max-width: 380px) {
+  .pay-section {
+    padding: 1.35rem 0.75rem !important;
+  }
+  .pay-hero h1 {
+    font-size: 1.7rem !important;
+  }
+}
+
 </style>
 
 <div class="pay-hero">

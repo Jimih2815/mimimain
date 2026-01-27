@@ -50,6 +50,107 @@
     color: #4ab3af;
     margin-bottom: 0.5rem;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width */
+  .w-70 {
+    width: 92% !important;
+  }
+
+  /* Hero: giảm chiều cao + chữ vừa mắt */
+  .vm-hero {
+    padding: 4.25rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top: 4rem;
+  }
+  .vm-hero h1 {
+    font-size: 2rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  .vm-hero p.lead {
+    font-size: 1rem !important;
+    margin-top: 0.75rem !important;
+    line-height: 1.5;
+  }
+
+  /* Section spacing */
+  .vm-section {
+    padding: 1.75rem 0.75rem !important;
+  }
+  .vm-section h2 {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .vm-section p {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Mission list: đỡ chật + dễ đọc */
+  .vm-section ul {
+    padding-left: 1.1rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+  }
+  .vm-section li {
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+  .vm-section li strong {
+    display: inline;
+  }
+
+  /* Values: ép 2 cột cho đẹp, thêm card nhẹ */
+  .values-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    margin-top: 1.25rem !important;
+  }
+  .value-item {
+    padding: 0.85rem 0.65rem;
+    border-radius: 14px;
+    background: rgba(74, 179, 175, 0.08);
+    border: 1px solid rgba(74, 179, 175, 0.12);
+  }
+  .value-item i {
+    font-size: 2rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+  .value-item h5 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+  }
+  .value-item p {
+    font-size: 0.9rem !important;
+    margin-bottom: 0;
+    line-height: 1.45 !important;
+  }
+
+  /* CTA button full width */
+  .btn-mimi.nut-xanh {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+    padding: 0.85rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  /* Optional: làm section bg-light “mềm” hơn trên mobile */
+  .vm-section.bg-light {
+    border-radius: 16px;
+  }
+}
+
 </style>
 
 <div class="vm-hero">

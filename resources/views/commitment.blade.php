@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .cm-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -59,6 +59,112 @@
     font-size: 1rem;
     color: #555;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width */
+  .w-70 {
+    width: 92% !important;
+  }
+
+  /* Hero: bớt cao + chữ vừa mắt */
+  .cm-hero {
+    margin-top: 4rem;
+    padding: 4.25rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+
+  }
+  .cm-hero h1 {
+    font-size: 2rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  .cm-hero p.lead {
+    font-size: 1rem !important;
+    margin-top: 0.75rem !important;
+    line-height: 1.5;
+  }
+
+  /* Section spacing */
+  .cm-section {
+    padding: 1.75rem 0.75rem !important;
+  }
+  .cm-section h2 {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .cm-section p {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Grid: ép 2 cột cho mobile, thêm card nhẹ */
+  .commitment-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.9rem !important;
+    margin-top: 1.25rem !important;
+  }
+
+  .commitment-item {
+    padding: 0.95rem 0.75rem;
+    border-radius: 14px;
+    background: rgba(74, 179, 175, 0.08);
+    border: 1px solid rgba(74, 179, 175, 0.12);
+    text-align: center;
+  }
+
+  .commitment-item i {
+    font-size: 2rem !important;
+    margin-bottom: 0.35rem !important;
+    display: inline-block;
+  }
+
+  .commitment-item h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.35rem !important;
+    line-height: 1.25;
+  }
+
+  .commitment-item p {
+    font-size: 0.9rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 0;
+    color: #444 !important;
+  }
+
+  /* CTA button full width */
+  .btn-mimi.nut-xanh {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+    padding: 0.85rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  /* Optional: bg-light section bo góc cho đẹp */
+  .cm-section.bg-light {
+    border-radius: 16px;
+  }
+}
+
+/* =========================
+   Extra small phones (<= 380px)
+   Nếu máy bé quá thì cho grid về 1 cột cho thoáng
+   ========================= */
+@media (max-width: 380px) {
+  .commitment-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 </style>
 
 <div class="cm-hero">

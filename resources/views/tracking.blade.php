@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .tracking-hero {
-    background: #4ab3af;
+     background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -42,6 +42,88 @@
   .tracking-section.bg-light {
     background: #f8f9fa;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 quá hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .tracking-hero {
+    padding: 3.9rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top: 4rem;
+  }
+  .tracking-hero h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+  }
+  .tracking-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+    margin-top: 0.65rem !important;
+    margin-bottom: 0;
+  }
+
+  /* Section spacing */
+  .tracking-section {
+    padding: 1.5rem 0.85rem !important;
+  }
+  .tracking-section h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.25;
+  }
+
+  /* Text readability */
+  .tracking-section p,
+  .tracking-section li {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Lists/ol: dễ đọc, đỡ chật */
+  .tracking-section ul,
+  .tracking-section ol {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .tracking-section li {
+    margin-bottom: 0.55rem;
+  }
+
+  /* bg-light section: bo góc như card */
+  .tracking-section.bg-light {
+    border-radius: 16px;
+  }
+
+  /* Link: tránh tràn dòng */
+  .tracking-section a {
+    word-break: break-word;
+  }
+
+  /* Text-center section spacing */
+  .tracking-section.text-center p {
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Extra small phones (<= 380px) */
+@media (max-width: 380px) {
+  .tracking-section {
+    padding: 1.35rem 0.75rem !important;
+  }
+  .tracking-hero h1 {
+    font-size: 1.7rem !important;
+  }
+}
+
 </style>
 
 <div class="tracking-hero">

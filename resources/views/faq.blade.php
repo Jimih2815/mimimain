@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .faq-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -19,6 +19,81 @@
     font-size: 1.25rem;
     margin-top: 0.5rem;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 quá hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .faq-hero {
+    padding: 3.9rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top: 4rem;
+  }
+  .faq-hero h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+  }
+  .faq-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+    margin-top: 0.65rem !important;
+    margin-bottom: 0;
+  }
+
+  /* Accordion: padding + font cho dễ đọc / dễ bấm */
+  .accordion-item {
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 0.85rem;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .accordion-button {
+    padding: 0.9rem 0.95rem !important;
+    font-size: 1rem !important;
+    line-height: 1.35;
+  }
+
+  .accordion-body {
+    padding: 0.95rem 0.95rem !important;
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+
+  /* Link/email: tránh tràn dòng */
+  .accordion-body a {
+    word-break: break-word;
+  }
+
+  /* Icon mũi tên (chevron) nhỏ lại cho gọn */
+  .accordion-button::after {
+    transform: scale(0.9);
+  }
+}
+
+/* Extra small phones (<= 380px): giảm padding thêm chút */
+@media (max-width: 380px) {
+  .accordion-button {
+    padding: 0.85rem 0.85rem !important;
+    font-size: 0.98rem !important;
+  }
+  .accordion-body {
+    padding: 0.85rem 0.85rem !important;
+    font-size: 0.96rem;
+  }
+  .faq-hero h1 {
+    font-size: 1.7rem !important;
+  }
+}
+
 </style>
 
 <div class="faq-hero">

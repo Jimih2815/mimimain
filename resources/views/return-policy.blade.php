@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .rp-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 5rem 1rem;
@@ -39,6 +39,94 @@
   .rp-section ul {
     padding-left: 1.25rem;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 hơi hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .rp-hero {
+    padding: 3.75rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top:4rem;
+  }
+  .rp-hero h1 {
+    font-size: 1.9rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.4rem !important;
+  }
+  .rp-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+  }
+
+  /* Section spacing */
+  .rp-section {
+    padding: 1.5rem 0.85rem !important;
+  }
+  .rp-section h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.25;
+  }
+
+  /* Text readability */
+  .rp-section p,
+  .rp-section li {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Lists: đỡ chật + dễ tap */
+  .rp-section ul {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .rp-section ol {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .rp-section li {
+    margin-bottom: 0.55rem;
+  }
+
+  /* Links/email: tránh tràn dòng */
+  .rp-section a {
+    word-break: break-word;
+  }
+
+  /* bg-light sections: bo góc + nhìn như card */
+  .rp-section.bg-light {
+    border-radius: 16px;
+  }
+
+  /* Contact section: chữ không bị dồn */
+  .rp-section.text-center p {
+    margin-bottom: 0.6rem;
+  }
+
+  /* Optional: nhấn mạnh hotline/email dễ nhìn hơn */
+  .rp-section strong {
+    font-weight: 700;
+  }
+}
+
+/* Extra small phones (<= 380px): giảm padding thêm chút */
+@media (max-width: 380px) {
+  .rp-section {
+    padding: 1.35rem 0.75rem !important;
+  }
+  .rp-hero h1 {
+    font-size: 1.75rem !important;
+  }
+}
+
 </style>
 
 <div class="rp-hero">

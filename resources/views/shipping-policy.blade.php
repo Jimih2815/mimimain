@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .sp-hero {
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -41,6 +41,84 @@
   .sp-section.bg-light {
     background: #f8f9fa;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 quá hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .sp-hero {
+    padding: 3.9rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top:4rem;
+  }
+  .sp-hero h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.45rem !important;
+  }
+  .sp-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  /* Section spacing */
+  .sp-section {
+    padding: 1.5rem 0.85rem !important;
+  }
+  .sp-section h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.25;
+  }
+  .sp-section p,
+  .sp-section li {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Lists: dễ đọc, đỡ chật */
+  .sp-section ul {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .sp-section li {
+    margin-bottom: 0.55rem;
+  }
+
+  /* bg-light section: bo góc như card */
+  .sp-section.bg-light {
+    border-radius: 16px;
+  }
+
+  /* Links/email: tránh tràn dòng */
+  .sp-section a {
+    word-break: break-word;
+  }
+
+  /* Contact section: spacing cho dễ nhìn */
+  .sp-section.text-center p {
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Extra small phones (<= 380px) */
+@media (max-width: 380px) {
+  .sp-section {
+    padding: 1.35rem 0.75rem !important;
+  }
+  .sp-hero h1 {
+    font-size: 1.7rem !important;
+  }
+}
+
 </style>
 
 <div class="sp-hero">

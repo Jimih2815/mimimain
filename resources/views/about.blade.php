@@ -6,7 +6,7 @@
   /* Hero Section */
   .about-hero {
     position: relative;
-    background: url('/images/about-hero.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     padding: 8rem 0;
     text-align: center;
@@ -15,7 +15,7 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #4ab3af;
+    background: linear-gradient(135deg, #4ab3af, #81e6d9);
   }
   .about-hero .container {
     position: relative;
@@ -90,6 +90,157 @@
     border-radius: 50%;
     margin-bottom: 1rem;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-70 đang hơi "đỏng đảnh" trên mobile */
+  .w-70 {
+    width: 92% !important;
+  }
+
+  /* Hero: giảm chiều cao, tránh "nuốt" màn hình */
+  .about-hero {
+    margin-top: 4rem;
+    padding: 4.25rem 0 !important;
+    background-position: center !important;
+  }
+  .about-hero::after {
+    /* overlay nhẹ hơn để chữ đọc rõ mà không "phủ đậm" quá */
+    opacity: 0.88;
+  }
+  .about-hero h1 {
+    font-size: 2rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  .about-hero p.lead {
+    font-size: 1rem !important;
+    margin-top: 0.75rem !important;
+    padding: 0 0.5rem;
+  }
+
+  /* Title & spacing */
+  .section-title {
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem !important;
+  }
+  section.mb-5 {
+    margin-bottom: 2.25rem !important;
+  }
+
+  /* Paragraph readability */
+  p {
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+  .text-center.mx-auto[style*="max-width"] {
+    max-width: 100% !important;
+    padding: 0 0.25rem;
+  }
+
+  /* Values: ép 2 cột cho đẹp, icon nhỏ lại */
+  .values-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+  .value-item {
+    padding: 0.75rem 0.5rem;
+    border-radius: 12px;
+    background: rgba(74, 179, 175, 0.06);
+  }
+  .value-item i {
+    font-size: 2rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .value-item h5 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem !important;
+  }
+  .value-item p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  /* Timeline: thu gọn line & dot cho gọn gàng */
+  .timeline {
+    padding-left: 1.25rem !important;
+  }
+  .timeline::before {
+    left: 0.6rem !important;
+    width: 3px !important;
+  }
+  .timeline-item {
+    margin-bottom: 1.25rem !important;
+    padding-left: 0.75rem !important;
+  }
+  .timeline-item::before {
+    left: -0.35rem !important;
+    width: 0.45rem !important;
+    height: 0.45rem !important;
+    top: 0.3rem !important;
+  }
+  .timeline-item h5 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  .timeline-item p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+  }
+
+  /* Team: ảnh nhỏ lại + spacing hợp lý */
+  .team-member img {
+    width: 96px !important;
+    height: 96px !important;
+    margin-bottom: 0.6rem !important;
+  }
+  .team-member h5 {
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
+  }
+  .team-member p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  /* Statistics: cái đoạn này đang dùng d-flex + col-* hơi "lệch hệ" */
+  section.text-center .d-flex.justify-content-center.align-items-center.gap-3 {
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+  }
+  section.text-center .d-flex > .col-6 {
+    width: calc(50% - 0.5rem) !important;
+    max-width: calc(50% - 0.5rem) !important;
+    margin-bottom: 0.75rem !important;
+    padding: 0.75rem 0.5rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.03);
+  }
+  section.text-center .d-flex h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.25rem;
+  }
+  section.text-center .d-flex p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  /* CTA button full width cho mobile */
+  .btn-mimi.nut-xanh {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+    padding: 0.85rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+}
+
 </style>
 
 <div class="about-hero">

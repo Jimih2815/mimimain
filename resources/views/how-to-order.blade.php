@@ -5,7 +5,7 @@
 <style>
   /* Hero Section */
   .ho-hero {
-    background: #4ab3af;
+     background: linear-gradient(135deg, #4ab3af, #81e6d9);
     color: #fff;
     text-align: center;
     padding: 6rem 1rem;
@@ -40,6 +40,92 @@
   .ho-section.bg-light {
     background: #f8f9fa;
   }
+  /* =========================
+   Mobile tweaks (<= 768px)
+   Paste this at the END of your <style>
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Container width: w-50 quá hẹp trên mobile */
+  .w-50 {
+    width: 92% !important;
+  }
+
+  /* Hero: gọn lại, chữ vừa mắt */
+  .ho-hero {
+    padding: 3.9rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    margin-top: 4rem;
+  }
+  .ho-hero h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+  }
+  .ho-hero p.lead {
+    font-size: 0.98rem !important;
+    line-height: 1.5;
+    margin-top: 0.65rem !important;
+    margin-bottom: 0;
+  }
+
+  /* Section spacing */
+  .ho-section {
+    padding: 1.5rem 0.85rem !important;
+  }
+  .ho-section h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.25;
+  }
+
+  /* Text readability */
+  .ho-section p,
+  .ho-section li {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Lists: dễ đọc, đỡ chật */
+  .ho-section ul {
+    padding-left: 1.15rem !important;
+    margin-bottom: 0;
+  }
+  .ho-section li {
+    margin-bottom: 0.55rem;
+  }
+
+  /* bg-light section: bo góc như card */
+  .ho-section.bg-light {
+    border-radius: 16px;
+  }
+
+  /* Link: tránh tràn dòng */
+  .ho-section a {
+    word-break: break-word;
+  }
+
+  /* Icon trái tim: canh cho đẹp */
+  .ho-section i.bi {
+    vertical-align: -0.1em;
+  }
+
+  /* Contact section: spacing cho dễ nhìn */
+  .ho-section.text-center p {
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Extra small phones (<= 380px) */
+@media (max-width: 380px) {
+  .ho-section {
+    padding: 1.35rem 0.75rem !important;
+  }
+  .ho-hero h1 {
+    font-size: 1.7rem !important;
+  }
+}
+
 </style>
 
 <div class="ho-hero">
