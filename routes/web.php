@@ -186,6 +186,7 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
 */
 Route::prefix('admin')
      ->name('admin.')
+     // ->middleware(['auth', 'is_admin'])
      ->group(function () {
      
     // 4.1 Dashboard
