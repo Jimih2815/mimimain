@@ -61,7 +61,7 @@ export default defineConfig({
         // tách riêng bundle Swiper và TinyMCE
         manualChunks(id) {
           if (id.includes('node_modules/swiper')) {
-            return 'swiper';``
+            return 'swiper';
           }
           if (id.includes('node_modules/tinymce')) {
             return 'editor';
@@ -86,12 +86,11 @@ export default defineConfig({
   //   },
   // },
   server: {
-  host: '127.0.0.1',
+  host: true,       // = 0.0.0.0
   port: 5173,
   strictPort: true,
   hmr: {
-    protocol: 'ws',
-    host: '127.0.0.1',
+    host: '192.168.1.11',
     port: 5173,
   },
 },

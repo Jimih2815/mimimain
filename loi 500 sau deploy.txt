@@ -1,0 +1,9 @@
+Tìm 2 dòng kiểu này (Laravel mặc định):
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+Đổi thành:
+
+require '/home/zutfakaz/mimimain/vendor/autoload.php';
+$app = require_once '/home/zutfakaz/mimimain/bootstrap/app.php';
