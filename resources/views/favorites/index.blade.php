@@ -22,7 +22,8 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title mb-0">
                 <a href="{{ route('products.show', $product->slug) }}"
-                   class="text-decoration-none text-dark">
+                   class="text-decoration-none text-dark product-title-clamp"
+                   style="max-width: 85%;">
                   {{ $product->name }}
                 </a>
               </h5>
