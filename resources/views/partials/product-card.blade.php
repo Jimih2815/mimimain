@@ -4,7 +4,8 @@
     <img
       src="{{ asset('storage/'.$product->img) }}"
       class="card-img-top"
-      alt="{{ $product->name }}">
+      alt="{{ $product->name }}"
+      style="border-radius: 5px;">
   </a>
   <div class="card-body d-flex flex-column">
     <h5 class="card-title ten-mobile">{{ $product->name }}</h5>
