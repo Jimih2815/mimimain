@@ -629,4 +629,22 @@ body {
   }
 }
 
+
+
+/* Desktop: giới hạn tên sản phẩm tối đa 2 dòng + ... */
+@media (min-width: 992px) {
+  .product-card-title {
+    gap: 10px;
+  }
+
+  .product-card-title .product-title-link {
+    flex: 1;
+    min-width: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
 @import 'components/mobile-contact-fab';

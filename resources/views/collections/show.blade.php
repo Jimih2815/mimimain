@@ -40,9 +40,9 @@
                 : in_array($product->id, session('favorites', []));
             @endphp
 
-            <h5 class="card-title d-flex justify-content-between align-items-center noi-chua-nut-favorites">
-              <a href="{{ route('products.show', $product->slug) }}"
-                class="text-decoration-none text-dark">
+            <h5  class="card-title d-flex justify-content-between align-items-start noi-chua-nut-favorites product-card-title">
+              <a style="max-width: 85%;" href="{{ route('products.show', $product->slug) }}"
+                class="text-decoration-none text-dark product-title-link" >
                 {{ $product->name }}
               </a>
               <button type="button"
@@ -56,20 +56,29 @@
               Giá: <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
             </p>
 
-            @foreach(
-              $product->optionValues
-                      ->groupBy(fn($v) => $v->type->name)
-                      as $typeName => $values
-            )
-              <div class="option-list mb-3">
-                <span class="option-type fw-semibold me-2">{{ $typeName }}:</span>
-                <div class="d-flex flex-row flex-nowrap overflow-auto option-items">
-                  @foreach($values as $val)
-                    <span class="option-item me-3">{{ $val->value }}</span>
-                  @endforeach
+            @if($product->optionValues->count())
+            <div class="product-options d-block d-lg-none">
+              @foreach(
+                $product->optionValues
+                        ->groupBy(fn($v) => $v->type->name)
+                        as $typeName => $values
+              )
+                <div class="option-list mb-3">
+                  <span class="option-type fw-semibold me-2">{{ $typeName }}:</span>
+                  <div class="d-flex flex-row flex-nowrap overflow-auto option-items">
+                    @foreach($values as $val)
+                      <span class="option-item me-3">{{ $val->value }}</span>
+                    @endforeach
+                  </div>
                 </div>
-              </div>
-            @endforeach
+              @endforeach
+            </div>
+
+            <a href="{{ route('products.show', $product->slug) }}"
+               class="btn btn-outline-secondary btn-sm w-100 mb-3 d-none d-lg-block">
+              Xem chi tiết
+            </a>
+            @endif
 
             <form action="{{ route('cart.add', $product->id) }}"
                   method="POST"
