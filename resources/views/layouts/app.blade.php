@@ -9,6 +9,7 @@
   <script src="https://kit.fontawesome.com/1081860f2a.js" crossorigin="anonymous"></script>
 
   <title>@yield('title', 'Mimi')</title>
+  <link rel="icon" href="{{ asset('favicon.ico') }}">
 
   {{-- 1) Google Font: Baloo 2 --}}
   <link
