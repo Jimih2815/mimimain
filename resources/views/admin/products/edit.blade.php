@@ -166,7 +166,7 @@
                   <img class="opt_preview"
                        src="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}"
                        alt="Option img"
-                       style="width:70px;height:70px;object-fit:cover;border:1px solid #ccc;">
+                       style="width:100%;height:100%;object-fit:cover;border:1px solid #ccc;">
                 </div>
 
                 {{-- giữ lại đường dẫn cũ / hoặc sẽ được set khi upload ngay --}}
