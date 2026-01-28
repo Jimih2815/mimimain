@@ -42,6 +42,14 @@
       <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
     </div>
 
+    <div class="mb-3 w-100">
+  <label for="long_description" class="form-label">Mô tả chi tiết</label>
+  <textarea id="long_description"
+            name="long_description"
+            class="form-control"
+            rows="10">{{ old('long_description') }}</textarea>
+</div>
+
     <hr>
 
     {{-- Ảnh chính --}}
@@ -194,6 +202,47 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+    // === TINYMCE cho mô tả chi tiết ===
+  if (window.tinymce) {
+    tinymce.init({
+      selector: '#long_description',
+      height: 400,
+      menubar: false,
+      plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
+        'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'paste', 'help', 'wordcount'
+      ].join(' '),
+      toolbar: [
+        'undo redo | fontfamily fontselect | fontsize fontsizeselect | blocks |',
+        'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |',
+        'bullist numlist outdent indent | link image media | removeformat | code'
+      ].join(' '),
+      font_size_formats:  '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
+      fontsize_formats  : '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
+      font_family_formats: [
+        'Baloo 2="Baloo 2",cursive',
+        'Arial=Arial,Helvetica,sans-serif',
+        'Helvetica=Helvetica,Arial,sans-serif',
+        'Verdana=Verdana,Geneva,sans-serif',
+        'Tahoma=Tahoma,Arial,sans-serif',
+        'Times New Roman=Times New Roman,serif',
+        'Georgia=Georgia,serif',
+        'Courier New=Courier New,courier'
+      ].join(';'),
+
+      images_upload_url: '{{ route("admin.products.uploadImage") }}?_token={{ csrf_token() }}',
+      automatic_uploads: true,
+      images_upload_credentials: true,
+
+      content_style: `
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+        body { font-family: "Baloo 2", cursive; font-size: 14px; }
+        img  { max-width: 100%; height: auto; }
+      `
+    });
+  }
+
 });
 </script>
 @endpush
