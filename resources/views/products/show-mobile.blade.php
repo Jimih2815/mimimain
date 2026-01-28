@@ -340,7 +340,7 @@
   <div class="mt-4">
     <h3 class="h5">Có thể bạn cũng thích</h3>
     <div class="slider-related mb-3">
-      <div class="swiper product-swiper-related">
+      <div class="swiper product-swiper-related" style="height: 8rem;">
         <div class="swiper-wrapper">
           @foreach ($relatedProducts as $rel)
             <div class="swiper-slide">

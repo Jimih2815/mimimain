@@ -8,7 +8,7 @@
   </a>
   <div class="card-body d-flex flex-column">
     <h5 class="card-title ten-mobile">{{ $product->name }}</h5>
-    <p class="card-text text-danger fw-bold">
+    <p class="card-text text-danger fw-bold text-center">
       {{ number_format($product->base_price,0,',','.') }}₫
     </p>
     <!-- <a href="{{ route('products.show', $product->slug) }}"
