@@ -77,15 +77,23 @@
             <label class="form-label">{{ $type->name }}</label>
             <div class="d-flex flex-row option-items-show mb-2"
                  data-first-group="{{ $loop->first ? 1 : 0 }}">
+              @php $isFirstType = $loop->first; @endphp
+
               @foreach($type->values as $val)
                 <div class="option-item-show"
-                     data-type-id="{{ $type->id }}"
-                     data-val-id="{{ $val->id }}"
-                     data-extra="{{ $val->extra_price }}"
-                     data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
-                  {{ $val->value }}
+                    data-type-id="{{ $type->id }}"
+                    data-val-id="{{ $val->id }}"
+                    data-extra="{{ $val->extra_price }}"
+                    data-img="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}">
+
+                  @if($isFirstType && $val->option_img)
+                    <img src="{{ asset('storage/'.$val->option_img) }}" class="option-thumb" alt="">
+                  @endif
+
+                  <span>{{ $val->value }}</span>
                 </div>
               @endforeach
+
             </div>
             <input type="hidden"
                    name="options[{{ $type->id }}]"

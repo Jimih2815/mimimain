@@ -188,13 +188,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: .4rem .8rem;
+    // padding: .4rem .8rem;
     border: 1px solid #4ab3af;
     border-radius: .25rem;
     cursor: pointer;
     white-space: nowrap;
     transition: background .2s, color .2s;
     width: 31.88%;
+    height: 3rem;
   }
   
   .option-item-show.selected {
@@ -449,4 +450,22 @@ $transition-duration: 0.2s;          // thời gian chuyển đổi
       margin-right: 1rem !important;
     }
   }
+}
+.option-item-show{
+  gap: .4rem;              // tạo khoảng cách ảnh - chữ
+}
+
+.option-item-show .option-thumb{
+  width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    border-radius: 6px;
+    flex: 0 0 auto;
+    margin: 0.2rem;
+}
+
+.option-item-show span{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;     // option name dài thì gọn lại
 }
