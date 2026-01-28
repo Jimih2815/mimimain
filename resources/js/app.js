@@ -9,12 +9,25 @@
 
 import './sidebar';
 
-// ✅ Bootstrap bundle (kèm Popper) để dropdown/modal ổn định ở production
+// ✅ Bootstrap bundle (kèm Popper) - chắc kèo production
 import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
 window.bootstrap = bootstrap;
 
 
+// ✅ Init dropdown thủ công cho chắc (đỡ phụ thuộc data-api)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach((el) => {
+    // tránh init trùng
+    bootstrap.Dropdown.getOrCreateInstance(el);
+  });
+});
+
+import { initMobileContactFab } from './components/mobile-contact-fab';
+
+
 document.addEventListener('DOMContentLoaded', async () => {
+  initMobileContactFab();
+
   /* ─────────────────────────────────────────────────
      A) Nếu trang có ít nhất 1 slider
   ───────────────────────────────────────────────── */
