@@ -8,14 +8,13 @@
  */
 
 import './sidebar';
-// Bootstrap JS & Popper
-import 'bootstrap';
-import { initMobileContactFab } from './components/mobile-contact-fab';
+
+// ✅ Bootstrap bundle (kèm Popper) để dropdown/modal ổn định ở production
+import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
+window.bootstrap = bootstrap;
 
 
 document.addEventListener('DOMContentLoaded', async () => {
-  initMobileContactFab();
-
   /* ─────────────────────────────────────────────────
      A) Nếu trang có ít nhất 1 slider
   ───────────────────────────────────────────────── */

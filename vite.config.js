@@ -45,7 +45,35 @@ export default defineConfig({
                   './resources/**/*.blade.php',
                   './resources/js/**/*.{vue,js}',
                 ],
-                safelist: [/^swiper-/, /^swiper$/, /^swiper\/bundle/],
+                safelist: {
+                  standard: [
+                    // Swiper
+                    /^swiper-/,
+                    /^swiper$/,
+                    /^swiper\/bundle/,
+
+                    // Bootstrap classes hay bị JS thêm/xoá ở runtime
+                    'show',
+                    'dropdown',
+                    'dropdown-menu',
+                    'dropdown-toggle',
+                    'dropdown-menu-end',
+                    'dropdown-menu-start',
+                    'dropup',
+                    'dropend',
+                    'dropstart',
+                    'collapse',
+                    'collapsing',
+                    'modal',
+                    'modal-backdrop',
+                    'offcanvas',
+                    'offcanvas-backdrop',
+                    'fade',
+                  ],
+                  // ăn sâu vào selector con
+                  deep: [/^dropdown/, /^modal/, /^offcanvas/, /^collapse/, /^show$/],
+                  greedy: [/dropdown-menu/, /\bshow\b/],
+                },
                 defaultExtractor: (content) =>
                   content.match(/[\w-/:]+(?<!:)/g) || [],
               }),
