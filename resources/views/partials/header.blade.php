@@ -137,12 +137,13 @@
                   <img src="{{ asset('storage/'.$item['image']) }}"
                       width="50" class="me-2 rounded" alt="{{ $item['name'] }}">
                 @endif
-                <div class="flex-grow-1">
-                  <div class="fw-semibold">{{ $item['name'] }}</div>
+                <div class="flex-grow-1 cart-item-info">
+                  <div class="fw-semibold cart-item-name-clamp">{{ $item['name'] }}</div>
                   <small class="text-muted">
                     {{ number_format($item['price'],0,',','.') }}₫ × {{ $item['quantity'] }}
                   </small>
                 </div>
+
               </li>
             @empty
               <li class="text-center mb-0 empty-cart">Giỏ hàng trống! 😊</li>

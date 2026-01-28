@@ -1,0 +1,44 @@
+0) Vào đúng folder dự án
+cd /home/zutfakaz/mimimain
+
+1) Kéo code mới từ Git (chuẩn an toàn)
+git fetch origin
+git status
+git pull --ff-only origin main
+
+
+Nếu nó báo “divergent branches” thì dùng luôn:
+
+git pull --rebase origin main
+
+2) Cài/update PHP packages (composer)
+composer install --no-dev --optimize-autoloader
+
+3) (Nếu có thay đổi DB) chạy migrate
+
+Chỉ chạy khi bạn vừa update code có migration mới:
+
+php artisan migrate --force
+
+4) Dọn cache + cache lại (production)
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+5) Đảm bảo thư mục storage/cache tồn tại + quyền
+mkdir -p storage/framework/{sessions,views,cache,cache/data}
+chmod -R 775 storage bootstrap/cache
+
+6) Deploy public ra webroot (public_html) + fix storage link
+Copy public sang public_html
+
+npm run build
+cp -a /home/zutfakaz/mimimain/public/. /home/zutfakaz/public_html/
+
+Xoá hot (tránh bị kéo sang chế độ dev)
+rm -f /home/zutfakaz/public_html/hot /home/zutfakaz/mimimain/public/hot
+
+Symlink storage (để upload ảnh hoạt động)
+rm -rf /home/zutfakaz/public_html/storage
+ln -s /home/zutfakaz/mimimain/storage/app/public /home/zutfakaz/public_html/storage

@@ -642,6 +642,18 @@ body {
   }
 }
 
+/* Cart dropdown: clamp product name to 2 lines */
+.cart-item-info { min-width: 0; }   /* quan trọng trong flex để text ellipsis ăn */
+.cart-item-name-clamp{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  line-height: 1.2;
+  max-height: calc(1.2em * 2);
+}
 
 
 /* Desktop: giới hạn tên sản phẩm tối đa 2 dòng + ... */

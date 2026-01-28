@@ -252,7 +252,7 @@
     text-align: center;
     align-items: center;
     height: 2.3rem;
-    width: 8rem;
+    width: 8rem !important;
     font-weight: 800;
 }
 .nut-dang-xuat {
