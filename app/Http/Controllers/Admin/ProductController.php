@@ -32,20 +32,34 @@ class ProductController extends Controller
     public function uploadImage(Request $request)
     {
         $request->validate([
-            'file' => 'required|image|max:4096',            // chấp nhận mọi định dạng ảnh
+            'file' => 'required|image|max:4096',
         ]);
-    
-        // Dùng trait để convert & lưu webp vào storage/app/public/products/descriptions
-        $relativePath = $this->uploadAsWebp(
-            $request->file('file'),
-            'products/descriptions'                         // folder tuỳ bạn đặt
-        );
-    
-        // Trả về absolute URL để TinyMCE chèn vào editor
+
+        // Cho phép client chỉ định folder (dùng cho: mô tả, ảnh chính, ảnh phụ, option...)
+        $folder = $request->input('folder', 'products/descriptions');
+
+        // Whitelist folder để tránh bị truyền bậy
+        $allowed = [
+            'products/descriptions',
+            'products/main',
+            'products/sub',
+            'products/options',
+        ];
+        if (!in_array($folder, $allowed, true)) {
+            $folder = 'products/descriptions';
+        }
+
+        $relativePath = $this->uploadAsWebp($request->file('file'), $folder);
+
         return response()->json([
-            'location' => asset('storage/' . $relativePath)
+            // TinyMCE cần key 'location'
+            'location' => asset('storage/' . $relativePath),
+
+            // Admin form upload nhanh cần 'path' để lưu DB
+            'path' => $relativePath,
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -63,24 +77,34 @@ class ProductController extends Controller
             'description'               => 'nullable|string',
             'long_description'          => 'nullable|string',
             'base_price'                => 'required|numeric',
-            'img'                       => 'required|image|max:4096',
+            'img'                       => 'nullable|image|max:4096',
+            'img_existing'              => 'required_without:img|nullable|string',
             'sub_img.*'                 => 'nullable|image|max:4096',
+            'sub_img_existing'          => 'array',
+            'sub_img_existing.*'        => 'string',
             'options'                   => 'array',
             'options.*.name'            => 'required|string',
             'options.*.values'          => 'array',
             'options.*.values.*.value'       => 'required|string',
             'options.*.values.*.extra_price' => 'required|numeric',
             'options.*.values.*.option_img'  => 'nullable|image|max:4096',
+            'options.*.values.*.existing_img'=> 'nullable|string',
         ]);
 
-        // 2) Upload ảnh chính & phụ
-        $validated['img'] = $this->uploadAsWebp($request->file('img'), 'products/main');
-        $validated['sub_img'] = [];
+        // 2) Ảnh: ưu tiên dùng file nếu submit có file, còn không thì dùng path đã upload trước
+        if ($request->hasFile('img')) {
+            $validated['img'] = $this->uploadAsWebp($request->file('img'), 'products/main');
+        } else {
+            $validated['img'] = $request->input('img_existing');
+        }
+
+        // Ảnh phụ: nhận danh sách path đã upload trước + append file mới (nếu có)
+        $validated['sub_img'] = $request->input('sub_img_existing', []);
         foreach ($request->file('sub_img') ?? [] as $file) {
             $validated['sub_img'][] = $this->uploadAsWebp($file, 'products/sub');
         }
 
-        // 3) Tạo product
+// 3) Tạo product
         $product = Product::create($validated);
 
         // 4) Sync options
@@ -114,7 +138,10 @@ class ProductController extends Controller
             'long_description'          => 'nullable|string',
             'base_price'                => 'required|numeric',
             'img'                       => 'nullable|image|max:4096',
+            'img_existing'              => 'nullable|string',
             'sub_img.*'                 => 'nullable|image|max:4096',
+            'sub_img_existing'          => 'array',
+            'sub_img_existing.*'        => 'string',
             'options'                   => 'array',
             'options.*.name'            => 'required|string',
             'options.*.values'          => 'array',
@@ -124,19 +151,25 @@ class ProductController extends Controller
             'options.*.values.*.existing_img'=> 'nullable|string',
         ]);
 
-        // 2) Xử lý ảnh mới nếu có
+        // 2) Ảnh: ưu tiên file nếu submit có file, hoặc dùng path đã upload trước (img_existing)
         if ($request->hasFile('img')) {
             $validated['img'] = $this->uploadAsWebp($request->file('img'), 'products/main');
-        }
-        if ($request->hasFile('sub_img')) {
-            $subs = [];
-            foreach ($request->file('sub_img') as $f) {
-                $subs[] = $this->uploadAsWebp($f, 'products/sub');
-            }
-            $validated['sub_img'] = $subs;
+        } elseif ($request->filled('img_existing')) {
+            $validated['img'] = $request->input('img_existing');
         }
 
-        // Lưu ID cũ trước khi detach để xóa đúng
+        // Ảnh phụ: nếu có sub_img_existing (tức UI đang quản lý list) thì dùng list đó trước,
+        // sau đó append thêm file mới nếu có
+        if ($request->has('sub_img_existing')) {
+            $validated['sub_img'] = $request->input('sub_img_existing', []);
+        }
+
+        foreach ($request->file('sub_img') ?? [] as $f) {
+            $validated['sub_img'] = $validated['sub_img'] ?? ($product->sub_img ?? []);
+            $validated['sub_img'][] = $this->uploadAsWebp($f, 'products/sub');
+        }
+
+// Lưu ID cũ trước khi detach để xóa đúng
         $oldOptionValueIds = $product
           ->optionValues()
           ->pluck('option_values.id')

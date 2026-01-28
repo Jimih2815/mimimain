@@ -81,41 +81,58 @@
 
     <hr>
 
-    {{-- Ảnh chính --}}
+    {{-- Ảnh chính (chọn là upload luôn + preview) --}}
     <div class="mb-3">
       <label class="form-label">Ảnh chính</label>
       <input type="file"
+             id="img_input"
              name="img"
              class="form-control"
              accept="image/*">
-      @if($product->img)
-        <div class="mt-2">
-          <img src="{{ asset('storage/'.$product->img) }}"
+      <input type="hidden" name="img_existing" id="img_existing" value="{{ old('img_existing', $product->img) }}">
+
+      <div class="mt-2">
+        @if($product->img)
+          <img id="img_preview"
+               src="{{ asset('storage/'.$product->img) }}"
                width="150"
                style="object-fit:cover"
                alt="Main Image">
-        </div>
-      @endif
+        @else
+          <img id="img_preview" style="display:none;width:150px;object-fit:cover;" alt="Main preview">
+        @endif
+      </div>
+
+      <small class="text-muted d-block mt-1">Chọn ảnh xong hệ thống sẽ tự upload và hiện preview.</small>
     </div>
 
-    {{-- Ảnh phụ --}}
+    {{-- Ảnh phụ (chọn là upload luôn + preview, có thể xoá) --}}
     <div class="mb-3">
       <label class="form-label">Ảnh phụ (có thể chọn nhiều)</label>
       <input type="file"
+             id="sub_input"
              name="sub_img[]"
              class="form-control"
              accept="image/*"
              multiple>
-      @if(!empty($product->sub_img))
-        <div class="mt-2 d-flex flex-wrap gap-2">
+
+      <div id="sub_previews" class="mt-2 d-flex flex-wrap gap-2">
+        @if(!empty($product->sub_img))
           @foreach($product->sub_img as $sub)
-            <img src="{{ asset('storage/'.$sub) }}"
-                 width="80" height="80"
-                 style="object-fit:cover;border:1px solid #ccc;"
-                 alt="Sub Image">
+            <div class="sub-one position-relative" data-path="{{ $sub }}" style="width:80px">
+              <img src="{{ asset('storage/'.$sub) }}"
+                   width="80" height="80"
+                   style="object-fit:cover;border:1px solid #ccc;"
+                   alt="Sub Image">
+              <button type="button" class="btn btn-sm btn-danger sub-remove"
+                      style="position:absolute;top:-6px;right:-6px;border-radius:999px;line-height:1;">×</button>
+              <input type="hidden" name="sub_img_existing[]" value="{{ $sub }}">
+            </div>
           @endforeach
-        </div>
-      @endif
+        @endif
+      </div>
+
+      <small class="text-muted d-block mt-1">Bạn có thể bấm dấu × để bỏ ảnh phụ trước khi lưu.</small>
     </div>
 
     <hr>
@@ -145,15 +162,18 @@
             <div class="d-flex align-items-end mb-2 value-block" data-val-index="{{ $j }}">
               {{-- 1) Cột preview --}}
               <div class="me-2 text-center" style="width:100px">
-                @if($val->option_img)
-                  <div class="img-cont">
-                    <img src="{{ asset('storage/'.$val->option_img) }}" alt="Option img">
-                  </div>
-                  {{-- giữ lại đường dẫn cũ --}}
-                  <input type="hidden"
-                        name="options[{{ $i }}][values][{{ $j }}][existing_img]"
-                        value="{{ $val->option_img }}">
-                @endif
+                <div class="img-cont" style="{{ $val->option_img ? '' : 'display:none;' }}">
+                  <img class="opt_preview"
+                       src="{{ $val->option_img ? asset('storage/'.$val->option_img) : '' }}"
+                       alt="Option img"
+                       style="width:70px;height:70px;object-fit:cover;border:1px solid #ccc;">
+                </div>
+
+                {{-- giữ lại đường dẫn cũ / hoặc sẽ được set khi upload ngay --}}
+                <input type="hidden"
+                      class="opt_existing"
+                      name="options[{{ $i }}][values][{{ $j }}][existing_img]"
+                      value="{{ $val->option_img }}">
               </div>
 
               {{-- 2) Cột input file --}}
@@ -162,7 +182,7 @@
                 <input type="file"
                       name="options[{{ $i }}][values][{{ $j }}][option_img]"
                       accept="image/*"
-                      class="form-control">
+                      class="form-control opt_upload">
               </div>
 
               {{-- 3) Cột Giá trị --}}
@@ -264,6 +284,124 @@
     document.addEventListener('DOMContentLoaded', function() {
       // === 1) XỬ LÝ DYNAMIC OPTIONS / VALUES ===
       const optionsContainer = document.getElementById('options-container');
+
+  // ===== Upload ảnh ngay khi chọn (Main/Sub/Option) =====
+  const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+  const uploadUrl = "{{ route('admin.products.uploadImage') }}";
+
+  async function uploadOne(file, folder) {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', folder);
+
+    const res = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { 'X-CSRF-TOKEN': csrf },
+      body: fd
+    });
+
+    if (!res.ok) throw new Error('Upload failed');
+    return await res.json(); // {location, path}
+  }
+
+  // Ảnh chính
+  const imgInput = document.getElementById('img_input');
+  const imgExisting = document.getElementById('img_existing');
+  const imgPreview = document.getElementById('img_preview');
+
+  if (imgInput && imgExisting && imgPreview) {
+    imgInput.addEventListener('change', async () => {
+      const file = imgInput.files?.[0];
+      if (!file) return;
+
+      try {
+        const out = await uploadOne(file, 'products/main');
+        imgExisting.value = out.path;
+        imgPreview.src = out.location;
+        imgPreview.style.display = 'block';
+        imgInput.value = '';
+      } catch (e) {
+        alert('Upload ảnh chính lỗi, thử lại nhé!');
+        console.error(e);
+      }
+    });
+  }
+
+  // Ảnh phụ
+  const subInput = document.getElementById('sub_input');
+  const subWrap = document.getElementById('sub_previews');
+
+  function addSubThumb(location, path) {
+    if (!subWrap) return;
+    const box = document.createElement('div');
+    box.className = 'sub-one position-relative';
+    box.dataset.path = path;
+    box.style.width = '80px';
+
+    box.innerHTML = `
+      <img src="${location}" width="80" height="80" style="object-fit:cover;border:1px solid #ccc;" alt="">
+      <button type="button" class="btn btn-sm btn-danger sub-remove"
+              style="position:absolute;top:-6px;right:-6px;border-radius:999px;line-height:1;">×</button>
+      <input type="hidden" name="sub_img_existing[]" value="${path}">
+    `;
+
+    box.querySelector('.sub-remove')?.addEventListener('click', () => box.remove());
+    subWrap.appendChild(box);
+  }
+
+  if (subInput && subWrap) {
+    subWrap.addEventListener('click', (e) => {
+      if (e.target.classList.contains('sub-remove')) {
+        e.target.closest('.sub-one')?.remove();
+      }
+    });
+
+    subInput.addEventListener('change', async () => {
+      const files = Array.from(subInput.files || []);
+      if (!files.length) return;
+
+      for (const f of files) {
+        try {
+          const out = await uploadOne(f, 'products/sub');
+          addSubThumb(out.location, out.path);
+        } catch (e) {
+          alert('Upload ảnh phụ lỗi, thử lại nhé!');
+          console.error(e);
+          break;
+        }
+      }
+      subInput.value = '';
+    });
+  }
+
+  // Option image: input file có class .opt_upload
+  document.addEventListener('change', async (e) => {
+    const input = e.target;
+    if (!input.classList.contains('opt_upload')) return;
+
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const row = input.closest('.value-block');
+    if (!row) return;
+
+    const existing = row.querySelector('.opt_existing') || row.querySelector('input[name*="[existing_img]"]');
+    const cont = row.querySelector('.img-cont');
+    const img = row.querySelector('.opt_preview') || cont?.querySelector('img');
+
+    try {
+      const out = await uploadOne(file, 'products/options');
+      if (existing) existing.value = out.path;
+      if (img) img.src = out.location;
+      if (cont) cont.style.display = 'block';
+      input.value = '';
+    } catch (e) {
+      alert('Upload ảnh option lỗi, thử lại nhé!');
+      console.error(e);
+    }
+  });
+
+
       const addOptionBtn     = document.getElementById('add-option-btn');
       let optionCount        = optionsContainer.querySelectorAll('.option-block').length;
       const tplOption        = document.getElementById('tpl-option').innerHTML;
