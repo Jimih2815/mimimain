@@ -164,7 +164,7 @@
   {{-- Vision --}}
   <section class="vm-section">
     <h2>Tầm Nhìn (Vision)</h2>
-    <p>MimiMain hướng đến trở thành thương hiệu quà tặng cá nhân hóa hàng đầu Việt Nam, nơi mỗi sản phẩm không chỉ là món quà, mà còn là câu chuyện, là kỷ niệm, là tình cảm được gửi gắm đến người thân, bạn bè và người yêu thương.</p>
+    <p>Mimi hướng đến trở thành thương hiệu quà tặng cá nhân hóa hàng đầu Việt Nam, nơi mỗi sản phẩm không chỉ là món quà, mà còn là câu chuyện, là kỷ niệm, là tình cảm được gửi gắm đến người thân, bạn bè và người yêu thương.</p>
   </section>
 
   {{-- Mission --}}
@@ -208,7 +208,7 @@
   {{-- CTA Section --}}
   <section class="vm-section text-center">
     <h2>Khám Phá Thêm</h2>
-    <p>Hãy để MimiMain đồng hành cùng khoảnh khắc ý nghĩa của bạn.</p>
+    <p>Hãy để Mimi đồng hành cùng khoảnh khắc ý nghĩa của bạn.</p>
     <a href="{{ route('products.index') }}" class="btn-mimi nut-xanh text-decoration-none">Khám phá sản phẩm</a>
   </section>
 </div>

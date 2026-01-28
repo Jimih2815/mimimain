@@ -141,7 +141,7 @@
       {{-- Preview + hidden existing path --}}
       <div class="me-2 text-center" style="width:100px">
         <div class="img-cont" style="display:none;">
-          <img class="opt_preview" src="" alt="Option img" style="width:70px;height:70px;object-fit:cover;border:1px solid #ccc;">
+          <img class="opt_preview" src="" alt="Option img" style="width:100%;height:100%;object-fit:cover;border:1px solid #ccc;">
         </div>
         <input type="hidden"
                class="opt_existing"

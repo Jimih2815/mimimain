@@ -169,7 +169,7 @@
 
 <div class="cm-hero">
   <div class="container">
-    <h1>Cam kết của MimiMain</h1>
+    <h1>Cam kết của Mimi</h1>
     <p class="lead">Chất lượng – An toàn – Tận tâm trong từng sản phẩm</p>
   </div>
 </div>
@@ -178,7 +178,7 @@
   {{-- Quality Commitment --}}
   <section class="cm-section">
     <h2>Cam kết Chất Lượng</h2>
-    <p>Mỗi sản phẩm của MimiMain đều trải qua quy trình kiểm định nghiêm ngặt, từ khâu chọn nguyên liệu đến khâu thành phẩm, nhằm đảm bảo chất lượng vượt trội và độ bền lâu dài.</p>
+    <p>Mỗi sản phẩm của Mimi đều trải qua quy trình kiểm định nghiêm ngặt, từ khâu chọn nguyên liệu đến khâu thành phẩm, nhằm đảm bảo chất lượng vượt trội và độ bền lâu dài.</p>
   </section>
 
   {{-- Safety & Environment --}}
@@ -246,7 +246,7 @@
 
   {{-- CTA Section --}}
   <section class="cm-section text-center">
-    <h2>Đặt trọn niềm tin vào MimiMain</h2>
+    <h2>Đặt trọn niềm tin vào Mimi</h2>
     <p>Hãy để chúng tôi đồng hành cùng khoảnh khắc ý nghĩa của bạn với cam kết chất lượng và dịch vụ hàng đầu.</p>
     <a href="{{ route('products.index') }}" class="btn-mimi nut-xanh text-decoration-none">Khám phá ngay</a>
   </section>

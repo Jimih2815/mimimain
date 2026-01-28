@@ -7,7 +7,7 @@
   {{-- CSRF token for AJAX uploads and TinyMCE --}}
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>@yield('title', 'Admin Dashboard') – MimiMain</title>
+  <title>@yield('title', 'Admin Dashboard') – Mimi</title>
 
   {{-- Bootstrap CSS --}}
   <link 

@@ -154,8 +154,8 @@
     <ol>
       <li>Liên hệ bộ phận Chăm sóc Khách hàng qua email: <a href="mailto:support@mimimain.com">support@mimi.com</a> hoặc số Hotline/Zalo: <strong>0354 235 669</strong>.</li>
       <li>Cung cấp thông tin đơn hàng, mã đơn và mô tả lý do đổi/trả kèm hình ảnh (nếu có).</li>
-      <li>Xác nhận từ phía MimiMain trong vòng <strong>24 giờ</strong> kể từ khi nhận yêu cầu.</li>
-      <li>Gửi trả sản phẩm về địa chỉ trung tâm bảo hành của MimiMain hoặc bưu cục gần nhất.</li>
+      <li>Xác nhận từ phía Mimi trong vòng <strong>24 giờ</strong> kể từ khi nhận yêu cầu.</li>
+      <li>Gửi trả sản phẩm về địa chỉ trung tâm bảo hành của Mimi hoặc bưu cục gần nhất.</li>
       <li>Sau khi kiểm tra, chúng tôi sẽ tiến hành đổi sản phẩm mới hoặc hoàn tiền theo phương thức đã chọn.</li>
     </ol>
   </section>
@@ -180,7 +180,7 @@
   {{-- Chi phí vận chuyển --}}
   <section class="rp-section">
     <h2>5. Chi Phí Vận Chuyển</h2>
-    <p>MimiMain chịu trách nhiệm chi phí vận chuyển trong các trường hợp:</p>
+    <p>Mimi chịu trách nhiệm chi phí vận chuyển trong các trường hợp:</p>
     <ul>
       <li>Sản phẩm lỗi, hỏng do nhà sản xuất.</li>
       <li>Giao nhầm hàng so với đơn đặt.</li>

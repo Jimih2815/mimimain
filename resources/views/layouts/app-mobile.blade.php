@@ -7,7 +7,7 @@
   {{-- CSRF token --}}
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>@yield('title', 'MimiMain Mobile')</title>
+  <title>@yield('title', 'Mimi')</title>
 
   {{-- Google Font --}}
   <link 
