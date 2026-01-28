@@ -44,6 +44,15 @@
   @include('partials.mobile-footer')
 
   {{-- Scripts từ @push('scripts') --}}
-  @stack('scripts')
+  @php
+  // Ẩn ở các trang không nên làm phiền
+    $hideFab = request()->is('cart', 'cart/*', 'checkout', 'checkout/*', 'order/*', 'payment/*');
+  @endphp
+
+  @if(!$hideFab)
+    @include('partials.mobile-contact-fab')
+  @endif
+
+@stack('scripts')
 </body>
 </html>

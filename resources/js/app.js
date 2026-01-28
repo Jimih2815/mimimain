@@ -10,9 +10,12 @@
 import './sidebar';
 // Bootstrap JS & Popper
 import 'bootstrap';
+import { initMobileContactFab } from './components/mobile-contact-fab';
 
 
 document.addEventListener('DOMContentLoaded', async () => {
+  initMobileContactFab();
+
   /* ─────────────────────────────────────────────────
      A) Nếu trang có ít nhất 1 slider
   ───────────────────────────────────────────────── */

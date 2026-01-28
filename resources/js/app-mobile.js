@@ -4,11 +4,14 @@ import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 
 import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
+import { initMobileContactFab } from './components/mobile-contact-fab';
 window.bootstrap = bootstrap;
 
 console.log('🔥 app-mobile.js loaded');
 
 document.addEventListener('DOMContentLoaded', () => {
+  initMobileContactFab();
+
   console.log('🛠️ DOMContentLoaded mobile');
 
   // 1) Collection slider với peek next + inertia

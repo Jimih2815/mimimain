@@ -102,7 +102,9 @@
   @endif
 
   {{-- Scripts từ view con --}}
-  @stack('scripts')
+  @include('partials.mobile-contact-fab')
+
+@stack('scripts')
 
   {{-- Script điều khiển floating panel: CHỈ CHẠY TRÊN PC --}}
   @if(!$agent->isMobile())
