@@ -110,6 +110,16 @@ class ProductController extends Controller
         // 4) Sync options
         $this->syncOptions($product, $validated['options'] ?? [], $request->file('options', []));
 
+        // Nếu submit bằng AJAX (Accept: application/json)
+        if ($request->expectsJson()) {
+            return response()->json([
+                'ok' => true,
+                'message' => 'Tạo sản phẩm thành công!',
+                'redirect' => route('admin.products.edit', $product),
+                'product_id' => $product->id,
+            ], 201);
+        }
+
         return redirect()
             ->route('admin.products.edit', $product)
             ->with('success', 'Tạo sản phẩm thành công!');
@@ -200,6 +210,16 @@ class ProductController extends Controller
             // C) Tạo & attach lại options mới
             $this->syncOptions($product, $validated['options'] ?? [], $request->file('options', []));
         });
+
+        // Nếu submit bằng AJAX (Accept: application/json)
+        if ($request->expectsJson()) {
+            return response()->json([
+                'ok' => true,
+                'message' => 'Cập nhật sản phẩm thành công!',
+                'redirect' => route('admin.products.edit', $product),
+                'product_id' => $product->id,
+            ]);
+        }
 
         return redirect()
             ->route('admin.products.edit', $product)

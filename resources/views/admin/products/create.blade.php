@@ -85,6 +85,25 @@
     <button class="btn mb-5 nut-cap-nhat">Lưu lại</button>
   </form>
 
+  {{-- Modal báo lỗi (AJAX) --}}
+  <div class="modal fade" id="productFormErrorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Không lưu được</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="productFormErrorText" class="mb-2">Có lỗi xảy ra, kiểm tra lại giúp mình nhé.</div>
+          <ul id="productFormErrorList" class="mb-0"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {{-- Template ẩn cho OptionType --}}
   <template id="tpl-option">
     <div class="card mb-3 option-block p-3" data-index="{i}">
@@ -149,11 +168,53 @@ document.addEventListener('DOMContentLoaded', () => {
   const optionsContainer = document.getElementById('options-container');
   const form = document.getElementById('product-form');
   const optionError = document.getElementById('option-error');
+
+  // Modal lỗi
+  const errModalEl  = document.getElementById('productFormErrorModal');
+  const errTextEl   = document.getElementById('productFormErrorText');
+  const errListEl   = document.getElementById('productFormErrorList');
+  const errModal = (window.bootstrap && errModalEl)
+    ? new bootstrap.Modal(errModalEl)
+    : null;
+
+  function showErrorModal(message, items = []) {
+    if (!errTextEl || !errListEl) return alert(message || 'Có lỗi xảy ra');
+
+    errTextEl.textContent = message || 'Có lỗi xảy ra, kiểm tra lại giúp mình nhé.';
+    errListEl.innerHTML = '';
+    (items || []).forEach(t => {
+      const li = document.createElement('li');
+      li.textContent = t;
+      errListEl.appendChild(li);
+    });
+
+    if (errModal) errModal.show();
+    else alert([message, ...(items||[])].filter(Boolean).join('\n'));
+  }
+
+  function errorKeyToName(key) {
+    if (!key) return key;
+    // Laravel validation errors trả về dạng dot: options.0.values.0.value
+    const parts = String(key).split('.');
+    if (parts.length === 1) return key;
+    return parts[0] + parts.slice(1).map(p => `[${p}]`).join('');
+  }
+
+  // Track upload đang chạy để tránh bấm Lưu khi ảnh chưa upload xong
+  let pendingUploads = 0;
+  function setSubmitting(isSubmitting) {
+    const btn = form.querySelector('button[type="submit"], button:not([type]), .nut-cap-nhat');
+    if (!btn) return;
+    btn.disabled = isSubmitting;
+    btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
+    btn.textContent = isSubmitting ? 'Đang lưu…' : btn.dataset.originalText;
+  }
   // ===== Upload ảnh ngay khi chọn (Main/Sub/Option) =====
   const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
   const uploadUrl = "{{ route('admin.products.uploadImage') }}";
 
   async function uploadOne(file, folder) {
+    pendingUploads++;
     const fd = new FormData();
     fd.append('file', file);
     fd.append('folder', folder);
@@ -168,6 +229,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return await res.json(); // {location, path}
   }
 
+  async function safeUploadOne(file, folder) {
+    try {
+      return await uploadOne(file, folder);
+    } finally {
+      pendingUploads = Math.max(0, pendingUploads - 1);
+    }
+  }
+
   // Ảnh chính
   const imgInput = document.getElementById('img_input');
   const imgExisting = document.getElementById('img_existing');
@@ -179,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!file) return;
 
       try {
-        const out = await uploadOne(file, 'products/main');
+        const out = await safeUploadOne(file, 'products/main');
         imgExisting.value = out.path;
         imgPreview.src = out.location;
         imgPreview.style.display = 'block';
@@ -226,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       for (const f of files) {
         try {
-          const out = await uploadOne(f, 'products/sub');
+          const out = await safeUploadOne(f, 'products/sub');
           addSubThumb(out.location, out.path);
         } catch (e) {
           alert('Upload ảnh phụ lỗi, thử lại nhé!');
@@ -254,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const img = row.querySelector('.opt_preview') || cont?.querySelector('img');
 
     try {
-      const out = await uploadOne(file, 'products/options');
+      const out = await safeUploadOne(file, 'products/options');
       if (existing) existing.value = out.path;
       if (img) img.src = out.location;
       if (cont) cont.style.display = 'block';
@@ -321,24 +390,100 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Validate trước submit
-  form.addEventListener('submit', function(e) {
+  // Submit bằng AJAX => không reload trang, giữ nguyên text/ảnh đã nhập
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // 0) Nếu đang upload ảnh mà đã bấm Lưu => chặn lại
+    if (pendingUploads > 0) {
+      showErrorModal('Ảnh đang upload', ['Đợi ảnh upload xong rồi bấm Lưu lại nha (đỡ bị mất công).']);
+      return;
+    }
+
     // 1) Phải có ít nhất 1 option
     if (optionsContainer.querySelectorAll('.option-block').length === 0) {
-      e.preventDefault();
       optionError.style.display = 'block';
+      showErrorModal('Thiếu phân loại', ['Thêm ít nhất 1 option/phân loại trước khi lưu.']);
       return;
     }
     optionError.style.display = 'none';
 
-    // 2) Loại bỏ dòng value hoàn toàn trống
+    // 2) Loại bỏ dòng value hoàn toàn trống (dòng auto-add)
     document.querySelectorAll('.value-block').forEach(vb => {
       const valInp   = vb.querySelector('input[name*="[value]"]');
       const extraInp = vb.querySelector('input[name*="[extra_price]"]');
-      if (valInp.value.trim() === '' && extraInp.value.trim() === '') {
+      if ((valInp?.value || '').trim() === '' && (extraInp?.value || '').trim() === '') {
         vb.remove();
       }
     });
+
+    // 3) Đồng bộ TinyMCE -> textarea trước khi lấy FormData
+    if (window.tinymce) {
+      try { tinymce.triggerSave(); } catch (err) {}
+    }
+
+    // 4) Clear trạng thái invalid cũ
+    form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+    // 5) Gửi request
+    setSubmitting(true);
+    try {
+      const fd = new FormData(form);
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf,
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: fd
+      });
+
+      if (res.ok) {
+        const out = await res.json().catch(() => ({}));
+        // Redirect qua trang edit (giữ flow cũ)
+        if (out.redirect) {
+          window.location.href = out.redirect;
+          return;
+        }
+        // fallback
+        window.location.reload();
+        return;
+      }
+
+      // Validation error
+      if (res.status === 422) {
+        const data = await res.json().catch(() => ({}));
+        const errors = data.errors || {};
+        const flat = [];
+        Object.values(errors).forEach(arr => {
+          (arr || []).forEach(msg => flat.push(msg));
+        });
+
+        // mark invalid fields
+        Object.keys(errors).forEach(key => {
+          const k1 = key;
+          const k2 = errorKeyToName(key);
+          const q1 = `[name="${CSS.escape(k1)}"]`;
+          const q2 = `[name="${CSS.escape(k2)}"]`;
+          const el = form.querySelector(q1) || form.querySelector(q2) || form.querySelector(`${q1}[]`) || form.querySelector(`${q2}[]`);
+          if (el) el.classList.add('is-invalid');
+        });
+
+        showErrorModal('Chưa lưu được vì còn thiếu/nhập sai vài chỗ', flat.length ? flat : ['Kiểm tra lại các trường bắt buộc.']);
+        return;
+      }
+
+      // Other errors
+      const text = await res.text().catch(() => '');
+      console.error('Store error:', res.status, text);
+      showErrorModal('Lỗi hệ thống', ['Server trả về lỗi, thử lại sau hoặc báo mình đoạn lỗi (Console/Network) để bắt bệnh nhanh.']);
+    } catch (err) {
+      console.error(err);
+      showErrorModal('Mất kết nối', ['Không gửi được dữ liệu lên server. Kiểm tra mạng rồi thử lại nha.']);
+    } finally {
+      setSubmitting(false);
+    }
   });
     // === TINYMCE cho mô tả chi tiết ===
   if (window.tinymce) {
