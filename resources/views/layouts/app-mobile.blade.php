@@ -46,7 +46,7 @@
   {{-- Scripts từ @push('scripts') --}}
   @php
   // Ẩn ở các trang không nên làm phiền
-    $hideFab = request()->is('cart', 'cart/*', 'checkout', 'checkout/*', 'order/*', 'payment/*');
+    $hideFab = request()->is('cart', 'cart/*', 'checkout', 'checkout/*', 'order/*', 'payment/*', 'products/*');
   @endphp
 
   @if(!$hideFab)

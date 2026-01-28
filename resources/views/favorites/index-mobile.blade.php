@@ -156,9 +156,12 @@ body.no-scroll { overflow: hidden; }
     transition: all 0.8s ease;
     pointer-events: none;
   }
+  .nut-xanh {
+    width: 100%;
+  }
 </style>
 <div class="trang-yeu-thich-mobile ms-1 me-1 pt-3 pb-3">
-    <h1 class="pb-3 ps-1">Sản phẩm yêu thích</h1>
+    <h1 class="pb-3 ps-1 text-center">Sản phẩm yêu thích</h1>
     @if($products->isEmpty())
       <div class="p-3 bg-white rounded-3 ms-1 me-1">
         <p class="m-0" style="font-weight:600;">Chưa có sản phẩm yêu thích nào.</p>
