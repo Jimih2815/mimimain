@@ -91,7 +91,7 @@ body.no-scroll { overflow: hidden; }
   box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
   transform: translateY(150%);
   transition: transform .3s ease;
-  z-index: 100;
+  z-index: 10001;
   display: flex;
   flex-direction: column;
 }
