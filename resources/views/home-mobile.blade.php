@@ -63,6 +63,7 @@
                alt="{{ $s->text }}"
                class="w-100 collection-stack-img">
           <p class="the-p collection-stack-caption">{{ $s->text }}</p>
+          <span class="collection-stack-shop-btn">Shop</span>
         </a>
       </div>
     @endforeach
@@ -189,7 +190,7 @@
 .collection-stack-caption{
   position:absolute;
   left:0; right:0;
-  bottom:14px;
+  bottom:56px; /* chừa chỗ cho nút Shop */
   margin:0;
   padding:0 14px;
   text-align:center;
@@ -199,6 +200,35 @@
   text-shadow:
     0 2px 10px rgba(0,0,0,.85),
     0 0 2px rgba(0,0,0,.95);
+}
+
+/* Nút Shop giống mẫu (pill trắng, đặt dưới caption) */
+.collection-stack-shop-btn{
+  position:absolute;
+  left:13%;
+  bottom:40px;
+  transform:translateX(-50%);
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:7px 18px;
+  border-radius:999px;
+  background:#fff;
+  color:#111;
+  font-weight:800;
+  font-size:14px;
+  line-height:1;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+  text-decoration:none;
+}
+
+/* chạm vào nhìn "đã" hơn */
+.collection-stack-item a:hover .collection-stack-shop-btn,
+.collection-stack-item a:focus .collection-stack-shop-btn{
+  transform:translateX(-50%) translateY(-1px);
+  box-shadow:0 10px 22px rgba(0,0,0,.32);
 }
 
 /* Section Images (Swiper) */
