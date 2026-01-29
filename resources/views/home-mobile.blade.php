@@ -181,10 +181,10 @@
 }
 .collection-stack-img{
   width:100%;
-  height:66svh;       /* ~2/3 màn hình */
-  max-height:66vh;
+  height:70svh;       
+  max-height:70vh;
   object-fit:cover;
-  border-radius:0;    /* bỏ bo góc */
+  border-radius:0;    
   display:block;
 }
 .collection-stack-caption{
