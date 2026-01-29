@@ -114,11 +114,11 @@ export default defineConfig({
   //   },
   // },
   server: {
-  host: true,       // = 0.0.0.0
+  host: true,       
   port: 5173,
   strictPort: true,
   hmr: {
-    host: '192.168.1.11',
+    host: '192.168.2.198',
     port: 5173,
   },
 },
