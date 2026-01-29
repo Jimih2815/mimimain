@@ -138,6 +138,13 @@
                type="number" step="0.01" class="form-control" required>
       </div>
 
+      <div class="me-2" style="width:120px">
+        <label class="form-label">Price</label>
+        <input type="number" step="0.01"
+               class="form-control option-price-helper"
+               placeholder="(không bắt buộc)">
+      </div>
+
       {{-- Preview + hidden existing path --}}
       <div class="me-2 text-center" style="width:100px">
         <div class="img-cont" style="display:none;">
@@ -168,6 +175,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const optionsContainer = document.getElementById('options-container');
   const form = document.getElementById('product-form');
   const optionError = document.getElementById('option-error');
+
+  // Base price helper
+  const basePriceInput = form.querySelector('input[name="base_price"]');
+  function getBasePrice() {
+    const v = parseFloat(basePriceInput?.value ?? '');
+    return Number.isFinite(v) ? v : NaN;
+  }
+  function round2(n) {
+    return Math.round(n * 100) / 100;
+  }
+  function calcExtraFromPrice(valueBlock) {
+    if (!valueBlock) return;
+    const extraInp = valueBlock.querySelector('input[name*="[extra_price]"]');
+    const priceInp = valueBlock.querySelector('.option-price-helper');
+    if (!extraInp || !priceInp) return;
+
+    // Chỉ tính khi Extra Price đang trống
+    if ((extraInp.value || '').trim() !== '') return;
+
+    const price = parseFloat(priceInp.value ?? '');
+    const base  = getBasePrice();
+    if (!Number.isFinite(price) || !Number.isFinite(base)) return;
+
+    let extra = round2(price - base);
+    if (Object.is(extra, -0)) extra = 0;
+
+    extraInp.value = String(extra);
+    // Trigger để auto-add dòng mới nếu đủ điều kiện
+    extraInp.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
 
   // Modal lỗi
   const errModalEl  = document.getElementById('productFormErrorModal');
@@ -377,6 +415,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.matches('.remove-value')) {
       e.target.closest('.value-block').remove();
     }
+  });
+
+  // Tính Extra Price tự động khi nhập Price (chỉ là công cụ tính hộ)
+  optionsContainer.addEventListener('input', (e) => {
+    if (e.target.classList && e.target.classList.contains('option-price-helper')) {
+      const vb = e.target.closest('.value-block');
+      calcExtraFromPrice(vb);
+    }
+  });
+
+  // Nếu đổi Base Price, và dòng nào có Price nhưng Extra đang trống -> tính lại
+  basePriceInput?.addEventListener('input', () => {
+    optionsContainer.querySelectorAll('.value-block').forEach(vb => {
+      calcExtraFromPrice(vb);
+    });
   });
 
   // Auto-add value khi hoàn thiện dòng cuối
