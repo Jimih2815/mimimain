@@ -17,42 +17,67 @@ class ProductController extends Controller
      */
    
     public function index(Request $request)
-    {
-        // 1) Nhận diện mobile (simple User-Agent check)
-        $isMobile = preg_match('/Mobile|Android|iPhone/', $request->header('User-Agent'));
+{
+    // 1) Nhận diện mobile (simple User-Agent check)
+    $isMobile = preg_match('/Mobile|Android|iPhone/', $request->header('User-Agent'));
 
-        if ($isMobile) {
-            // Lấy sidebar + tất cả products
-            $roots    = SidebarItem::with('children.collection.products')
-                          ->whereNull('parent_id')
-                          ->orderBy('sort_order')
-                          ->get();
-            $products = Product::all();
+    if ($isMobile) {
+        // Lấy sidebar + tất cả products
+        $roots    = SidebarItem::with('children.collection.products')
+                      ->whereNull('parent_id')
+                      ->orderBy('sort_order')
+                      ->get();
 
-            // Lấy mảng ID sản phẩm user đã favorite
-            $favIds = Auth::check()
-            ? Auth::user()->favorites()->pluck('product_id')->toArray()
-            : session('favorites', []);
+        // Random mỗi lần load trang (mobile hiện tại không paginate)
+        $products = Product::inRandomOrder()->get();
 
+        // Lấy mảng ID sản phẩm user đã favorite
+        $favIds = Auth::check()
+        ? Auth::user()->favorites()->pluck('product_id')->toArray()
+        : session('favorites', []);
 
-            // Trả view mobile với favIds
-            return view('products.index-mobile', compact('roots', 'products', 'favIds'));
-        }
-
-        // ===== Desktop: xử lý search + paginate =====
-        $q = $request->input('q');
-        $query = Product::with('optionValues.type');
-
-        if ($q) {
-            $query->where('name', 'like', "%{$q}%")
-                  ->orWhere('description', 'like', "%{$q}%");
-        }
-
-        $products = $query->paginate(12)
-                          ->appends(['q' => $q]);
-
-        return view('products.index', compact('products', 'q'));
+        // Trả view mobile với favIds
+        return view('products.index-mobile', compact('roots', 'products', 'favIds'));
     }
+
+    // ===== Desktop: xử lý search + paginate =====
+    $q = $request->input('q');
+    $query = Product::with('optionValues.type');
+
+    if ($q) {
+        $query->where('name', 'like', "%{$q}%")
+              ->orWhere('description', 'like', "%{$q}%");
+    }
+
+    /**
+     * Random thứ tự sản phẩm theo "seed" để:
+     * - Mỗi lần F5 / vào lại trang => seed mới => thứ tự mới
+     * - Nhưng khi bấm trang 2,3... => giữ seed => không bị nhảy loạn/trùng sản phẩm
+     */
+    $seedQuery = (string) $q;
+    if (!$request->has('page')) {
+        session([
+            'products_seed'   => random_int(1, 999999),
+            'products_seed_q' => $seedQuery,
+        ]);
+    } elseif (session('products_seed_q') !== $seedQuery) {
+        // Trường hợp user đổi q nhưng vẫn còn ?page=... (hiếm) => reset seed
+        session([
+            'products_seed'   => random_int(1, 999999),
+            'products_seed_q' => $seedQuery,
+        ]);
+    }
+
+    $seed = session('products_seed', 123456);
+
+    // MySQL/MariaDB: RAND(seed) giúp random nhưng vẫn ổn định theo trang
+    $query->orderByRaw("RAND($seed)");
+
+    $products = $query->paginate(12)
+                      ->appends(['q' => $q]);
+
+    return view('products.index', compact('products', 'q'));
+}
 
     /**
      * Hiển thị chi tiết sản phẩm theo slug.
