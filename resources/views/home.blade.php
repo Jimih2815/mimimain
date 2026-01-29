@@ -159,8 +159,9 @@
                    class="w-100 h-100 object-fit-cover object-position-center">
             </div>
           </a>
-          <p class="mt-3 text-center fw-semibold">{{ $ps->product->name }}</p>
-          <p class="text-center">
+          <p class="mt-3 text-center fw-semibold" style="margin-bottom: 0px;">{{ $ps->product->name }}</p>
+          <p class="text-center"
+            style="color: #b83232; font-size: 1.2rem; font-weight: 500;" >
             {{ number_format($ps->product->base_price,0,',','.') }}₫
           </p>
         </div>
