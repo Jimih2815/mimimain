@@ -77,25 +77,24 @@ if (document.querySelector('.collection-swiper')) {
   // 4) Home-mobile product slider (config riêng) + inertia
   if (document.querySelector('.home-product-swiper')) {
     new Swiper('.home-product-swiper', {
-      loop: false,
-      slidesPerView: 2.5,
-      spaceBetween: 16,
-      freeMode: {
-        enabled: true,
-        sticky: true,
-        momentum: true,
-        momentumRatio: 0.5,
-        momentumBounce: true,
-      },
-      navigation: {
-        prevEl: '.home-product-prev',
-        nextEl: '.home-product-next',
-      },
-      breakpoints: {
-        576: { slidesPerView: 2.5 },
-        768: { slidesPerView: 3   },
-      },
-    });
+  // ✅ 1 sản phẩm + ló mép sản phẩm kế bên (peek)
+  slidesPerView: 'auto',
+  spaceBetween: 14,
+  slidesOffsetBefore: 16,
+  slidesOffsetAfter: 16,
+  freeMode: true,
+  watchSlidesProgress: true,
+  grabCursor: true,
+
+  // Nếu bạn có pagination/navigation thì để nguyên, không có thì bỏ cũng được
+  // pagination: { el: '.home-product-swiper .swiper-pagination', clickable: true },
+
+  breakpoints: {
+    480: { slidesPerView: 1.15 },
+    768: { slidesPerView: 2.2, spaceBetween: 16, slidesOffsetBefore: 16, slidesOffsetAfter: 16, freeMode: false },
+  },
+});
+
   }
     // 5) Section Images slider tự động + tương tác tăng delay lên 15s
   if (document.querySelector('.section-images-swiper')) {

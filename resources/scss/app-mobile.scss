@@ -90,3 +90,20 @@ html, body {
 }
 
 @import 'components/mobile-contact-fab';
+
+
+/* === Home product swiper: 1 item + peek next (mobile) === */
+.home-product-swiper {
+  /* giữ overflow hidden mặc định của swiper vẫn ok */
+}
+
+.home-product-swiper .swiper-slide {
+  /* Nếu trước đó bạn CSS width:100% thì cái này sẽ cứu */
+  width: calc(100% - 56px) !important; /* chừa 56px để ló mép slide kế bên */
+}
+
+@media (min-width: 768px) {
+  .home-product-swiper .swiper-slide {
+    width: auto !important;
+  }
+}

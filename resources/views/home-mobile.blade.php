@@ -6,12 +6,12 @@
 @section('content')
   {{-- 0) Pre-banner --}}
   @if($home->pre_banner_title)
-    <div class="pre-banner text-center py-4 bg-light w-100">
-      <h5>{{ $home->pre_banner_title }}</h5>
+    <div class="pre-banner text-center py-2 bg-light w-100">
+      <h5 class="mb-0" style="font-size:1.5rem;">{{ $home->pre_banner_title }}</h5>
       @if($home->preBannerCollection)
         <a href="{{ route('collections.show',$home->preBannerCollection->slug) }}"
            class="nut-dau-trang mx-auto">
-          {{ $home->pre_banner_button_text }}  <i class="fa-solid fa-angles-right"></i>
+           {{ $home->pre_banner_button_text }}  <!-- <i class="fa-solid fa-angles-right"></i> -->
         </a>
       @endif
     </div>
@@ -50,8 +50,8 @@
       </div>
     @endif -->
 {{-- 3) Collection (xếp dọc, không slider) --}}
-<div class="slider-full-width mb-5 ms-0 me-0 pt-5 pb-3 px-0">
-  <div class="d-flex justify-content-between px-3 align-items-center mb-2">
+<div class="slider-full-width ms-0 me-0 px-0" style="padding-top: 4rem;">
+  <div class="d-flex justify-content-between px-3 align-items-center">
     <h3 class="mb-0 tieu-de">{{ $home->collection_slider_title ?: 'Khám phá bộ sưu tập' }}</h3>
   </div>
 
@@ -71,11 +71,11 @@
 
 {{-- 4A) Khám phá bộ sưu tập --}}
     @if($home->collection_section_title)
-      <div class="text-center mb-4 ms-3 me-3 pt-4">
+      <div class="text-center mb-3 ms-3 me-3 " style="padding-top: 4rem;">
         <h2 class="">{{ $home->collection_section_title }}</h2>
         @if($home->collectionSectionCollection)
           <a href="{{ route('collections.show', $home->collectionSectionCollection->slug) }}"
-             class="btn-mimi nut-do mx-auto">
+             class="btn-mimi nut-do mx-auto" style="padding: 0.25rem 1rem;">
             {{ $home->collection_section_button_text }}
           </a>
         @endif
@@ -83,7 +83,7 @@
     @endif
 
   {{-- 4B) Section Images slider tự động --}}
-  <div class="swiper section-images-swiper mb-4 ms-1 me-1">
+  <div class="swiper section-images-swiper  ms-1 me-1">
     <div class="swiper-wrapper">
       @foreach($sectionImages as $img)
         <div class="swiper-slide section-img">
@@ -103,8 +103,8 @@
 
     {{-- 5) Product Slider --}}
     <div class="slider-home-product mb-5 ms-1 me-1">
-      <div class="d-flex justify-content-between align-items-center ms-2 mb-2">
-        <h3 class="mb-0">{{ $home->product_slider_title ?: 'Sản phẩm nổi bật' }}</h3>
+      <div class="d-flex justify-content-between align-items-center" style="padding-left: 1rem; padding-bottom: 1rem; padding-top: 4rem; ">
+        <h3 class="mb-0" style="font-size:1.8rem;">{{ $home->product_slider_title ?: 'Sản phẩm nổi bật' }}</h3>
         <div class="nut-navi">
           <button class="btn btn-outline-secondary me-2 home-product-prev">
              <i class="bi bi-chevron-left fs-4"></i>
@@ -122,8 +122,8 @@
                 <img src="{{ asset('storage/'.$ps->image) }}"
                      alt="{{ $ps->product->name }}"
                      class="w-100 rounded mb-2">
-                <p class="text-center mb-1 the-p-2">{{ $ps->product->name }}</p>
-                <p class="text-center text-danger fw-bold">
+                <p class="text-start mb-0 the-p-2">{{ $ps->product->name }}</p>
+                <p class="text-start text-danger fw-bold" style="font-size: 1.2rem;">
                   {{ number_format($ps->product->base_price,0,',','.') }}₫
                 </p>
               </a>
@@ -228,12 +228,14 @@
     font-weight: 400;
   }
   .nut-dau-trang { 
+    font-size: 0.9rem;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
     color: #4ab3af;
-    font-weight: 700;
+    font-weight: 600;
+    text-decoration: underline;
   }
   .nut-dau-trang .fa-angles-right {
     font-size: 0.8rem;
@@ -246,7 +248,11 @@
     font-weight: 500;
     padding-bottom: 1.5rem;
   }
-
+  .the-p-2 {
+    color: black;
+    font-size: 1rem;
+    font-weight: 500;
+  }
   .img-cont {
     width: 100%;
     display: flex;
