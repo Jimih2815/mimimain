@@ -192,9 +192,11 @@
     border: 1px solid #4ab3af;
     border-radius: .25rem;
     cursor: pointer;
-    white-space: nowrap;
+    white-space: normal;
     transition: background .2s, color .2s;
-    width: 31.88%;
+    width: fit-content;
+    max-width: 100%;
+    flex: 0 0 auto;
     height: 3rem;
   }
   
@@ -465,7 +467,12 @@ $transition-duration: 0.2s;          // thời gian chuyển đổi
 }
 
 .option-item-show span{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;     // option name dài thì gọn lại
+  /* Cho phép tên option dài tự xuống dòng, không bị ... */
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;  /* bẻ từ khi quá dài */
+  word-break: break-word;
+  line-height: 1.2;
+  padding: 0 1rem;
 }

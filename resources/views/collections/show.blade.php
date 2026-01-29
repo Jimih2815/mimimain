@@ -32,7 +32,7 @@
             </div>
           @endif
 
-          <div class="card-body d-flex flex-column">
+          <div class="card-body d-flex flex-column justify-content-between">
             @php
               // Kiểm tra đã favorite chưa: auth → DB, guest → session
               $isFav = auth()->check()
@@ -52,8 +52,9 @@
               </button>
             </h5>
 
-            <p class="card-text text-muted mb-2">
-              Giá: <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
+            <p class="card-text mb-2"
+               style="color: #b83232;">
+               <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
             </p>
 
             @if($product->optionValues->count())
@@ -74,10 +75,10 @@
               @endforeach
             </div>
 
-            <a href="{{ route('products.show', $product->slug) }}"
+            <!-- <a href="{{ route('products.show', $product->slug) }}"
                class="btn btn-outline-secondary btn-sm w-100 mb-3 d-none d-lg-block">
               Xem chi tiết
-            </a>
+            </a> -->
             @endif
 
             <form action="{{ route('cart.add', $product->id) }}"

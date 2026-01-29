@@ -34,8 +34,9 @@
               </button>
             </div>
 
-            <p class="card-text text-muted mb-2">
-              Giá: <strong id="total-price-{{ $product->id }}">{{ number_format($product->base_price,0,',','.') }}₫</strong>
+            <p class="card-text text-muted mb-2"
+                style="color:#b83232;">
+              <strong id="total-price-{{ $product->id }}">{{ number_format($product->base_price,0,',','.') }}₫</strong>
             </p>
 
             <p class="card-text xem-chi-tiet">

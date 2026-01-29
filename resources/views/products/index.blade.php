@@ -23,7 +23,7 @@
             </a>
           @endif
 
-          <div class="card-body d-flex flex-column">
+          <div class="card-body d-flex flex-column justify-content-between">
             <h5 class="card-title d-flex justify-content-between align-items-start noi-chua-nut-favorites product-card-title">
               <a style="max-width: 85%;" href="{{ route('products.show', $product->slug) }}"
                 class="text-decoration-none text-dark product-title-link">
@@ -45,8 +45,9 @@
             </h5>
 
 
-            <p class="card-text text-muted mb-2">
-              Giá: <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
+            <p class="card-text mb-2"
+              style="color:#b83232;">
+              <strong>{{ number_format($product->base_price,0,',','.') }}₫</strong>
             </p>
 
             @if($product->optionValues->count())
@@ -73,15 +74,15 @@
             </a> -->
             @endif
 
-            <form action="{{ route('cart.add', $product->id) }}"
+            <!-- <form action="{{ route('cart.add', $product->id) }}"
                   method="POST"
                   class="mt-auto">
               @csrf
-              <!-- <button type="submit"
+              <button type="submit"
                       class="btn btn-primary w-100">
                 Thêm vào giỏ hàng
-              </button> -->
-            </form>
+              </button>
+            </form> -->
           </div>
         </div>
       </div>
