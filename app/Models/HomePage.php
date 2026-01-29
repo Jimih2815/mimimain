@@ -9,6 +9,7 @@ class HomePage extends Model
 {
     protected $fillable = [
         'banner_image',
+        'banner_image_mobile',
         'about_title',
         'about_text',
         'show_button',

@@ -58,12 +58,32 @@
              accept="image/*">
       @error('banner_image')<div class="text-danger">{{ $message }}</div>@enderror
     </div>
+
+    <div class="mt-3 mb-3">
+      <label class="form-label">Ảnh Banner Mobile (dọc, 100vw×100vh)</label>
+      <input type="file"
+             name="banner_image_mobile"
+             class="form-control full-width"
+             accept="image/*">
+      @error('banner_image_mobile')<div class="text-danger">{{ $message }}</div>@enderror
+    
+    </div>
     @if($home->banner_image)
       <div class="mb-4">
         <img src="{{ asset('storage/'.$home->banner_image) }}"
              alt="Banner"
              class="img-fluid w-100"
              style="height:80vh; object-fit:cover;">
+      </div>
+    @endif
+
+@if($home->banner_image_mobile)
+      <div class="mb-4">
+        <p class="mb-2"><b>Preview Banner Mobile</b></p>
+        <img src="{{ asset('storage/'.$home->banner_image_mobile) }}"
+             alt="Banner Mobile"
+             class="img-fluid w-100"
+             style="height:100vh; object-fit:cover;">
       </div>
     @endif
 

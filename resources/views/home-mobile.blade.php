@@ -17,9 +17,14 @@
     </div>
   @endif
 
-  {{-- 1) Banner động --}}
+  {{-- 1) Banner (Mobile ưu tiên ảnh dọc nếu có) --}}
+@php
+  $bannerPath = $home->banner_image_mobile ?: $home->banner_image;
+@endphp
+
+@if($bannerPath)
   <div class="full-banner position-relative mb-4">
-    <img src="{{ asset('storage/'.$home->banner_image) }}"
+    <img src="{{ asset('storage/'.$bannerPath) }}"
          alt="Home Banner"
          class="w-100 mobile-banner-img">
     @if($home->show_button && $home->buttonCollection)
@@ -29,8 +34,9 @@
       </a>
     @endif
   </div>
+@endif
 
-  <div class="slider-cont">
+<div class="slider-cont">
     {{-- 2) Intro text --}}
     @if($home->intro_text)
       <div class="text-center mb-4 ms-3 me-3">
@@ -43,36 +49,27 @@
         @endif
       </div>
     @endif
+{{-- 3) Collection (xếp dọc, không slider) --}}
+<div class="slider-full-width mb-5 ms-1 me-1 pt-5 pb-3">
+  <div class="d-flex justify-content-between ms-2 align-items-center mb-2">
+    <h3 class="mb-0">{{ $home->collection_slider_title ?: 'Khám phá bộ sưu tập' }}</h3>
+  </div>
 
-    {{-- 3) Collection Slider --}}
-    <div class="slider-full-width mb-5 ms-1 me-1 pt-5 pb-3">
-      <div class="d-flex justify-content-between ms-2 align-items-center mb-2">
-        <h3 class="mb-0">{{ $home->collection_slider_title ?: 'Khám phá bộ sưu tập' }}</h3>
-        <div class="nut-navi">
-          <button class="btn btn-outline-secondary me-2 swiper-button-prev">
-            <i class="bi bi-chevron-left fs-4"></i>
-          </button>
-          <button class="btn btn-outline-secondary swiper-button-next">
-            <i class="bi bi-chevron-right fs-4"></i>
-          </button>
-        </div>
+  <div class="collection-stack">
+    @foreach($sliders as $s)
+      <div class="swiper-slide swiper-slide-active collection-stack-item">
+        <a href="{{ route('collections.show', $s->collection->slug) }}" class="d-block">
+          <img src="{{ asset('storage/'.$s->image) }}"
+               alt="{{ $s->text }}"
+               class="w-100 rounded collection-stack-img">
+          <p class="mt-2 text-center the-p">{{ $s->text }}</p>
+        </a>
       </div>
-      <div class="swiper collection-swiper">
-        <div class="swiper-wrapper">
-          @foreach($sliders as $s)
-            <div class="swiper-slide">
-              <a href="{{ route('collections.show', $s->collection->slug) }}">
-                <img src="{{ asset('storage/'.$s->image) }}"
-                     alt="{{ $s->text }}"
-                     class="w-100 rounded">
-                <p class="mt-2 text-center the-p">{{ $s->text }}</p>
-              </a>
-            </div>
-          @endforeach
-        </div>
-      </div>
-    </div>
-    {{-- 4A) Khám phá bộ sưu tập --}}
+    @endforeach
+  </div>
+</div>
+
+{{-- 4A) Khám phá bộ sưu tập --}}
     @if($home->collection_section_title)
       <div class="text-center mb-4 ms-3 me-3 pt-4">
         <h2 class="">{{ $home->collection_section_title }}</h2>
@@ -140,63 +137,61 @@
 
 @push('styles')
 <style>
-  /* Section Images xếp dọc */
-  .section-images {
-  display: flex;                /* ngang thay vì dọc */
-  flex-direction: row;
-  gap: 12px;                    /* khoảng cách giữa các ảnh */
-  overflow-x: auto;             /* cho phép cuộn ngang */
-  scroll-snap-type: x mandatory;/* bật scroll-snap */
-  
-}
-
-.section-images .section-img {
-  flex: 0 0 85%;                /* mỗi ảnh rộng 85% container */
-  scroll-snap-align: start;     /* snap mỗi ảnh khi scroll */
-  position: relative;
-}
-
-/* Ẩn scrollbar (tuỳ chọn) */
-.section-images::-webkit-scrollbar {
-  display: none;
-}
-
-/* Ảnh chiếm full .section-img */
-.section-images .section-img img {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 10px;
-  object-fit: cover;
-}
-  .nut-navi {
-    display: none !important;
-  }
-  .slider-full-width.mb-5 {
-  height: 38rem;
-  /* overflow: hidden;  */
-  }
-
-  /* Cho Swiper container và slide full 100% chiều cao */
-  .slider-full-width .swiper,
-  .slider-full-width .swiper-slide {
-    height: 100%;
-  }
-
-  /* Ảnh trong slide chiếm full và cover */
-  .slider-full-width .swiper-slide img {
-    width: 100%;
-    height: 90%;
-    object-fit: cover;
-  }
+  /* === Banner full màn hình dọc (Mobile) === */
   .full-banner {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    height: 100svh; /* iOS-friendly */
+    min-height: 100vh;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    object-fit: cover;
-    overflow: hidden;
   }
+  .mobile-banner-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+
+  /* Ẩn navi (giữ cho đồng bộ layout cũ) */
+  .nut-navi { display: none !important; }
+
+  /* === Collection stack (thay slider) === */
+  .collection-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 0 10px;
+  }
+  .collection-stack-img {
+    width: 100%;
+    height: 66svh;     /* ~2/3 màn hình */
+    max-height: 66vh;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  /* Section Images (Swiper) */
+  .section-images {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .section-images .section-img {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+    position: relative;
+  }
+  .section-images::-webkit-scrollbar { display: none; }
+  .section-images .section-img img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
   .lead {
     font-size: 1.1rem;
     font-weight: 400;
@@ -218,10 +213,7 @@
     font-size: 1.2rem;
     font-weight: 500;
   }
-  .mobile-banner-img {
-    height: 100% !important;
-    object-fit: cover ;
-  }
+
   .img-cont {
     width: 100%;
     display: flex;
@@ -234,3 +226,4 @@
   }
 </style>
 @endpush
+

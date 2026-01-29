@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('🛠️ DOMContentLoaded mobile');
 
-  // 1) Collection slider với peek next + inertia
+  // 1) Collection slider (nếu còn dùng Swiper)
+if (document.querySelector('.collection-swiper')) {
   new Swiper('.collection-swiper', {
     slidesPerView: 1.15,
     spaceBetween: 12,
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nextEl: '.slider-full-width .swiper-button-next',
     },
   });
+}
 
   // 2) Product slider (ảnh chính sản phẩm) + pagination + inertia
   new Swiper('.product-swiper', {

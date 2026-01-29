@@ -67,6 +67,7 @@ class HomePageController extends Controller
 
             // — Banner chính & About —
             'banner_image'                        => 'nullable|image|max:4096',
+            'banner_image_mobile'                 => 'nullable|image|max:4096',
             'about_title'                         => 'nullable|string|max:255',
             'about_text'                          => 'nullable|string',
 
@@ -87,7 +88,15 @@ class HomePageController extends Controller
             );
         }
 
-        HomePage::first()->update($data);
+        
+        // Nếu có banner mobile mới thì convert & upload WebP
+        if ($r->hasFile('banner_image_mobile')) {
+            $data['banner_image_mobile'] = $this->uploadAsWebp(
+                $r->file('banner_image_mobile'),
+                'home'
+            );
+        }
+HomePage::first()->update($data);
 
         return redirect()
             ->route('admin.home.edit')
