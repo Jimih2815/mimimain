@@ -4,7 +4,7 @@
 /* ==== Mobile Header CSS ==== */
 .mobile-header {
   position: fixed;
-    z-index: 2;
+    z-index: 3;
     background: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;

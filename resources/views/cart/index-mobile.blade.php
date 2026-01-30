@@ -50,7 +50,7 @@ hr {
   background: #fff;
   transform: translateY(150%);
   transition: transform 0.3s ease;
-  z-index: 3;
+  z-index: 101;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
   padding: 1rem;
   overflow-y: auto;
@@ -89,7 +89,7 @@ hr {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.3);
-  z-index: 2;          
+  z-index: 100;          
 }
 
 /* khi active thì show */
