@@ -308,10 +308,47 @@ width: 30%;
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // ✅ Scroll-lock (fix mobile/iOS: mở offcanvas vẫn kéo được nền)
+  const __scrollLock = {
+    y: 0,
+    locked: false,
+    lock() {
+      if (this.locked) return;
+      this.locked = true;
+      this.y = window.scrollY || document.documentElement.scrollTop || 0;
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      // iOS: cần position fixed để chặn “rubber-band scroll”
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${this.y}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    },
+    unlock() {
+      if (!this.locked) return;
+      this.locked = false;
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      const y = this.y;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, y);
+    }
+  };
+
   // 1) Offcanvas
-  const offcanvas = new bootstrap.Offcanvas('#offcanvasRecipient');
+  const offcanvasEl = document.getElementById('offcanvasRecipient');
+  const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
   document.getElementById('checkout-btn-mobile')
           .addEventListener('click', () => offcanvas.show());
+
+  // Chặn scroll nền khi offcanvas bật lên
+  offcanvasEl.addEventListener('shown.bs.offcanvas', () => __scrollLock.lock());
+  offcanvasEl.addEventListener('hidden.bs.offcanvas', () => __scrollLock.unlock());
 
   // 2) Form & validate & toggle COD/Bank
   const form        = document.getElementById('checkoutForm');

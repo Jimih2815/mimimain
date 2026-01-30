@@ -307,6 +307,38 @@ background-color: #4ab3af;
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // ✅ Scroll-lock (fix mobile/iOS: không cho trang phía sau cuộn khi panel mở)
+  const __scrollLock = {
+    y: 0,
+    locked: false,
+    lock() {
+      if (this.locked) return;
+      this.locked = true;
+      this.y = window.scrollY || document.documentElement.scrollTop || 0;
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      // iOS: overflow hidden vẫn “lụt” -> dùng position fixed
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${this.y}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    },
+    unlock() {
+      if (!this.locked) return;
+      this.locked = false;
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      const y = this.y;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, y);
+    }
+  };
+
   // 1) Summary logic
   const boxes      = document.querySelectorAll('input.rowCheck');
   const subtotalEl = document.getElementById('summary-subtotal');
@@ -420,15 +452,26 @@ document.addEventListener('DOMContentLoaded', () => {
     warnEl.style.display = 'none';
     panel.classList.add('open');
     overlay.classList.add('open');
+    __scrollLock.lock();
   }
   function closePanel(){
     panel.classList.remove('open');
     overlay.classList.remove('open');
+    __scrollLock.unlock();
   }
 
   panelToggle.addEventListener('click', openPanel);
   panelClose.addEventListener('click', closePanel);
   overlay.addEventListener('click', closePanel);
+
+  // Chặn touch-move “lụt nền” (mobile safari hay bị)
+  overlay.addEventListener('touchmove', (e) => {
+    if (overlay.classList.contains('open')) e.preventDefault();
+  }, { passive: false });
+  panel.addEventListener('touchmove', (e) => {
+    // Cho phép cuộn trong panel nếu nội dung dài, chỉ chặn nền
+    e.stopPropagation();
+  }, { passive: true });
 
   // 5) Xác nhận thanh toán
   document.getElementById('checkout-submit').addEventListener('click', () => {
