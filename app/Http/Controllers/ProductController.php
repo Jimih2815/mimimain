@@ -22,14 +22,31 @@ class ProductController extends Controller
     $isMobile = preg_match('/Mobile|Android|iPhone/', $request->header('User-Agent'));
 
     if ($isMobile) {
+        // ===== Mobile: xử lý search (trước đây mobile luôn trả ALL sản phẩm => search bị “hỏng”) =====
+        $q = trim((string) $request->input('q', ''));
+
         // Lấy sidebar + tất cả products
         $roots    = SidebarItem::with('children.collection.products')
                       ->whereNull('parent_id')
                       ->orderBy('sort_order')
                       ->get();
 
-        // Random mỗi lần load trang (mobile hiện tại không paginate)
-        $products = Product::inRandomOrder()->get();
+        // Mobile hiện tại không paginate => trả Collection.
+        // - Nếu có q: filter theo tên + mô tả
+        // - Nếu không có q: random như cũ
+        $productQuery = Product::query();
+        if ($q !== '') {
+            $productQuery->where(function ($qq) use ($q) {
+                $qq->where('name', 'like', "%{$q}%")
+                   ->orWhere('description', 'like', "%{$q}%");
+            });
+            // Để kết quả bớt “nhảy”, ưu tiên mới trước (bạn muốn random thì đổi lại inRandomOrder)
+            $productQuery->orderByDesc('created_at');
+        } else {
+            $productQuery->inRandomOrder();
+        }
+
+        $products = $productQuery->get();
 
         // Lấy mảng ID sản phẩm user đã favorite
         $favIds = Auth::check()
@@ -37,7 +54,7 @@ class ProductController extends Controller
         : session('favorites', []);
 
         // Trả view mobile với favIds
-        return view('products.index-mobile', compact('roots', 'products', 'favIds'));
+        return view('products.index-mobile', compact('roots', 'products', 'favIds', 'q'));
     }
 
     // ===== Desktop: xử lý search + paginate =====

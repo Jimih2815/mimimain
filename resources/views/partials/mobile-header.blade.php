@@ -439,17 +439,17 @@
             <div class="p-3">
             <p class="mb-2 fw-bold">Từ Khóa Phổ Biến</p>
             <div class="d-flex flex-wrap gap-2">
-                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                <a href="{{ route('products.index', ['q'=>'đèn ngủ hoa tulyp']) }}"
                 class="badge text-goi-y">Đèn Ngủ Hoa Tulyp</a>
-                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                <a href="{{ route('products.index', ['q'=>'gấu bông']) }}"
                 class="badge text-goi-y">Gấu Bông</a>
-                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                <a href="{{ route('products.index', ['q'=>'hoa gấu bông']) }}"
                 class="badge text-goi-y">Hoa Gấu Bông</a>
-                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                <a href="{{ route('products.index', ['q'=>'đèn ngủ đám mây']) }}"
                 class="badge text-goi-y">Đèn Ngủ Đám Mây</a>
-                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                <a href="{{ route('products.index', ['q'=>'quạt mini tích điện']) }}"
                 class="badge text-goi-y">Quạt Mini Tích Điện</a>
-                <a href="{{ route('products.index', ['q'=>'air max 90 lv8']) }}"
+                <a href="{{ route('products.index', ['q'=>'phụ kiện cute']) }}"
                 class="badge text-goi-y">Phụ Kiện Cute</a>
             </div>
             </div>

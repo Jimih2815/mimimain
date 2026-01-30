@@ -110,6 +110,18 @@
 
 <div class="px-3 py-4">
 
+  @if(!empty($q))
+    <div class="mb-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="fw-semibold">Kết quả cho: "{{ $q }}"</div>
+        <a class="text-decoration-none nut-do" href="{{ route('products.index') }}" style="font-weight: 600; font-size: 1rem; width: 5rem; padding: 0.2rem 0.3rem;">Xoá lọc</a>
+      </div>
+      @if($products->isEmpty())
+        <div class="text-muted mt-2">Không tìm thấy sản phẩm nào 🥲</div>
+      @endif
+    </div>
+  @endif
+
   <!-- 1) Thanh chọn collection cha -->
   <div id="mobile-parent-bar" class="d-flex flex-nowrap overflow-auto">
     @foreach($roots as $parent)
@@ -131,6 +143,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const roots = @json($roots->toArray());
   const allProducts = @json($products->toArray());
+  const q = @json($q ?? '');
   let favIds     = @json($favIds);
   const parentBar = document.getElementById('mobile-parent-bar');
   const childBar = document.getElementById('mobile-child-bar');
@@ -249,6 +262,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 }
+
+  // Nếu đang ở trang search (?q=...), ưu tiên hiển thị kết quả và tắt filter theo collection
+  if (q && String(q).trim().length) {
+    if (parentBar) parentBar.style.display = 'none';
+    if (childBar)  childBar.style.display  = 'none';
+    renderProducts(allProducts);
+    return;
+  }
 
 
 
