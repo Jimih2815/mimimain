@@ -18,7 +18,7 @@
       </div>
     @endif
   {{-- 1) Banner động full-screen --}}
-  <div class="position-relative" style="width:100%; height:100vh; overflow:hidden;">
+  <div class="position-relative" style="width:100%; height:auto; overflow:hidden;">
     <img src="{{ asset('storage/'.$home->banner_image) }}"
          alt="Home Banner"
          style="width:100vw; aspect-ratio: 16 / 6;; object-fit:cover; object-position:center;">
