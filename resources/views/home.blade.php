@@ -17,11 +17,37 @@
         @endif
       </div>
     @endif
-  {{-- 1) Banner động full-screen --}}
+  {{-- 1) Banner slider (desktop) --}}
+  @php
+    $desktopBanners = isset($bannerImagesDesktop) ? $bannerImagesDesktop : collect();
+  @endphp
+
   <div class="position-relative" style="width:100%; height:auto; overflow:hidden;">
-    <img src="{{ asset('storage/'.$home->banner_image) }}"
-         alt="Home Banner"
-         style="width:100vw; aspect-ratio: 16 / 6;; object-fit:cover; object-position:center;">
+    @if($desktopBanners->count() > 0)
+      <div class="swiper home-banner-swiper">
+        <div class="swiper-wrapper">
+          @foreach($desktopBanners as $b)
+            <div class="swiper-slide">
+              @php
+                $href = $b->collection
+                  ? route('collections.show', $b->collection->slug)
+                  : '#';
+              @endphp
+              <a href="{{ $href }}" class="d-block">
+                <img src="{{ asset('storage/'.$b->image) }}"
+                     alt="Home Banner {{ $loop->iteration }}"
+                     style="width:100vw; aspect-ratio: 16 / 6; object-fit:cover; object-position:center;">
+              </a>
+            </div>
+          @endforeach
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    @elseif($home->banner_image)
+      <img src="{{ asset('storage/'.$home->banner_image) }}"
+           alt="Home Banner"
+           style="width:100vw; aspect-ratio: 16 / 6; object-fit:cover; object-position:center;">
+    @endif
 
     {{-- 1.a) Central button, chỉ hiển thị khi admin bật và chọn Collection --}}
     <div class="position-absolute top-80 start-50 translate-middle">

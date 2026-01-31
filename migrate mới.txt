@@ -1,0 +1,1 @@
+php artisan migrate --path=database/migrations/2026_01_31_090000_create_home_banner_images_table.php

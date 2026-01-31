@@ -17,24 +17,60 @@
     </div>
   @endif
 
-  {{-- 1) Banner (Mobile ưu tiên ảnh dọc nếu có) --}}
-@php
-  $bannerPath = $home->banner_image_mobile ?: $home->banner_image;
-@endphp
+  {{-- 1) Banner slider (Mobile ưu tiên banner mobile nếu có) --}}
+  @php
+    $mobileBanners = isset($bannerImagesMobile) ? $bannerImagesMobile : collect();
+    $desktopBanners = isset($bannerImagesDesktop) ? $bannerImagesDesktop : collect();
+    $bannersToUse = $mobileBanners->count() ? $mobileBanners : $desktopBanners;
+  @endphp
 
-@if($bannerPath)
-  <div class="full-banner position-relative mb-">
-    <img src="{{ asset('storage/'.$bannerPath) }}"
-         alt="Home Banner"
-         class="w-100 mobile-banner-img">
-    @if($home->show_button && $home->buttonCollection)
-      <a href="{{ route('collections.show', $home->buttonCollection->slug) }}"
-         class="btn btn-lg btn-primary nut-banner position-absolute top-50 start-50 translate-middle">
-        {{ $home->button_text }}
-      </a>
+  @if($bannersToUse->count() > 0)
+    <div class="full-banner position-relative mb-">
+      <div class="swiper home-banner-swiper w-100 h-100">
+        <div class="swiper-wrapper w-100 h-100">
+          @foreach($bannersToUse as $b)
+            <div class="swiper-slide w-100 h-100">
+              @php
+                $href = $b->collection
+                  ? route('collections.show', $b->collection->slug)
+                  : '#';
+              @endphp
+              <a href="{{ $href }}" class="d-block w-100 h-100">
+                <img src="{{ asset('storage/'.$b->image) }}"
+                    alt="Home Banner {{ $loop->iteration }}"
+                    class="w-100 mobile-banner-img">
+              </a>
+            </div>
+          @endforeach
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+      @if($home->show_button && $home->buttonCollection)
+        <a href="{{ route('collections.show', $home->buttonCollection->slug) }}"
+          class="btn btn-lg btn-primary nut-banner position-absolute top-50 start-50 translate-middle">
+          {{ $home->button_text }}
+        </a>
+      @endif
+    </div>
+  @else
+    @php
+      $bannerPath = $home->banner_image_mobile ?: $home->banner_image;
+    @endphp
+    @if($bannerPath)
+      <div class="full-banner position-relative mb-">
+        <img src="{{ asset('storage/'.$bannerPath) }}"
+            alt="Home Banner"
+            class="w-100 mobile-banner-img">
+        @if($home->show_button && $home->buttonCollection)
+          <a href="{{ route('collections.show', $home->buttonCollection->slug) }}"
+            class="btn btn-lg btn-primary nut-banner position-absolute top-50 start-50 translate-middle">
+            {{ $home->button_text }}
+          </a>
+        @endif
+      </div>
     @endif
-  </div>
-@endif
+  @endif
 
 <div class="slider-cont">
     <!-- {{-- 2) Intro text --}}
@@ -141,8 +177,8 @@
   /* === Banner full màn hình dọc (Mobile) === */
   .full-banner {
     width: 100%;
-    height: 75svh; /* iOS-friendly */
-    min-height: 75vh;
+    height: auto; 
+    aspect-ratio: 9 / 12;
     overflow: hidden;
     display: flex;
     justify-content: center;

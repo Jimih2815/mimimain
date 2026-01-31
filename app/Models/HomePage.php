@@ -49,4 +49,24 @@ class HomePage extends Model
     {
         return $this->belongsTo(Collection::class, 'intro_button_collection_id');
     }
+
+    /**
+     * Banner slider images (desktop)
+     */
+    public function bannerImages()
+    {
+        return $this->hasMany(HomeBannerImage::class)
+            ->where('device', 'desktop')
+            ->orderBy('sort_order');
+    }
+
+    /**
+     * Banner slider images (mobile)
+     */
+    public function bannerImagesMobile()
+    {
+        return $this->hasMany(HomeBannerImage::class)
+            ->where('device', 'mobile')
+            ->orderBy('sort_order');
+    }
 }

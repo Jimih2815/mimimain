@@ -48,44 +48,106 @@
     
 
     <hr>
-    {{-- C) Banner chính & nút trung tâm --}}
-    <h1 class="margintop6rem">Sửa Banner chính và nút trung tâm</h1>
+    {{-- C) Banner slider & nút trung tâm --}}
+    <h1 class="margintop6rem">Banner Slider (Desktop/Mobile) + nút trung tâm</h1>
+
+    {{-- Upload nhiều ảnh desktop --}}
     <div class="mt-3 mb-3">
-      <label class="form-label">Ảnh Banner chính (100vw×80vh)</label>
+      <label class="form-label">Thêm ảnh Banner Desktop (có thể chọn nhiều ảnh 1 lần)</label>
       <input type="file"
-             name="banner_image"
+             name="banner_images_desktop[]"
              class="form-control full-width"
-             accept="image/*">
-      @error('banner_image')<div class="text-danger">{{ $message }}</div>@enderror
+             accept="image/*"
+             multiple>
+      @error('banner_images_desktop')<div class="text-danger">{{ $message }}</div>@enderror
+      @error('banner_images_desktop.*')<div class="text-danger">{{ $message }}</div>@enderror
+      <p class="text-muted mt-2" style="font-style: italic;">Kéo/Thả để đổi thứ tự. Mỗi ảnh có thể gắn 1 collection riêng.</p>
     </div>
 
-    <div class="mt-3 mb-3">
-      <label class="form-label">Ảnh Banner Mobile (dọc, 100vw×100vh)</label>
-      <input type="file"
-             name="banner_image_mobile"
-             class="form-control full-width"
-             accept="image/*">
-      @error('banner_image_mobile')<div class="text-danger">{{ $message }}</div>@enderror
-    
+    <div class="mb-4">
+      <table id="home-banner-desktop-table" class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th style="width:6rem;">Thứ tự</th>
+            <th>Ảnh</th>
+            <th style="min-width: 260px;">Collection khi bấm</th>
+            <th style="width:8rem;">Xóa</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($bannerImagesDesktop as $b)
+            <tr data-id="{{ $b->id }}">
+              <td class="sort-handle" style="cursor: move; text-align:center;">{{ $b->sort_order }}</td>
+              <td>
+                <img src="{{ asset('storage/'.$b->image) }}" alt="banner" style="max-width: 320px; width:100%; height:120px; object-fit:cover; border-radius: 8px;">
+              </td>
+              <td>
+                <select name="banner_items_desktop[{{ $b->id }}][collection_id]" class="form-select">
+                  <option value="">-- Không chọn (chỉ xem ảnh) --</option>
+                  @foreach($collections as $id => $name)
+                    <option value="{{ $id }}" @selected((string)($b->collection_id ?? '') === (string)$id)>{{ $name }}</option>
+                  @endforeach
+                </select>
+              </td>
+              <td style="text-align:center;">
+                <input type="checkbox" name="banner_items_desktop[{{ $b->id }}][delete]" value="1">
+              </td>
+            </tr>
+          @empty
+            <tr><td colspan="4" class="text-center text-muted">Chưa có banner desktop nào.</td></tr>
+          @endforelse
+        </tbody>
+      </table>
     </div>
-    @if($home->banner_image)
-      <div class="mb-4">
-        <img src="{{ asset('storage/'.$home->banner_image) }}"
-             alt="Banner"
-             class="img-fluid w-100"
-             style="height:80vh; object-fit:cover;">
-      </div>
-    @endif
 
-@if($home->banner_image_mobile)
-      <div class="mb-4">
-        <p class="mb-2"><b>Preview Banner Mobile</b></p>
-        <img src="{{ asset('storage/'.$home->banner_image_mobile) }}"
-             alt="Banner Mobile"
-             class="img-fluid w-100"
-             style="height:100vh; object-fit:cover;">
-      </div>
-    @endif
+    {{-- Upload nhiều ảnh mobile --}}
+    <div class="mt-3 mb-3">
+      <label class="form-label">Thêm ảnh Banner Mobile (dọc, có thể chọn nhiều ảnh 1 lần)</label>
+      <input type="file"
+             name="banner_images_mobile[]"
+             class="form-control full-width"
+             accept="image/*"
+             multiple>
+      @error('banner_images_mobile')<div class="text-danger">{{ $message }}</div>@enderror
+      @error('banner_images_mobile.*')<div class="text-danger">{{ $message }}</div>@enderror
+      <p class="text-muted mt-2" style="font-style: italic;">Nếu có banner mobile thì trang chủ mobile sẽ ưu tiên dùng banner mobile.</p>
+    </div>
+
+    <div class="mb-4">
+      <table id="home-banner-mobile-table" class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th style="width:6rem;">Thứ tự</th>
+            <th>Ảnh</th>
+            <th style="min-width: 260px;">Collection khi bấm</th>
+            <th style="width:8rem;">Xóa</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($bannerImagesMobile as $b)
+            <tr data-id="{{ $b->id }}">
+              <td class="sort-handle" style="cursor: move; text-align:center;">{{ $b->sort_order }}</td>
+              <td>
+                <img src="{{ asset('storage/'.$b->image) }}" alt="banner" style="max-width: 220px; width:100%; height:160px; object-fit:cover; border-radius: 8px;">
+              </td>
+              <td>
+                <select name="banner_items_mobile[{{ $b->id }}][collection_id]" class="form-select">
+                  <option value="">-- Không chọn (chỉ xem ảnh) --</option>
+                  @foreach($collections as $id => $name)
+                    <option value="{{ $id }}" @selected((string)($b->collection_id ?? '') === (string)$id)>{{ $name }}</option>
+                  @endforeach
+                </select>
+              </td>
+              <td style="text-align:center;">
+                <input type="checkbox" name="banner_items_mobile[{{ $b->id }}][delete]" value="1">
+              </td>
+            </tr>
+          @empty
+            <tr><td colspan="4" class="text-center text-muted">Chưa có banner mobile nào.</td></tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
 
     {{-- hidden để luôn gửi show_button về controller --}}
     <input type="hidden" name="show_button" value="0">
@@ -291,3 +353,50 @@
   </form>
 </div>
 @endsection
+
+@push('scripts')
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const reorderUrl = @json(route('admin.home-banners.reorder'));
+
+      function initSortable(tableSelector, device) {
+        const tbody = document.querySelector(`${tableSelector} tbody`);
+        if (!tbody) return;
+
+        Sortable.create(tbody, {
+          animation: 150,
+          handle: '.sort-handle',
+          onEnd: function () {
+            const ids = Array.from(tbody.querySelectorAll('tr[data-id]'))
+              .map(tr => tr.dataset.id);
+
+            fetch(reorderUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+              },
+              body: JSON.stringify({ device, ids })
+            })
+            .then(r => r.json())
+            .then(json => {
+              if (json.status === 'success') {
+                tbody.querySelectorAll('tr[data-id]').forEach((tr, idx) => {
+                  const cell = tr.querySelector('.sort-handle');
+                  if (cell) cell.textContent = idx + 1;
+                });
+              } else {
+                alert('Lỗi lưu thứ tự banner');
+              }
+            })
+            .catch(() => alert('Không thể lưu thứ tự banner (mạng / CSRF).'));
+          }
+        });
+      }
+
+      initSortable('#home-banner-desktop-table', 'desktop');
+      initSortable('#home-banner-mobile-table', 'mobile');
+    });
+  </script>
+@endpush

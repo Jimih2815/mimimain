@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      A) Nếu trang có ít nhất 1 slider
   ───────────────────────────────────────────────── */
   const needSwiper = document.querySelector(
-      '.collection-swiper, .product-swiper, .product-swiper-related, .news-swiper, .show-product-swiper'
+      '.home-banner-swiper, .collection-swiper, .product-swiper, .product-swiper-related, .news-swiper, .show-product-swiper'
     );
 
   if (needSwiper) {
@@ -54,6 +54,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         navigation: {
           nextEl: '.slider-full-width .swiper-button-next',
           prevEl: '.slider-full-width .swiper-button-prev',
+        },
+      });
+    }
+
+    /* A-0) Home banner slider */
+    if (document.querySelector('.home-banner-swiper')) {
+      new Swiper('.home-banner-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        speed: 600,
+        autoplay: {
+          delay: 4500,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.home-banner-swiper .swiper-pagination',
+          clickable: true,
         },
       });
     }

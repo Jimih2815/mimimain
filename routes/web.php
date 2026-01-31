@@ -240,6 +240,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // 4.8 Home Page & Home Section Images
         Route::get  ('home',                [HomePageController::class,'edit'])->name('home.edit');
         Route::post ('home',                [HomePageController::class,'update'])->name('home.update');
+        Route::post ('home-banners/reorder', [HomePageController::class,'reorderBanners'])->name('home-banners.reorder');
         Route::get  ('home-section-images', [HomeSectionImageController::class,'index'])->name('home-section-images.index');
         Route::post ('home-section-images', [HomeSectionImageController::class,'update'])->name('home-section-images.update');
 

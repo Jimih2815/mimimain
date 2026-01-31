@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HomePage;
+use App\Models\HomeBannerImage;
 use App\Models\CollectionSlider;
 use App\Models\HomeSectionImage;
 use App\Models\ProductSlider;
@@ -18,7 +19,18 @@ class HomeController extends Controller
     public function index()
     {
         // 1) Cấu hình chung trang chủ
-        $home = HomePage::first(); // chứa banner_image, about_title, about_text,...
+        $home = HomePage::first(); // chứa banner_image, ...
+
+        // 1.a) Banner slider (desktop/mobile)
+        $bannerImagesDesktop = HomeBannerImage::with('collection')
+            ->where('device', 'desktop')
+            ->orderBy('sort_order')
+            ->get();
+
+        $bannerImagesMobile = HomeBannerImage::with('collection')
+            ->where('device', 'mobile')
+            ->orderBy('sort_order')
+            ->get();
 
         // 2) Slider bộ sưu tập
         $sliders = CollectionSlider::with('collection')
@@ -37,6 +49,8 @@ class HomeController extends Controller
 
         return $this->renderView('home', compact(
             'home',
+            'bannerImagesDesktop',
+            'bannerImagesMobile',
             'sliders',
             'sectionImages',
             'productSliders'

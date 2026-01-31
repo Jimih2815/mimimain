@@ -14,6 +14,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('🛠️ DOMContentLoaded mobile');
 
+  // 0) Home banner slider
+  if (document.querySelector('.home-banner-swiper')) {
+    new Swiper('.home-banner-swiper', {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      loop: true,
+      speed: 600,
+      autoplay: {
+        delay: 4500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: '.home-banner-swiper .swiper-pagination',
+        clickable: true,
+      },
+    });
+  }
+
   // 1) Collection slider (nếu còn dùng Swiper)
 if (document.querySelector('.collection-swiper')) {
   new Swiper('.collection-swiper', {
