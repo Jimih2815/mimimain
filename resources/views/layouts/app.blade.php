@@ -48,13 +48,13 @@
   @endif
 
   {{-- Nội dung chính --}}
-  <main class="container mx-auto">
+  <main class="@yield('main_container_class', 'container') mx-auto">
     @hasSection('sidebar')
-      <div class="row">
-        <aside class="col-md-3 mb-4">
+      <div class="row @yield('main_row_class','')">
+        <aside class="col-md-3 mb-4 @yield('main_aside_class','')">
           @yield('sidebar')
         </aside>
-        <section class="col-md-9">
+        <section class="col-md-9 @yield('main_section_class','')">
           @yield('content')
         </section>
       </div>

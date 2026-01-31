@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+{{-- Trang PC: muốn lưới sát mép phải màn hình hơn thì dùng container-fluid và bỏ gutter ngoài --}}
+@section('main_container_class', 'container-fluid px-0')
+@section('main_row_class', 'g-0')
+@section('main_section_class', 'pe-0')
+
 {{-- ▼ BẮT ĐẦU CHÈN SIDEBAR --}}
 @section('sidebar')
   @include('components.sidebar')
@@ -7,16 +12,16 @@
 {{-- ▲ KẾT THÚC CHÈN SIDEBAR --}}
 
 @section('content')
-<div class="py-4 tat-ca-san-pham-cont">
+<div class="py-4 tat-ca-san-pham-cont px-3">
   <h1 class="mb-4">{{ $collection->name }}</h1>
 
   @if($collection->description)
     <p class="text-muted mb-4">{{ $collection->description }}</p>
   @endif
 
-  <div class="row">
+  <div class="row g-3">
     @forelse($collection->products as $product)
-      <div class="col-md-4 mb-4">
+      <div class="col-6 col-md-4 col-lg-3">
         <div class="card h-100">
           @if($product->img)
             <a href="{{ route('products.show', $product->slug) }}">
