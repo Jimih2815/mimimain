@@ -7,7 +7,7 @@
   {{-- 0) Pre-banner --}}
   @if($home->pre_banner_title)
     <div class="pre-banner text-center py-2 bg-light w-100">
-      <h5 class="mb-0" style="font-size:1.5rem;">{{ $home->pre_banner_title }}</h5>
+      <h5 class="mb-0" style="font-size:1.1rem;">{{ $home->pre_banner_title }}</h5>
       @if($home->preBannerCollection)
         <a href="{{ route('collections.show',$home->preBannerCollection->slug) }}"
            class="nut-dau-trang mx-auto">
@@ -73,7 +73,7 @@
 {{-- 4A) Khám phá bộ sưu tập --}}
     @if($home->collection_section_title)
       <div class="text-center mb-3 ms-3 me-3 " style="padding-top: 4rem;">
-        <h2 class="">{{ $home->collection_section_title }}</h2>
+        <h2 class="" style="font-size: 1.5rem;">{{ $home->collection_section_title }}</h2>
         @if($home->collectionSectionCollection)
           <a href="{{ route('collections.show', $home->collectionSectionCollection->slug) }}"
              class="btn-mimi nut-do mx-auto" style="padding: 0.25rem 1rem;">
@@ -105,7 +105,7 @@
     {{-- 5) Product Slider --}}
     <div class="slider-home-product mb-5 ms-1 me-1">
       <div class="d-flex justify-content-between align-items-center" style="padding-left: 1rem; padding-bottom: 1rem; padding-top: 4rem; ">
-        <h3 class="mb-0" style="font-size:1.8rem;">{{ $home->product_slider_title ?: 'Sản phẩm nổi bật' }}</h3>
+        <h3 class="mb-0" style="font-size:1.5rem;">{{ $home->product_slider_title ?: 'Sản phẩm nổi bật' }}</h3>
         <div class="nut-navi">
           <button class="btn btn-outline-secondary me-2 home-product-prev">
              <i class="bi bi-chevron-left fs-4"></i>
@@ -294,7 +294,7 @@
     align-items: center;
   }
   .tieu-de {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     padding-bottom: 1rem;
   }
 </style>
