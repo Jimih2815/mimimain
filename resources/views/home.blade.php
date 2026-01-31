@@ -112,7 +112,7 @@
     <div class="swiper-wrapper overflow-auto" style="scroll-snap-type: x mandatory;">
       @foreach($sliders as $s)
         <div class="swiper-slide" style="scroll-snap-align: start;">
-          <div class="position-relative overflow-hidden" style="width:500px; aspect-ratio:3/4">
+          <div class="position-relative overflow-hidden" style="width:500px; aspect-ratio:3/4; border-radius: 10px !important;">
             <a href="{{ route('collections.show', $s->collection->slug) }}">
               <img
                 src="{{ asset('storage/'.$s->image) }}"
@@ -180,7 +180,7 @@
       @foreach($productSliders as $ps)
         <div class="swiper-slide" style="width:400px">
           <a href="{{ route('products.show', $ps->product->slug) }}">
-            <div class="ratio ratio-1x1 overflow-hidden">
+            <div class="ratio ratio-1x1 overflow-hidden" style="border-radius: 10px;" >
               <img src="{{ asset('storage/'.$ps->image) }}"
                    alt="{{ $ps->product->name }}"
                    class="w-100 h-100 object-fit-cover object-position-center">
