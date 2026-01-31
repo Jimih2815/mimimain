@@ -6,6 +6,10 @@ html, body {
   font-family: 'Baloo 2', sans-serif  !important;
     background-color: #f4f6f8;
   }
+  :root{
+  --swiper-theme-color: #4ab3af !important;
+}
+
 .xuong-2-dong {
   display: -webkit-box;
   -webkit-line-clamp: 2;     
