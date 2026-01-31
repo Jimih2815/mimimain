@@ -39,7 +39,7 @@
   </div>
 
   {{-- 2) Main header --}}
-  <div class="header-main bg-white py-3 an-des">
+  <div class="header-main bg-white py-1 an-des">
     <div class="container position-relative d-flex align-items-center">
 
       {{-- Logo trái --}}
@@ -57,10 +57,11 @@
                  href="{{ $section->collection_id 
                            ? route('collections.show', $section->collection->slug) 
                            : '#' }}"
-                 id="sec-{{ $section->id }}">
+                 id="sec-{{ $section->id }}"
+                 style="font-size: 1.1rem;">
                 {{ $section->name }}
               </a>
-              <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}">
+              <div class="dropdown-menu p-4 mega-menu" aria-labelledby="sec-{{ $section->id }}" style="border-top: 0px solid #d1a029;">
                 <div class="row">
                   @forelse($section->groups as $group)
                     <div class="group-block col-6 col-md-3 mb-3">
@@ -69,7 +70,8 @@
                         @forelse($group->products as $p)
                           <li>
                             <a class="dropdown-item px-0"
-                               href="{{ route('products.show', $p->slug ?? $p->id) }}">
+                               href="{{ route('products.show', $p->slug ?? $p->id) }}"
+                               style="font-size: 1rem;">
                               {{ $p->name }}
                             </a>
                           </li>
@@ -86,7 +88,7 @@
             </li>
           @endforeach
           <li class="nav-item">
-            <a class="nav-link px-3 text-dark" href="{{ route('products.index') }}">TOÀN BỘ</a>
+            <a class="nav-link px-3 text-dark" href="{{ route('products.index') }}" style="font-size: 1.1rem;">TOÀN BỘ</a>
           </li>
         </ul>
       </nav>
