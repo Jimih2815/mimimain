@@ -50,7 +50,7 @@
         <label class="form-label">Base Price</label>
         <input
           name="base_price"
-          type="number"
+          type="text" inputmode="decimal"
           class="form-control"
           value="{{ old('base_price', $product->base_price) }}"
           step="any"    {{-- cho phép nhập bất kỳ số thập phân hay nguyên nào --}}
@@ -198,7 +198,7 @@
               <div class="me-2" style="width:120px">
                 <label class="form-label">Extra Price</label>
                 <input name="options[{{ $i }}][values][{{ $j }}][extra_price]"
-                      type="number" step="0.01"
+                      type="text" inputmode="decimal"
                       class="form-control"
                       value="{{ old("options.$i.values.$j.extra_price", $val->extra_price) }}"
                       required>
@@ -284,6 +284,31 @@
     document.addEventListener('DOMContentLoaded', function() {
       // === 1) XỬ LÝ DYNAMIC OPTIONS / VALUES ===
       const optionsContainer = document.getElementById('options-container');
+
+      function parseLocaleNumber(raw) {
+        let s = String(raw ?? '').trim();
+        if (!s) return NaN;
+        s = s.replace(/\s+/g, '').replace(/[^0-9,\.\-]/g, '');
+        const lastDot = s.lastIndexOf('.');
+        const lastComma = s.lastIndexOf(',');
+        if (lastDot > -1 && lastComma > -1) {
+          if (lastComma > lastDot) {
+            s = s.replace(/\./g, '').replace(',', '.');
+          } else {
+            s = s.replace(/,/g, '');
+          }
+        } else if (lastComma > -1) {
+          s = s.replace(',', '.');
+        }
+        const n = parseFloat(s);
+        return Number.isFinite(n) ? n : NaN;
+      }
+
+      function toBackendNumberString(raw) {
+        const n = parseLocaleNumber(raw);
+        return Number.isFinite(n) ? String(n) : '';
+      }
+
 
   // ===== Upload ảnh ngay khi chọn (Main/Sub/Option) =====
   const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -462,6 +487,21 @@
       // Trước khi submit: loại bỏ value-block trống
       const form = optionsContainer.closest('form');
       form.addEventListener('submit', function() {
+        // Chuẩn hoá số: cho phép nhập 100,5 / 1.234,56 ...
+        const basePriceInput = form.querySelector('input[name="base_price"]');
+        const numericInputs = [
+          basePriceInput,
+          ...form.querySelectorAll('input[name*="[extra_price]"]'),
+        ].filter(Boolean);
+
+        numericInputs.forEach(inp => {
+          const raw = String(inp.value ?? '').trim();
+          if (!raw) return;
+          const norm = toBackendNumberString(raw);
+          if (norm !== '') inp.value = norm;
+        });
+
+
         optionsContainer.querySelectorAll('.value-block').forEach(vb => {
           const hasVal = vb.querySelector('input[name*="[value]"]').value.trim() !== '';
           const hasPr  = vb.querySelector('input[name*="[extra_price]"]').value.trim() !== '';

@@ -33,7 +33,7 @@
       </div>
       <div class="mb-3 ten-va-link-con">
         <label class="form-label">Base Price</label>
-        <input name="base_price" type="number" class="form-control" value="{{ old('base_price') }}" required>
+        <input name="base_price" type="text" inputmode="decimal" class="form-control" value="{{ old('base_price') }}" required>
       </div>
     </div>
 
@@ -135,12 +135,12 @@
       <div class="me-2" style="width:120px">
         <label class="form-label">Extra Price</label>
         <input name="options[{i}][values][{j}][extra_price]"
-               type="number" step="0.01" class="form-control" required>
+               type="text" inputmode="decimal" class="form-control" required>
       </div>
 
       <div class="me-2" style="width:120px">
         <label class="form-label">Price</label>
-        <input type="number" step="0.01"
+        <input type="text" inputmode="decimal"
                class="form-control option-price-helper"
                placeholder="(không bắt buộc)">
       </div>
@@ -178,30 +178,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Base price helper
   const basePriceInput = form.querySelector('input[name="base_price"]');
-  function getBasePrice() {
-    const v = parseFloat(basePriceInput?.value ?? '');
-    return Number.isFinite(v) ? v : NaN;
+
+  // Parse numbers user may type in VN/EU/US formats:
+  //  - "159000"          -> 159000
+  //  - "100,5"           -> 100.5
+  //  - "1.234,56"        -> 1234.56
+  //  - "1,234.56"        -> 1234.56
+  function parseLocaleNumber(raw) {
+    let s = String(raw ?? '').trim();
+    if (!s) return NaN;
+
+    // remove spaces + currency symbols
+    s = s.replace(/\s+/g, '').replace(/[^0-9,\.\-]/g, '');
+
+    const lastDot = s.lastIndexOf('.');
+    const lastComma = s.lastIndexOf(',');
+
+    if (lastDot > -1 && lastComma > -1) {
+      // pick the last one as decimal separator
+      if (lastComma > lastDot) {
+        // 1.234,56 => 1234.56
+        s = s.replace(/\./g, '').replace(',', '.');
+      } else {
+        // 1,234.56 => 1234.56
+        s = s.replace(/,/g, '');
+      }
+    } else if (lastComma > -1) {
+      // 100,5 => 100.5
+      s = s.replace(',', '.');
+    }
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : NaN;
   }
+
+  function toBackendNumberString(raw) {
+    const n = parseLocaleNumber(raw);
+    return Number.isFinite(n) ? String(n) : '';
+  }
+
+  function getBasePrice() {
+    return parseLocaleNumber(basePriceInput?.value ?? '');
+  }
+
   function round2(n) {
     return Math.round(n * 100) / 100;
   }
-  function calcExtraFromPrice(valueBlock) {
+  function calcExtraFromPrice(valueBlock, opts = {}) {
     if (!valueBlock) return;
     const extraInp = valueBlock.querySelector('input[name*="[extra_price]"]');
     const priceInp = valueBlock.querySelector('.option-price-helper');
     if (!extraInp || !priceInp) return;
 
-    // Chỉ tính khi Extra Price đang trống
-    if ((extraInp.value || '').trim() !== '') return;
+    const rawPrice = String(priceInp.value ?? '').trim();
 
-    const price = parseFloat(priceInp.value ?? '');
+    // Nếu user đang gõ dang dở kiểu "100," hoặc "100." thì khoan tính
+    if (!opts.force && /[\.,\-]$/.test(rawPrice)) return;
+
+    const price = parseLocaleNumber(rawPrice);
     const base  = getBasePrice();
     if (!Number.isFinite(price) || !Number.isFinite(base)) return;
+
+    // Chỉ auto-fill nếu Extra Price trống hoặc trước đó do auto-fill tạo ra
+    const isEmpty = (extraInp.value || '').trim() === '';
+    const isAuto  = extraInp.dataset.autofilled === '1';
+    if (!opts.force && !(isEmpty || isAuto)) return;
 
     let extra = round2(price - base);
     if (Object.is(extra, -0)) extra = 0;
 
     extraInp.value = String(extra);
+    extraInp.dataset.autofilled = '1';
+
     // Trigger để auto-add dòng mới nếu đủ điều kiện
     extraInp.dispatchEvent(new Event('input', { bubbles: true }));
   }
@@ -418,21 +465,52 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Tính Extra Price tự động khi nhập Price (chỉ là công cụ tính hộ)
+  // Debounce để tránh tính khi user mới gõ 1-2 ký tự (vd vừa gõ "1" của 159000)
+  const _debounceTimers = new WeakMap();
+  function debounce(key, fn, wait = 450) {
+    const old = _debounceTimers.get(key);
+    if (old) clearTimeout(old);
+    const t = setTimeout(fn, wait);
+    _debounceTimers.set(key, t);
+  }
+
+  // Khi gõ Price: đợi user ngừng gõ 1 nhịp rồi mới tính Extra Price
   optionsContainer.addEventListener('input', (e) => {
-    if (e.target.classList && e.target.classList.contains('option-price-helper')) {
+    if (e.target?.classList?.contains('option-price-helper')) {
       const vb = e.target.closest('.value-block');
-      calcExtraFromPrice(vb);
+      debounce(e.target, () => calcExtraFromPrice(vb, { force: false }));
     }
   });
 
-  // Nếu đổi Base Price, và dòng nào có Price nhưng Extra đang trống -> tính lại
-  basePriceInput?.addEventListener('input', () => {
-    optionsContainer.querySelectorAll('.value-block').forEach(vb => {
-      calcExtraFromPrice(vb);
-    });
+  // Khi rời ô Price (blur): tính luôn (nếu user gõ xong rồi click ra ngoài)
+  optionsContainer.addEventListener('blur', (e) => {
+    if (e.target?.classList?.contains('option-price-helper')) {
+      const vb = e.target.closest('.value-block');
+      calcExtraFromPrice(vb, { force: true });
+    }
+  }, true);
+
+  // Nếu user tự sửa Extra Price bằng tay thì đừng auto-override nữa
+  optionsContainer.addEventListener('keydown', (e) => {
+    if (e.target && e.target.name && e.target.name.includes('[extra_price]')) {
+      e.target.dataset.autofilled = '0';
+    }
   });
 
-  // Auto-add value khi hoàn thiện dòng cuối
+  // Nếu đổi Base Price: chỉ recalc những dòng Extra đang trống / do auto-fill
+  basePriceInput?.addEventListener('input', () => {
+    debounce(basePriceInput, () => {
+      optionsContainer.querySelectorAll('.value-block').forEach(vb => {
+        const extraInp = vb.querySelector('input[name*="[extra_price]"]');
+        const priceInp = vb.querySelector('.option-price-helper');
+        if (!priceInp) return;
+        const hasPrice = String(priceInp.value ?? '').trim() !== '';
+        const canAuto = !extraInp || (String(extraInp.value ?? '').trim() === '' || extraInp.dataset.autofilled === '1');
+        if (hasPrice && canAuto) calcExtraFromPrice(vb, { force: false });
+      });
+    }, 300);
+  });
+// Auto-add value khi hoàn thiện dòng cuối
   optionsContainer.addEventListener('input', e => {
     if (!e.target.matches('input[name*="[value]"], input[name*="[extra_price]"]')) return;
     const vb = e.target.closest('.value-block');
@@ -468,6 +546,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if ((valInp?.value || '').trim() === '' && (extraInp?.value || '').trim() === '') {
         vb.remove();
       }
+    });
+
+    // 2.5) Chuẩn hoá số (cho phép user nhập 100,5 / 1.234,56 ...)
+    //      -> backend luôn nhận dạng chuẩn dùng dấu chấm.
+    //      (price helper không submit nên không cần)
+    const numericInputs = [
+      basePriceInput,
+      ...form.querySelectorAll('input[name*="[extra_price]"]'),
+    ].filter(Boolean);
+
+    numericInputs.forEach(inp => {
+      const raw = String(inp.value ?? '').trim();
+      if (!raw) return;
+      const norm = toBackendNumberString(raw);
+      if (norm !== '') inp.value = norm;
     });
 
     // 3) Đồng bộ TinyMCE -> textarea trước khi lấy FormData
