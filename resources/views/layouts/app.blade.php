@@ -71,7 +71,8 @@
               class="mc-floating-toggle"
               id="mcToggleBtn"
               aria-label="Mở / Đóng liên hệ">
-        <i class="fas fa-chevron-left"></i>
+        <span class="mc-toggle-icon mc-icon-open" aria-hidden="true"><i class="fa-solid fa-comments"></i></span>
+        <span class="mc-toggle-icon mc-icon-close" aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
       </button>
       <div class="mc-floating-contact">
         <a href="tel:0354235669"
@@ -134,7 +135,19 @@
 
       // Tự thu gọn sau 15s
       if (panel) setTimeout(() => panel.classList.remove('expanded'), 15000);
-      if (toggle && panel) toggle.addEventListener('click', () => panel.classList.toggle('expanded'));
+      if (toggle && panel) {
+        const kick = () => {
+          toggle.classList.remove('is-animating');
+          void toggle.offsetWidth;
+          toggle.classList.add('is-animating');
+          setTimeout(() => toggle.classList.remove('is-animating'), 180);
+        };
+
+        toggle.addEventListener('click', () => {
+          panel.classList.toggle('expanded');
+          kick();
+        });
+      }
     });
   </script>
   @endif
