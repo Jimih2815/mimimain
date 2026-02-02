@@ -121,7 +121,7 @@
               >
             </a>
           </div>
-          <p class="mt-4 text-center fw-semibold">{{ $s->text }}</p>
+          <p class="mt-2 text-center fw-semibold">{{ $s->text }}</p>
         </div>
       @endforeach
     </div>

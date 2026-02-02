@@ -476,3 +476,33 @@ $transition-duration: 0.2s;          // thời gian chuyển đổi
   line-height: 1.2;
   padding: 0 1rem;
 }
+
+
+/* === Product long description (Desktop) ===
+   - Căn giữa, rộng ~70% (theo yêu cầu)
+   - Ảnh TinyMCE tự co theo div cha
+*/
+.product-long-description {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Wrapper ảnh (TinyMCE / editor) */
+.product-long-description .syl-image-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Ảnh trong wrapper: full width của div cha, height auto */
+.product-long-description .syl-image-wrapper img {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+/* Fallback cho img không có wrapper: không vượt quá container */
+.product-long-description img {
+  max-width: 100%;
+  height: auto;
+}

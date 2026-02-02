@@ -111,3 +111,29 @@ html, body {
     width: auto !important;
   }
 }
+
+
+/* === Product long description (Mobile) ===
+   - Giữ 100% width cho content
+   - Ảnh TinyMCE tự co theo màn hình
+*/
+.product-long-description {
+  width: 100%;
+}
+
+.product-long-description .syl-image-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.product-long-description .syl-image-wrapper img {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+/* fallback nếu TinyMCE output img không bọc wrapper */
+.product-long-description img {
+  max-width: 100%;
+  height: auto;
+}
