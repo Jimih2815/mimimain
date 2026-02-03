@@ -212,7 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
           btn.textContent = 'Đã thêm';
           setTimeout(() => btn.textContent = origText, 1500);
           // e) Notification tuỳ chỉnh
-          if (window.showCartNotification) window.showCartNotification(json.message, json.image);
+          const notifImg = (json.item && json.item.image) ? json.item.image : (json.image || '');
+          if (window.showCartNotification) window.showCartNotification(json.message, notifImg);
         } else {
           alert(json.message || 'Thêm thất bại, thử lại sau nhé!');
         }
