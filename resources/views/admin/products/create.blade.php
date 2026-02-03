@@ -29,7 +29,7 @@
       </div>
       <div class="mb-3 ten-va-link-con">
         <label class="form-label">Tạo Link</label>
-        <input name="slug" class="form-control" value="{{ old('slug') }}" required>
+        <input name="slug" class="form-control" value="{{ old('slug') }}" placeholder="Để trống sẽ tự tạo">
       </div>
       <div class="mb-3 ten-va-link-con">
         <label class="form-label">Base Price</label>

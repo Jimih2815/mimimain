@@ -7,6 +7,7 @@ use App\Http\Traits\HandlesWebpUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\OptionType;
 use App\Models\OptionValue;
@@ -77,12 +78,22 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // 0) Loại bỏ các dòng trống trong options
+        // 0) Chuẩn hóa input (options + slug auto)
         $input = $request->all();
+
+        $slugInput = trim((string) ($input['slug'] ?? ''));
+        if ($slugInput === '') {
+            $nameInput = trim((string) ($input['name'] ?? ''));
+            if ($nameInput !== '') {
+                $input['slug'] = $this->makeUniqueSlug($nameInput);
+            }
+        }
+
         if (!empty($input['options'])) {
             $input['options'] = $this->filterOptions($input['options']);
             $request->replace($input);
         }
+        $request->replace($input);
 
         // 1) Validate
         $validated = $request->validate([
@@ -288,6 +299,29 @@ class ProductController extends Controller
                 $product->optionValues()->attach($ov->id);
             }
         }
+    }
+
+    /**
+     * Tạo slug duy nhất từ tên sản phẩm (không dấu, dấu cách -> "-")
+     */
+    private function makeUniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        if ($base === '') {
+            $base = 'san-pham';
+        }
+
+        $slug = $base;
+        $i = 2;
+        while (
+            Product::where('slug', $slug)
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $base . '-' . $i;
+            $i++;
+        }
+        return $slug;
     }
     
 }
