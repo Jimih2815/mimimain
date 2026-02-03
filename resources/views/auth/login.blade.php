@@ -63,12 +63,12 @@
           </button>
         </form>
         <div class="dang-ky-va-quen-mat-khau">
-          <p class="mt-3 text-center">
+          <p class="mt-3 text-center mb-0">
             Chưa có tài khoản?
             <a href="{{ route('register') }}">Đăng ký</a>
           </p>
           {{-- Quên mật khẩu --}}
-          <div class="mb-3 text-end">
+          <div class="mb-3 text-center">
             <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
           </div>
         </div>
