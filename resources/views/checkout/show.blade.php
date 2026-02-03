@@ -98,6 +98,7 @@
     {{-- ==== Cột phải: Thông tin người nhận + Phương thức thanh toán ==== --}}
     <div class="col-md-6 thong-tin-nguoi-nhan">
       <h4 class="mb-3">Thông tin người nhận</h4>
+      @php $user = auth()->user(); @endphp
       <form id="checkoutForm" action="{{ route('checkout.confirm') }}" method="POST">
         @csrf
 
@@ -109,7 +110,8 @@
 
         <div class="mb-3">
           <label class="form-label">Họ tên</label>
-          <input type="text" name="fullname" class="form-checkout" required>
+          <input type="text" name="fullname" class="form-checkout" required
+                 value="{{ old('fullname', $user?->name ?? '') }}">
         </div>
         <div class="mb-3">
           <label class="form-label">Số điện thoại</label>
@@ -122,6 +124,7 @@
             pattern="[0-9]{9,11}"
             minlength="9"
             maxlength="11"
+            value="{{ old('phone', $user?->phone ?? '') }}"
           >
         </div>
         <div class="mb-3">
@@ -269,4 +272,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-

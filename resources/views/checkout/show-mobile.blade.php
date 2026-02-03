@@ -219,6 +219,7 @@ width: 30%;
     <button type="button" class="border-0 bg-transparent d-flex justify-content-center align-items-center" data-bs-dismiss="offcanvas"> <i class="fa fa-times fa-lg"></i></button>
   </div>
   <div class="offcanvas-body">
+    @php $user = auth()->user(); @endphp
     <form id="checkoutForm" action="{{ route('checkout.confirm') }}" method="POST">
       @csrf
 
@@ -228,7 +229,8 @@ width: 30%;
 
       <div class="mb-3">
         <label class="form-label">Họ tên</label>
-        <input type="text" name="fullname" class="form-checkout form-control" required>
+        <input type="text" name="fullname" class="form-checkout form-control" required
+               value="{{ old('fullname', $user?->name ?? '') }}">
       </div>
       <div class="mb-3">
         <label class="form-label">Số điện thoại</label>
@@ -241,6 +243,7 @@ width: 30%;
           pattern="[0-9]{9,11}"
           minlength="9"
           maxlength="11"
+          value="{{ old('phone', $user?->phone ?? '') }}"
         >
       </div>
       <div class="mb-3">
@@ -440,5 +443,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-
 
