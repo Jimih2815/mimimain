@@ -3,6 +3,36 @@
 @section('title','Đặt hàng thành công')
 
 @section('content')
+<style>
+  @media (max-width: 576px) {
+    .trang-cam-on {
+      width: 100% !important;
+      padding: 0 1rem;
+      padding-top: 0px !important; 
+    }
+
+    .anh-cam-on-mua-hang-cont img {
+      width: 80% !important;
+    }
+
+    .trang-cam-on p {
+      font-size: 0.9rem;
+    }
+
+    .thankyou-actions {
+      flex-direction: column;
+      gap: 0.75rem !important;
+    }
+
+    .thankyou-actions a {
+      width: 100%;
+      justify-content: center;
+    }
+    .mx-auto {
+      margin-top: 5rem;
+    }
+  }
+</style>
 <div class="fex-can-giua bat-col">
   <div class="anh-cam-on-mua-hang-cont">
     <img src="{{ asset('hinhanh/anh-cam-on.png') }}" 
@@ -14,6 +44,7 @@
 
 
   <!-- <h2 class="mb-3">Cảm ơn bạn đã đặt hàng!</h2> -->
+  <p class="text-danger fw-semibold mb-2">Lưu ý: lưu lại mã đơn để tiện tra cứu đơn hàng</p>
   <p>Mã đơn: <strong>#{{ $order->order_code }}</strong></p>
   <p>Tổng tiền: <strong>{{ number_format($order->total,0,',','.') }}₫</strong></p>
 
@@ -28,7 +59,7 @@
     </div>
   @endif
 
-  <div class="text-center mt-4 d-flex gap-3 justify-content-center align-items-center">
+  <div class="text-center mt-4 d-flex gap-3 justify-content-center align-items-center thankyou-actions">
   <a href="{{ route('home') }}" class="btn-mimi nut-vang text-decoration-none">
     Tiếp tục mua hàng
   </a>
