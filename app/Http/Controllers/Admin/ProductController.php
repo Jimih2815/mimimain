@@ -15,9 +15,23 @@ class ProductController extends Controller
 {
     use HandlesWebpUpload;
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(15);
+        $query = Product::query();
+
+        $search = trim((string) $request->query('q', ''));
+        if ($search !== '') {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $sort = $request->query('sort', 'newest');
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->paginate(15)->withQueryString();
         return view('admin.products.index', compact('products'));
     }
 

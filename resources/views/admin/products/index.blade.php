@@ -9,11 +9,38 @@
     <div class="alert alert-success">{{ session('success') }}</div>
   @endif
 
-  {{-- Nút thêm --}}
-  <a href="{{ route('admin.products.create') }}"
-     class="btn nut-them-san-pham mb-3">
-    <i class="fa fa-plus"></i> Thêm sản phẩm mới
-  </a>
+  {{-- Nút thêm + thanh tìm kiếm/sắp xếp --}}
+  <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+    <a href="{{ route('admin.products.create') }}"
+       class="btn nut-them-san-pham">
+      <i class="fa fa-plus"></i> Thêm sản phẩm mới
+    </a>
+
+    <form action="{{ route('admin.products.index') }}"
+          method="GET"
+          class="d-flex align-items-center gap-2 ms-auto">
+      <input type="text"
+             name="q"
+             value="{{ request('q') }}"
+             class="form-control form-control-sm"
+             placeholder="Tìm theo tên sản phẩm..."
+             style="width:220px;"
+             aria-label="Tìm tên sản phẩm">
+
+      <select name="sort" class="form-select form-select-sm" style="width:110px;">
+        <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>
+          Mới đến cũ
+        </option>
+        <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>
+          Cũ đến mới
+        </option>
+      </select>
+
+      <button type="submit" class="btn btn-outline-secondary btn-sm nut-xanh" style="padding: 0 0.5rem 0 0.5rem; border-radius: 10px !important;">
+        Lọc
+      </button>
+    </form>
+  </div>
 
   {{-- Bảng danh sách --}}
   <table class="table table-bordered table-hover align-middle">
