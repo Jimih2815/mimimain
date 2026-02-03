@@ -1,0 +1,13 @@
+chạy 2 file migrate 
+php artisan migrate --path=database/migrations/2026_02_03_120000_add_phone_to_users_table.php
+php artisan migrate --path=database/migrations/2026_02_03_120500_create_password_reset_tokens_table.php
+
+sửa env 
+MAIL_MAILER=smtp
+MAIL_HOST=mail.tiemhoamimi.com
+MAIL_PORT=465
+MAIL_USERNAME=cskh@tiemhoamimi.com
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=cskh@tiemhoamimi.com
+MAIL_FROM_NAME="MiMi"
