@@ -4,6 +4,19 @@
 @section('title','Hồ sơ của tôi')
 
 @section('content')
+<style>
+  .order-option-thumb {
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #e5e5e5;
+    flex: 0 0 42px;
+  }
+  .tab-pane {
+    border-radius: 0 0 10px 10px;
+  }
+</style>
 <div class="w-70 mx-auto mt-5 mb-5 trang-thong-tin">
 
   {{-- Nav tabs --}}
@@ -143,7 +156,6 @@
           <thead>
             <tr>
               <th>Mã đơn hàng</th>
-              <th>Ảnh</th>
               <th>Sản phẩm</th>
               <th>Thanh toán</th>
               <th>Hình thức</th>
@@ -156,23 +168,32 @@
             @foreach($orders as $o)
               <tr>
                 <td>{{ $o->order_code }}</td>
-                <!-- Ảnh sản phẩm đầu tiên -->
-                <td>
-                  @php $it = $o->items->first(); @endphp
-                  <img src="{{ asset('storage/'.$it->product->img) }}"
-                      style="width:50px;height:50px;object-fit:cover;">
-                </td>
                 <!-- Tên + thuộc tính -->
                 <td>
                   @foreach($o->items as $it)
-                    {{ $it->product->name }} × {{ $it->quantity }}
-                    @if($it->options)
-                      <ul class="mb-1">
-                        @foreach(\App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get() as $v)
-                          <li>{{ $v->type->name }}: {{ $v->value }}</li>
-                        @endforeach
-                      </ul>
-                    @endif
+                    @php
+                      $optionValues = $it->options
+                        ? \App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get()
+                        : collect();
+                      $optionImg = $optionValues->firstWhere('option_img', '!=', null);
+                    @endphp
+                    <div class="d-flex align-items-start gap-2">
+                      @if($optionImg && $optionImg->option_img)
+                        <img src="{{ asset('storage/'.$optionImg->option_img) }}"
+                             alt="{{ $optionImg->value }}"
+                             class="order-option-thumb">
+                      @endif
+                      <div>
+                        {{ $it->product->name }} × {{ $it->quantity }}
+                        @if($optionValues->isNotEmpty())
+                          <ul class="mb-1">
+                            @foreach($optionValues as $v)
+                              <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                            @endforeach
+                          </ul>
+                        @endif
+                      </div>
+                    </div>
                     <hr class="my-1">
                   @endforeach
                 </td>
@@ -221,8 +242,8 @@
     }
       @endphp
 
-      <nav class="nut-pagi">
-        <ul style="gap:2px;" class="pagination justify-content-center ">
+      <nav class="nut-pagi pb-2" >
+        <ul style="gap:2px;" class="pagination justify-content-center m-0">
           {{-- Nút Prev --}}
           <!-- <li class="page-item {{ $current==1?'disabled':'' }}">
             <a class="page-link" href="{{ $orders->url($current-1) }}">«</a>
@@ -232,7 +253,7 @@
           @foreach($pages as $p)
             <li class="page-item {{ $p==$current?'active':'' }}">
               @if($p == $current)
-                <span class="page-link">{{ $p }}</span>
+                <span class="page-link" style="border-radius: 10px;">{{ $p }}</span>
               @else
                 <a class="page-link" href="{{ $orders->url($p) }}">{{ $p }}</a>
               @endif

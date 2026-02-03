@@ -104,9 +104,17 @@
 .status-help-dang-xu-ly { color: #fe3b27;font-weight:bold; }
 
 .status-help-hoan-thanh { color: #3f9426;font-weight:bold; }
-.btn-read-more {
+  .btn-read-more {
   color: #4ab3af;
 }
+  .order-option-thumb {
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #e5e5e5;
+    flex: 0 0 42px;
+  }
 </style>
 
 <div class="mobile-profile">
@@ -200,15 +208,28 @@
 
                   <div class="mb-3"><strong>Sản phẩm:</strong></div>
                   @foreach($o->items as $it)
-                    <div class="ps-3 mb-3">
-                      {{ $it->product->name }} × {{ $it->quantity }}
-                      @if($it->options)
-                        <ul class="ps-3 mb-0">
-                          @foreach(\App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get() as $v)
-                            <li>{{ $v->type->name }}: {{ $v->value }}</li>
-                          @endforeach
-                        </ul>
+                    @php
+                      $optionValues = $it->options
+                        ? \App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get()
+                        : collect();
+                      $optionImg = $optionValues->firstWhere('option_img', '!=', null);
+                    @endphp
+                    <div class="ps-3 mb-3 d-flex align-items-start gap-2">
+                      @if($optionImg && $optionImg->option_img)
+                        <img src="{{ asset('storage/'.$optionImg->option_img) }}"
+                             alt="{{ $optionImg->value }}"
+                             class="order-option-thumb">
                       @endif
+                      <div>
+                        {{ $it->product->name }} × {{ $it->quantity }}
+                        @if($optionValues->isNotEmpty())
+                          <ul class="ps-3 mb-0">
+                            @foreach($optionValues as $v)
+                              <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                            @endforeach
+                          </ul>
+                        @endif
+                      </div>
                     </div>
                   @endforeach
 
@@ -429,7 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
-
 
 
 
