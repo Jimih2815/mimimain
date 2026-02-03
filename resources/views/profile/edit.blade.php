@@ -74,7 +74,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="email" class="form-label">Email (không bắt buộc)</label>
+              <label for="email" class="form-label">Email</label>
               <input id="email" name="email" type="email"
                      class="form-control @error('email') is-invalid @enderror"
                      value="{{ old('email', $user->email) }}" placeholder="you@email.com">
