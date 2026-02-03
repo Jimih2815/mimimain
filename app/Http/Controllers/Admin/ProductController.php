@@ -129,13 +129,13 @@ class ProductController extends Controller
             return response()->json([
                 'ok' => true,
                 'message' => 'Tạo sản phẩm thành công!',
-                'redirect' => route('admin.products.edit', $product),
+                'redirect' => route('admin.products.index'),
                 'product_id' => $product->id,
             ], 201);
         }
 
         return redirect()
-            ->route('admin.products.edit', $product)
+            ->route('admin.products.index')
             ->with('success', 'Tạo sản phẩm thành công!');
     }
 

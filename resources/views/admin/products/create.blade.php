@@ -587,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (res.ok) {
         const out = await res.json().catch(() => ({}));
-        // Redirect qua trang edit (giữ flow cũ)
+        // Redirect về danh sách sản phẩm
         if (out.redirect) {
           window.location.href = out.redirect;
           return;
