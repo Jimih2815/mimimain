@@ -20,30 +20,38 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        // Chuẩn hóa SĐT (loại bỏ ký tự không phải số)
+        $request->merge([
+            'phone' => preg_replace('/\D+/', '', (string) $request->input('phone')),
+        ]);
+
         // 1) Validate input
         $credentials = $request->validate([
-            'email'    => ['required','email'],
+            'phone'    => ['required', 'regex:/^0\d{9}$/'],
             'password' => ['required'],
         ]);
 
         // 2) Thử đăng nhập
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt([
+            'phone' => $credentials['phone'],
+            'password' => $credentials['password'],
+        ], $request->boolean('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
-        // 3) Xử lý lỗi: kiểm tra xem email có trong DB hay không
-        $user = User::where('email', $request->email)->first();
+        // 3) Xử lý lỗi: kiểm tra xem số điện thoại có trong DB hay không
+        $user = User::where('phone', $request->phone)->first();
         if (! $user) {
             return back()
-                ->withErrors(['email' => 'Chưa có tài khoản gắn với email này'])
-                ->withInput($request->only('email'));
+                ->withErrors(['phone' => 'Chưa có tài khoản gắn với số điện thoại này'])
+                ->withInput($request->only('phone'));
         }
 
-        // 4) Email đúng, nghĩa là chỉ có thể sai mật khẩu
+        // 4) SĐT đúng, nghĩa là chỉ có thể sai mật khẩu
         return back()
             ->withErrors(['password' => 'Mật khẩu không đúng'])
-            ->withInput($request->only('email'));
+            ->withInput($request->only('phone'));
     }
 
 

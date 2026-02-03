@@ -38,7 +38,8 @@ class UserController extends Controller
     {
         $user->password = bcrypt('123456789');
         $user->save();
-        return back()->with('success', "Đã reset mật khẩu của {$user->email} về mặc định.");
+        $label = $user->phone ?: ($user->email ?: 'user');
+        return back()->with('success', "Đã reset mật khẩu của {$label} về mặc định.");
     }
 
     /**

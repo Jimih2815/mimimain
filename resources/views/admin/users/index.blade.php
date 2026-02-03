@@ -104,6 +104,7 @@
           <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>SĐT</th>
             <th>Email</th>
             <th>Đăng ký</th>
             <th>Thao tác</th>
@@ -114,6 +115,7 @@
             <tr>
               <td>{{ $u->id }}</td>
               <td>{{ $u->name }}</td>
+              <td>{{ $u->phone }}</td>
               <td>{{ $u->email }}</td>
               <td>{{ $u->created_at->format('d/m/Y H:i') }}</td>
               <td class="d-flex gap-1 justify-content-center">
@@ -133,7 +135,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="text-center">Chưa có user nào.</td>
+              <td colspan="6" class="text-center">Chưa có user nào.</td>
             </tr>
           @endforelse
         </tbody>

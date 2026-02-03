@@ -23,19 +23,29 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        // 1. Validate chỉ yêu cầu và confirmed
+        // Chuẩn hóa SĐT (loại bỏ ký tự không phải số)
+        $request->merge([
+            'phone' => preg_replace('/\D+/', '', (string) $request->input('phone')),
+        ]);
+
+        // 1. Validate
         $data = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone'    => ['required', 'regex:/^0\d{9}$/', 'unique:users,phone'],
+            'email'    => ['nullable', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed'],
         ]);
 
         // 2. Tạo user
-        $user = User::create([
+        $payload = [
             'name'     => $data['name'],
-            'email'    => $data['email'],
+            'phone'    => $data['phone'],
             'password' => Hash::make($data['password']),
-        ]);
+        ];
+        if (!empty($data['email'])) {
+            $payload['email'] = $data['email'];
+        }
+        $user = User::create($payload);
 
         // 3. Event nếu có verify
         event(new Registered($user));

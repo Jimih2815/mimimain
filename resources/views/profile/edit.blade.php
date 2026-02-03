@@ -74,10 +74,10 @@
             </div>
 
             <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
+              <label for="email" class="form-label">Email (không bắt buộc)</label>
               <input id="email" name="email" type="email"
                      class="form-control @error('email') is-invalid @enderror"
-                     value="{{ old('email', $user->email) }}" required>
+                     value="{{ old('email', $user->email) }}" placeholder="you@email.com">
               @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -383,4 +383,3 @@
 });
 </script>
 @endpush
-

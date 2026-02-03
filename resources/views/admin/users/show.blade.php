@@ -62,7 +62,8 @@
 <div class="container-fluid trang-admin-user">
   <h1 class="mb-4">User #{{ $user->id }}: {{ $user->name }}</h1>
 
-  <p><strong>Email:</strong> {{ $user->email }}</p>
+  <p><strong>SĐT:</strong> {{ $user->phone }}</p>
+  <p><strong>Email:</strong> {{ $user->email ?: '—' }}</p>
   <p><strong>Đăng ký:</strong> {{ $user->created_at->format('d/m/Y H:i') }}</p>
 
   <form action="{{ route('admin.users.resetPassword', $user) }}"

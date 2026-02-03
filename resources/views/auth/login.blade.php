@@ -24,13 +24,14 @@
         <form method="POST" action="{{ route('login') }}">
           @csrf
 
-          {{-- Email --}}
+          {{-- Số điện thoại --}}
           <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input id="email" type="email"
-                  class="form-control @error('email') is-invalid @enderror"
-                  name="email" value="{{ old('email') }}" required autofocus>
-            @error('email')
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input id="phone" type="tel"
+                  class="form-control @error('phone') is-invalid @enderror"
+                  name="phone" value="{{ old('phone') }}" required autofocus
+                  placeholder="0912345678">
+            @error('phone')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>

@@ -28,11 +28,12 @@
             </div>
 
             <div>
-                <label class="block mb-1">Email</label>
-                <input type="email" name="email" value="{{ old('email') }}" required
-                    class="w-full border rounded p-2" />
-                <x-input-error :messages="$errors->get('email')" />
+                <label class="block mb-1">Số điện thoại</label>
+                <input type="tel" name="phone" value="{{ old('phone') }}" required
+                    class="w-full border rounded p-2" placeholder="0912345678" />
+                <x-input-error :messages="$errors->get('phone')" />
             </div>
+            <small class="text-muted d-block mb-2">Email không bắt buộc, bạn có thể thêm sau khi đăng nhập.</small>
 
             <div>
                 <label class="block mb-1">Mật khẩu</label>
