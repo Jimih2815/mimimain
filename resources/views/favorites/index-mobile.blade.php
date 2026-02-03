@@ -156,9 +156,7 @@ body.no-scroll { overflow: hidden; }
     transition: all 0.8s ease;
     pointer-events: none;
   }
-  .nut-xanh {
-    width: 100%;
-  }
+  
 </style>
 <div class="trang-yeu-thich-mobile ms-1 me-1 pt-3 pb-3">
     <h1 class="pb-3 ps-1 text-center">Sản phẩm yêu thích</h1>
@@ -218,7 +216,7 @@ body.no-scroll { overflow: hidden; }
                 <i class="fa-solid fa-truck-fast me-2"></i>
                 <p class="mb-0 small">Freeship đơn trên 199.000₫</p>
             </div>
-            <div class="fw-bold">{{ number_format($p->base_price,0,',','.') }}₫</div>
+            <div class="fw-bold" style="color: #fe3b27;">{{ number_format($p->base_price,0,',','.') }}₫</div>
         </div>
         </div>
         <button class="panel-close" data-id="{{ $p->id }}"><i class="fa fa-times fa-lg"></i></button>
@@ -273,7 +271,7 @@ body.no-scroll { overflow: hidden; }
     {{-- Footer với nút Thêm/Mua --}}
     <div class="panel-footer">
          <button
-             class="btn-mimi nut-xanh btn-add-fav-cart mt-2"
+             class="btn-mimi nut-vang btn-add-fav-cart mt-2"
              data-id="{{ $p->id }}"
              data-url="{{ route('cart.add', $p->id) }}"
            >
@@ -281,7 +279,7 @@ body.no-scroll { overflow: hidden; }
            </button>
         <button 
             type="button"
-            class="btn-mimi nut-do btn-buy-now mt-2"
+            class="btn-mimi nut-xanh btn-buy-now mt-2"
             data-id="{{ $p->id }}"
             data-buy-url="{{ route('checkout.buyNow', $p->id) }}"
         >
