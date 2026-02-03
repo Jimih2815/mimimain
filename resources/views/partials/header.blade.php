@@ -118,7 +118,7 @@
       data-bs-toggle="dropdown">
       <i class="bi bi-bag-fill"></i>
       <span id="cart-count"
-            class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+            class="cart-count-in-icon position-absolute top-50 start-50 translate-middle"
             style="{{ $cartCount ? '' : 'display:none' }}">
         {{ $cartCount }}
       </span>
@@ -230,5 +230,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
-
 

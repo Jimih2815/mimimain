@@ -223,6 +223,15 @@ header {
           background-color: #b83232 !important; 
           color: #fff;
         }
+
+        .cart-count-in-icon {
+          font-size: 0.7rem;
+          font-weight: 600;
+          line-height: 1;
+          color: #fff;
+          padding-top: 4px; // đẩy số xuống giữa icon cho cân
+          pointer-events: none;
+        }
       }
     }
   }
