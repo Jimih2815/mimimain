@@ -18,17 +18,37 @@ class CheckoutController extends Controller
      */
     public function show(Request $request)
     {
-        // 1. Lấy danh sách sản phẩm được chọn (nếu có) từ giỏ
-        $selected = $request->input('selected_ids', []);
-        $cart     = session('cart', []);
-        $items    = empty($selected)
-                  ? $cart
-                  : array_intersect_key($cart, array_flip($selected));
+        // MODE:
+        // - cart     : thanh toán giỏ hàng như bình thường
+        // - buy_now  : thanh toán 1 sản phẩm (mua ngay) nhưng KHÔNG đụng vào giỏ hàng
+        $mode = $request->query('mode') === 'buy_now' ? 'buy_now' : 'cart';
 
-        if (empty($items)) {
-            return redirect()
-                   ->route('cart.index')
-                   ->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        
+        $selected = [];
+if ($mode === 'buy_now') {
+            $items = session('buy_now', []);
+
+            if (empty($items)) {
+                return redirect()
+                    ->route('cart.index')
+                    ->with('error', 'Sản phẩm mua ngay đã hết hiệu lực. Vui lòng bấm “Mua ngay” lại.');
+            }
+        } else {
+            // nếu user vào checkout từ giỏ hàng, dọn sạch state mua ngay để khỏi bị dính
+            $request->session()->forget('buy_now');
+
+            // 1) Lấy danh sách sản phẩm được chọn (nếu có) từ giỏ
+            $selected = $request->input('selected_ids', []);
+            $cart     = session('cart', []);
+            $items    = empty($selected)
+                      ? $cart
+                      : array_intersect_key($cart, array_flip($selected));
+
+            if (empty($items)) {
+                return redirect()
+                    ->route('cart.index')
+                    ->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+            }
         }
 
         // 2. Tính tổng tiền sản phẩm
@@ -61,20 +81,19 @@ class CheckoutController extends Controller
                ? 'checkout.show-mobile'
                : 'checkout.show';
 
-        return view($view, compact('items', 'grand', 'shipping', 'qrUrl', 'bankRef'));
+        return view($view, compact('items', 'grand', 'shipping', 'qrUrl', 'bankRef', 'mode', 'selected'));
     }
 
     /**
      * POST /checkout/buy-now/{product}
-     * → Xoá toàn bộ cart cũ, chỉ push mỗi sản phẩm này
+     * → Thanh toán ngay 1 sản phẩm nhưng KHÔNG xoá / đụng vào giỏ hàng
      */
     public function buyNow(Request $request, Product $product)
     {
-        // Đánh dấu để middleware skip merge DB cart ở lần redirect kế tiếp
+        // Đánh dấu để middleware skip merge DB cart ở lần redirect kế tiếp (an toàn)
         $request->session()->put('skip_cart_sync', true);
 
         $options = $request->input('options', []);
-        session()->forget('cart');
 
         // Tính tổng extra_price
         $sumExtra = 0;
@@ -92,8 +111,8 @@ class CheckoutController extends Controller
             }
         }
 
-        // Push duy nhất món này vào session cart
-        session()->push('cart', [
+        // Lưu riêng session buy_now (không đụng cart)
+        $buyNowItem = [
             'product_id'  => $product->id,
             'name'        => $product->name,
             'quantity'    => 1,
@@ -102,9 +121,12 @@ class CheckoutController extends Controller
             'total_price' => $product->base_price + $sumExtra,
             'image'       => $imgPath,
             'options'     => $options,
-        ]);
+        ];
 
-        return redirect()->route('checkout.show');
+        session(['buy_now' => [$buyNowItem]]);
+
+        // chuyển qua checkout ở chế độ buy_now
+        return redirect()->route('checkout.show', ['mode' => 'buy_now']);
     }
 
     /**
@@ -121,14 +143,22 @@ class CheckoutController extends Controller
             'bank_ref' => 'nullable|string',
         ]);
 
-        $cart = session('cart', []);
-        if (empty($cart)) {
-            return back()->withErrors('Giỏ hàng trống!');
+        $mode = $r->input('mode', 'cart') === 'buy_now' ? 'buy_now' : 'cart';
+
+        $selected = $r->input('selected_ids', []);
+        $cartAll  = session('cart', []);
+
+        $items = $mode === 'buy_now'
+            ? session('buy_now', [])
+            : (empty($selected) ? $cartAll : array_intersect_key($cartAll, array_flip($selected)));
+
+        if (empty($items)) {
+            return back()->withErrors($mode === 'buy_now' ? 'Sản phẩm mua ngay trống!' : 'Giỏ hàng trống!');
         }
 
         $total = array_sum(array_map(function($i) {
             return ($i['price'] + ($i['extra_price'] ?? 0)) * $i['quantity'];
-        }, $cart));
+        }, $items));
 
         $bankRef = $r->input('bank_ref') ?: session('pending_bank_ref');
 
@@ -143,7 +173,7 @@ class CheckoutController extends Controller
             'total'          => $total,
         ]);
 
-        foreach ($cart as $key => $item) {
+        foreach ($items as $key => $item) {
             $order->items()->create([
                 'product_id' => $item['product_id'] ?? $key,
                 'quantity'   => $item['quantity'],
@@ -152,7 +182,23 @@ class CheckoutController extends Controller
             ]);
         }
 
-        session()->forget(['cart', 'pending_bank_ref']);
+        // Chỉ xoá state tương ứng, không đụng giỏ hàng nếu là mua ngay
+        if ($mode === 'buy_now') {
+            session()->forget(['buy_now', 'pending_bank_ref']);
+        } else {
+            // Checkout từ giỏ hàng:
+            // - Nếu có chọn sản phẩm: chỉ xoá đúng các sản phẩm đã thanh toán
+            // - Nếu không truyền selected_ids: hiểu là thanh toán toàn bộ giỏ, xoá sạch
+            if (!empty($selected)) {
+                foreach ($selected as $k) {
+                    unset($cartAll[$k]);
+                }
+                session(['cart' => $cartAll]);
+                session()->forget(['pending_bank_ref']);
+            } else {
+                session()->forget(['cart', 'pending_bank_ref']);
+            }
+        }
 
         return redirect()->route('checkout.success', $order->id);
     }

@@ -183,6 +183,13 @@
           </button>
         </div>
 
+        
+        @if(($mode ?? 'cart') === 'cart' && !empty($selected))
+          @foreach($selected as $sid)
+            <input type="hidden" name="selected_ids[]" value="{{ $sid }}">
+          @endforeach
+        @endif
+<input type="hidden" name="mode" value="{{ $mode ?? 'cart' }}">
         <input type="hidden" name="bank_ref" value="{{ $bankRef }}">
       </form>
     </div>
