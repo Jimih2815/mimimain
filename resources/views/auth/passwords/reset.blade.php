@@ -31,10 +31,58 @@
         background-color: #3aa19d;
         border-color: #3aa19d;
     }
+
+    .password-reset-col {
+        width: 40% !important;
+    }
+
+    @media (max-width: 576px) {
+        .password-reset-container {
+            padding: 1.5rem 1rem !important;
+            margin-top: 6rem;
+        }
+
+        .password-reset-col {
+            width: 100% !important;
+        }
+
+        .password-reset-card .card-body {
+            padding: 1.25rem 1rem 0 1rem !important;
+        }
+
+        .password-reset-card .row.mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        .password-reset-card .col-form-label {
+            text-align: left !important;
+            margin-bottom: 0.25rem;
+        }
+
+        .password-reset-card .col-md-4,
+        .password-reset-card .col-md-6,
+        .password-reset-card .col-md-6.offset-md-4 {
+            width: 100%;
+            margin-left: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .password-reset-card .btn-primary {
+            width: 100%;
+        }
+        .form-control-plaintext {
+            text-align: center;
+        }
+        .form-control {
+            width: 90%;
+        }
+
+    }
 </style>
-<div class="container" style="padding: 3rem;">
+<div class="container password-reset-container" style="padding: 3rem;">
     <div class="row justify-content-center">
-        <div class="col-md-8" style="width: 40% !important;">
+        <div class="col-md-8 password-reset-col">
             <div class="card password-reset-card">
                 <div class="card-header">{{ __('Reset Password') }}</div>
 
@@ -53,7 +101,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu mới') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">

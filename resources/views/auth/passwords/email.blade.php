@@ -26,10 +26,48 @@
         border-color: #4ab3af;
         color: #2f7f7c;
     }
+
+    .password-reset-col {
+        width: 40% !important;
+    }
+
+    @media (max-width: 576px) {
+        .password-reset-container {
+            padding: 1.5rem 1rem !important;
+            margin-top: 6rem;
+        }
+
+        .password-reset-col {
+            width: 100% !important;
+        }
+
+        .password-reset-card .card-body {
+            padding: 1.25rem 1rem 0 1rem !important;
+        }
+
+        .password-reset-card .row.mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        .password-reset-card .col-form-label {
+            text-align: center !important;
+            margin-bottom: 0.25rem;
+        }
+
+        .password-reset-card .col-md-4,
+        .password-reset-card .col-md-6 {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .form-control {
+            width: 90%;
+        }
+    }
 </style>
-<div class="container" style="padding: 3rem;">
+<div class="container password-reset-container" style="padding: 3rem;">
     <div class="row justify-content-center">
-        <div class="col-md-8" style="width: 40% !important;">
+        <div class="col-md-8 password-reset-col">
             <div class="card password-reset-card">
                 <div class="card-header">{{ __('Reset Password') }}</div>
 
