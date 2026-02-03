@@ -6,6 +6,8 @@
 export function initMobileContactFab() {
   const fab = document.querySelector('.mcfab');
   if (!fab) return;
+  if (fab.dataset.mcfabInited === '1') return;
+  fab.dataset.mcfabInited = '1';
 
   const mainBtn = fab.querySelector('.mcfab__main');
   if (!mainBtn) return;
