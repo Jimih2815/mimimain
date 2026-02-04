@@ -44,7 +44,7 @@
    Mobile tweaks (<= 768px)
    Paste this at the END of your <style>
    ========================= */
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
 
   /* Container width: w-50 quá hẹp trên mobile */
   .w-50 {

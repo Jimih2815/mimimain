@@ -18,8 +18,9 @@ class ProductController extends Controller
    
     public function index(Request $request)
 {
-    // 1) Nhận diện mobile (simple User-Agent check)
-    $isMobile = preg_match('/Mobile|Android|iPhone/', $request->header('User-Agent'));
+    // 1) Nhận diện điện thoại (không tính tablet)
+    $agent = new Agent();
+    $isMobile = $agent->isMobile() && ! $agent->isTablet();
 
     if ($isMobile) {
         // ===== Mobile: xử lý search (trước đây mobile luôn trả ALL sản phẩm => search bị “hỏng”) =====
@@ -136,7 +137,7 @@ class ProductController extends Controller
 
         // 4) Phân biệt mobile vs desktop để chọn view
         $agent = new Agent();
-        $view  = $agent->isMobile()
+        $view  = ($agent->isMobile() && ! $agent->isTablet())
             ? 'products.show-mobile'
             : 'products.show';
 

@@ -18,8 +18,8 @@ class FavoriteController extends Controller
     public function index(Request $request)
     {
         $agent = new Agent();
-        // Nếu mobile thì delegate sang indexMobile()
-        if ($agent->isMobile()) {
+        // Nếu là điện thoại thì delegate sang indexMobile()
+        if ($agent->isMobile() && ! $agent->isTablet()) {
             return $this->indexMobile($request);
         }
 

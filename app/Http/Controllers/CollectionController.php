@@ -17,7 +17,7 @@ class CollectionController extends Controller
 
         // Phát hiện mobile
         $agent = new Agent();
-        if ($agent->isMobile()) {
+        if ($agent->isMobile() && ! $agent->isTablet()) {
             // Lấy cây menu bên mobile (nếu bạn đã dùng SidebarItem như trước)
             $roots = SidebarItem::with('children.collection.products')
                        ->whereNull('parent_id')

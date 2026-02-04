@@ -77,7 +77,7 @@ if ($mode === 'buy_now') {
 
         // 6. Chọn view desktop hoặc mobile
         $agent = new Agent();
-        $view  = $agent->isMobile()
+        $view  = ($agent->isMobile() && ! $agent->isTablet())
                ? 'checkout.show-mobile'
                : 'checkout.show';
 

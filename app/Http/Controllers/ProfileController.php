@@ -40,7 +40,7 @@ class ProfileController extends Controller
 
     // 3) Phát hiện mobile vs desktop
     $agent = new Agent;
-    $view  = $agent->isMobile()
+    $view  = ($agent->isMobile() && ! $agent->isTablet())
            ? 'profile.edit-mobile'
            : 'profile.edit';
 

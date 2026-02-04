@@ -54,7 +54,7 @@ class CartController extends Controller
 
     /* 3. Chọn view dựa theo thiết bị */
     $agent = new Agent;
-    $view  = $agent->isMobile()
+    $view  = ($agent->isMobile() && ! $agent->isTablet())
             ? 'cart.index-mobile'   // file mới: copy từ index.blade và chỉnh CSS
             : 'cart.index';
 

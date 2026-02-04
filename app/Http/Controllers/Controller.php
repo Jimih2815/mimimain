@@ -12,6 +12,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected function isPhone(): bool
+    {
+        $agent = new Agent();
+        return $agent->isMobile() && ! $agent->isTablet();
+    }
+
     /**
      * Trả về bản mobile nếu đang mobile & có view-mobile,
      * ngược lại trả về bản desktop.
@@ -21,11 +27,10 @@ class Controller extends BaseController
      */
     protected function renderView(string $name, array $data = [])
     {
-        $agent = new Agent();
         $mobile = "{$name}-mobile";
 
-        // nếu mobile và tồn tại file view-mobile.blade.php
-        if ($agent->isMobile() && view()->exists($mobile)) {
+        // nếu điện thoại và tồn tại file view-mobile.blade.php
+        if ($this->isPhone() && view()->exists($mobile)) {
             return view($mobile, $data);
         }
 
