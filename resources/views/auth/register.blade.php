@@ -33,7 +33,6 @@
                     class="w-full border rounded p-2" placeholder="0912345678" />
                 <x-input-error :messages="$errors->get('phone')" />
             </div>
-            <small class="text-muted d-block mb-2">Email không bắt buộc, bạn có thể thêm sau khi đăng nhập.</small>
 
             <div>
                 <label class="block mb-1">Mật khẩu</label>
