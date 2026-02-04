@@ -4,19 +4,6 @@
 @section('title','Hồ sơ của tôi')
 
 @section('content')
-<style>
-  .order-option-thumb {
-    width: 42px;
-    height: 42px;
-    border-radius: 6px;
-    object-fit: cover;
-    border: 1px solid #e5e5e5;
-    flex: 0 0 42px;
-  }
-  .tab-pane {
-    border-radius: 0 0 10px 10px;
-  }
-</style>
 <div class="w-70 mx-auto mt-5 mb-5 trang-thong-tin">
 
   {{-- Nav tabs --}}
@@ -175,25 +162,24 @@
                       $optionValues = $it->options
                         ? \App\Models\OptionValue::whereIn('id', $it->options)->with('type')->get()
                         : collect();
-                      $optionImg = $optionValues->firstWhere('option_img', '!=', null);
                     @endphp
-                    <div class="d-flex align-items-start gap-2">
-                      @if($optionImg && $optionImg->option_img)
-                        <img src="{{ asset('storage/'.$optionImg->option_img) }}"
-                             alt="{{ $optionImg->value }}"
-                             class="order-option-thumb">
-                      @endif
-                      <div>
+                    <div class="order-item-info">
                         {{ $it->product->name }} × {{ $it->quantity }}
                         @if($optionValues->isNotEmpty())
-                          <ul class="mb-1">
+                          <ul class="mb-1 order-option-list">
                             @foreach($optionValues as $v)
-                              <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                              <li class="order-option-line">
+                                @if($v->option_img)
+                                  <img src="{{ asset('storage/'.$v->option_img) }}"
+                                       alt="{{ $v->value }}"
+                                       class="order-option-thumb">
+                                @endif
+                                <span>{{ $v->type->name }}: {{ $v->value }}</span>
+                              </li>
                             @endforeach
                           </ul>
                         @endif
                       </div>
-                    </div>
                     <hr class="my-1">
                   @endforeach
                 </td>

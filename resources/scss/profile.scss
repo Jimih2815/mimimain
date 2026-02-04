@@ -15,6 +15,31 @@
     border-top-left-radius: 0px !important;
     border-top-right-radius: 0px !important;
     }
+    .tab-pane {
+      border-radius: 0 0 10px 10px;
+    }
+    .order-item-info {
+      text-align: left;
+    }
+    .order-option-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0.25rem;
+    }
+    .order-option-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.2rem;
+    }
+    .order-option-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      object-fit: cover;
+      border: 1px solid #e5e5e5;
+      flex: 0 0 24px;
+    }
     h2.mb-4 {
       font-size: 1.75rem;
       font-weight: 700;
@@ -155,6 +180,12 @@
       }
     }
     
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .trang-thong-tin {
+      width: 100% !important;
+    }
   }
 
   @media (max-width: 768px) {
