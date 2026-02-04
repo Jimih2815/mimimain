@@ -84,7 +84,7 @@
     }
   </style>
 </head>
-<body class="bg-light">
+<body class="bg-light admin-layout">
 
   {{-- Header chỉ còn logo ở giữa --}}
   <nav class="navbar bg-white py-3 mb-4">

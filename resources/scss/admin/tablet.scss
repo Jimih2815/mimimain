@@ -1,0 +1,240 @@
+@media (min-width: 768px) and (max-width: 1024px) {
+  .admin-layout {
+    .container,
+    .container-fluid {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .navbar .container {
+      max-width: 100%;
+    }
+
+    .nut-dang-xuat {
+      right: 1rem;
+    }
+
+    .admin-dashboard,
+    .trang-edit-home,
+    .trang-sua-menu,
+    .trang-collection,
+    .trang-slider-san-pham,
+    .trang-sidebar,
+    .sua-chi-tiet-san-pham,
+    .container-fluid.trang-sua-san-pham {
+      width: 100% !important;
+      max-width: 100%;
+    }
+
+    .admin-dashboard .danh-muc-cont {
+      gap: 0.75rem;
+    }
+
+    .admin-dashboard .danh-muc-cont .danh-sach,
+    .admin-dashboard .danh-muc-cont > .col-md-3 {
+      width: calc(50% - 0.5rem) !important;
+      flex: 0 0 calc(50% - 0.5rem);
+    }
+
+    .trang-edit-home .form-control,
+    .trang-edit-home .form-select,
+    .trang-sua-menu .form-control.w-25,
+    .trang-sua-menu .form-select.w-25,
+    .trang-sua-menu .form-select.form-select-sm.w-25,
+    .sua-chi-tiet-san-pham .ten-va-link-con {
+      width: 100% !important;
+    }
+
+    .sua-chi-tiet-san-pham .ten-va-link {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .trang-edit-home .banner-2-cont .card {
+      width: 100%;
+    }
+
+    .trang-sua-san-pham .d-flex.align-items-center.flex-wrap.gap-2.mb-3 {
+      gap: 0.5rem !important;
+    }
+
+    .trang-sua-san-pham .nut-them-san-pham {
+      font-size: 1rem;
+      padding: 0.45rem 0.7rem;
+      white-space: nowrap;
+    }
+
+    .trang-sua-san-pham .admin-product-filter {
+      width: auto;
+      margin-left: auto !important;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      gap: 0.4rem !important;
+    }
+
+    .trang-sua-san-pham .admin-product-filter input.form-control {
+      width: 150px !important;
+      max-width: 150px;
+      min-width: 150px;
+    }
+
+    .trang-sua-san-pham .admin-product-filter select.form-select {
+      width: 88px !important;
+      max-width: 88px;
+      min-width: 88px;
+    }
+
+    .trang-sua-san-pham .admin-product-filter .nut-xanh {
+      padding: 0 0.45rem !important;
+      font-size: 0.88rem;
+    }
+
+    .container-fluid.py-4,
+    .container.py-4,
+    .trang-sua-san-pham,
+    .trang-slider-san-pham,
+    .trang-collection,
+    .trang-sidebar,
+    .trang-sua-menu,
+    .trang-edit-home,
+    .trang-admin-user {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+      min-width: 920px;
+      font-size: 0.92rem;
+    }
+
+    .trang-edit-home .table,
+    .trang-admin-user .table,
+    .trang-sua-san-pham .table,
+    .trang-slider-san-pham .table,
+    .trang-collection .table,
+    .trang-sidebar .table,
+    .trang-sua-menu .table {
+      min-width: 980px;
+    }
+
+    .trang-sua-san-pham .admin-products-table {
+      min-width: 100% !important;
+      table-layout: fixed;
+      font-size: 0.85rem;
+    }
+
+    .trang-sua-san-pham .admin-products-table th,
+    .trang-sua-san-pham .admin-products-table td {
+      padding: 0.35rem;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(1),
+    .trang-sua-san-pham .admin-products-table td:nth-child(1) {
+      width: 42px;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(2),
+    .trang-sua-san-pham .admin-products-table td:nth-child(2) {
+      width: 80px;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(5),
+    .trang-sua-san-pham .admin-products-table td:nth-child(5) {
+      width: 90px;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(6),
+    .trang-sua-san-pham .admin-products-table td:nth-child(6) {
+      width: 62px;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(7),
+    .trang-sua-san-pham .admin-products-table td:nth-child(7) {
+      width: 108px;
+    }
+
+    .trang-sua-san-pham .admin-products-table td:nth-child(2) > img {
+      width: 42px !important;
+      height: 42px !important;
+      object-fit: cover;
+    }
+
+    .trang-sua-san-pham .admin-products-table td:nth-child(2) .mt-1 {
+      display: none !important;
+    }
+
+    .trang-sua-san-pham .admin-products-table td:nth-child(3),
+    .trang-sua-san-pham .admin-products-table td:nth-child(4) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .trang-sua-san-pham .admin-products-table .nut-sua,
+    .trang-sua-san-pham .admin-products-table .nut-xoa {
+      padding: 0.18rem 0.35rem;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .trang-sua-san-pham .admin-products-table .td-action-flex {
+      gap: 0.2rem;
+    }
+
+    .trang-collection .admin-collections-table {
+      min-width: 100% !important;
+      table-layout: fixed;
+      font-size: 0.86rem;
+    }
+
+    .trang-collection .admin-collections-table th,
+    .trang-collection .admin-collections-table td {
+      padding: 0.35rem;
+    }
+
+    .trang-collection .admin-collections-table th:nth-child(1),
+    .trang-collection .admin-collections-table td:nth-child(1) {
+      width: 40px !important;
+    }
+
+    .trang-collection .admin-collections-table th:nth-child(4),
+    .trang-collection .admin-collections-table td:nth-child(4) {
+      width: 84px;
+    }
+
+    .trang-collection .admin-collections-table th:nth-child(5),
+    .trang-collection .admin-collections-table td:nth-child(5) {
+      width: 160px !important;
+    }
+
+    .trang-collection .admin-collections-table td:nth-child(2),
+    .trang-collection .admin-collections-table td:nth-child(3) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .trang-collection .admin-collections-table .collection-actions {
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      gap: 0.22rem !important;
+      flex-wrap: nowrap;
+    }
+
+    .trang-collection .admin-collections-table .collection-actions form {
+      margin: 0;
+    }
+
+    .trang-collection .admin-collections-table .collection-actions .btn-mimi {
+      padding: 0.18rem 0.32rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    h1[style*="font-size: 3rem"],
+    h2[style*="font-size: 3rem"] {
+      font-size: 2.1rem !important;
+    }
+  }
+}

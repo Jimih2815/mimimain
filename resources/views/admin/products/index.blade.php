@@ -18,7 +18,7 @@
 
     <form action="{{ route('admin.products.index') }}"
           method="GET"
-          class="d-flex align-items-center gap-2 ms-auto">
+          class="d-flex align-items-center gap-2 ms-auto admin-product-filter">
       <input type="text"
              name="q"
              value="{{ request('q') }}"
@@ -43,7 +43,7 @@
   </div>
 
   {{-- Bảng danh sách --}}
-  <table class="table table-bordered table-hover align-middle">
+  <table class="table table-bordered table-hover align-middle admin-products-table">
     <thead class="table-light">
       <tr>
         <th>ID</th>

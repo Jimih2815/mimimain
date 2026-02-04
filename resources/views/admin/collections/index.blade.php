@@ -12,7 +12,7 @@
     <i class="fa fa-plus"></i> Tạo bộ sưu tập mới
   </a>
 
-  <table class="table table-bordered table-hover">
+  <table class="table table-bordered table-hover admin-collections-table">
     <thead class="table-light">
       <tr>
         <th style="width: 2rem;">ID</th>
@@ -29,7 +29,7 @@
         <td>{{ $col->name }}</td>
         <td>{{ $col->slug }}</td>
         <td>{{ $col->products()->count() }}</td>
-        <td class="d-flex gap-1">
+        <td class="d-flex gap-1 collection-actions">
           <a href="{{ route('collections.show', $col->slug) }}" class="btn-mimi nut-xem">Xem</a>
           <a href="{{ route('admin.collections.edit', $col) }}" class="btn-mimi nut-sua">Sửa</a>
           <form action="{{ route('admin.collections.destroy', $col) }}" method="POST" onsubmit="return confirm('Xóa bộ sưu tập này?')">
