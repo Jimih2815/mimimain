@@ -30,7 +30,7 @@
 
           <div class="card-body d-flex flex-column justify-content-between">
             <h5 class="card-title d-flex justify-content-between align-items-start noi-chua-nut-favorites product-card-title">
-              <a style="max-width: 85%;" href="{{ route('products.show', $product->slug) }}"
+              <a href="{{ route('products.show', $product->slug) }}"
                 class="text-decoration-none text-dark product-title-link">
                 {{ $product->name }}
               </a>

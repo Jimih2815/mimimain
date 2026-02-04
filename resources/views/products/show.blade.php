@@ -37,6 +37,20 @@
           src="{{ asset('storage/'.$product->img) }}"
           class="img-fluid"
           alt="{{ $product->name }}">
+
+        @if($hasThumbs)
+          <div class="tablet-thumbs">
+            <div class="thumbs-container">
+              @foreach($subImgs as $idx => $path)
+                <img
+                  src="{{ asset('storage/'.$path) }}"
+                  class="thumb-item {{ $idx === 0 ? 'selected' : '' }}"
+                  data-src="{{ asset('storage/'.$path) }}"
+                  alt="Thumb {{ $idx + 1 }}">
+              @endforeach
+            </div>
+          </div>
+        @endif
       </div>
 
       {{-- Thông tin & chọn Option --}}
@@ -112,13 +126,13 @@
             <!-- Nút Thêm vào giỏ hàng -->
             <button type="submit"
                     class="btn-them-gio-trang-chi-tiet">
-              Thêm vào giỏ hàng
+              Thêm Giỏ
             </button>
 
             <!-- Nút Mua Ngay -->
             <button type="button"
                     id="buy-now-btn"
-                    class="btn-mua-ngay">
+                    class="btn-mua-ngay nut-xanh">
               Mua ngay
             </button>
           </div>
@@ -401,6 +415,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
-
 
 

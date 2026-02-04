@@ -20,10 +20,9 @@
 
           <div class="card-body-favorite d-flex flex-column noi-chua-nut-favorites-2">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <h5 class="card-title mb-0">
+              <h5 class="card-title mb-0 favorite-title-wrap">
                 <a href="{{ route('products.show', $product->slug) }}"
-                   class="text-decoration-none text-dark product-title-clamp"
-                   style="max-width: 85%;">
+                   class="text-decoration-none text-dark product-title-clamp">
                   {{ $product->name }}
                 </a>
               </h5>
