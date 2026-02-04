@@ -733,3 +733,192 @@ body {
 }
 
 @import 'components/mobile-contact-fab';
+
+/* Tablet (768-1024): keep desktop look but tighten spacing */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  header {
+    .header-top .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      gap: 1rem;
+    }
+
+    .header-main {
+      padding-left: 2rem;
+      padding-right: 2rem;
+
+      .logo-cong-ty img {
+        height: 44px;
+      }
+
+      nav ul.nav {
+        gap: 18px;
+
+        .nav-link {
+          font-size: 0.95rem !important;
+          letter-spacing: 0.06em;
+          padding: 0.75rem 0 !important;
+        }
+      }
+
+      .input-group {
+        width: 180px;
+      }
+
+      .d-flex.align-items-center {
+        gap: 1rem;
+      }
+    }
+  }
+
+  .footer-danh-sach-cont {
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-container {
+    padding: 0 1.5rem;
+  }
+
+  .quan-ly-side-bar {
+    width: 210px;
+  }
+
+  .col-md-3 {
+    width: 210px;
+  }
+
+  .col-md-9 {
+    width: calc(100% - 210px);
+  }
+
+  .col-md-9-oh {
+    width: calc(100% - 220px);
+  }
+
+  .favorite-cont {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .favorite-cont .list-san-pham {
+    width: 25%;
+  }
+
+  .trang-gio-hang {
+    padding: 2.5rem 3rem;
+  }
+
+  .trang-gio-hang .anh-san-pham {
+    width: 160px;
+  }
+
+  .trang-checkout {
+    padding: 2.5rem 3rem;
+
+    .checkout-cont {
+      gap: 2rem;
+    }
+
+    .row {
+      flex-wrap: nowrap !important;
+    }
+
+    .danh-sach-san-pham {
+      width: 58% !important;
+    }
+
+    .thong-tin-nguoi-nhan {
+      width: 38% !important;
+    }
+  }
+
+  .chi-tiet-san-pham-cont {
+    width: 90%;
+    padding: 2rem 0;
+
+    .thong-tin-chi-tiet-cont {
+      .main-img-container {
+        width: 52%;
+      }
+
+      .option-san-pham {
+        width: 44%;
+        margin-left: 1.5rem;
+      }
+    }
+  }
+
+  .product-long-description {
+    width: 90%;
+  }
+
+  .trang-cam-on {
+    width: 60%;
+  }
+
+  .anh-cam-on-mua-hang-cont img {
+    width: 70%;
+  }
+}
+
+/* Smaller tablets */
+@media (min-width: 768px) and (max-width: 899.98px) {
+  header {
+    .header-main {
+      .container {
+        flex-wrap: wrap;
+      }
+
+      nav {
+        position: static;
+        transform: none;
+        width: 100%;
+        order: 3;
+        margin-top: 0.5rem;
+      }
+
+      nav ul.nav {
+        justify-content: center;
+        flex-wrap: wrap;
+        row-gap: 0.25rem;
+      }
+    }
+  }
+
+  .favorite-cont .list-san-pham {
+    width: 33.333%;
+  }
+
+  .trang-checkout {
+    .row {
+      flex-wrap: wrap !important;
+    }
+
+    .checkout-cont {
+      flex-direction: column;
+    }
+
+    .danh-sach-san-pham,
+    .thong-tin-nguoi-nhan {
+      width: 100% !important;
+    }
+  }
+
+  .chi-tiet-san-pham-cont {
+    .thong-tin-chi-tiet-cont {
+      flex-direction: column;
+
+      .main-img-container,
+      .option-san-pham {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+}

@@ -1,4 +1,7 @@
 @inject('agent', 'Jenssegers\Agent\Agent')
+@php
+  $isMobile = $agent->isMobile() && !$agent->isTablet();
+@endphp
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -24,7 +27,7 @@
   />
 
   {{-- 3) Vite: chọn assets dựa trên thiết bị --}}
-  @if($agent->isMobile())
+  @if($isMobile)
     @vite([
       'resources/scss/app.scss',
       'resources/scss/app-mobile.scss',
@@ -41,7 +44,7 @@
 <body class="antialiased">
 
   {{-- Header: desktop hoặc mobile --}}
-  @if($agent->isMobile())
+  @if($isMobile)
     @include('partials.mobile-header')
   @else
     @include('partials.header')
@@ -64,7 +67,7 @@
   </main>
 
   {{-- Floating Contact Panel: CHỈ HIỆN TRÊN PC --}}
-  @if(!$agent->isMobile())
+  @if(!$isMobile)
     <div class="mc-floating-panel expanded text-decoration-none" id="mcFloatingPanel">
       <button type="button"
               style="margin-bottom:6rem;"
@@ -97,7 +100,7 @@
   @endif
 
   {{-- Footer: desktop hoặc mobile --}}
-  @if($agent->isMobile())
+  @if($isMobile)
     @include('partials.mobile-footer')
   @else
     @include('partials.footer')
@@ -109,7 +112,7 @@
 @stack('scripts')
 
   {{-- Script điều khiển floating panel: CHỈ CHẠY TRÊN PC --}}
-  @if(!$agent->isMobile())
+  @if(!$isMobile)
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const panel    = document.getElementById('mcFloatingPanel');
