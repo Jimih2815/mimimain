@@ -53,7 +53,7 @@
         <ul class="nav">
           @foreach($menuSections as $section)
             <li class="nav-item dropdown position-static">
-              <a class="nav-link px-3 fw-semibold text-dark"
+              <a class="nav-link px-3 fw-semibold text-dark js-tablet-menu-link"
                  href="{{ $section->collection_id 
                            ? route('collections.show', $section->collection->slug) 
                            : '#' }}"
@@ -96,10 +96,10 @@
       {{-- Search + Wishlist + Cart --}}
       <div class="ms-auto d-flex align-items-center gap-3 gio-hang-tim-kiem">
         {{-- Tìm kiếm --}}
-        <form action="{{ route('products.index') }}" method="GET" class="d-flex me-2" style="max-width:200px;">
+        <form action="{{ route('products.index') }}" method="GET" class="d-flex tablet-search-form js-tablet-search-form" style="max-width:200px;">
           <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Tìm kiếm..." value="{{ request('q') }}">
-            <button class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+            <input type="text" name="q" class="form-control js-tablet-search-input" placeholder="Tìm kiếm..." value="{{ request('q') }}">
+            <button class="btn btn-outline-secondary js-tablet-search-toggle"><i class="bi bi-search"></i></button>
           </div>
         </form>
 

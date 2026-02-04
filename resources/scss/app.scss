@@ -773,8 +773,42 @@ body {
 /* Tablet (768-1024): keep desktop look but tighten spacing */
 @media (min-width: 768px) and (max-width: 1024px) {
   .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .container.mx-auto {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .slider-full-width.mb-5 {
+    left: 50%;
+    right: auto;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+
+  .slider-full-width .collection-swiper .swiper-wrapper {
+    width: max-content !important;
+    min-width: 100% !important;
+    gap: 0;
+  }
+
+  .slider-full-width .collection-swiper .swiper-slide {
+    width: calc((100vw - 2rem) / 2.333) !important;
+    margin-right: 0.75rem !important;
+  }
+
+  .slider-full-width .collection-swiper .swiper-slide > div {
+    width: 100% !important;
+  }
+
+  .slider-full-width > .d-flex.justify-content-between.align-items-center.mb-3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   header {
@@ -800,10 +834,119 @@ body {
           letter-spacing: 0.06em;
           padding: 0.75rem 0 !important;
         }
+
+        .nav-item.dropdown > .js-tablet-menu-link {
+          cursor: pointer;
+        }
+
+        .nav-item.dropdown .dropdown-menu.mega-menu {
+          pointer-events: none;
+        }
+
+        .nav-item.dropdown.tablet-open .dropdown-menu.mega-menu {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+          pointer-events: auto;
+        }
       }
 
       .input-group {
         width: 180px;
+      }
+
+      .tablet-search-form {
+        width: 1.5rem !important;
+        overflow: hidden;
+        transition: width 0.28s ease;
+      }
+
+      .tablet-search-form .input-group {
+        width: 100%;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+      }
+
+      .tablet-search-form .js-tablet-search-input {
+        flex: 0 0 auto;
+        width: 0;
+        min-width: 0;
+        max-width: 0;
+        height: 34px;
+        margin-right: 0;
+        opacity: 0;
+        padding-left: 0;
+        padding-right: 0;
+        border-color: transparent;
+        transform: translateX(10px);
+        pointer-events: none;
+        transition: width 0.28s ease, max-width 0.28s ease, opacity 0.18s ease, padding 0.28s ease, transform 0.28s ease;
+      }
+
+      .tablet-search-form .js-tablet-search-toggle {
+        width: 1.3rem;
+        min-width: 1.3rem;
+        flex: 0 0 1.3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 0 !important;
+        background: transparent !important;
+        border-radius: 0;
+        box-shadow: none !important;
+        color: #212529 !important;
+        padding: 0;
+        line-height: 1;
+      }
+
+      .tablet-search-form .js-tablet-search-toggle i {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 900;
+      }
+
+      .tablet-search-form .js-tablet-search-toggle .bi-search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .tablet-search-form .js-tablet-search-toggle:hover,
+      .tablet-search-form .js-tablet-search-toggle:focus,
+      .tablet-search-form .js-tablet-search-toggle:active {
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: #4ab3af !important;
+      }
+
+      .tablet-search-form .js-tablet-search-toggle:hover i,
+      .tablet-search-form .js-tablet-search-toggle:focus i,
+      .tablet-search-form .js-tablet-search-toggle:active i,
+      .tablet-search-form .js-tablet-search-toggle.active i {
+        color: #4ab3af !important;
+      }
+
+      .tablet-search-form.is-open {
+        width: 190px !important;
+      }
+
+      .tablet-search-form.is-open .js-tablet-search-input {
+        flex: 1 1 auto;
+        width: auto;
+        max-width: 100%;
+        margin-right: 0.35rem;
+        opacity: 1;
+        padding-left: 0.75rem;
+        padding-right: 0.5rem;
+        border-color: #4ab3af;
+        border-right-color: transparent;
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+
+      .tablet-search-form.is-open .js-tablet-search-toggle {
+        border-radius: 0;
       }
 
       .d-flex.align-items-center {
@@ -852,6 +995,14 @@ body {
 
   .trang-gio-hang .anh-san-pham {
     width: 160px;
+  }
+
+  .slider-product.mb-5 {
+    overflow: hidden;
+  }
+
+  .slider-product.mb-5 .product-swiper {
+    overflow: hidden !important;
   }
 
   .trang-checkout {

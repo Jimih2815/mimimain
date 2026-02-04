@@ -109,9 +109,9 @@
 
   {{-- Chỉ giữ mỗi container Swiper --}}
   <div class="swiper collection-swiper">
-    <div class="swiper-wrapper overflow-auto" style="scroll-snap-type: x mandatory;">
+    <div class="swiper-wrapper">
       @foreach($sliders as $s)
-        <div class="swiper-slide" style="scroll-snap-align: start;">
+        <div class="swiper-slide">
           <div class="position-relative overflow-hidden" style="width:500px; aspect-ratio:3/4; border-radius: 10px !important;">
             <a href="{{ route('collections.show', $s->collection->slug) }}">
               <img
@@ -255,10 +255,10 @@
       },
       breakpoints: {
         640: { slidesPerView: 2 },
-        1024: { slidesPerView: 3 },
+        768: { slidesPerView: 3.33 },
+        1024: { slidesPerView: 4 },
       },
     });
   });
 </script>
 @endpush
-

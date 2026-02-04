@@ -20,6 +20,97 @@ document.addEventListener('DOMContentLoaded', () => {
     // tránh init trùng
     bootstrap.Dropdown.getOrCreateInstance(el);
   });
+
+  const tabletMedia = window.matchMedia('(min-width: 768px) and (max-width: 1024px)');
+  const isTablet = () => tabletMedia.matches;
+
+  // Tablet: chặn click vào menu section để không nhảy sang trang collection,
+  // thay vào đó mở/đóng mega menu.
+  const tabletMenuItems = Array.from(
+    document.querySelectorAll('header .header-main .nav-item.dropdown')
+  );
+
+  tabletMenuItems.forEach((item) => {
+    const link = item.querySelector('.js-tablet-menu-link');
+    if (!link) return;
+
+    link.addEventListener('click', (e) => {
+      if (!isTablet()) return;
+      e.preventDefault();
+
+      tabletMenuItems.forEach((other) => {
+        if (other !== item) other.classList.remove('tablet-open');
+      });
+
+      item.classList.toggle('tablet-open');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!isTablet()) return;
+    if (e.target.closest('header .header-main nav')) return;
+    tabletMenuItems.forEach((item) => item.classList.remove('tablet-open'));
+  });
+
+  // Tablet: search thu gọn thành icon kính lúp, bấm để trượt input từ phải qua trái.
+  const tabletSearchForm = document.querySelector('.js-tablet-search-form');
+  const tabletSearchInput = tabletSearchForm?.querySelector('.js-tablet-search-input');
+  const tabletSearchToggle = tabletSearchForm?.querySelector('.js-tablet-search-toggle');
+
+  const openTabletSearch = () => {
+    if (!tabletSearchForm || !tabletSearchInput) return;
+    tabletSearchForm.classList.add('is-open');
+    window.setTimeout(() => tabletSearchInput.focus(), 150);
+  };
+
+  const closeTabletSearch = () => {
+    if (!tabletSearchForm || !tabletSearchInput) return;
+    tabletSearchForm.classList.remove('is-open');
+    tabletSearchInput.blur();
+  };
+
+  const closeTabletSearchIfEmpty = () => {
+    if (!tabletSearchForm || !tabletSearchInput) return;
+    if (!tabletSearchInput.value.trim()) {
+      closeTabletSearch();
+    }
+  };
+
+  if (tabletSearchForm && tabletSearchInput && tabletSearchToggle) {
+    tabletSearchToggle.addEventListener('click', (e) => {
+      if (!isTablet()) return;
+
+      if (!tabletSearchForm.classList.contains('is-open')) {
+        e.preventDefault();
+        openTabletSearch();
+        return;
+      }
+
+      if (!tabletSearchInput.value.trim()) {
+        e.preventDefault();
+        closeTabletSearch();
+      }
+    });
+
+    tabletSearchInput.addEventListener('keydown', (e) => {
+      if (!isTablet()) return;
+      if (e.key === 'Escape') {
+        closeTabletSearch();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!isTablet()) return;
+      if (tabletSearchForm.contains(e.target)) return;
+      closeTabletSearchIfEmpty();
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if (isTablet()) return;
+    tabletMenuItems.forEach((item) => item.classList.remove('tablet-open'));
+    tabletSearchForm?.classList.remove('is-open');
+  });
 });
 
 import { initMobileContactFab } from './components/mobile-contact-fab';
@@ -79,7 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* A-2) Product slider (home) */
     if (document.querySelector('.product-swiper')) {
       new Swiper('.product-swiper', {
-        slidesPerView: 4,
+        slidesPerView: 1,
         spaceBetween: 15,
         loop: false,
         grabCursor: true,
@@ -95,6 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         breakpoints: {
           640: { slidesPerView: 2 },
+          768: { slidesPerView: 3.33 },
           1024: { slidesPerView: 4 },
         },
       });
