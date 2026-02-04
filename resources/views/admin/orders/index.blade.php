@@ -45,14 +45,51 @@
 }
 
 /* Disabled state (Prev/Next khi hết) */
-.pagination .page-item.disabled .page-link {
+  .pagination .page-item.disabled .page-link {
   opacity: 0.5;
   pointer-events: none;
 }
 
+.order-option-line {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.order-option-thumb-btn {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  line-height: 0;
+  border-radius: 6px;
+  cursor: zoom-in;
+}
+
+.order-option-thumb {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  display: block;
+}
+
+#orderOptionPreviewModal .modal-dialog {
+  max-width: min(92vw, 720px);
+}
+
+.order-option-preview-img {
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
 </style>
 
-<div class="container py-4">
+<div class="container py-4 trang-admin-orders">
   <h2 class="mb-4" style="color: #b83232; font-size: 3rem;">Danh sách Đơn hàng</h2>
 
   <form method="GET"
@@ -72,10 +109,11 @@
   </div>
 </form>
 
-  <table class="table table-bordered align-middle">
+  <div class="admin-orders-table-scroll">
+  <table class="table table-bordered align-middle admin-orders-table">
     <thead class="table-light">
       <tr>
-        <th>Mã đơn hàng</th><th>Tài khoản</th><th>Khách</th><th>Điện thoại</th><th>Tổng</th>
+        <th>Mã đơn hàng</th><th>Khách</th><th>Địa chỉ</th><th>Điện thoại</th><th>Tổng</th>
         <th>Thanh toán</th><th>Mã vận đơn</th><th>Trạng thái</th><th>Ngày</th>
       </tr>
     </thead>
@@ -84,27 +122,19 @@
         <tr>
           {{-- 1. Mã đơn --}}
           <td>{{ $o->order_code }}</td>
-          {{-- 1b. Tài khoản --}}
-          <td>
-            @if($o->user)
-              {{ $o->user->email }}
-            @else
-              <span class="text-muted">Khách không có tài khoản</span>
-            @endif
-          </td>
-          {{-- 2. Khách & địa chỉ --}}
-          <td>
-            {{ $o->fullname }}<br>
-            <small>{{ $o->address }}</small>
-          </td>
+          {{-- 2. Khách --}}
+          <td>{{ $o->fullname }}</td>
 
-          {{-- 3. Điện thoại --}}
+          {{-- 3. Địa chỉ --}}
+          <td>{{ $o->address }}</td>
+
+          {{-- 4. Điện thoại --}}
           <td>{{ $o->phone }}</td>
 
-          {{-- 4. Tổng tiền --}}
+          {{-- 5. Tổng tiền --}}
           <td>{{ number_format($o->total,0,',','.') }}₫</td>
 
-          {{-- 5. Thanh toán --}}
+          {{-- 6. Thanh toán --}}
           <td>
             @if($o->payment_method=='cod')
               COD
@@ -114,7 +144,7 @@
             @endif
           </td>
 
-          {{-- 6. Tracking number (inline edit) --}}
+          {{-- 7. Tracking number (inline edit) --}}
           <td>
             <form action="{{ route('admin.orders.update', $o) }}" method="POST" class="d-flex">
               @csrf
@@ -129,7 +159,7 @@
             </form>
           </td>
 
-          {{-- 7. Status dropdown (auto-submit) --}}
+          {{-- 8. Status dropdown (auto-submit) --}}
           <td>
             <form action="{{ route('admin.orders.update', $o) }}" method="POST">
               @csrf
@@ -145,13 +175,13 @@
             </form>
           </td>
 
-          {{-- 8. Ngày tạo --}}
+          {{-- 9. Ngày tạo --}}
           <td>{{ $o->created_at->format('d/m H:i') }}</td>
         </tr>
 
         {{-- Chi tiết các item trong đơn --}}
         <tr>
-          <td colspan="8">
+          <td colspan="9">
             <ul class="mb-0">
               @foreach($o->items as $it)
                 <li>
@@ -164,7 +194,25 @@
                                                       ->get();
                       @endphp
                       @foreach($vals as $v)
-                        <li>{{ $v->type->name }}: {{ $v->value }}</li>
+                        @php
+                          $optionImgUrl = $v->option_img ? asset('storage/'.$v->option_img) : null;
+                        @endphp
+                        <li class="order-option-line">
+                          @if($optionImgUrl)
+                            <button type="button"
+                                    class="order-option-thumb-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#orderOptionPreviewModal"
+                                    data-option-img="{{ $optionImgUrl }}"
+                                    data-option-label="{{ $v->type->name }}: {{ $v->value }}"
+                                    aria-label="Xem ảnh option {{ $v->value }}">
+                              <img src="{{ $optionImgUrl }}"
+                                   alt="{{ $v->value }}"
+                                   class="order-option-thumb">
+                            </button>
+                          @endif
+                          <span>{{ $v->type->name }}: {{ $v->value }}</span>
+                        </li>
                       @endforeach
                     </ul>
                   @endif
@@ -177,6 +225,22 @@
     </tbody>
 
   </table>
+  </div>
+
+  <div class="modal fade" id="orderOptionPreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header py-2">
+          <h5 class="modal-title fs-6" id="orderOptionPreviewLabel">Ảnh option</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img src="" alt="Ảnh option" class="order-option-preview-img" id="orderOptionPreviewImg">
+        </div>
+      </div>
+    </div>
+  </div>
+
   @php
     $current = $orders->currentPage();
     $last    = $orders->lastPage();
@@ -224,4 +288,33 @@
   </ul>
 </nav>
 </div>
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const previewModalEl = document.getElementById('orderOptionPreviewModal');
+    if (!previewModalEl) return;
+
+    previewModalEl.addEventListener('show.bs.modal', function (event) {
+      const trigger = event.relatedTarget;
+      if (!trigger) return;
+
+      const imgEl = previewModalEl.querySelector('#orderOptionPreviewImg');
+      const titleEl = previewModalEl.querySelector('#orderOptionPreviewLabel');
+      const imgSrc = trigger.getAttribute('data-option-img') || '';
+      const label = trigger.getAttribute('data-option-label') || 'Ảnh option';
+
+      imgEl.src = imgSrc;
+      imgEl.alt = label;
+      titleEl.textContent = label;
+    });
+
+    previewModalEl.addEventListener('hidden.bs.modal', function () {
+      const imgEl = previewModalEl.querySelector('#orderOptionPreviewImg');
+      if (imgEl) imgEl.src = '';
+    });
+  });
+</script>
+@endpush
+
 @endsection

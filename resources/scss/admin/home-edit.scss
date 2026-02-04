@@ -82,6 +82,39 @@
         padding: 0.75rem 1.5rem;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
+    #home-banner-desktop-table,
+    #home-banner-mobile-table {
+        .home-banner-col-order {
+            width: 6rem;
+        }
+        .home-banner-col-collection {
+            min-width: 260px;
+        }
+        .home-banner-col-delete {
+            width: 8rem;
+        }
+        .home-banner-sort-cell {
+            cursor: move;
+            text-align: center;
+        }
+        .home-banner-delete-cell {
+            text-align: center;
+        }
+        .home-banner-preview {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+        }
+        .home-banner-preview-desktop {
+            max-width: 320px;
+            height: 120px;
+        }
+        .home-banner-preview-mobile {
+            max-width: 220px;
+            height: 160px;
+        }
+    }
     .tieu-de {
         text-align: center;
         color: #b83232;

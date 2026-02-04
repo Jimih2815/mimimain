@@ -69,7 +69,12 @@
 @import "./admin/product-sliders.scss";
 @import "./admin/sidebar.scss";
 @import "./admin/tablet.scss";
+@import "./admin/mobile.scss";
 // @import "./admin/user.scss";
+
+.admin-layout table th {
+  text-align: center;
+}
 
 
 

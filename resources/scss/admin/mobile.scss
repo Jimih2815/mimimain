@@ -1,0 +1,440 @@
+@media (max-width: 767.98px) {
+  .admin-layout {
+    .container,
+    .container-fluid {
+      padding-left: 0.65rem;
+      padding-right: 0.65rem;
+    }
+
+    .navbar {
+      margin-bottom: 0.75rem !important;
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
+    .navbar .container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      min-height: 52px;
+      position: relative;
+    }
+
+    .navbar img {
+      height: 44px !important;
+    }
+
+    .nut-dang-xuat {
+      position: absolute !important;
+      right: 0 !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+
+    .nut-dang-xuat .btn {
+      min-width: 2rem;
+      height: 2rem;
+      padding: 0.2rem 0.4rem;
+      font-size: 0.75rem;
+      gap: 0 !important;
+      border-radius: 999px;
+      justify-content: center;
+      margin-right: 0.5rem;
+    }
+
+    .nut-dang-xuat .btn span {
+      display: none;
+    }
+
+    .nut-dang-xuat .btn i {
+      margin: 0 !important;
+    }
+
+    .nut-dang-xuat .btn .bi.bi-box-arrow-right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1,
+    h2 {
+      font-size: 1.55rem !important;
+      line-height: 1.25;
+      margin-bottom: 0.85rem !important;
+    }
+
+    h1[style*="font-size: 3rem"],
+    h2[style*="font-size: 3rem"] {
+      font-size: 1.65rem !important;
+    }
+
+    .admin-dashboard,
+    .trang-edit-home,
+    .trang-sua-menu,
+    .trang-collection,
+    .trang-slider-san-pham,
+    .trang-sidebar,
+    .sua-chi-tiet-san-pham,
+    .trang-admin-user,
+    .container-fluid.trang-sua-san-pham {
+      width: 100% !important;
+      max-width: 100%;
+      margin-top: 0.75rem !important;
+      margin-bottom: 1rem !important;
+    }
+
+    .admin-dashboard .danh-muc-cont {
+      gap: 0.55rem;
+    }
+
+    .admin-dashboard .danh-muc-cont .danh-sach,
+    .admin-dashboard .danh-muc-cont > .col-md-3 {
+      width: calc(50% - 0.3rem) !important;
+      flex: 0 0 calc(50% - 0.3rem);
+    }
+
+    .admin-dashboard .card .card-body {
+      padding: 0.75rem 0.5rem;
+    }
+
+    .admin-dashboard .card .fs-1 {
+      font-size: 1.5rem !important;
+    }
+
+    .admin-dashboard .card h5 {
+      font-size: 1rem;
+      margin-top: 0.45rem !important;
+    }
+
+    .trang-edit-home .form-control,
+    .trang-edit-home .form-select,
+    .trang-sua-menu .form-control.w-25,
+    .trang-sua-menu .form-select.w-25,
+    .trang-sua-menu .form-select.form-select-sm.w-25,
+    .sua-chi-tiet-san-pham .ten-va-link-con {
+      width: 100% !important;
+      max-width: none;
+    }
+
+    .trang-sua-menu .form-them-muc-cont {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .sua-chi-tiet-san-pham .ten-va-link {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+
+    .sua-chi-tiet-san-pham .img-cont {
+      width: 82px;
+      height: 82px;
+    }
+
+    .trang-edit-home .btn-luu {
+      font-size: 1rem;
+      padding: 0.55rem 1rem;
+      bottom: 0.75rem;
+      right: 0.65rem;
+    }
+
+    .trang-edit-home #home-banner-desktop-table,
+    .trang-edit-home #home-banner-mobile-table {
+      min-width: 100% !important;
+      table-layout: fixed;
+      font-size: 0.76rem;
+    }
+
+    .trang-edit-home #home-banner-desktop-table th,
+    .trang-edit-home #home-banner-desktop-table td,
+    .trang-edit-home #home-banner-mobile-table th,
+    .trang-edit-home #home-banner-mobile-table td {
+      padding: 0.22rem;
+    }
+
+    .trang-edit-home .home-banner-col-order,
+    .trang-edit-home .home-banner-col-collection,
+    .trang-edit-home .home-banner-col-delete {
+      white-space: nowrap;
+    }
+
+    .trang-edit-home .home-banner-col-order {
+      width: 2.8rem !important;
+      text-align: center;
+    }
+
+    .trang-edit-home .home-banner-col-delete {
+      width: 3.1rem !important;
+      text-align: center;
+    }
+
+    .trang-edit-home .home-banner-col-collection {
+      width: 8.8rem !important;
+      min-width: 0 !important;
+    }
+
+    .trang-edit-home .home-banner-sort-cell,
+    .trang-edit-home .home-banner-delete-cell {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .trang-edit-home #home-banner-desktop-table th:nth-child(2),
+    .trang-edit-home #home-banner-mobile-table th:nth-child(2),
+    .trang-edit-home #home-banner-desktop-table td:nth-child(2),
+    .trang-edit-home #home-banner-mobile-table td:nth-child(2) {
+      width: auto;
+    }
+
+    .trang-edit-home .home-banner-preview-desktop {
+      max-width: 100% !important;
+      height: 84px !important;
+    }
+
+    .trang-edit-home .home-banner-preview-mobile {
+      max-width: 100% !important;
+      height: 104px !important;
+    }
+
+    .trang-edit-home #home-banner-desktop-table select.form-select,
+    .trang-edit-home #home-banner-mobile-table select.form-select {
+      min-width: 0 !important;
+      width: 100%;
+      font-size: 0.78rem;
+      padding: 0.2rem 1.5rem 0.2rem 0.35rem;
+    }
+
+    .trang-edit-home td.text-center.text-muted {
+      white-space: normal !important;
+      word-break: break-word;
+      padding: 0.5rem 0.35rem !important;
+    }
+
+    .trang-sua-san-pham .d-flex.align-items-center.flex-wrap.gap-2.mb-3 {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 0.5rem !important;
+    }
+
+    .trang-sua-san-pham .nut-them-san-pham {
+      font-size: 0.95rem;
+      padding: 0.45rem 0.7rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .trang-sua-san-pham .admin-product-filter {
+      width: auto;
+      max-width: 100%;
+      margin-left: auto !important;
+      align-self: flex-end;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center !important;
+      justify-content: flex-end;
+      gap: 0.3rem !important;
+    }
+
+    .trang-sua-san-pham .admin-product-filter input.form-control {
+      width: 44vw !important;
+      max-width: 160px;
+      min-width: 104px;
+    }
+
+    .trang-sua-san-pham .admin-product-filter select.form-select {
+      width: 8rem !important;
+      max-width: 8rem;
+      min-width: 4.8rem;
+    }
+
+    .trang-sua-san-pham .admin-product-filter .nut-xanh {
+      width: auto !important;
+      border-radius: 8px !important;
+      padding: 0.3rem 0.55rem !important;
+      font-size: 0.82rem;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .container-fluid.py-4,
+    .container.py-4,
+    .trang-slider-san-pham,
+    .trang-collection,
+    .trang-sidebar,
+    .trang-sua-menu,
+    .trang-edit-home,
+    .trang-admin-user {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+      min-width: 700px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .container.py-4.trang-admin-orders {
+      overflow-x: hidden !important;
+    }
+
+    .trang-admin-orders .admin-orders-table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .trang-admin-orders .admin-orders-table {
+      min-width: 980px !important;
+      margin-bottom: 0;
+    }
+
+    .trang-sua-san-pham {
+      overflow-x: hidden;
+    }
+
+    .trang-sua-san-pham .admin-products-table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .trang-sua-san-pham .admin-products-table {
+      min-width: 700px !important;
+      table-layout: auto;
+      font-size: 0.78rem;
+      margin-bottom: 0;
+    }
+
+    .trang-sua-san-pham .admin-products-table th,
+    .trang-sua-san-pham .admin-products-table td {
+      padding: 0.28rem;
+      white-space: nowrap;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(1),
+    .trang-sua-san-pham .admin-products-table td:nth-child(1) {
+      width: 2.6rem;
+      text-align: center;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(2),
+    .trang-sua-san-pham .admin-products-table td:nth-child(2) {
+      width: 3.2rem;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(6),
+    .trang-sua-san-pham .admin-products-table td:nth-child(6) {
+      width: 4.2rem;
+      text-align: center;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(3),
+    .trang-sua-san-pham .admin-products-table td:nth-child(3) {
+      min-width: 10rem;
+    }
+
+    .trang-sua-san-pham .admin-products-table th:nth-child(4),
+    .trang-sua-san-pham .admin-products-table td:nth-child(4) {
+      min-width: 11rem;
+    }
+
+    .trang-sua-san-pham .admin-products-table td:nth-child(2) > img {
+      width: 34px !important;
+      height: 34px !important;
+      object-fit: cover;
+    }
+
+    .trang-sua-san-pham .admin-products-table td:nth-child(2) .mt-1 {
+      display: none !important;
+    }
+
+    .trang-sua-san-pham .admin-products-table .nut-sua,
+    .trang-sua-san-pham .admin-products-table .nut-xoa {
+      padding: 0.14rem 0.3rem;
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
+    .trang-sua-san-pham .admin-products-table .td-action-flex {
+      gap: 0.18rem;
+    }
+
+    .trang-collection .admin-collections-table {
+      min-width: 620px !important;
+      table-layout: fixed;
+      font-size: 0.8rem;
+    }
+
+    .trang-collection .admin-collections-table th,
+    .trang-collection .admin-collections-table td {
+      padding: 0.28rem;
+    }
+
+    .trang-collection .admin-collections-table .collection-actions {
+      display: flex !important;
+      gap: 0.2rem !important;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .trang-collection .admin-collections-table .collection-actions .btn-mimi {
+      padding: 0.14rem 0.28rem;
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
+    .trang-slider-san-pham .img-cont {
+      width: 70px;
+    }
+
+    .trang-slider-san-pham .nut-sua,
+    .trang-slider-san-pham .nut-xoa,
+    .trang-sidebar .nut-sua,
+    .trang-sidebar .nut-xoa {
+      padding: 0.25rem 0.4rem;
+      font-size: 0.82rem;
+    }
+
+    .trang-sua-menu .mega-menu-preview {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.3rem;
+    }
+
+    .trang-sua-menu .mega-menu-preview ul.nav {
+      width: max-content;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding-left: 0.6rem;
+      padding-right: 0.6rem;
+    }
+
+    .trang-admin-user .nav {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .trang-admin-user .nav-link {
+      white-space: nowrap;
+      font-size: 0.95rem;
+      margin-right: 0.4rem;
+      padding: 0.45rem 0.65rem;
+    }
+
+    .trang-admin-user .table {
+      min-width: 820px;
+      font-size: 0.8rem;
+    }
+
+    .pagination .page-link {
+      padding: 0.32rem 0.55rem;
+      font-size: 0.82rem;
+    }
+  }
+}

@@ -43,6 +43,7 @@
   </div>
 
   {{-- Bảng danh sách --}}
+  <div class="admin-products-table-scroll">
   <table class="table table-bordered table-hover align-middle admin-products-table">
     <thead class="table-light">
       <tr>
@@ -103,6 +104,7 @@
       @endforelse
     </tbody>
   </table>
+  </div>
 
   {{-- Phân trang custom --}}
 @php

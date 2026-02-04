@@ -32,8 +32,8 @@
 
     .admin-dashboard .danh-muc-cont .danh-sach,
     .admin-dashboard .danh-muc-cont > .col-md-3 {
-      width: calc(50% - 0.5rem) !important;
-      flex: 0 0 calc(50% - 0.5rem);
+      width: calc((100% - 1.5rem) / 3) !important;
+      flex: 0 0 calc((100% - 1.5rem) / 3);
     }
 
     .trang-edit-home .form-control,
@@ -102,12 +102,27 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    .container.py-4.trang-admin-orders {
+      overflow-x: hidden !important;
+    }
+
+    .trang-admin-orders .admin-orders-table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .trang-admin-orders .admin-orders-table {
+      margin-bottom: 0;
+    }
+
     .table {
       min-width: 920px;
       font-size: 0.92rem;
     }
 
     .trang-edit-home .table,
+    .trang-admin-orders .table,
     .trang-admin-user .table,
     .trang-sua-san-pham .table,
     .trang-slider-san-pham .table,
@@ -115,6 +130,77 @@
     .trang-sidebar .table,
     .trang-sua-menu .table {
       min-width: 980px;
+    }
+
+    .trang-admin-orders .admin-orders-table th:nth-child(3),
+    .trang-admin-orders .admin-orders-table td:nth-child(3) {
+      min-width: 230px;
+      max-width: 320px;
+      white-space: normal;
+      line-height: 1.35;
+    }
+
+    .trang-edit-home #home-banner-desktop-table,
+    .trang-edit-home #home-banner-mobile-table {
+      min-width: 100% !important;
+      table-layout: fixed;
+      font-size: 0.86rem;
+    }
+
+    .trang-edit-home #home-banner-desktop-table th,
+    .trang-edit-home #home-banner-desktop-table td,
+    .trang-edit-home #home-banner-mobile-table th,
+    .trang-edit-home #home-banner-mobile-table td {
+      padding: 0.3rem;
+    }
+
+    .trang-edit-home .home-banner-col-order {
+      width: 3.2rem !important;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .trang-edit-home .home-banner-col-delete {
+      width: 3.4rem !important;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .trang-edit-home .home-banner-col-collection {
+      width: 9.6rem !important;
+      white-space: nowrap;
+    }
+
+    .trang-edit-home .home-banner-sort-cell,
+    .trang-edit-home .home-banner-delete-cell {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .trang-edit-home #home-banner-desktop-table select.form-select,
+    .trang-edit-home #home-banner-mobile-table select.form-select {
+      min-width: 0;
+      width: 100%;
+      font-size: 0.82rem;
+      padding: 0.22rem 1.4rem 0.22rem 0.3rem;
+    }
+
+    .trang-edit-home #home-banner-desktop-table .home-banner-preview-desktop {
+      width: min(100%, 180px) !important;
+      aspect-ratio: 16 / 6;
+      height: auto !important;
+      object-fit: cover;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .trang-edit-home #home-banner-mobile-table .home-banner-preview-mobile {
+      width: min(100%, 90px) !important;
+      aspect-ratio: 9 / 12;
+      height: auto !important;
+      object-fit: cover;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .trang-sua-san-pham .admin-products-table {

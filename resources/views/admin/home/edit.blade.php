@@ -68,18 +68,20 @@
       <table id="home-banner-desktop-table" class="table table-striped align-middle">
         <thead>
           <tr>
-            <th style="width:6rem;">Thứ tự</th>
+            <th class="home-banner-col-order">STT</th>
             <th>Ảnh</th>
-            <th style="min-width: 260px;">Collection khi bấm</th>
-            <th style="width:8rem;">Xóa</th>
+            <th class="home-banner-col-collection">Collection khi bấm</th>
+            <th class="home-banner-col-delete">Xóa</th>
           </tr>
         </thead>
         <tbody>
           @forelse($bannerImagesDesktop as $b)
             <tr data-id="{{ $b->id }}">
-              <td class="sort-handle" style="cursor: move; text-align:center;">{{ $b->sort_order }}</td>
+              <td class="sort-handle home-banner-sort-cell">{{ $b->sort_order }}</td>
               <td>
-                <img src="{{ asset('storage/'.$b->image) }}" alt="banner" style="max-width: 320px; width:100%; height:120px; object-fit:cover; border-radius: 8px;">
+                <img src="{{ asset('storage/'.$b->image) }}"
+                     alt="banner"
+                     class="home-banner-preview home-banner-preview-desktop">
               </td>
               <td>
                 <select name="banner_items_desktop[{{ $b->id }}][collection_id]" class="form-select">
@@ -89,7 +91,7 @@
                   @endforeach
                 </select>
               </td>
-              <td style="text-align:center;">
+              <td class="home-banner-delete-cell">
                 <input type="checkbox" name="banner_items_desktop[{{ $b->id }}][delete]" value="1">
               </td>
             </tr>
@@ -117,18 +119,20 @@
       <table id="home-banner-mobile-table" class="table table-striped align-middle">
         <thead>
           <tr>
-            <th style="width:6rem;">Thứ tự</th>
+            <th class="home-banner-col-order">STT</th>
             <th>Ảnh</th>
-            <th style="min-width: 260px;">Collection khi bấm</th>
-            <th style="width:8rem;">Xóa</th>
+            <th class="home-banner-col-collection">Collection khi bấm</th>
+            <th class="home-banner-col-delete">Xóa</th>
           </tr>
         </thead>
         <tbody>
           @forelse($bannerImagesMobile as $b)
             <tr data-id="{{ $b->id }}">
-              <td class="sort-handle" style="cursor: move; text-align:center;">{{ $b->sort_order }}</td>
+              <td class="sort-handle home-banner-sort-cell">{{ $b->sort_order }}</td>
               <td>
-                <img src="{{ asset('storage/'.$b->image) }}" alt="banner" style="max-width: 220px; width:100%; height:160px; object-fit:cover; border-radius: 8px;">
+                <img src="{{ asset('storage/'.$b->image) }}"
+                     alt="banner"
+                     class="home-banner-preview home-banner-preview-mobile">
               </td>
               <td>
                 <select name="banner_items_mobile[{{ $b->id }}][collection_id]" class="form-select">
@@ -138,7 +142,7 @@
                   @endforeach
                 </select>
               </td>
-              <td style="text-align:center;">
+              <td class="home-banner-delete-cell">
                 <input type="checkbox" name="banner_items_mobile[{{ $b->id }}][delete]" value="1">
               </td>
             </tr>
