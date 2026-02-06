@@ -1,4 +1,5 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @font-face {
     font-family: 'Baloo 2';
     font-style: normal;
@@ -16,14 +17,14 @@
     font-family: 'Baloo 2', sans-serif;
 }
 
-/* Căn giữa container */
+/* Can gi?a container */
 body {
     background-color: #ecf0f1;
     color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Chiều cao full màn hình */
+    height: 100vh; /* Chi?u cao full m�n h�nh */
     padding: 0;
     position: relative;
 }
@@ -42,7 +43,7 @@ body {
     max-width: 220px;
 }
 
-/* Container chính */
+/* Container ch�nh */
 .container {
     background: #ecf0f1;
     padding: 20px;
@@ -84,18 +85,27 @@ body {
 .calendar-popover {
     position: absolute;
     top: 2.6rem;
-    right: 0;
+    right: -9rem;
     background: #fff;
     border: 1px solid #4ab3af;
     border-radius: 10px;
     padding: 10px;
     width: 240px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    display: none;
     z-index: 20;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+    will-change: opacity, transform;
 }
 .calendar-popover.is-open {
-    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
 }
 .calendar-header {
     display: flex;
@@ -193,19 +203,19 @@ select:focus {
     box-shadow: 0 0 0 2px rgba(74, 179, 175, 0.2);
 }
 
-/* Tiêu đề */
+/* Ti�u d? */
 h2, h3, h4 {
     text-align: center;
     margin-bottom: 15px;
 }
 
-/* Ẩn form đổi mật khẩu mặc định */
+/* ?n form d?i m?t kh?u m?c d?nh */
 .password-section {
     display: none;
     margin-bottom: 1.5rem;
 }
 
-/* Bảng lịch sử chấm công */
+/* B?ng l?ch s? ch?m c�ng */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -230,7 +240,7 @@ td {
     background: #f8f9fa;
 }
 
-/* Nút bấm */
+/* N�t b?m */
 .toggle-password-btn, button {
     width: 100%;
     padding: 10px;
@@ -256,7 +266,7 @@ button:hover {
     opacity: 0.8;
 }
 
-/* Link quay lại */
+/* Link quay l?i */
 .back-link {
     text-align: center;
     display: inline-block;
@@ -273,27 +283,27 @@ button:hover {
 
 /* Popup modal */
 .modal {
-    display: none; /* Chỉ hiển thị khi được kích hoạt */
+    display: none; /* Ch? hi?n th? khi du?c k�ch ho?t */
     position: fixed;
     z-index: 9999;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Hiệu ứng mờ nền */
+    background-color: rgba(0, 0, 0, 0.5); /* Hi?u ?ng m? n?n */
     justify-content: center;
     align-items: center;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
 
-/* Khi hiển thị modal */
+/* Khi hi?n th? modal */
 .modal.show {
     display: flex;
     opacity: 1;
 }
 
-/* Nội dung modal */
+/* N?i dung modal */
 .modal-content {
     background: white;
     padding: 20px;
@@ -308,7 +318,7 @@ button:hover {
     opacity: 0.8;
 }
 
-/* Nút đóng popup */
+/* N�t d�ng popup */
 .close {
     position: absolute;
     top: 10px;
@@ -316,7 +326,7 @@ button:hover {
     font-size: 24px;
     cursor: pointer;
 }
-/* Nút Xác nhận */
+/* N�t X�c nh?n */
 .modal-content button {
     width: 100%;
     padding: 10px;
@@ -329,35 +339,35 @@ button:hover {
     cursor: pointer;
     transition: 0.3s;
 }
-/* Căn chỉnh input */
+/* Can ch?nh input */
 .modal-content input {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px; /* Tạo khoảng cách giữa các trường */
+    margin-bottom: 15px; /* T?o kho?ng c�ch gi?a c�c tru?ng */
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
 }
-/* Căn chỉnh nhãn (label) */
+/* Can ch?nh nh�n (label) */
 .modal-content label {
     font-weight: bold;
     margin-bottom: 5px;
-    width: 100%; /* Đảm bảo label và input cùng hàng */
+    width: 100%; /* �?m b?o label v� input c�ng h�ng */
     text-align: left;
 }
-/* Căn chỉnh form trong popup */
+/* Can ch?nh form trong popup */
 .modal-content form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Căn trái nhãn */
+    align-items: flex-start; /* Can tr�i nh�n */
 }
-/* Khi modal mở, hiệu ứng trượt xuống */
+/* Khi modal m?, hi?u ?ng tru?t xu?ng */
 .modal.show .modal-content {
     transform: translateY(0);
     opacity: 1;
 }
 
-/* Nút đóng modal */
+/* N�t d�ng modal */
 .close {
     position: absolute;
     top: 10px;
@@ -366,7 +376,7 @@ button:hover {
     cursor: pointer;
 }
 
-/* Nút đổi mật khẩu */
+/* N�t d?i m?t kh?u */
 .open-password-modal {
     width: 100%;
     padding: 10px;
@@ -386,7 +396,7 @@ button:hover {
 }
 
 
-/* Làm nổi bật tổng giờ làm việc */
+/* L�m n?i b?t t?ng gi? l�m vi?c */
 .total-hours {
     font-size: 20px;
     font-weight: 500;
@@ -398,7 +408,7 @@ button:hover {
     margin: 0;
 }
 
-/* Làm nổi bật lương hiện tại */
+/* L�m n?i b?t luong hi?n t?i */
 .current-salary {
     font-size: 20px;
     font-weight: 500;
@@ -413,12 +423,12 @@ button:hover {
 
 
 
-/* 💠 STYLE CHO NÚT PHÂN TRANG */
+/* ?? STYLE CHO N�T PH�N TRANG */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px; /* Khoảng cách giữa các nút */
+    gap: 5px; /* Kho?ng c�ch gi?a c�c n�t */
     margin-top: 15px;
 }
 

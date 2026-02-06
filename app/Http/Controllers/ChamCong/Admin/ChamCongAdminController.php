@@ -101,6 +101,36 @@ class ChamCongAdminController extends Controller
             ->limit($rowsPerPage)
             ->get();
 
+        if ($request->query('ajax') == '1') {
+            return response()->json([
+                'rowsHtml' => view('chamcong.admin.partials.attendance_rows', [
+                    'groupedAtt' => $groupedAtt,
+                ])->render(),
+                'paginationHtml' => view('chamcong.admin.partials.attendance_pagination', [
+                    'page' => $page,
+                    'totalPages' => $totalPages,
+                    'filterUID' => $filterUID,
+                    'rowsPerPage' => $rowsPerPage,
+                    'startDate' => $startDate,
+                    'endDate' => $endDate,
+                ])->render(),
+                'detailUrl' => route('chamcong.admin.detail', [
+                    'filter_user_id' => $filterUID,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'rows_per_page' => $rowsPerPage,
+                ]),
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'rowsPerPage' => $rowsPerPage,
+                'filterUID' => $filterUID,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'startDateDmy' => $this->ymdToDmy($startDate),
+                'endDateDmy' => $this->ymdToDmy($endDate),
+            ]);
+        }
+
         $calcResult = [];
         $calcMonth = (int) $request->query('calc_month', 0);
         $calcYear = (int) $request->query('calc_year', 0);
@@ -351,6 +381,10 @@ class ChamCongAdminController extends Controller
                 'salary' => $salary,
             ];
         }
+
+        usort($totalResult, function ($a, $b) {
+            return ($b['salary'] ?? 0) <=> ($a['salary'] ?? 0);
+        });
 
         return $totalResult;
     }

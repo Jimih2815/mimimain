@@ -5,7 +5,6 @@
     <title>MiMi Quản Lý Chấm Công</title>
     @vite([
         'resources/chamcong/admin.css',
-        'resources/chamcong/vendor/daterangepicker.min.css',
         'resources/chamcong/vendor.js',
     ])
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -122,7 +121,7 @@
                         <form method="POST" action="{{ route('chamcong.admin.users.delete') }}" onsubmit="return confirm('Bạn chắc chắn muốn xóa user {{ $u->username }}?');">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ $u->id }}">
-                            <button type="submit" style="color:red;">Xóa</button>
+                            <button type="submit" class="btn-delete-user">Xóa</button>
                         </form>
                     </td>
                 </tr>
@@ -159,7 +158,7 @@
                 Kết quả lương tháng {{ $calcMonth }}/{{ $calcYear }}:
             </h3>
             <table border="1" cellpadding="5" cellspacing="0">
-                <tr>
+                <tr style="color: white;">
                     <th style="background-color: #b83232;">ID</th>
                     <th style="background-color: #b83232;">Tài khoản</th>
                     <th style="background-color: #b83232;">Loại NV</th>
@@ -199,9 +198,10 @@
     <div id="modul4" class="tab-content {{ ($activeTab ?? 'modul1') === 'modul4' ? 'active' : '' }}">
         <h2 id="table-chamcong">Quản lý chấm công</h2>
 
-        <form method="GET" action="{{ route('chamcong.admin.dashboard') }}#table-chamcong" style="margin-bottom: 1rem;" class="filter-row">
+        <form method="GET" action="{{ route('chamcong.admin.dashboard') }}#table-chamcong" style="margin-bottom: 1rem;" class="filter-row" id="modul4FilterForm">
+            <input type="hidden" name="tab" value="modul4">
             <label>Chọn nhân viên:</label>
-            <select name="filter_user_id" onchange="this.form.submit()">
+            <select name="filter_user_id">
                 <option value="">-- Tất cả --</option>
                 @foreach($users as $u)
                     <option value="{{ $u->id }}" {{ $filterUID == $u->id ? 'selected' : '' }}>
@@ -218,7 +218,7 @@
             <input type="hidden" name="end_date" id="end_date" value="{{ $endDate }}">
 
             <label>Số hàng/trang:</label>
-            <select name="rows_per_page" onchange="this.form.submit()">
+            <select name="rows_per_page">
                 <option value="10" {{ $rowsPerPage == 10 ? 'selected' : '' }}>10</option>
                 <option value="20" {{ $rowsPerPage == 20 ? 'selected' : '' }}>20</option>
                 <option value="30" {{ $rowsPerPage == 30 ? 'selected' : '' }}>30</option>
@@ -227,75 +227,31 @@
 
         <table border="1" cellpadding="5" cellspacing="0">
             <tr>
-                <th>Nhân viên</th>
-                <th>Ngày chấm công</th>
-                <th>Giờ Check-In</th>
-                <th>Giờ Check-Out</th>
-                <th>Thời gian làm việc</th>
-                <th>Hành động</th>
+                <th class="cc-attendance-th">Nhân viên</th>
+                <th class="cc-attendance-th">Ngày chấm công</th>
+                <th class="cc-attendance-th">Giờ Check-In</th>
+                <th class="cc-attendance-th">Giờ Check-Out</th>
+                <th class="cc-attendance-th">Thời gian làm việc</th>
+                <th class="cc-attendance-th">Hành động</th>
             </tr>
-
-            @if(count($groupedAtt) === 0)
-                <tr>
-                    <td colspan="6" style="color:red; font-weight:bold;">
-                        Không có dữ liệu chấm công tháng này
-                    </td>
-                </tr>
-            @else
-                @foreach($groupedAtt as $g)
-                    @php
-                        $earliestTS = strtotime($g->earliest_in);
-                        $latestTS = strtotime($g->latest_out);
-                        $dailyHours = 0;
-                        if ($earliestTS && $latestTS && $latestTS > $earliestTS) {
-                            $dailyHours = round(($latestTS - $earliestTS) / 3600, 2);
-                        }
-                        $earliestHM = $g->earliest_in ? substr(explode(' ', $g->earliest_in)[1] ?? '', 0, 5) : '';
-                        $latestHM = $g->latest_out ? substr(explode(' ', $g->latest_out)[1] ?? '', 0, 5) : '';
-                        $workDateDmy = $g->work_date ? implode('/', array_reverse(explode('-', $g->work_date))) : '';
-                    @endphp
-                    <tr>
-                        <td>{{ $g->username }} (user_id={{ $g->user_id }})</td>
-                        <td>{{ $workDateDmy }}</td>
-                        <form method="POST" action="{{ route('chamcong.admin.attendance.update-earliest-latest') }}">
-                            @csrf
-                            <input type="hidden" name="earliest_id" value="{{ $g->earliest_id }}">
-                            <input type="hidden" name="latest_id" value="{{ $g->latest_id }}">
-                            <input type="hidden" name="the_date" value="{{ $g->work_date }}">
-                            <td><input type="text" name="earliest_in" value="{{ $earliestHM }}" size="5"></td>
-                            <td><input type="text" name="latest_out" value="{{ $latestHM }}" size="5"></td>
-                            <td>{{ $dailyHours }} giờ</td>
-                            <td class="action-buttons">
-                                <button type="submit">Lưu</button>
-                        </form>
-                                <form method="POST" action="{{ route('chamcong.admin.attendance.delete-day') }}" style="display:inline;"
-                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa toàn bộ chấm công ngày {{ $g->work_date }} của user {{ $g->username }}?');">
-                                    @csrf
-                                    <input type="hidden" name="user_id" value="{{ $g->user_id }}">
-                                    <input type="hidden" name="the_date" value="{{ $g->work_date }}">
-                                    <button type="submit" style="color:white; background-color:#b83232;">Xóa</button>
-                                </form>
-                            </td>
-                    </tr>
-                @endforeach
-            @endif
+            <tbody id="attendanceRows">
+                @include('chamcong.admin.partials.attendance_rows', ['groupedAtt' => $groupedAtt])
+            </tbody>
         </table>
         <div class="detail-link-wrapper">
-            <a class="btn btn-detail" href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage]) }}">
+            <a class="btn btn-detail" id="attendanceDetailLink" href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage]) }}">
                 Xem chi tiết nhân viên & lương
             </a>
         </div>
-        <div class="pagination">
-            @if($page > 1)
-                <a href="{{ route('chamcong.admin.dashboard', ['filter_user_id' => $filterUID, 'rows_per_page' => $rowsPerPage, 'page' => $page-1]) }}#table-chamcong">&laquo;</a>
-            @endif
-            @for($i = 1; $i <= $totalPages; $i++)
-                <a href="{{ route('chamcong.admin.dashboard', ['filter_user_id' => $filterUID, 'rows_per_page' => $rowsPerPage, 'page' => $i]) }}#table-chamcong"
-                   class="{{ $i == $page ? 'active' : '' }}">{{ $i }}</a>
-            @endfor
-            @if($page < $totalPages)
-                <a href="{{ route('chamcong.admin.dashboard', ['filter_user_id' => $filterUID, 'rows_per_page' => $rowsPerPage, 'page' => $page+1]) }}#table-chamcong">&raquo;</a>
-            @endif
+        <div class="pagination" id="attendancePagination" data-page="{{ $page }}" data-total="{{ $totalPages }}" data-rows="{{ $rowsPerPage }}">
+            @include('chamcong.admin.partials.attendance_pagination', [
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'filterUID' => $filterUID,
+                'rowsPerPage' => $rowsPerPage,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ])
         </div>
     </div>
 
@@ -416,6 +372,117 @@ window.addEventListener('load', function(){
   var phpStart = '{{ $startDate }}';
   var phpEnd   = '{{ $endDate }}';
 
+  var filterForm = document.getElementById('modul4FilterForm');
+  var userSelect = filterForm ? filterForm.querySelector('select[name="filter_user_id"]') : null;
+  var rowsSelect = filterForm ? filterForm.querySelector('select[name="rows_per_page"]') : null;
+  var startInput = document.getElementById('start_date');
+  var endInput = document.getElementById('end_date');
+  var daterangeInput = document.getElementById('daterange');
+  var rowsEl = document.getElementById('attendanceRows');
+  var paginationEl = document.getElementById('attendancePagination');
+  var detailLink = document.getElementById('attendanceDetailLink');
+  var baseUrl = "{{ route('chamcong.admin.dashboard') }}";
+
+  function buildUrl(page, ajax) {
+    var params = new URLSearchParams();
+    if (ajax) params.set('ajax', '1');
+    params.set('tab', 'modul4');
+    params.set('page', page);
+    if (rowsSelect && rowsSelect.value) params.set('rows_per_page', rowsSelect.value);
+    if (userSelect && userSelect.value) params.set('filter_user_id', userSelect.value);
+    if (startInput && startInput.value) params.set('start_date', startInput.value);
+    if (endInput && endInput.value) params.set('end_date', endInput.value);
+    var qs = params.toString();
+    return baseUrl + (qs ? ('?' + qs) : '');
+  }
+
+  function getPageList(page, totalPages) {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, function(_, i){ return i + 1; });
+    }
+    var last = totalPages;
+    var list = [];
+    if (page <= 3) {
+      list = [1, 2, 3, 4, last];
+    } else if (page >= last - 1) {
+      list = [1, last - 3, last - 2, last - 1, last];
+    } else {
+      list = [1, page - 1, page, page + 1, last];
+    }
+    return Array.from(new Set(list.filter(function(n){ return n >= 1 && n <= last; })))
+      .sort(function(a, b){ return a - b; });
+  }
+
+  function buildPagination(page, totalPages) {
+    if (!paginationEl) return;
+    var pages = getPageList(page, totalPages);
+    var html = '';
+    pages.forEach(function(i){
+      var active = i === page ? 'active' : '';
+      var href = buildUrl(i, false) + '#table-chamcong';
+      html += '<a href="' + href + '" data-page="' + i + '" class="' + active + '">' + i + '</a>';
+    });
+    paginationEl.innerHTML = html;
+  }
+
+  function applyFilters(page) {
+    if (!rowsEl || !paginationEl) {
+      window.location.href = buildUrl(page, false) + '#table-chamcong';
+      return;
+    }
+
+    var url = buildUrl(page, true);
+    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function(res){ return res.ok ? res.json() : Promise.reject(res); })
+      .then(function(data){
+        if (typeof data.rowsHtml !== 'undefined') rowsEl.innerHTML = data.rowsHtml;
+        if (data.detailUrl && detailLink) detailLink.href = data.detailUrl;
+        if (data.rowsPerPage && rowsSelect) rowsSelect.value = data.rowsPerPage;
+        if (userSelect) userSelect.value = (data.filterUID && data.filterUID > 0) ? String(data.filterUID) : '';
+        if (data.startDate && startInput) startInput.value = data.startDate;
+        if (data.endDate && endInput) endInput.value = data.endDate;
+        if (daterangeInput && data.startDateDmy && data.endDateDmy) {
+          daterangeInput.value = data.startDateDmy + ' - ' + data.endDateDmy;
+        }
+        var newPage = data.page || page;
+        var newTotal = data.totalPages || 1;
+        if (paginationEl) {
+          paginationEl.dataset.page = newPage;
+          paginationEl.dataset.total = newTotal;
+          paginationEl.dataset.rows = data.rowsPerPage || '';
+        }
+        buildPagination(newPage, newTotal);
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, '', buildUrl(newPage, false) + '#table-chamcong');
+        }
+      })
+      .catch(function(){
+        window.location.href = buildUrl(page, false) + '#table-chamcong';
+      });
+  }
+
+  if (userSelect) {
+    userSelect.addEventListener('change', function(){ applyFilters(1); });
+  }
+  if (rowsSelect) {
+    rowsSelect.addEventListener('change', function(){ applyFilters(1); });
+  }
+
+  if (paginationEl) {
+    paginationEl.addEventListener('click', function(e){
+      var link = e.target.closest('a[data-page]');
+      if (!link) return;
+      e.preventDefault();
+      var page = parseInt(link.dataset.page || '1', 10) || 1;
+      applyFilters(page);
+    });
+  }
+  if (paginationEl) {
+    var initialPage = parseInt(paginationEl.dataset.page || '1', 10) || 1;
+    var initialTotal = parseInt(paginationEl.dataset.total || '1', 10) || 1;
+    buildPagination(initialPage, initialTotal);
+  }
+
   $('#daterange').daterangepicker({
     autoUpdateInput: true,
     startDate: moment(phpStart, 'YYYY-MM-DD'),
@@ -434,10 +501,13 @@ window.addEventListener('load', function(){
     $('#daterange').val(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
     $('#start_date').val(start.format('YYYY-MM-DD'));
     $('#end_date').val(end.format('YYYY-MM-DD'));
-    $('#daterange').closest('form').submit();
+    applyFilters(1);
   });
 
   $('#daterange').on('show.daterangepicker', function(ev, picker) {
+    if (picker && picker.container) {
+      picker.container.addClass('cc-open');
+    }
     setTimeout(function(){
       if (!picker.container.find('.btn-today').length) {
         picker.container.find('.drp-buttons').prepend(`
@@ -454,7 +524,25 @@ window.addEventListener('load', function(){
       }
     }, 50);
   });
+  $('#daterange').on('hide.daterangepicker', function(ev, picker) {
+    if (picker && picker.container) {
+      picker.container.removeClass('cc-open');
+    }
+  });
 });
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+

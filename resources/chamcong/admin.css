@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
 @font-face {
     font-family: 'Baloo 2';
     font-style: normal;
@@ -8,7 +8,7 @@
     unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
 }
 
-/* Reset mặc định */
+/* Reset m?c d?nh */
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +16,7 @@
     font-family: 'Baloo 2', sans-serif;
 }
 
-/* Toàn bộ trang */
+/* To�n b? trang */
 body {
     display: block !important;
     background-color: #f4f4f4;
@@ -24,24 +24,24 @@ body {
     margin: 0;
 }
 
-/* Container chính */
+/* Container ch�nh */
 .container {
     max-width: 1200px;
     margin: auto;
     background: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 10px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Tiêu đề chính */
+/* Ti�u d? ch�nh */
 h1 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
 }
 
-/* Tiêu đề các phần */
+/* Ti�u d? c�c ph?n */
 h2, h3 {
     margin-top: 15px;
     color: #1f3b4d;
@@ -50,7 +50,7 @@ h2, h3 {
     margin-bottom: 15px;
 }
 
-/* Bảng hiển thị dữ liệu */
+/* B?ng hi?n th? d? li?u */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -61,22 +61,22 @@ table, th, td {
     border: 1px solid #ccc;
 }
 
-/* Header bảng */
-th {
+/* Header b?ng (Qu?n l? ch?m c?ng) */
+.cc-attendance-th {
     background-color: #4ab3af;
     color: white;
     padding: 12px;
     text-align: center;
 }
 
-/* Căn giữa nội dung trong các ô */
+/* Can gi?a n?i dung trong c�c � */
 td {
     padding: 12px;
     text-align: center;
     vertical-align: middle;
 }
 
-/* Ô input trong bảng */
+/* � input trong b?ng */
 table input {
     width: 80%;
     padding: 6px;
@@ -86,7 +86,7 @@ table input {
     border-radius: 5px;
 }
 
-/* Nút bấm */
+/* N�t b?m */
 button {
     background-color: #3f9426;
     color: white;
@@ -99,7 +99,7 @@ button {
     transition: 0.3s;
 }
 
-/* Navbar giống admin */
+/* Navbar gi?ng admin */
 .navbar {
     width: 100%;
 }
@@ -151,7 +151,7 @@ button {
     margin: 0;
 }
 
-/* Nút Lưu */
+/* N�t Luu */
 button[name="update_earliest_latest"] {
     background-color: #3f9426;
     color: white;
@@ -161,19 +161,21 @@ button[name="update_earliest_latest"]:hover {
     background-color: #3f9426;
 }
 
-/* Nút Xóa */
+/* N�t X�a */
 button[name="delete_user"],
-button[name="delete_day_attendance"] {
+  button[name="delete_day_attendance"],
+  .btn-delete-user {
     background-color: #b83232;
     color: white !important;
-}
-
+  }
+  
 button[name="delete_user"]:hover,
-button[name="delete_day_attendance"]:hover {
+  button[name="delete_day_attendance"]:hover,
+  .btn-delete-user:hover {
     background-color: #b83232;
-}
+  }
 
-/* Tạo flexbox cho ô hành động */
+/* T?o flexbox cho � h�nh d?ng */
 .action-buttons {
     display: flex;
     justify-content: space-evenly;
@@ -181,15 +183,15 @@ button[name="delete_day_attendance"]:hover {
     
 }
 
-/* Căn chỉnh form chọn nhân viên */
+/* Can ch?nh form ch?n nh�n vi�n */
 form select {
-    padding: 10px;
+    
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-/* Nút đăng xuất */
+/* N�t dang xu?t */
 .logout-link {
     display: flex;
     justify-content: flex-end;
@@ -201,7 +203,7 @@ form select {
 }
 
 
-/* Căn chỉnh form "Thêm nhân viên" */
+/* Can ch?nh form "Th�m nh�n vi�n" */
 .form-add-employee, .form-add-attendance {
     width: 100%;
     display: flex;
@@ -219,7 +221,7 @@ form select {
     vertical-align: middle;
 }
 
-/* Ô input và select rộng ngang với bảng trên */
+/* � input v� select r?ng ngang v?i b?ng tr�n */
 .form-add-employee input,
 .form-add-employee select,
 .form-add-attendance input,
@@ -231,12 +233,12 @@ form select {
     border-radius: 5px;
 }
 
-/* Căn giữa nút "Thêm" */
+/* Can gi?a n�t "Th�m" */
 .form-add-employee button,
 .form-add-attendance button {
   background-color: #d1a029;
     width: 150px;
-    padding: 10px;
+    padding: 10px !important;
     font-size: 16px;
     font-weight: bold;
     margin-top: 10px;
@@ -256,10 +258,10 @@ form select {
 .pagination a {
     display: inline-block;
     text-decoration: none;
-    color: #4ab3af; /* Xanh dương phù hợp tông */
+    color: #4ab3af; /* Xanh duong ph� h?p t�ng */
     font-weight: bold;
     padding: 6px 12px;
-    border: 1px solid #4ab3af;
+    border: 1px solid #4ab3af !important;
     border-radius: 5px;
     transition: all 0.3s ease;
 }
@@ -272,46 +274,121 @@ form select {
 .pagination a.active {
     background-color: #4ab3af;
     color: white;
-    border: 1px solid #4ab3af;
+    border: 1px solid #4ab3af !important;
 }
 
-/* Nút &laquo; / &raquo; */
+/* N�t &laquo; / &raquo; */
 .pagination a:first-child,
 .pagination a:last-child {
     min-width: 36px;
     text-align: center;
 }
-/* Tạo hàng ngang cho form lọc */
+
+/* Chamcong admin: button always pill */
+button,
+.btn,
+.btn-detail,
+.btn-task {
+  border-radius: 50px !important;
+}
+/* T?o h�ng ngang cho form l?c */
 .filter-row {
-    display: flex;            /* Xếp ngang */
-    align-items: center;      /* Canh giữa theo chiều dọc */
-    gap: 10px;                /* Khoảng cách giữa các phần tử */
-    margin-bottom: 20px;      /* Khoảng cách dưới form */
+    display: flex;            /* X?p ngang */
+    align-items: center;      /* Canh gi?a theo chi?u d?c */
+    gap: 10px;                /* Kho?ng c�ch gi?a c�c ph?n t? */
+    margin-bottom: 20px;      /* Kho?ng c�ch du?i form */
 }
 
-/* Đảm bảo label, select, input có cùng chiều cao cơ bản */
+/* �?m b?o label, select, input c� c�ng chi?u cao co b?n */
 .filter-row label {
     font-weight: bold;
-    white-space: nowrap;      /* Không xuống dòng label */
+    white-space: nowrap;      /* Kh�ng xu?ng d�ng label */
 }
 
-/* Đồng bộ chiều cao, padding giữa các trường */
+/* �?ng b? chi?u cao, padding gi?a c�c tru?ng */
 .filter-row select,
 .filter-row input[type="text"] {
-    height: 40px;             /* Chiều cao đồng nhất */
-    padding: 0 10px;          /* Thêm khoảng cách trái-phải */
+    height: 40px;             /* Chi?u cao d?ng nh?t */
+    padding: 0 10px;          /* Th�m kho?ng c�ch tr�i-ph?i */
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-/* Dùng flex để đẩy nút sang phải */
+/* D�ng flex d? d?y n�t sang ph?i */
 .detail-link-wrapper {
     display: flex;
-    justify-content: flex-end; /* đẩy phần tử con sát bên phải */
-    margin-top: 1rem; /* khoảng cách trên */
+    justify-content: flex-end; /* d?y ph?n t? con s�t b�n ph?i */
+    margin-top: 1rem; /* kho?ng c�ch tr�n */
   }
+
+/* Daterangepicker - style gi?ng calendar-popover (info) + animation */
+.daterangepicker {
+    border: 1px solid #4ab3af !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+    background: #fff !important;
+    padding: 10px !important;
+    font-family: 'Baloo 2', sans-serif;
+    display: block !important;
+    opacity: 0;
+    transform: translateY(-8px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+    will-change: opacity, transform;
+    z-index: 2000;
+}
+.daterangepicker.cc-open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
+}
+.daterangepicker .calendar-table {
+    border: 0;
+    background: transparent;
+}
+.daterangepicker .calendar-table th {
+    color: #666;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 6px 4px;
+}
+.daterangepicker .calendar-table td {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+.daterangepicker td.available:hover,
+.daterangepicker td.in-range {
+    background: rgba(74, 179, 175, 0.18);
+}
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    background: #4ab3af !important;
+    color: #fff;
+}
+.daterangepicker .drp-buttons {
+    border-top: 1px solid #e1efee;
+    padding-top: 8px;
+}
+.daterangepicker .drp-buttons .btn {
+    border-radius: 6px;
+    padding: 8px 12px !important;
+    font-size: 12px;
+    line-height: 1;
+}
+.daterangepicker .drp-buttons .applyBtn {
+    background: #4ab3af !important;
+    border: 1px solid #4ab3af !important;
+    color: #fff;
+}
+
   
-  /* Nút kiểu xanh chữ trắng, giống nút Lưu */
+  /* N�t ki?u xanh ch? tr?ng, gi?ng n�t Luu */
   .btn-detail {
     background-color: #d1a029;
     color: white;
@@ -322,21 +399,21 @@ form select {
     font-weight: bold;
     border-radius: 5px;
     transition: 0.3s;
-    text-decoration: none; /* bỏ gạch chân link */
+    text-decoration: none; /* b? g?ch ch�n link */
   }
   
   .btn-detail:hover {
     background-color: #b18623;
   }
-  /* ========== Nút dẫn sang giao_viec.php ========== */
+  /* ========== N�t d?n sang giao_viec.php ========== */
 .action-links{
-    margin: 1.2rem 0 2.5rem;         /* cách trên & dưới */
+    margin: 1.2rem 0 2.5rem;         /* c�ch tr�n & du?i */
 }
 
 .btn-task{
     display:inline-block;
     padding:10px 26px;
-    background:#17a2b8;              /* xanh ngọc */
+    background:#17a2b8;              /* xanh ng?c */
     color:#fff;
     font-weight:600;
     border-radius:6px;
@@ -345,8 +422,8 @@ form select {
     transition:background .25s, transform .15s;
 }
 .btn-task:hover{
-    background:#138496;              /* đậm hơn khi hover */
-    transform:translateY(-2px);      /* hiệu ứng nổi nhẹ */
+    background:#138496;              /* d?m hon khi hover */
+    transform:translateY(-2px);      /* hi?u ?ng n?i nh? */
 }
 /* TABS NAV */
 .tabs {
@@ -355,10 +432,10 @@ form select {
   }
   .tab-btn {
     margin-right:5px;
-    border-top-left-radius: 5px;  
-    border-top-right-radius: 5px; 
-    border-bottom-left-radius: 0;  
-    border-bottom-right-radius: 0; 
+    border-top-left-radius: 5px !important;  
+    border-top-right-radius: 5px !important; 
+    border-bottom-left-radius: 0 !important;  
+    border-bottom-right-radius: 0 !important; 
     border-left: 0px solid rgb(228, 227, 227);
     border-right: 1px solid rgb(228, 227, 227);
     border-top: 1px solid rgb(228, 227, 227);
@@ -391,26 +468,26 @@ form select {
   
 
 
-/* ===== RESPONSIVE CHO TABLE TRÊN IPAD ===== */
+/* ===== RESPONSIVE CHO TABLE TR�N IPAD ===== */
 @media only screen and (max-width: 1024px) {
-    /* Thêm cuộn ngang cho bảng nếu chiều rộng màn hình bị hẹp */
+    /* Th�m cu?n ngang cho b?ng n?u chi?u r?ng m�n h�nh b? h?p */
     table {
         display: block;
-        overflow-x: auto; /* Tạo thanh cuộn ngang khi bảng rộng hơn màn hình */
-        white-space: nowrap; /* Không xuống dòng ô, giúp bảng gọn trong khung cuộn */
+        overflow-x: auto; /* T?o thanh cu?n ngang khi b?ng r?ng hon m�n h�nh */
+        white-space: nowrap; /* Kh�ng xu?ng d�ng �, gi�p b?ng g?n trong khung cu?n */
     }
     
-    /* Giảm padding/tràn của .container nếu cần */
+    /* Gi?m padding/tr�n c?a .container n?u c?n */
     .container {
-        padding: 10px;
+        padding: 10px !important;
     }
     
-    /* Có thể điều chỉnh font-size một chút nếu muốn chữ nhỏ hơn */
+    /* C� th? di?u ch?nh font-size m?t ch�t n?u mu?n ch? nh? hon */
     table, th, td {
         font-size: 14px;
     }
     
-    /* Giảm độ rộng input trong bảng, nếu thấy cần */
+    /* Gi?m d? r?ng input trong b?ng, n?u th?y c?n */
     table input {
         width: 70%;
     }
@@ -425,7 +502,7 @@ form select {
         word-wrap: break-word;  /* allow long text to wrap */
         width: calc(100% / 6);
       }
-        /* make the entire row a flex‑container without wrapping */
+        /* make the entire row a flex-container without wrapping */
   #modul4 .filter-row {
     display: flex;
     flex-wrap: nowrap;
@@ -444,15 +521,16 @@ form select {
   /* selects & the daterange input share remaining space and can shrink */
   #modul4 .filter-row select,
   #modul4 .filter-row input#daterange {
-    flex: 1 1 auto;     /* grow to fill, shrink if needed */
-    min-width: 0;       /* allow shrinking below their content width */
-    width: auto !important; /* override the inline 200px */
+      flex: 1 1 auto;     /* grow to fill, shrink if needed */
+      min-width: 0;       /* allow shrinking below their content width */
+      width: auto !important; /* override the inline 200px */
+      cursor: pointer;
   }
   .form-add-employee table,
   .form-add-attendance table {
     display: table !important;
     width: 100% !important;
-    table-layout: auto; /* hoặc fixed nếu muốn các cột đều nhau */
+    table-layout: auto; /* ho?c fixed n?u mu?n c�c c?t d?u nhau */
   }
 
   .form-add-employee td,
@@ -463,7 +541,7 @@ form select {
     box-sizing: border-box;
   }
 
-  /* Đảm bảo input/select vẫn full‑width */
+  /* �?m b?o input/select v?n full-width */
   .form-add-employee input,
   .form-add-employee select,
   .form-add-attendance input,
@@ -475,9 +553,9 @@ form select {
   }
   
 }
-/* ===== RESPONSIVE CHO ĐIỆN THOẠI (≤768px) ===== */
+/* ===== RESPONSIVE CHO �I?N THO?I (=768px) ===== */
 @media only screen and (max-width: 768px) {
-    /* --- Modul1: Thêm nhân viên --- */
+    /* --- Modul1: Th�m nh�n vi�n --- */
     .form-add-employee table,
     .form-add-employee thead,
     .form-add-employee tbody,
@@ -504,7 +582,7 @@ form select {
       width: 100%;
     }
   
-    /* --- Modul5: Chấm công bù --- */
+    /* --- Modul5: Ch?m c�ng b� --- */
     .form-add-attendance table,
     .form-add-attendance thead,
     .form-add-attendance tbody,
@@ -531,7 +609,7 @@ form select {
       width: 100%;
     }
   
-    /* --- Modul4: Filter-row (Quản lý chấm công) --- */
+    /* --- Modul4: Filter-row (Qu?n l� ch?m c�ng) --- */
     .filter-row {
       flex-direction: column;
       align-items: stretch;
@@ -562,9 +640,9 @@ form select {
         scrollbar-width: thin;       /* thin scrollbar in Firefox */
       }
       
-      /* prevent each button from shrinking — force its own width */
+      /* prevent each button from shrinking � force its own width */
       .tab-btn {
-        flex: 0 0 auto;              /* don’t grow or shrink, size to content */
+        flex: 0 0 auto;              /* don�t grow or shrink, size to content */
         white-space: nowrap;         /* keep text on one line */
       }
       
@@ -576,7 +654,7 @@ form select {
         background: rgba(0,0,0,0.2);
         border-radius: 3px;
       }
-       /* Modul4 – căn trái filter-row */
+       /* Modul4 � can tr�i filter-row */
     #modul4 .filter-row select,
     #modul4 .filter-row input[type="text"],
     #modul4 .filter-row input#daterange {
@@ -597,5 +675,3 @@ form select {
   
 
   
-
-

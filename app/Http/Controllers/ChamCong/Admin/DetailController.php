@@ -121,6 +121,29 @@ class DetailController extends Controller
             ->limit($rowsPerPage)
             ->get();
 
+        $sumHoursDisplay = round($sumHours, 2);
+        $sumSalaryDisplay = number_format($sumSalary, 0, ',', '.');
+
+        if ($request->ajax() || $request->query('ajax') == '1') {
+            return response()->json([
+                'rowsHtml' => view('chamcong.admin.partials.detail_rows', [
+                    'groupedAtt' => $groupedAtt,
+                ])->render(),
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'rowsPerPage' => $rowsPerPage,
+                'filterUID' => $filterUID,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'startDateDmy' => $startDateDmy,
+                'endDateDmy' => $endDateDmy,
+                'sumHours' => $sumHours,
+                'sumHoursDisplay' => $sumHoursDisplay,
+                'sumSalary' => $sumSalary,
+                'sumSalaryFormatted' => $sumSalaryDisplay,
+            ]);
+        }
+
         return view('chamcong.admin.detail', [
             'allUsers' => $allUsers,
             'groupedAtt' => $groupedAtt,

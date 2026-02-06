@@ -29,9 +29,7 @@
     <div class="table-controls">
         <div class="calendar-wrap">
             <button type="button" class="calendar-toggle" id="calendarToggle" aria-label="Lịch">
-                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                    <path fill="currentColor" d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm12 6H5v12h14V8Z"/>
-                </svg>
+                <i class="fa-solid fa-calendar" aria-hidden="true"></i>
             </button>
             <div class="calendar-popover" id="calendarPopover" aria-hidden="true">
                 <div class="calendar-header">
@@ -40,7 +38,7 @@
                     <button type="button" class="cal-nav" id="calNext" aria-label="Tháng sau">›</button>
                 </div>
                 <div class="calendar-weekdays">
-                    <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                    <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
             </div>
@@ -211,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!year || !month) return;
 
         calendarTitle.textContent = `${monthNames[month - 1]} ${year}`;
-        const firstDay = new Date(year, month - 1, 1).getDay();
+        const firstDay = (new Date(year, month - 1, 1).getDay() + 6) % 7;
         const daysInMonth = new Date(year, month, 0).getDate();
 
         let html = '';
@@ -429,3 +427,4 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 </body>
 </html>
+

@@ -21,7 +21,6 @@ export default defineConfig({
         'resources/chamcong/user_tasks.css',
         'resources/chamcong/admin.css',
         'resources/chamcong/giao_viec.css',
-        'resources/chamcong/vendor/daterangepicker.min.css',
         'resources/chamcong/vendor.js',
       ],
       refresh: true, // tự reload khi blade/js thay đổi
@@ -127,7 +126,7 @@ export default defineConfig({
   port: 5173,
   strictPort: true,
   hmr: {
-    host: '192.168.2.198',
+    host: '192.168.1.11',
     port: 5173,
   },
 },

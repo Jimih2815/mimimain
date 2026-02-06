@@ -216,6 +216,8 @@
   
   .daterangepicker th.month {
     width: auto;
+    font-size: 1rem;
+    color: black;
   }
   
   .daterangepicker td.disabled, .daterangepicker option.disabled {
