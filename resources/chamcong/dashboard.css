@@ -1,9 +1,19 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@font-face {
+    font-family: 'Baloo 2';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/baloo2/v23/wXKrE3kTposypRyd51ncANwr.woff2) format('woff2');
+    unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
+}
+
 /* Reset mặc định */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Baloo 2', sans-serif;
 }
 
 /* Căn giữa nội dung và tối ưu cho điện thoại */
@@ -33,68 +43,57 @@ p {
     margin-bottom: 20px;
 }
 
-/* Định dạng danh sách */
-ul {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-}
-
-/* Tạo style chung cho các nút */
-ul li {
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
-}
-
-ul li a {
-    display: block;
-    text-decoration: none;
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    padding: 15px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 300px;
-    transition: all 0.3s ease;
-}
-
-
-
-/* Nút Đăng xuất nhỏ hơn, đặt ở dưới cùng và sát phải */
-.logout-container {
-    width: 90%;
+/* Logout icon top-right */
+.logout-top {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
 }
-
-ul li a[href="logout.php"],
-ul li a[href="info.php"] {
-    color: gray;
-    font-size: 16px; /* Chữ nhỏ hơn */
-    padding: 10px 20px; /* Kích thước nhỏ hơn */
-    width: auto;
+.logout-icon-btn {
+    border: 1px solid #b83232;
+    color: #b83232;
+    background: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
-
-ul li a[href="logout.php"]:hover, 
-ul li a[href="info.php"]:hover {
-    opacity: 0.8;
+.logout-icon-btn:hover {
+    background: #b83232;
+    color: #fff;
 }
 .check-btn {
-    /* width: 14rem;
-    height: 4rem; */
-    display: inline-block;
+    justify-content: center;
+    display: flex;
     font-size: 26px;
-    padding: 20px 60px;      
+    padding: 20px 60px;
     border-radius: 10px;
     font-weight: bold;
     color: #fff;
     text-decoration: none;
     transition: all 0.3s ease;
-    margin: 20px auto;       /* Tạo khoảng cách trên dưới */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    margin: 20px auto;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+/* Nút Thông tin */
+.info-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.info-btn {
+    background-color: #d1a029;
+    width: 250px;
+    height: 80px;
+}
+.info-btn:hover {
+    background-color: #b88f21;
 }
 /* Nút Check-in màu xanh */
 .checkin {
@@ -120,3 +119,5 @@ ul li a[href="info.php"]:hover {
     width: 40%;
     margin-bottom: 2rem;
   }
+
+

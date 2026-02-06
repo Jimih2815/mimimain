@@ -7,6 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
+    <div class="logout-top">
+        <form method="POST" action="{{ route('chamcong.logout') }}">
+            @csrf
+            <button type="submit" class="logout-icon-btn" aria-label="Đăng xuất">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                    <path fill="currentColor" d="M10 17v-2h4v-6h-4V7l-5 5 5 5Zm7-12v14H7v2h12V3H7v2h10Z"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
     <a href="{{ route('chamcong.dashboard') }}" class="logo-link">
         <img src="{{ Vite::asset('resources/chamcong/logo.png') }}" alt="Logo Công Ty" class="company-logo">
     </a>
@@ -59,16 +70,8 @@
         </div>
     @endif
 
-    <div class="logout-container" style="margin-top:20px;">
-        <ul style="width: 100%; justify-content: space-between; display: flex;">
-            <li><a href="{{ route('chamcong.info') }}">Thông tin</a></li>
-            <li>
-                <form method="POST" action="{{ route('chamcong.logout') }}">
-                    @csrf
-                    <button type="submit" style="background:none;border:none;padding:0;color:#0d6efd;text-decoration:underline;cursor:pointer;">Đăng xuất</button>
-                </form>
-            </li>
-        </ul>
+    <div class="info-container">
+        <a href="{{ route('chamcong.info') }}" class="check-btn info-btn">Thông tin</a>
     </div>
 
     @if($showNewTaskPopup)

@@ -16,30 +16,82 @@ class InfoController extends Controller
         $userId = (int) $request->session()->get('chamcong_user_id');
         $username = $request->session()->get('chamcong_username', '');
 
-        $rowsPerPage = 5;
+        $tz = config('chamcong.timezone', 'Asia/Ho_Chi_Minh');
+        $now = Carbon::now($tz);
+
+        $selectedMonth = (string) $request->query('month', $now->format('Y-m'));
+        if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $selectedMonth)) {
+            $selectedMonth = $now->format('Y-m');
+        }
+        [$filterYear, $filterMonth] = array_map('intval', explode('-', $selectedMonth));
+
+        $monthOptions = [];
+        for ($i = 0; $i < 6; $i++) {
+            $d = $now->copy()->subMonths($i);
+            $monthOptions[] = [
+                'value' => $d->format('Y-m'),
+                'label' => $d->format('m/Y'),
+            ];
+        }
+
+        $rowsPerPage = (int) $request->query('rows_per_page', 5);
+        if (!in_array($rowsPerPage, [5, 10, 20, 30], true)) {
+            $rowsPerPage = 5;
+        }
         $page = max(1, (int) $request->query('page', 1));
         $startFrom = ($page - 1) * $rowsPerPage;
 
-        $totalRows = Attendance::where('user_id', $userId)
+        $totalRowsQuery = Attendance::where('user_id', $userId);
+        if ($filterYear > 0 && $filterMonth > 0) {
+            $totalRowsQuery->whereYear('check_in', $filterYear)
+                ->whereMonth('check_in', $filterMonth);
+        }
+        $totalRows = $totalRowsQuery
             ->selectRaw('COUNT(DISTINCT DATE(check_in)) AS total_days')
             ->value('total_days');
         $totalRows = (int) ($totalRows ?? 0);
         $totalPages = $totalRows > 0 ? (int) ceil($totalRows / $rowsPerPage) : 1;
 
-        $groupedAtt = Attendance::where('user_id', $userId)
+        $groupedQuery = Attendance::where('user_id', $userId)
             ->selectRaw('DATE(check_in) AS work_date, MIN(check_in) AS earliest_in, MAX(check_out) AS latest_out')
-            ->groupBy(DB::raw('DATE(check_in)'))
+            ->groupBy(DB::raw('DATE(check_in)'));
+        if ($filterYear > 0 && $filterMonth > 0) {
+            $groupedQuery->whereYear('check_in', $filterYear)
+                ->whereMonth('check_in', $filterMonth);
+        }
+        $groupedAtt = $groupedQuery
             ->orderByDesc('work_date')
             ->offset($startFrom)
             ->limit($rowsPerPage)
             ->get();
 
-        $tz = config('chamcong.timezone', 'Asia/Ho_Chi_Minh');
-        $now = Carbon::now($tz);
+        $calendarDays = [];
+        if ($filterYear > 0 && $filterMonth > 0) {
+            $calendarRows = Attendance::where('user_id', $userId)
+                ->whereYear('check_in', $filterYear)
+                ->whereMonth('check_in', $filterMonth)
+                ->selectRaw('DATE(check_in) AS work_date, MAX(check_in IS NOT NULL) AS has_in, MAX(check_out IS NOT NULL) AS has_out')
+                ->groupBy(DB::raw('DATE(check_in)'))
+                ->get();
 
-        $totalMins = Attendance::where('user_id', $userId)
-            ->whereMonth('check_in', $now->month)
-            ->whereYear('check_in', $now->year)
+            $calendarDays = $calendarRows->map(function ($r) {
+                $day = (int) substr((string) $r->work_date, 8, 2);
+                $hasIn = (int) $r->has_in > 0;
+                $hasOut = (int) $r->has_out > 0;
+                $status = ($hasIn && $hasOut) ? 'complete' : 'incomplete';
+                return [
+                    'day' => $day,
+                    'status' => $status,
+                ];
+            })->values();
+        }
+
+        $totalMinsQuery = Attendance::where('user_id', $userId);
+        if ($filterYear > 0 && $filterMonth > 0) {
+            $totalMinsQuery->whereYear('check_in', $filterYear)
+                ->whereMonth('check_in', $filterMonth);
+        }
+        $totalMins = $totalMinsQuery
             ->whereNotNull('check_out')
             ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, check_in, check_out)) AS total_mins')
             ->value('total_mins');
@@ -64,6 +116,31 @@ class InfoController extends Controller
             }
         }
 
+        if ($request->query('ajax') == '1') {
+            $rows = $groupedAtt->map(function ($g) {
+                $dayString = $g->work_date;
+                $earliestHM = $g->earliest_in ? substr(explode(' ', $g->earliest_in)[1] ?? '', 0, 5) : '';
+                $latestHM = $g->latest_out ? substr(explode(' ', $g->latest_out)[1] ?? '', 0, 5) : '';
+                $dmy = $dayString ? implode('/', array_reverse(explode('-', $dayString))) : '';
+                return [
+                    'date' => $dmy,
+                    'check_in' => $earliestHM,
+                    'check_out' => $latestHM,
+                ];
+            })->values();
+
+            return response()->json([
+                'rows' => $rows,
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'rowsPerPage' => $rowsPerPage,
+                'month' => $selectedMonth,
+                'actualHours' => round($actualHoursThisMonth, 2),
+                'currentSalary' => number_format($currentSalary),
+                'calendar' => $calendarDays,
+            ]);
+        }
+
         $passMsg = $request->session()->pull('chamcong_pass_msg');
 
         return view('chamcong.info', [
@@ -71,6 +148,10 @@ class InfoController extends Controller
             'groupedAtt' => $groupedAtt,
             'page' => $page,
             'totalPages' => $totalPages,
+            'rowsPerPage' => $rowsPerPage,
+            'monthOptions' => $monthOptions,
+            'selectedMonth' => $selectedMonth,
+            'calendarDays' => $calendarDays,
             'actualHoursThisMonth' => $actualHoursThisMonth,
             'currentSalary' => $currentSalary,
             'passMsg' => $passMsg,
