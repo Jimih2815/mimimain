@@ -59,6 +59,7 @@
       <option value="30" {{ $rowsPerPage==30 ? 'selected' : '' }}>30</option>
     </select>
 
+    <label style="margin-left:10px;">Xem l&#7883;ch/nv:</label>
     <div class="calendar-wrap" id="detailCalendarWrap">
       <button type="button" class="calendar-toggle" id="detailCalendarToggle" aria-label="L&#7883;ch">
         <i class="fa-solid fa-calendar" aria-hidden="true"></i>
@@ -518,6 +519,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 </body>
 </html>
+
 
 
 

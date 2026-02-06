@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 @font-face {
     font-family: 'Baloo 2';
@@ -17,7 +17,7 @@
     font-family: 'Baloo 2', sans-serif;
 }
 
-/* To�n b? trang */
+/* Toï¿½n b? trang */
 body {
     display: block !important;
     background-color: #f4f4f4;
@@ -25,7 +25,7 @@ body {
     margin: 0;
 }
 
-/* Container ch�nh */
+/* Container chï¿½nh */
 .container {
     max-width: 1200px;
     margin: auto;
@@ -35,14 +35,14 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Ti�u d? ch�nh */
+/* Tiï¿½u d? chï¿½nh */
 h1 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
 }
 
-/* Ti�u d? c�c ph?n */
+/* Tiï¿½u d? cï¿½c ph?n */
 h2, h3 {
     margin-top: 15px;
     color: #1f3b4d;
@@ -70,14 +70,14 @@ table, th, td {
     text-align: center;
 }
 
-/* Can gi?a n?i dung trong c�c � */
+/* Can gi?a n?i dung trong cï¿½c ï¿½ */
 td {
     padding: 12px;
     text-align: center;
     vertical-align: middle;
 }
 
-/* � input trong b?ng */
+/* ï¿½ input trong b?ng */
 table input {
     width: 80%;
     padding: 6px;
@@ -87,7 +87,7 @@ table input {
     border-radius: 5px;
 }
 
-/* N�t b?m */
+/* Nï¿½t b?m */
 button {
     background-color: #3f9426;
     color: white;
@@ -152,7 +152,7 @@ button {
     margin: 0;
 }
 
-/* N�t Luu */
+/* Nï¿½t Luu */
 button[name="update_earliest_latest"] {
     background-color: #3f9426;
     color: white;
@@ -162,7 +162,7 @@ button[name="update_earliest_latest"]:hover {
     background-color: #3f9426;
 }
 
-/* N�t X�a */
+/* Nï¿½t Xï¿½a */
 button[name="delete_user"],
   button[name="delete_day_attendance"],
   .btn-delete-user {
@@ -176,7 +176,7 @@ button[name="delete_user"]:hover,
     background-color: #b83232;
   }
 
-/* T?o flexbox cho � h�nh d?ng */
+/* T?o flexbox cho ï¿½ hï¿½nh d?ng */
 .action-buttons {
     display: flex;
     justify-content: space-evenly;
@@ -184,7 +184,7 @@ button[name="delete_user"]:hover,
     
 }
 
-/* Can ch?nh form ch?n nh�n vi�n */
+/* Can ch?nh form ch?n nhï¿½n viï¿½n */
 form select {
     
     font-size: 16px;
@@ -192,7 +192,7 @@ form select {
     border-radius: 5px;
 }
 
-/* N�t dang xu?t */
+/* Nï¿½t dang xu?t */
 .logout-link {
     display: flex;
     justify-content: flex-end;
@@ -204,7 +204,7 @@ form select {
 }
 
 
-/* Can ch?nh form "Th�m nh�n vi�n" */
+/* Can ch?nh form "Thï¿½m nhï¿½n viï¿½n" */
 .form-add-employee, .form-add-attendance {
     width: 100%;
     display: flex;
@@ -222,7 +222,7 @@ form select {
     vertical-align: middle;
 }
 
-/* � input v� select r?ng ngang v?i b?ng tr�n */
+/* ï¿½ input vï¿½ select r?ng ngang v?i b?ng trï¿½n */
 .form-add-employee input,
 .form-add-employee select,
 .form-add-attendance input,
@@ -234,7 +234,7 @@ form select {
     border-radius: 5px;
 }
 
-/* Can gi?a n�t "Th�m" */
+/* Can gi?a nï¿½t "Thï¿½m" */
 .form-add-employee button,
 .form-add-attendance button {
   background-color: #d1a029;
@@ -259,7 +259,7 @@ form select {
 .pagination a {
     display: inline-block;
     text-decoration: none;
-    color: #4ab3af; /* Xanh duong ph� h?p t�ng */
+    color: #4ab3af; /* Xanh duong phï¿½ h?p tï¿½ng */
     font-weight: bold;
     padding: 6px 12px;
     border: 1px solid #4ab3af !important;
@@ -278,7 +278,7 @@ form select {
     border: 1px solid #4ab3af !important;
 }
 
-/* N�t &laquo; / &raquo; */
+/* Nï¿½t &laquo; / &raquo; */
 .pagination a:first-child,
 .pagination a:last-child {
     min-width: 36px;
@@ -292,34 +292,43 @@ button,
 .btn-task {
   border-radius: 50px !important;
 }
-/* T?o h�ng ngang cho form l?c */
+/* T?o hï¿½ng ngang cho form l?c */
 .filter-row {
     display: flex;            /* X?p ngang */
     align-items: center;      /* Canh gi?a theo chi?u d?c */
-    gap: 10px;                /* Kho?ng c�ch gi?a c�c ph?n t? */
-    margin-bottom: 20px;      /* Kho?ng c�ch du?i form */
+    gap: 10px;                /* Kho?ng cï¿½ch gi?a cï¿½c ph?n t? */
+    margin-bottom: 20px;      /* Kho?ng cï¿½ch du?i form */
 }
 
-/* �?m b?o label, select, input c� c�ng chi?u cao co b?n */
+/* ï¿½?m b?o label, select, input cï¿½ cï¿½ng chi?u cao co b?n */
 .filter-row label {
     font-weight: bold;
-    white-space: nowrap;      /* Kh�ng xu?ng d�ng label */
+    white-space: nowrap;      /* Khï¿½ng xu?ng dï¿½ng label */
 }
 
-/* �?ng b? chi?u cao, padding gi?a c�c tru?ng */
+/* ï¿½?ng b? chi?u cao, padding gi?a cï¿½c tru?ng */
 .filter-row select,
 .filter-row input[type="text"] {
     height: 40px;             /* Chi?u cao d?ng nh?t */
-    padding: 0 10px;          /* Th�m kho?ng c�ch tr�i-ph?i */
+    padding: 0 10px;          /* Thï¿½m kho?ng cï¿½ch trï¿½i-ph?i */
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-/* D�ng flex d? d?y n�t sang ph?i */
+
+/* Detail page filters: green border/text + pill radius */
+#detailFilterForm select,
+#detailFilterForm input#daterange {
+    border: 1px solid #4ab3af;
+    color: #4ab3af;
+    border-radius: 50px;
+    height: 40px;
+}
+/* Dï¿½ng flex d? d?y nï¿½t sang ph?i */
 .detail-link-wrapper {
     display: flex;
-    justify-content: flex-end; /* d?y ph?n t? con s�t b�n ph?i */
-    margin-top: 1rem; /* kho?ng c�ch tr�n */
+    justify-content: flex-end; /* d?y ph?n t? con sï¿½t bï¿½n ph?i */
+    margin-top: 1rem; /* kho?ng cï¿½ch trï¿½n */
   }
 
 /* Daterangepicker - style gi?ng calendar-popover (info) + animation */
@@ -391,11 +400,11 @@ button,
 /* Calendar popover (same as info page) */
 .calendar-wrap {
     position: relative;
-    margin-left: 10px;
+
 }
 .calendar-toggle {
-    width: 2rem;
-    height: 2rem;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 1px solid #4ab3af;
     background: #fff;
@@ -525,7 +534,7 @@ button,
 }
 
   
-  /* N�t ki?u xanh ch? tr?ng, gi?ng n�t Luu */
+  /* Nï¿½t ki?u xanh ch? tr?ng, gi?ng nï¿½t Luu */
   .btn-detail {
     background-color: #d1a029;
     color: white;
@@ -536,15 +545,15 @@ button,
     font-weight: bold;
     border-radius: 5px;
     transition: 0.3s;
-    text-decoration: none; /* b? g?ch ch�n link */
+    text-decoration: none; /* b? g?ch chï¿½n link */
   }
   
   .btn-detail:hover {
     background-color: #b18623;
   }
-  /* ========== N�t d?n sang giao_viec.php ========== */
+  /* ========== Nï¿½t d?n sang giao_viec.php ========== */
 .action-links{
-    margin: 1.2rem 0 2.5rem;         /* c�ch tr�n & du?i */
+    margin: 1.2rem 0 2.5rem;         /* cï¿½ch trï¿½n & du?i */
 }
 
 .btn-task{
@@ -605,21 +614,21 @@ button,
   
 
 
-/* ===== RESPONSIVE CHO TABLE TR�N IPAD ===== */
+/* ===== RESPONSIVE CHO TABLE TRï¿½N IPAD ===== */
 @media only screen and (max-width: 1024px) {
-    /* Th�m cu?n ngang cho b?ng n?u chi?u r?ng m�n h�nh b? h?p */
+    /* Thï¿½m cu?n ngang cho b?ng n?u chi?u r?ng mï¿½n hï¿½nh b? h?p */
     table {
         display: block;
-        overflow-x: auto; /* T?o thanh cu?n ngang khi b?ng r?ng hon m�n h�nh */
-        white-space: nowrap; /* Kh�ng xu?ng d�ng �, gi�p b?ng g?n trong khung cu?n */
+        overflow-x: auto; /* T?o thanh cu?n ngang khi b?ng r?ng hon mï¿½n hï¿½nh */
+        white-space: nowrap; /* Khï¿½ng xu?ng dï¿½ng ï¿½, giï¿½p b?ng g?n trong khung cu?n */
     }
     
-    /* Gi?m padding/tr�n c?a .container n?u c?n */
+    /* Gi?m padding/trï¿½n c?a .container n?u c?n */
     .container {
         padding: 10px !important;
     }
     
-    /* C� th? di?u ch?nh font-size m?t ch�t n?u mu?n ch? nh? hon */
+    /* Cï¿½ th? di?u ch?nh font-size m?t chï¿½t n?u mu?n ch? nh? hon */
     table, th, td {
         font-size: 14px;
     }
@@ -667,7 +676,7 @@ button,
   .form-add-attendance table {
     display: table !important;
     width: 100% !important;
-    table-layout: auto; /* ho?c fixed n?u mu?n c�c c?t d?u nhau */
+    table-layout: auto; /* ho?c fixed n?u mu?n cï¿½c c?t d?u nhau */
   }
 
   .form-add-employee td,
@@ -678,7 +687,7 @@ button,
     box-sizing: border-box;
   }
 
-  /* �?m b?o input/select v?n full-width */
+  /* ï¿½?m b?o input/select v?n full-width */
   .form-add-employee input,
   .form-add-employee select,
   .form-add-attendance input,
@@ -690,9 +699,9 @@ button,
   }
   
 }
-/* ===== RESPONSIVE CHO �I?N THO?I (=768px) ===== */
+/* ===== RESPONSIVE CHO ï¿½I?N THO?I (=768px) ===== */
 @media only screen and (max-width: 768px) {
-    /* --- Modul1: Th�m nh�n vi�n --- */
+    /* --- Modul1: Thï¿½m nhï¿½n viï¿½n --- */
     .form-add-employee table,
     .form-add-employee thead,
     .form-add-employee tbody,
@@ -719,7 +728,7 @@ button,
       width: 100%;
     }
   
-    /* --- Modul5: Ch?m c�ng b� --- */
+    /* --- Modul5: Ch?m cï¿½ng bï¿½ --- */
     .form-add-attendance table,
     .form-add-attendance thead,
     .form-add-attendance tbody,
@@ -746,7 +755,7 @@ button,
       width: 100%;
     }
   
-    /* --- Modul4: Filter-row (Qu?n l� ch?m c�ng) --- */
+    /* --- Modul4: Filter-row (Qu?n lï¿½ ch?m cï¿½ng) --- */
     .filter-row {
       flex-direction: column;
       align-items: stretch;
@@ -757,6 +766,8 @@ button,
     .filter-row input[type="text"] {
       width: 100%;
     }
+
+
     table, th, td {
         border: 0px solid #ccc;
 
@@ -777,9 +788,9 @@ button,
         scrollbar-width: thin;       /* thin scrollbar in Firefox */
       }
       
-      /* prevent each button from shrinking � force its own width */
+      /* prevent each button from shrinking ï¿½ force its own width */
       .tab-btn {
-        flex: 0 0 auto;              /* don�t grow or shrink, size to content */
+        flex: 0 0 auto;              /* donï¿½t grow or shrink, size to content */
         white-space: nowrap;         /* keep text on one line */
       }
       
@@ -791,7 +802,7 @@ button,
         background: rgba(0,0,0,0.2);
         border-radius: 3px;
       }
-       /* Modul4 � can tr�i filter-row */
+       /* Modul4 ï¿½ can trï¿½i filter-row */
     #modul4 .filter-row select,
     #modul4 .filter-row input[type="text"],
     #modul4 .filter-row input#daterange {
@@ -812,3 +823,6 @@ button,
   
 
   
+
+
+
