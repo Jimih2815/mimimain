@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Detail Nhân Viên & Lương</title>
+  <title>Chi Ti&#7871;t Nh&#226;n Vi&#234;n &amp; L&#432;&#417;ng</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   @vite([
         'resources/chamcong/admin.css',
@@ -30,14 +30,14 @@
 @include('chamcong.partials.admin_navbar')
 <div class="container">
   <div class="tro-ve-trang-admin">
-    <a href="{{ route('chamcong.admin.dashboard') }}">Trở về Trang Chấm công</a>
+    <a href="{{ route('chamcong.admin.dashboard') }}">Tr&#7903; v&#7873; Trang Ch&#7845;m c&#244;ng</a>
   </div>
-  <h1>Chi Tiết Nhân Viên & Lương</h1>
+  <h1>Chi Ti&#7871;t Nh&#226;n Vi&#234;n &amp; L&#432;&#417;ng</h1>
 
   <form method="GET" action="{{ route('chamcong.admin.detail') }}" class="filter-row" style="margin-bottom:1rem;" id="detailFilterForm">
-    <label>Chọn nhân viên:</label>
+    <label>Ch&#7885;n nh&#226;n vi&#234;n:</label>
     <select name="filter_user_id">
-      <option value="">-- Tất cả --</option>
+      <option value="">-- T&#7845;t c&#7843; --</option>
       @foreach($allUsers as $u)
         <option value="{{ $u->id }}" {{ $filterUID == $u->id ? 'selected' : '' }}>
           {{ $u->username }}
@@ -45,28 +45,46 @@
       @endforeach
     </select>
 
-    <label style="margin-left:10px;">Khoảng ngày:</label>
+    <label style="margin-left:10px;">Kho&#7843;ng ng&#224;y:</label>
     <input type="text" id="daterange" style="width:200px; text-align:center;"
            value="{{ $startDateDmy.' - '.$endDateDmy }}" readonly />
 
     <input type="hidden" name="start_date" id="start_date" value="{{ $startDate }}">
     <input type="hidden" name="end_date" id="end_date" value="{{ $endDate }}">
 
-    <label style="margin-left:10px;">Số hàng/trang:</label>
+    <label style="margin-left:10px;">S&#7889; h&#224;ng/trang:</label>
     <select name="rows_per_page">
       <option value="10" {{ $rowsPerPage==10 ? 'selected' : '' }}>10</option>
       <option value="20" {{ $rowsPerPage==20 ? 'selected' : '' }}>20</option>
       <option value="30" {{ $rowsPerPage==30 ? 'selected' : '' }}>30</option>
     </select>
+
+    <div class="calendar-wrap" id="detailCalendarWrap">
+      <button type="button" class="calendar-toggle" id="detailCalendarToggle" aria-label="L&#7883;ch">
+        <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+      </button>
+      <span class="calendar-hint" id="detailCalendarHint">vui l&#242;ng ch&#7885;n nh&#226;n vi&#234;n</span>
+      <div class="calendar-popover" id="detailCalendarPopover" aria-hidden="true">
+        <div class="calendar-header">
+          {{-- <button type="button" class="cal-nav" id="detailCalPrev" aria-label="Tháng trước">‹</button> --}}
+          <div class="calendar-title" id="detailCalendarTitle"></div>
+          {{-- <button type="button" class="cal-nav" id="detailCalNext" aria-label="Tháng sau">›</button> --}}
+        </div>
+        <div class="calendar-weekdays">
+          <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+        </div>
+        <div class="calendar-grid" id="detailCalendarGrid"></div>
+      </div>
+    </div>
   </form>
 
   <table class="day-ne" border="1" cellpadding="5" cellspacing="0">
     <tr>
-      <th>Nhân viên</th>
-      <th>Ngày chấm công</th>
-      <th>Giờ Check-In</th>
-      <th>Giờ Check-Out</th>
-      <th>Thời gian làm</th>
+      <th>Nh&#226;n vi&#234;n</th>
+      <th>Ng&#224;y ch&#7845;m c&#244;ng</th>
+      <th>Gi&#7901; Check-In</th>
+      <th>Gi&#7901; Check-Out</th>
+      <th>Th&#7901;i gian l&#224;m</th>
     </tr>    <tbody id="detailRows">
       @include('chamcong.admin.partials.detail_rows', ['groupedAtt' => $groupedAtt])
     </tbody>
@@ -74,13 +92,13 @@
 
   <div class="pagination" id="detailPagination" data-page="{{ $page }}" data-total="{{ $totalPages }}" data-rows="{{ $rowsPerPage }}">
     @if($page > 1)
-      <a href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage, 'page' => $page-1]) }}">«</a>
+      <a href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage, 'page' => $page-1]) }}">&laquo;</a>
     @endif
     @for($i = 1; $i <= $totalPages; $i++)
       <a href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage, 'page' => $i]) }}" class="{{ $i == $page ? 'active' : '' }}">{{ $i }}</a>
     @endfor
     @if($page < $totalPages)
-      <a href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage, 'page' => $page+1]) }}">»</a>
+      <a href="{{ route('chamcong.admin.detail', ['filter_user_id' => $filterUID, 'start_date' => $startDate, 'end_date' => $endDate, 'rows_per_page' => $rowsPerPage, 'page' => $page+1]) }}">&raquo;</a>
     @endif
   </div>
 
@@ -91,19 +109,19 @@
   <div style="max-width: 400px; margin-top: 30px;">
     <table border="1" cellpadding="6" cellspacing="0" width="100%">
       <tr>
-        <th style="text-align:right; padding-right:0.5rem;">Tổng giờ làm:</th>
+        <th style="text-align:right; padding-right:0.5rem;">T&#7893;ng gi&#7901; l&#224;m:</th>
         <td id="totalHours">{{ $sumHoursDisplay }}</td>
       </tr>
       <tr>
-        <th style="text-align:right; padding-right:0.5rem;">Tổng lương:</th>
+        <th style="text-align:right; padding-right:0.5rem;">T&#7893;ng l&#432;&#417;ng:</th>
         <td id="totalSalary">{{ $sumSalaryDisplay }}</td>
       </tr>
       <tr>
-        <th style="text-align:right; padding-right:0.5rem;">Thưởng:</th>
+        <th style="text-align:right; padding-right:0.5rem;">Th&#432;&#7903;ng:</th>
         <td><input style="border: 0px solid #ccc;" type="text" id="bonusInput" value="0"></td>
       </tr>
       <tr>
-        <th style="text-align:right; background-color:#c82333; padding-right:0.5rem; color:white;">Tổng cộng lương:</th>
+        <th style="text-align:right; background-color:#c82333; padding-right:0.5rem; color:white;">T&#7893;ng c&#7897;ng l&#432;&#417;ng:</th>
         <td><input style="border: 0px solid #ccc; color: #c82333; font-weight:800;" type="text" id="finalInput" value="0"></td>
       </tr>
     </table>
@@ -128,6 +146,132 @@ window.addEventListener('load', function(){
   var totalHoursEl = document.getElementById('totalHours');
   var baseUrl = "{{ route('chamcong.admin.detail') }}";
 
+  var calendarDays = @json($calendarDays ?? []);
+  var calendarToggle = document.getElementById('detailCalendarToggle');
+  var calendarPopover = document.getElementById('detailCalendarPopover');
+  var calendarGrid = document.getElementById('detailCalendarGrid');
+  var calendarTitle = document.getElementById('detailCalendarTitle');
+  var calPrev = document.getElementById('detailCalPrev');
+  var calNext = document.getElementById('detailCalNext');
+  var calendarHint = document.getElementById('detailCalendarHint');
+  var monthNames = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+  var monthList = [];
+  var currentMonth = '';
+
+  function getMonthList(startStr, endStr) {
+    if (!startStr || !endStr) return [];
+    var s = startStr.split('-');
+    var e = endStr.split('-');
+    if (s.length < 2 || e.length < 2) return [];
+    var cur = new Date(parseInt(s[0],10), parseInt(s[1],10) - 1, 1);
+    var end = new Date(parseInt(e[0],10), parseInt(e[1],10) - 1, 1);
+    if (isNaN(cur.getTime()) || isNaN(end.getTime())) return [];
+    var list = [];
+    while (cur <= end) {
+      var y = cur.getFullYear();
+      var m = String(cur.getMonth() + 1).padStart(2, '0');
+      list.push(y + '-' + m);
+      cur.setMonth(cur.getMonth() + 1);
+    }
+    return list;
+  }
+
+  function pickClosestMonth(list) {
+    if (!list || !list.length) return '';
+    var now = new Date();
+    var nowKey = now.getFullYear() * 12 + now.getMonth();
+    var best = list[0];
+    var bestDiff = 999999;
+    list.forEach(function(m){
+      var parts = m.split('-');
+      if (parts.length < 2) return;
+      var key = parseInt(parts[0],10) * 12 + (parseInt(parts[1],10) - 1);
+      var diff = Math.abs(key - nowKey);
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        best = m;
+      }
+    });
+    return best;
+  }
+
+  function buildCalendarMap(days, monthStr) {
+    var map = {};
+    if (!Array.isArray(days) || !monthStr) return map;
+    var prefix = monthStr + '-';
+    days.forEach(function(d){
+      if (!d || !d.date) return;
+      if (String(d.date).indexOf(prefix) !== 0) return;
+      var day = parseInt(String(d.date).slice(8, 10), 10);
+      if (!isNaN(day)) map[day] = d.status || '';
+    });
+    return map;
+  }
+
+  function renderCalendar(monthStr) {
+    if (!calendarGrid || !calendarTitle || !monthStr) return;
+    var parts = monthStr.split('-');
+    var year = parseInt(parts[0], 10);
+    var month = parseInt(parts[1], 10);
+    if (!year || !month) return;
+
+    calendarTitle.textContent = monthNames[month - 1] + ' ' + year;
+    var firstDay = (new Date(year, month - 1, 1).getDay() + 6) % 7;
+    var daysInMonth = new Date(year, month, 0).getDate();
+    var calendarData = buildCalendarMap(calendarDays, monthStr);
+
+    var html = '';
+    for (var i = 0; i < firstDay; i++) {
+      html += '<div class="cal-cell empty"></div>';
+    }
+    for (var d = 1; d <= daysInMonth; d++) {
+      var status = calendarData[d];
+      var cls = '';
+      if (status === 'complete') cls = 'complete';
+      if (status === 'incomplete') cls = 'partial';
+      html += '<div class="cal-cell"><span class="cal-day ' + cls + '">' + d + '</span></div>';
+    }
+    calendarGrid.innerHTML = html;
+  }
+
+  function updateCalendarNav() {
+    if (!calPrev || !calNext) return;
+    var idx = monthList.indexOf(currentMonth);
+    calPrev.disabled = idx <= 0;
+    calNext.disabled = idx < 0 || idx >= monthList.length - 1;
+  }
+
+  function refreshCalendarFromRange() {
+    monthList = getMonthList(startInput ? startInput.value : '', endInput ? endInput.value : '');
+    if (!monthList.length) {
+      var now = new Date();
+      var cur = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      monthList = [cur];
+    }
+    currentMonth = pickClosestMonth(monthList) || monthList[0];
+    renderCalendar(currentMonth);
+    updateCalendarNav();
+  }
+
+  function setCalendarEnabled() {
+    var enabled = !!(userSelect && userSelect.value);
+    if (calendarToggle) {
+      calendarToggle.classList.toggle('is-disabled', !enabled);
+      calendarToggle.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+    }
+    if (!enabled && calendarPopover) {
+      calendarPopover.classList.remove('is-open');
+    }
+  }
+
+  function showCalendarHint() {
+    if (!calendarHint) return;
+    calendarHint.classList.add('is-show');
+    clearTimeout(calendarHint._hideTimer);
+    calendarHint._hideTimer = setTimeout(function(){
+      calendarHint.classList.remove('is-show');
+    }, 2000);
+  }
   function buildUrl(page, ajax) {
     var params = new URLSearchParams();
     if (ajax) params.set('ajax', '1');
@@ -187,6 +331,11 @@ window.addEventListener('load', function(){
         if (daterangeInput && data.startDateDmy && data.endDateDmy) {
           daterangeInput.value = data.startDateDmy + ' - ' + data.endDateDmy;
         }
+        if (Array.isArray(data.calendarDays)) {
+          calendarDays = data.calendarDays;
+        }
+        refreshCalendarFromRange();
+        setCalendarEnabled();
         var newPage = data.page || page;
         var newTotal = data.totalPages || 1;
         if (paginationEl) {
@@ -212,7 +361,7 @@ window.addEventListener('load', function(){
   }
 
   if (userSelect) {
-    userSelect.addEventListener('change', function(){ applyFilters(1); });
+    userSelect.addEventListener('change', function(){ setCalendarEnabled(); applyFilters(1); });
   }
   if (rowsSelect) {
     rowsSelect.addEventListener('change', function(){ applyFilters(1); });
@@ -232,7 +381,46 @@ window.addEventListener('load', function(){
     buildPagination(initialPage, initialTotal);
   }
 
-  $('#daterange').daterangepicker({
+    if (calendarToggle) {
+    calendarToggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (!(userSelect && userSelect.value)) {
+        showCalendarHint();
+        return;
+      }
+      if (calendarPopover) {
+        calendarPopover.classList.toggle('is-open');
+      }
+    });
+  }
+  if (calendarPopover) {
+    calendarPopover.addEventListener('click', function(e){ e.stopPropagation(); });
+  }
+  document.addEventListener('click', function(){
+    if (calendarPopover) calendarPopover.classList.remove('is-open');
+  });
+
+  if (calPrev) {
+    calPrev.addEventListener('click', function(){
+      var idx = monthList.indexOf(currentMonth);
+      if (idx > 0) {
+        currentMonth = monthList[idx - 1];
+        renderCalendar(currentMonth);
+        updateCalendarNav();
+      }
+    });
+  }
+  if (calNext) {
+    calNext.addEventListener('click', function(){
+      var idx = monthList.indexOf(currentMonth);
+      if (idx >= 0 && idx < monthList.length - 1) {
+        currentMonth = monthList[idx + 1];
+        renderCalendar(currentMonth);
+        updateCalendarNav();
+      }
+    });
+  }
+$('#daterange').daterangepicker({
     autoUpdateInput: true,
     startDate: moment(phpStart, 'YYYY-MM-DD'),
     endDate:   moment(phpEnd,   'YYYY-MM-DD'),
@@ -330,6 +518,33 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

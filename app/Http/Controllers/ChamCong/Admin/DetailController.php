@@ -121,6 +121,28 @@ class DetailController extends Controller
             ->limit($rowsPerPage)
             ->get();
 
+        $calendarDays = collect();
+        if ($filterUID > 0) {
+            $calendarRows = DB::connection('chamcong')
+                ->table('attendance')
+                ->selectRaw('DATE(check_in) AS work_date, MAX(check_in IS NOT NULL) AS has_in, MAX(check_out IS NOT NULL) AS has_out')
+                ->where('user_id', $filterUID)
+                ->whereDate('check_in', '>=', $startDate)
+                ->whereDate('check_in', '<=', $endDate)
+                ->groupBy(DB::raw('DATE(check_in)'))
+                ->get();
+
+            $calendarDays = $calendarRows->map(function ($r) {
+                $hasIn = (int) $r->has_in > 0;
+                $hasOut = (int) $r->has_out > 0;
+                $status = ($hasIn && $hasOut) ? 'complete' : 'incomplete';
+                return [
+                    'date' => $r->work_date,
+                    'status' => $status,
+                ];
+            })->values();
+        }
+
         $sumHoursDisplay = round($sumHours, 2);
         $sumSalaryDisplay = number_format($sumSalary, 0, ',', '.');
 
@@ -137,6 +159,7 @@ class DetailController extends Controller
                 'endDate' => $endDate,
                 'startDateDmy' => $startDateDmy,
                 'endDateDmy' => $endDateDmy,
+                'calendarDays' => $calendarDays,
                 'sumHours' => $sumHours,
                 'sumHoursDisplay' => $sumHoursDisplay,
                 'sumSalary' => $sumSalary,
@@ -157,6 +180,7 @@ class DetailController extends Controller
             'totalPages' => $totalPages,
             'sumHours' => $sumHours,
             'sumSalary' => $sumSalary,
+            'calendarDays' => $calendarDays,
         ]);
     }
 
