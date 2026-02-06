@@ -1,0 +1,539 @@
+.logo-link {
+  justify-content: center;
+  width: 100%;
+  display: flex;
+}
+.company-logo {
+  width: 20%;
+}
+.container-body {
+    width: 60%;
+  }
+    table, td, th {
+        border:1px solid #ccc;
+        border-collapse: collapse;
+        padding:5px;
+    }
+    /* Popup thông báo */
+    .popup-overlay {
+        position: fixed;
+        top:0;
+        left: 0;
+        right:0;
+        bottom:0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .popup-box {
+        background: #fff;
+        padding:20px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    .close-popup {
+        margin-top: 10px;
+    }
+    /* Container cho các nút tab */
+
+    .tab-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        background: #f5f5f5;
+        cursor: pointer;
+        margin-right: 0.25rem;
+    }
+    .tab-btn.active {
+        background: #fff;
+        font-weight: bold;
+    }
+    /* Nội dung mỗi tab */
+    .tab-content {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    /* Dùng cho phân trang */
+    .filter-section { 
+        justify-content: flex-end;
+        display: flex;
+        margin-bottom:0.5rem;
+        
+    }
+    .filter-section:hover {
+      cursor: pointer;
+    }
+    .pagination-controls {
+        margin-top: 10px;
+    }
+    /* Đánh dấu các box của task */
+    .task-pending-box, .task-completed-box {
+        border:1px solid #999;
+        margin-bottom:1rem; 
+        padding:1rem;
+        background: #fafafa;
+    }
+    :root {
+/* Các biến màu sắc */
+--primary-color: #4ab3af;
+--primary-hover: #4ab3af;
+--secondary-color: #fff;
+--bg-color: #f5f5f5;
+--text-color: #333;
+--border-color: #ccc;
+--accent-color: #4CAF50;
+--font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+--transition-duration: 0.3s;
+}
+
+/* Reset và định dạng chung */
+* {
+box-sizing: border-box;
+}
+
+body {
+display:flex;
+justify-content: center;
+background-color: var(--bg-color);
+color: var(--text-color);
+font-family: var(--font-family);
+margin: 20px;
+line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+color: var(--primary-color);
+margin-bottom: 10px;
+}
+h3 {
+text-align: center;
+font-size: 2rem;
+
+}
+p {
+margin-bottom: 10px;
+}
+
+a {
+color: var(--primary-color);
+text-decoration: none;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+/* Flash message */
+.flash-msg {
+padding: 10px 15px;
+background: var(--accent-color);
+color: var(--secondary-color);
+border-radius: 5px;
+margin-bottom: 15px;
+font-weight: bold;
+}
+
+/* Tabs */
+.tabs {
+display: flex;
+border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+padding: 10px 20px;
+cursor: pointer;
+background: var(--bg-color);
+border: 1px solid var(--border-color);
+border-bottom: none;
+margin-right: 5px;
+transition: background var(--transition-duration);
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+}
+
+.tab-btn:hover {
+background: var(--secondary-color);
+}
+
+.tab-btn.active {
+background: var(--secondary-color);
+font-weight: bold;
+border-bottom: 2px solid var(--secondary-color);
+}
+
+/* Nội dung tab */
+.tab-content {
+padding: 20px;
+background: var(--secondary-color);
+border: 1px solid var(--border-color);
+border-top: none;
+border-bottom-left-radius: 5px;
+border-bottom-right-radius: 5px;
+}
+
+/* Box công việc (Pending & Completed) */
+.task-pending-box,
+.task-completed-box {
+background: var(--secondary-color);
+border: 1px solid var(--border-color);
+border-radius: 5px;
+padding: 15px;
+margin-bottom: 15px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+transition: box-shadow var(--transition-duration);
+}
+
+.task-pending-box:hover,
+.task-completed-box:hover {
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Bảng tiến độ */
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+}
+
+table th,
+table td {
+padding: 8px 12px;
+text-align: left;
+border: 1px solid var(--border-color);
+}
+
+table th {
+background: var(--bg-color);
+font-weight: bold;
+}
+
+.filter-section label {
+font-weight: bold;
+margin-right: 10px;
+
+}
+
+.filter-section select,
+.filter-section input[type="text"] {
+padding: 6px;
+border: 1px solid var(--border-color);
+border-radius: 3px;
+transition: border var(--transition-duration);
+}
+
+.filter-section select:focus,
+.filter-section input[type="text"]:focus {
+border-color: var(--primary-color);
+outline: none;
+}
+
+.pagination-controls {
+text-align: center;
+margin-top: 10px;
+}
+
+.pagination-controls button {
+padding: 6px 12px;
+background: var(--primary-color);
+color: var(--secondary-color);
+border: none;
+border-radius: 3px;
+cursor: pointer;
+margin: 0 3px;
+transition: background var(--transition-duration);
+}
+
+.pagination-controls button:hover {
+background: var(--primary-hover);
+}
+
+/* Popup */
+.popup-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.5);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+}
+
+.popup-box {
+background: var(--secondary-color);
+padding: 20px;
+border-radius: 5px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+text-align: center;
+}
+
+.popup-box p {
+margin-bottom: 15px;
+font-size: 16px;
+}
+
+.close-popup {
+padding: 8px 16px;
+background: var(--primary-color);
+color: var(--secondary-color);
+border: none;
+border-radius: 3px;
+cursor: pointer;
+transition: background var(--transition-duration);
+}
+
+.close-popup:hover {
+background: var(--primary-hover);
+}
+
+/* Các điều khiển trong form */
+input[type="text"],
+input[type="date"],
+textarea {
+width: 100%;
+padding: 8px;
+margin: 4px 0 10px;
+border: 1px solid var(--border-color);
+border-radius: 3px;
+font-family: var(--font-family);
+}
+
+textarea {
+resize: vertical;
+}
+
+button {
+padding: 10px 20px;
+background: #d1a029;
+color: var(--secondary-color);
+border: none;
+border-radius: 3px;
+cursor: pointer;
+transition: background var(--transition-duration);
+}
+
+button:hover {
+background: #b18623;
+}
+
+/* Gợi ý tìm kiếm nhân viên */
+#employeeSuggestions {
+background: var(--secondary-color);
+border: 1px solid var(--border-color);
+border-radius: 3px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+max-height: 150px;
+overflow-y: auto;
+position: absolute;
+z-index: 1000;
+}
+
+#employeeSuggestions .suggestion-item {
+padding: 8px 10px;
+cursor: pointer;
+transition: background var(--transition-duration);
+}
+
+#employeeSuggestions .suggestion-item:hover {
+background: var(--bg-color);
+}
+
+/* Thẻ nhân viên được chọn */
+.employee-tag {
+display: inline-block;
+margin: 4px;
+padding: 4px 8px;
+background: var(--bg-color);
+border: 1px solid var(--border-color);
+border-radius: 3px;
+cursor: pointer;
+transition: background var(--transition-duration);
+}
+
+.employee-tag:hover {
+background: var(--primary-color);
+color: var(--secondary-color);
+}
+/* Ẩn bớt 3 dòng đầu tiên khi thu gọn */
+.expandable.collapsed{
+display:-webkit-box;
+-webkit-box-orient:vertical;
+-webkit-line-clamp:3;   /* số dòng muốn giữ lại */
+overflow:hidden;
+margin-bottom:0;
+}
+
+/* nút “Xem thêm / Thu gọn” */
+.show-more{
+display:block;
+font-size:.875rem;
+color:gray;
+cursor:pointer;
+user-select:none;
+}
+
+/* Căn giữa tiêu đề và cột STT trong bảng tiến độ */
+table th{ text-align:center; }
+table td:first-child{ text-align:center; }
+/* Áp dụng cho mọi đoạn văn trong các ô công việc */
+.task-pending-box p,
+.task-completed-box p{
+/* bẻ từ khi cần, cả chuỗi không có khoảng trắng cũng bẻ */
+word-break: break-all;        /* hoặc overflow-wrap:anywhere; */
+overflow-wrap: anywhere;
+
+white-space: normal;
+}
+
+
+.two-col{
+display:inline-block;
+width:48%;
+margin:0 1% .5rem 0;
+vertical-align:top;
+
+word-break: break-all;        
+overflow-wrap:anywhere;
+}
+/* ---- Căn giữa toàn bộ nội dung bảng “Tiến độ chi tiết” ---- */
+.task-pending-box   table th,
+.task-pending-box   table td,
+.task-completed-box table th,
+.task-completed-box table td{
+text-align : center;      /* căn giữa ngang */
+vertical-align: middle;   /* căn giữa dọc (hàng cao > 1 dòng) */
+}
+.ve-trang-chu {
+font-size:1rem;
+margin-top: 1.5rem;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: flex-end;
+}
+/* ==== Ngăn text tràn bảng Tiến độ chi tiết ==== */
+.subtask-table{
+    table-layout: fixed;          /* cố định chiều rộng cột, cho phép wrap */
+  }
+  
+  .subtask-table td{
+    word-break: break-word;       /* ngắt chuỗi không có khoảng trắng */
+    overflow-wrap: anywhere;      /* trình duyệt mới */
+    white-space: normal;          /* đảm bảo được xuống dòng */
+  }
+  .subtask-table tr th:nth-child(1) {
+    width: 50px;
+  }
+  .subtask-table tr th:nth-child(4) {
+    width: 120px;
+  }
+  .subtask-table tr th:nth-child(5) {
+    width: 300px;
+  }
+/* ---------- Laptop ≤1200px ---------- */
+@media (max-width:1200px){
+.container-body {width:80%;}
+}
+
+/* ---------- Tablet dọc ≤992px ---------- */
+@media (max-width:992px){
+.container-body {width:100%;}
+.tabs          {overflow-x:auto; flex-wrap:nowrap;}
+.tab-btn {
+    margin:0;
+    flex:0 0 auto; 
+    white-space:nowrap;
+    width: 50%;
+
+}
+.tabs {
+width: 100%;
+}
+/* bảng dài trượt ngang */
+.subtask-table-container{
+    overflow-x:auto;
+    width:100%;
+}
+.subtask-table{
+    width:100%;
+
+}
+}
+
+/* ---------- Điện thoại lớn ≤768px ---------- */
+@media (max-width:768px){
+    body {
+        margin:0;
+    }
+    .logo-link {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    .company-logo {
+      width: 35%;
+    }
+    .subtask-table{
+        width:940px;
+        min-width:100%;
+    }
+    .container-body > h1 {
+        margin: 1rem 10px 1rem;
+        
+    }
+h1{font-size:1.35rem;} h2{font-size:1.15rem;} h3{font-size:1.05rem;}
+.tab-btn {
+    width: 50%;
+}
+.container-body   {width:100%;}
+.tabs {
+width: 100%;
+margin: 0 0;
+border-bottom: 0px solid var(--border-color); 
+}
+/* bảng tiến độ: cột STT – Nội dung – … */
+table, th, td     {font-size:14px;}
+
+/* cuộn ngang bảng */
+.subtask-table-container{overflow-x:auto;}
+.task-pending-box{          /* bọc toàn bộ box để có thanh cuộn */
+    overflow-x:auto;
+  }
+  
+  /* bảng bên trong: giữ kích thước ngang lớn hơn khung để buộc xuất hiện thanh cuộn */
+  .task-pending-box > table{
+    width: 940px;             /* bằng với .subtask-table */
+    min-width: 100%;
+  }
+  .subtask-table tr th:nth-child(1) {
+    width: 50px;
+  }
+  .subtask-table tr th:nth-child(2), .subtask-table tr th:nth-child(3) {
+    width: 250px;
+  }
+  .tabs{overflow-x:visible !important;}
+  .ve-trang-chu {
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+  }
+  .ve-trang-chu a {
+    margin-right: 2rem;
+  }
+}
+
+
+/* ---------- Điện thoại nhỏ ≤480px ---------- */
+@media (max-width:480px){
+.tab-btn       {padding:8px 12px; font-size:.85rem;}
+}
+
+

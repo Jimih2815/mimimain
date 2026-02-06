@@ -50,6 +50,15 @@ use App\Http\Controllers\Admin\SidebarItemController;
 use App\Http\Controllers\Admin\HelpRequestController as AdminHelpRequestController;
 use App\Http\Controllers\Admin\SectorController as AdminSectorController;
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\ChamCong\AuthController as ChamCongAuthController;
+use App\Http\Controllers\ChamCong\DashboardController as ChamCongDashboardController;
+use App\Http\Controllers\ChamCong\AttendanceController as ChamCongAttendanceController;
+use App\Http\Controllers\ChamCong\InfoController as ChamCongInfoController;
+use App\Http\Controllers\ChamCong\UserTaskController as ChamCongUserTaskController;
+use App\Http\Controllers\ChamCong\Admin\ChamCongAdminController;
+use App\Http\Controllers\ChamCong\Admin\TaskAdminController;
+use App\Http\Controllers\ChamCong\Admin\DetailController as ChamCongDetailController;
+use App\Http\Controllers\ChamCongLegacyController;
 
 
 
@@ -272,5 +281,46 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+/*
+|--------------------------------------------------------------------------
+| 5. CHAM CONG (LARAVEL) ROUTES
+|--------------------------------------------------------------------------
+*/
 
+Route::prefix('chamcong_lavarel')->name('chamcong.')->group(function () {
+    Route::get('/', [ChamCongAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [ChamCongAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [ChamCongAuthController::class, 'logout'])->name('logout');
+
+    Route::middleware('chamcong.auth')->group(function () {
+        Route::get('/dashboard', [ChamCongDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/qr', [ChamCongAttendanceController::class, 'qr'])->name('qr');
+        Route::post('/qr', [ChamCongAttendanceController::class, 'handleQr'])->name('qr.handle');
+        Route::get('/info', [ChamCongInfoController::class, 'index'])->name('info');
+        Route::post('/info/password', [ChamCongInfoController::class, 'changePassword'])->name('info.password');
+        Route::get('/tasks', [ChamCongUserTaskController::class, 'index'])->name('tasks');
+        Route::post('/tasks/complete', [ChamCongUserTaskController::class, 'completeSubtask'])->name('tasks.complete');
+    });
+});
+
+Route::prefix('chamcong_lavarel/admin')->name('chamcong.admin.')->middleware('admin.auth')->group(function () {
+    Route::get('/', [ChamCongAdminController::class, 'index'])->name('dashboard');
+    Route::post('/toggle-status', [ChamCongAdminController::class, 'toggleStatus'])->name('toggle-status');
+    Route::post('/users/add', [ChamCongAdminController::class, 'addUser'])->name('users.add');
+    Route::post('/users/update', [ChamCongAdminController::class, 'updateUser'])->name('users.update');
+    Route::post('/users/delete', [ChamCongAdminController::class, 'deleteUser'])->name('users.delete');
+    Route::post('/attendance/add', [ChamCongAdminController::class, 'addAttendance'])->name('attendance.add');
+    Route::post('/attendance/update', [ChamCongAdminController::class, 'updateAttendance'])->name('attendance.update');
+    Route::post('/attendance/delete-day', [ChamCongAdminController::class, 'deleteDayAttendance'])->name('attendance.delete-day');
+    Route::post('/attendance/update-earliest-latest', [ChamCongAdminController::class, 'updateEarliestLatest'])->name('attendance.update-earliest-latest');
+    Route::post('/salary/calculate', [ChamCongAdminController::class, 'calculateSalary'])->name('salary.calculate');
+
+    Route::get('/detail', [ChamCongDetailController::class, 'index'])->name('detail');
+
+    Route::get('/tasks', [TaskAdminController::class, 'index'])->name('tasks');
+    Route::post('/tasks/create', [TaskAdminController::class, 'store'])->name('tasks.create');
+    Route::post('/tasks/update', [TaskAdminController::class, 'update'])->name('tasks.update');
+    Route::post('/tasks/delete', [TaskAdminController::class, 'delete'])->name('tasks.delete');
+    Route::post('/tasks/delete-progress', [TaskAdminController::class, 'deleteProgress'])->name('tasks.delete-progress');
+});
 

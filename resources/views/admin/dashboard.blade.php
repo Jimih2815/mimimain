@@ -1,9 +1,9 @@
-{{-- resources/views/admin/dashboard.blade.php --}}
+﻿{{-- resources/views/admin/dashboard.blade.php --}}
 @extends('layouts.admin')
 
 @section('content')
 <div class="py-4 admin-dashboard">
-  <h1 class="mb-4">🚀 Admin Dashboard</h1>
+  <h1 class="mb-4">Admin Dashboard</h1>
 
   <div class="row g-3 danh-muc-cont mt-4">
     {{-- Home Page --}}
@@ -28,7 +28,7 @@
       </div>
 
 
-    {{-- Mega‐menu --}}
+    {{-- Mega-menu --}}
     <div class="col-md-3 danh-sach">
       <a href="{{ route('admin.menu.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">
@@ -136,7 +136,27 @@
 
 
 
-  <!-- {{-- Widgets --}} -->
+  
+    {{-- Chấm công --}}
+    <div class="col-md-3 danh-sach">
+      <a href="{{ url('/chamcong_lavarel/admin') }}" class="card h-100 text-center text-decoration-none">
+        <div class="card-body">
+          <i class="bi bi-calendar-check fs-1"></i>
+          <h5 class="mt-2">Chấm công</h5>
+        </div>
+      </a>
+    </div>
+
+    {{-- Giao việc --}}
+    <div class="col-md-3 danh-sach">
+      <a href="{{ url('/chamcong_lavarel/admin/tasks') }}" class="card h-100 text-center text-decoration-none">
+        <div class="card-body">
+          <i class="bi bi-list-check fs-1"></i>
+          <h5 class="mt-2">Giao việc</h5>
+        </div>
+      </a>
+    </div>
+<!-- {{-- Widgets --}} -->
     <!-- <div class="col-md-3 danh-sach">
       <a href="{{ route('admin.widgets.index') }}" class="card h-100 text-center text-decoration-none">
         <div class="card-body">

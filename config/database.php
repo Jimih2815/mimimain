@@ -63,6 +63,22 @@ return [
             ]) : [],
         ],
 
+        'chamcong' => [
+            'driver' => 'mysql',
+            'host' => env('DB_CHAMCONG_HOST', '127.0.0.1'),
+            'port' => env('DB_CHAMCONG_PORT', '3306'),
+            'database' => env('DB_CHAMCONG_DATABASE', 'zutfakaz_mimi_chamcong'),
+            'username' => env('DB_CHAMCONG_USERNAME', 'root'),
+            'password' => env('DB_CHAMCONG_PASSWORD', ''),
+            'unix_socket' => env('DB_CHAMCONG_SOCKET', ''),
+            'charset' => env('DB_CHAMCONG_CHARSET', 'utf8mb4'),
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

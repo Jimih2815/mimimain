@@ -1,0 +1,1077 @@
+.container-body {
+    width: 60%;
+}
+    /* Tab buttons container */
+    .tabs { 
+      display: flex; 
+    }
+    /* Các nút tab */
+    .tab-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        background: #f5f5f5;
+        cursor: pointer;
+        margin-right: 0.25rem;
+    }
+    .tab-btn.active {
+        background: #fff;
+        font-weight: bold;
+    }
+    /* Nội dung mỗi tab */
+    .tab-content {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .task-completed-box {
+        border: 1px solid #999;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fdfdfd;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .task-completed-box {
+        border: 1px solid #999;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fdfdfd;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .task-pending-box {
+        border: 1px solid #999;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fafafa;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .filter-section {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border: 1px dashed #aaa;
+      background-color: #f9f9f9;
+  }
+  .filter-suggestions {
+      border: 1px solid #ccc;
+      background: #fff;
+      max-height: 100px;
+      overflow-y: auto;
+      position: absolute;
+      width: 200px;
+      display: none;
+      z-index: 100;
+  }
+  .filter-suggestions div {
+      padding: 4px;
+      cursor: pointer;
+  }
+  .filter-suggestions div:hover {
+      background: #eee;
+  }
+  .filter-tag {
+      display: inline-block;
+      margin: 2px;
+      padding: 2px 5px;
+      border: 1px solid #aaa;
+      background: #eef;
+      cursor: pointer;
+  }
+  
+  /* Đánh dấu đoạn hiển thị "Giao cho" với class 'assignees-text' */
+  .assignees-text {
+      font-style: italic;
+      color: #333;
+  }
+  :root {
+  /* Các biến màu sắc */
+  --primary-color: #1E90FF;
+  --primary-hover: #187ac8;
+  --secondary-color: #fff;
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --border-color: #ccc;
+  --accent-color: #4CAF50;
+  --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --transition-duration: 0.3s;
+}
+
+/* Reset và định dạng chung */
+* {
+  box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  margin: 20px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  color: #4ab3af;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+a {
+  color: #4ab3af;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Flash message */
+.flash-msg {
+  padding: 10px 15px;
+  background: var(--accent-color);
+  color: var(--secondary-color);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  cursor: pointer;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  margin-right: 5px;
+  transition: background var(--transition-duration);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.tab-btn:hover {
+  background: var(--secondary-color);
+}
+
+.tab-btn.active {
+  background: var(--secondary-color);
+  font-weight: bold;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+/* Nội dung tab */
+.tab-content {
+  padding: 20px;
+  background: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+/* Box công việc (Pending & Completed) */
+.task-pending-box,
+.task-completed-box {
+  background: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition-duration);
+}
+
+.task-pending-box:hover,
+.task-completed-box:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Bảng tiến độ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table th,
+table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--border-color);
+}
+
+table th {
+  background: var(--bg-color);
+  font-weight: bold;
+}
+
+/* Phần lọc và phân trang */
+.filter-section {
+  background: var(--secondary-color);
+  border: 1px dashed var(--border-color);
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.filter-section label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.filter-section select,
+.filter-section input[type="text"] {
+  padding: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  transition: border var(--transition-duration);
+}
+
+.filter-section select:focus,
+.filter-section input[type="text"]:focus {
+  border-color: #4ab3af;
+  outline: none;
+}
+
+.pagination-controls {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.pagination-controls button {
+  padding: 6px 12px;
+  background: #d1a029;
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin: 0 3px;
+  transition: background var(--transition-duration);
+}
+
+.pagination-controls button:hover {
+  background: #b18623;
+}
+
+/* Popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: var(--secondary-color);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.popup-box p {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.close-popup {
+  padding: 8px 16px;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background var(--transition-duration);
+}
+
+.close-popup:hover {
+  background: var(--primary-hover);
+}
+
+/* Các điều khiển trong form */
+input[type="text"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  /* margin: 4px 0 10px; */
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  font-family: var(--font-family);
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  padding: 10px 20px;
+  background: #d1a029;
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background var(--transition-duration);
+}
+
+button:hover {
+  background: #b18623;
+}
+
+/* Gợi ý tìm kiếm nhân viên */
+#employeeSuggestions {
+  background: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+}
+
+#employeeSuggestions .suggestion-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background var(--transition-duration);
+}
+
+#employeeSuggestions .suggestion-item:hover {
+  background: var(--bg-color);
+}
+
+/* Thẻ nhân viên được chọn */
+.employee-tag {
+  display: inline-block;
+  margin: 4px;
+  padding: 4px 8px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background var(--transition-duration);
+}
+
+
+#tab-pending {
+  position: relative;
+  /* Tạo khoảng trống phía trên để chừa chỗ cho header và filter */
+  padding-top: 50px; /* điều chỉnh nếu cần */
+}
+#tab-pending h2.section-title,
+#tab-pending h2 {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  font-size: 1.4em;
+}
+/* Căn chỉnh phần lọc sang bên phải cùng hàng với tiêu đề */
+#tab-pending .filter-section {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  margin: 0;
+  padding: 0;
+  background: transparent;  /* loại bỏ background nếu có */
+  border: none;            /* loại bỏ border nếu có */
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+}
+
+/* Khoảng cách hợp lý cho nhãn và điều khiển bên trong */
+#tab-pending .filter-section label {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    text-align: center;
+    margin-right: 5px;
+    font-weight: normal;
+}
+
+#tab-pending .filter-section select,
+#tab-pending .filter-section input[type="text"] {
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+}
+.loc-nhan-vien {
+    width: 60% !important;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 0.5rem;
+
+}
+#filterInputPending {
+    width: 9rem;
+    height: 29px;
+
+}
+.completed-input-container {
+  margin-left: 0.2rem;
+}
+.hien-thi {
+    width: 4rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+#tasksPerPagePending {
+    text-align: center;
+  text-align-last: center;
+    width: 3rem;
+    direction: ltr;
+}
+select {
+  text-align: center;
+  text-align-last: center;
+}
+/* Ô input chiếm hết chiều rộng container */
+#employeeSearch {
+  width: 100%;
+  box-sizing: border-box;  
+  display: block;
+}
+
+/* Danh sách gợi ý - tuyệt đối so với .employee-search-container */
+#employeeSuggestions {
+  position: absolute;
+  top: calc(100% + 4px);   /* xuất hiện ngay dưới ô input, có thể chỉnh thêm */
+  left: 0;
+  width: 100%;            /* luôn phủ toàn bộ chiều ngang container */
+  background: #fff;       /* màu nền cho gợi ý */
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  max-height: 150px;      /* giới hạn chiều cao */
+  overflow-y: auto;
+  z-index: 9999;          /* đảm bảo nổi lên trên */
+  display: none;          /* ẩn mặc định, hiển thị khi có gợi ý */
+}
+
+/* Các item gợi ý */
+#employeeSuggestions .suggestion-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#employeeSuggestions .suggestion-item:hover {
+  background: #f0f0f0;
+}
+
+/* Khối hiển thị nhân viên đã chọn nằm dưới input */
+#selectedEmployees {
+  margin-top: 8px;  /* cách một đoạn so với ô input */
+  clear: both;
+}
+
+/* Thẻ cho nhân viên đã chọn - hiển thị dạng inline-block, xuống hàng khi hẹp */
+.employee-tag {
+  display: inline-block;
+  margin: 4px;
+  padding: 4px 8px;
+  background: #eef;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+#selectedFiltersPending {
+    top: 1.9rem;
+    position: absolute;
+}
+/* Ví dụ: Khi hover xóa, đổi màu */
+.employee-tag:hover {
+  background: gray;
+}
+.pending-filter-wrapper {
+    display:flex;
+}
+.choices__inner {
+    text-align: center;
+}
+.choices__list--dropdown .choices__item {
+    text-align: center;
+}
+/* ======= TAB 3 – Completed: Heading + bộ lọc cùng hàng ======= */
+#tab-completed {
+    position: relative;
+    padding-top: 50px;      /* chừa chỗ cho heading + filter */
+}
+#tab-completed h2.section-title,
+#tab-completed h2{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    margin: 0;
+    line-height: 1.4;
+    font-size: 1.4em;
+}
+
+/* block lọc */
+#tab-completed .filter-section{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;               /* khoảng cách nhỏ giữa các thành phần */
+}
+
+/* nhãn & input/dropdown */
+#tab-completed .filter-section label{
+    margin: 0;
+    font-weight: normal;
+}
+#filterInputCompleted{
+    width: 9rem;
+}
+#tasksPerPageCompleted{
+    width: 3rem;
+    text-align: center;
+    text-align-last: center;
+}
+
+/* thẻ username đã chọn hiển thị dưới input */
+#selectedFiltersCompleted{
+    position: absolute;
+    top: 1.9rem;            /* cùng cách tính với Pending */
+}
+/* ==== Thu nhỏ dropdown số trang hiển thị bên Tab Completed ==== */
+#tab-completed .choices__inner{
+    padding: 3px 25px 3px 8px;
+    min-height: 29px;
+    line-height: 13px;
+    font-size: 0.875rem;
+}
+
+/* Giữ menu xổ xuống gọn gàng hơn một chút */
+#tab-completed .choices__list--dropdown .choices__item{
+    padding: 6px 10px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+.choices__list--single {
+    padding: 4px 4px 4px 4px !important; 
+}
+#tab-pending .choices__inner{
+    padding: 3px 25px 3px 8px; /* giống Completed */
+    min-height: 29px;          /* cao ngang ô input lọc */
+    line-height: 13px;         /* căn chữ giữa */
+    font-size: 0.875rem;       /* 14 px */
+}
+
+#tab-pending .choices__list--dropdown .choices__item{
+    padding: 6px 10px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+.tasks-container {
+    margin-top:2rem;
+}
+.employee-search-container {
+  position: relative;    /* để thẻ con tuyệt đối dựa theo thẻ cha */
+  display: inline-block; /* hoặc block nếu muốn chiếm toàn bộ chiều ngang */
+  width: 100%;          /* tùy chỉnh chiều rộng mong muốn */
+  vertical-align: top;   /* tránh bị đẩy xuống dòng */
+}
+
+#tab-pending .choices__list--single{
+    padding: 4px 4px 4px 4px !important;   /* bo nhỏ viền bên trong */
+}
+/* ===== TAB 2 – Pending: bố cục & kiểu chữ ===== */
+
+/* Tiêu đề “Công việc:” – căn giữa, chữ to hơn */
+#tab-pending .task-pending-box h3{
+    text-align:center;
+    font-size:1.3rem;      /* to hơn mặc định */
+    font-weight:600;
+    margin-bottom:2rem;
+}
+
+/* Hai dòng “Giao cho:” + “Nội dung chính:” đứng cùng hàng */
+#tab-pending .task-pending-box p:nth-of-type(1),   /* Giao cho */
+#tab-pending .task-pending-box p:nth-of-type(2){   /* Nội dung chính */
+   
+    width:100%;               
+    margin: 1.5rem 1% 0 0;    
+    vertical-align:top;
+}
+
+/* ===== Bảng sub‑task: căn giữa tiêu đề & cột STT ===== */
+#tab-pending .subtask-table th{
+    text-align:center;
+    vertical-align:middle;
+}
+#tab-pending .subtask-table td:first-child{ /* cột STT 1‑2‑3… */
+    text-align:center;
+}
+/* ===== TAB 3 – Completed: bố cục & kiểu chữ ===== */
+
+/* Tiêu đề “Công việc:” – căn giữa, chữ to */
+#tab-completed .task-completed-box h3{
+    text-align:center;
+    font-size:1.3rem;
+    font-weight:600;
+    margin-bottom:.75rem;
+}
+
+/* “Giao cho” + “Nội dung chính” chung 1 hàng */
+#tab-completed .task-completed-box p:nth-of-type(1),   /* Giao cho */
+#tab-completed .task-completed-box p:nth-of-type(2){   /* Nội dung chính */
+    display:inline-block;
+    width:100%;
+    margin:1.5rem 1% 0 0;
+    vertical-align:top;
+}
+
+/* “Hoàn thành lúc” + “Log” chung 1 hàng */
+#tab-completed .task-completed-box p:nth-of-type(5),   /* Hoàn thành lúc */
+#tab-completed .task-completed-box p:nth-of-type(6){   /* Log */
+    display:inline-block;
+    width:48%;
+    margin:0 1% .5rem 0;
+    vertical-align:top;
+}
+
+/* ===== Bảng tiến độ chi tiết ===== */
+#tab-completed .subtask-table th{
+    text-align:center;
+    vertical-align:middle;
+}
+#tab-completed .subtask-table td:first-child{   /* cột STT */
+    text-align:center;
+}
+/* --- Hàng chọn nhân viên + hạn hoàn thành --- */
+.assign-date-row{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+  }
+  .assign-date-row .assign-col,
+  .assign-date-row .duedate-col{
+    flex:1 1 300px;   /* co giãn – tối thiểu 300 px */
+  }
+  
+  /* --- Lưới tiến độ --- */
+  .progress-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr 200px;   
+    gap:10px;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .progress-grid textarea,
+  .progress-grid input{
+    width:100%;
+  }
+  .progress-grid.header{
+    font-weight:600;
+    text-align:center;
+    border-bottom:1px solid var(--border-color);
+    padding-bottom:4px;
+  }
+/* xuống dòng khi chuỗi quá dài (không có khoảng trắng) */
+.task-pending-box p,
+.task-completed-box p{
+    word-break: break-all;        /* bẻ cả chuỗi không có dấu cách */
+    overflow-wrap: anywhere;      /* bổ trợ trình duyệt cũ */
+}
+
+ /* riêng 2 ô “Giao cho / Nội dung chính” (đang inline‑block 48%)  */
+#tab-pending .task-pending-box p:nth-of-type(1),
+#tab-pending .task-pending-box p:nth-of-type(2){
+    white-space: normal;          
+}
+.expandable.collapsed{
+    display:-webkit-box !important;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+.show-more{
+    display:inline-block;
+    width:48%;
+    margin:0 1% 0 0;
+    color:gray;
+    cursor:pointer;
+    font-size:.875rem;
+    user-select:none;
+  }
+.two-col + .show-more{             /* span ngay sau .two-col */
+    width:48%;
+    margin:0 1% 0 0;               /* canh thẳng cột */
+}
+.two-col{
+    display:inline-block;
+    width:48%;
+    margin:0 1% .5rem 0;
+    vertical-align:top;
+}
+.noidungchinhvagiaocho {
+    display: flex;
+    flex-wrap:wrap; 
+}
+#tab-completed .noidungchinhvagiaocho{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+/* Hai cột “Giao cho / Nội dung chính” trong tab Completed */
+#tab-completed .two-col{
+    display:inline-block;
+    width:48%;
+    margin:0 1% .5rem 0;
+    vertical-align:top;
+}
+/* ================== TAB 3 – Completed: chống tràn chữ bảng tiến độ ================== */
+#tab-completed .subtask-table{
+  table-layout: fixed;      /* khoá chiều rộng cột, cho phép wrap */
+}
+
+#tab-completed .subtask-table td{
+  word-break: break-word;   /* ngắt chuỗi dài không dấu cách */
+  overflow-wrap: anywhere;  /* hỗ trợ trình duyệt mới */
+  white-space: normal;      /* bảo đảm được xuống dòng */
+}
+.hien-thi-so-trang {
+  display: flex;
+}
+.hien-thi-so-trang-completed {
+  display: flex;
+}
+.completed-filter-wrapper {
+  display: flex;
+}
+/* Ô textarea nhỏ – có thể kéo ngang / dọc tuỳ ý */
+.subtask-table textarea,
+.progress-grid textarea{
+  resize: vertical;   
+    min-height: 24px;   
+    width: 100%;
+}
+/* ==== Nút "Về trang Admin" ==== */
+.back-admin {
+  text-align: right;
+  margin: 2rem 0;
+}
+.btn-back-admin {
+  display: inline-block;
+  padding: 10px 22px;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 5px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s, transform 0.2s;
+}
+.btn-back-admin:hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+}
+.assignees-edit { position: relative; display: inline-block; }
+.employee-search-container.pending {
+  position: absolute;
+  top: 100%; left: 0;
+  background: #fff; border: 1px solid #ccc;
+  z-index: 10; width: 200px;
+}
+.employee-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  margin: 2px;
+  background: #eef; border: 1px solid #88a;
+  cursor: pointer;
+}
+.btn-add-assignee {
+  margin-left: 4px;
+  padding: 0 6px;
+}
+.nut-luu-xoa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+.form-group {
+  margin-top: 1.5rem;
+}
+.employeeSuggestionsPending .suggestion {
+  padding: 5px;
+}
+.btn-danger {
+  background-color: #b83232;
+}
+
+.nut-xoa-trang-3 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 1rem 0 0 0;
+}
+
+/* ---------- Màn hình cỡ Laptop ≤ 1200 px ---------- */
+@media (max-width:1200px){
+    .container-body     {width: 80%;}
+    .tasks-container    {margin-top:1.5rem;}
+    .two-col, .show-more{width: 100%; margin: .25rem 0;}
+  }
+  
+  /* ---------- Máy tính bảng (dọc) ≤ 992 px ---------- */
+  @media (max-width:992px){
+    .back-admin {
+      margin-right: 1rem;
+    }
+    .container-body     {width: 100%;}
+    /* Tabs xếp dọc, trượt ngang nếu nhiều */
+    .tabs               {overflow-x:auto; flex-wrap:nowrap;}
+    .tab-btn            {flex:0 0 auto; white-space:nowrap;}
+  
+    /* Bộ lọc chuyển dưới tiêu đề (khỏi absolute) */
+    #tab-pending .filter-section,
+    #tab-completed .filter-section{
+          position:static; 
+          width:100%; 
+          justify-content:flex-end;
+          margin:.5rem 0 1rem; gap:.5rem;
+    }
+    /* Box công việc – bo góc nhẹ & giãn cách */
+    .task-pending-box,
+    .task-completed-box {padding:12px;}
+    .hien-thi-so-trang, .hien-thi-so-trang-completed, .completed-filter-wrapper {
+        display: flex;
+    }
+  }
+  
+  /* ---------- Điện thoại lớn ≤ 768 px ---------- */
+  @media (max-width:768px){
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .container-body > h1 {
+        margin:20px 10px;
+    }
+  
+    h1{font-size:1.35rem;} h2{font-size:1.15rem;} h3{font-size:1.05rem;}
+    #tab-pending h2.section-title, #tab-pending h2 {
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+    }
+    #tab-pending .filter-section, #tab-completed .filter-section {
+        margin: 1.5rem 0 1rem;  
+    }
+    .assign-date-row,
+    .noidungchinhvagiaocho      {flex-direction:column;}
+  
+    /* Lưới progress → cột đơn (dễ gõ) */
+    .progress-grid,
+    .progress-grid.header{
+        grid-template-columns: 1fr 1fr 140px;   /* Tiến độ | Ghi chú | Date */
+       
+    }
+  
+    /* Bảng dài – cuộn ngang thay vì co chữ */
+    .subtask-table,           /* admin */
+    .task-pending-box table,  /* user */
+    .task-completed-box table  {display:block; overflow-x:auto;}
+    .subtask-table thead,
+    .task-pending-box table thead,
+    .task-completed-box table thead{background:#f0f4ff; position:sticky; top:0;}
+    .assign-date-row{
+        flex-direction: row;        /* xếp ngang */
+        flex-wrap: wrap;            /* tự rơi xuống nếu thiếu chỗ */
+        column-gap: 8px;
+        row-gap   : 8px;
+    }
+    /* mỗi khối co giãn nhưng tối thiểu 150 px để không bóp quá nhỏ */
+    .assign-date-row .assign-col,
+    .assign-date-row .duedate-col{
+        flex: 1 1 150px;
+    }
+    #tab-create .progress-grid,
+    #tab-create .progress-grid.header{
+        overflow-x: auto;
+    }
+     /* cả khối filter xếp dọc thay vì ngang */
+     #tab-pending .filter-section{
+        display:flex;            /* 2 hàng dọc */
+        flex-direction:column;
+        gap:10px;                /* cách hàng */
+        padding:0;               /* bớt rìa thừa */
+    }
+    #tab-pending .hien-thi{           /* nhãn */
+        margin:0;
+        width:auto;
+    }
+    #tasksPerPagePending{             /* dropdown */
+        margin:0;
+        min-width:90px;
+    }
+    #filterInputPending{              /* ô tìm kiếm */
+        flex:1 1 auto;
+        min-width:140px;
+        width:100%;
+    }
+    #selectedFiltersPending{
+        position:static;
+        margin-top:4px;
+        width:100%;
+    }
+    #tab-pending .loc-nhan-vien{     
+        margin:0;
+        width:auto!important;         
+        flex:0 0 auto;
+    }
+    #tab-pending .pending-filter-wrapper{
+        display:flex;            
+        align-items:center;
+        gap:6px;                 
+        width:100%;
+        flex-wrap: wrap;
+    }
+    /* từng cặp nhãn+input hiển thị block */
+    #tab-pending .filter-section label,
+    #tab-pending .filter-section input,
+    #tab-pending .filter-section select{
+        display : block;
+        width   : 100%;               
+    }
+
+
+     /* nhãn */
+    #tab-pending .filter-section label.hien-thi{
+        margin: 0 7px 0 0 !important;
+        display: flex;
+        width: auto;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* dropdown */
+    #tasksPerPagePending{
+        width:100%;
+        max-width:100%;         
+        margin:0;               
+    }
+    .hien-thi-so-trang{
+        width: 100%;
+        display: flex;
+    }
+    .subtask-table-container {
+        overflow-x: auto; /* Cho phép kéo ngang */
+        width: 100%;
+      }
+      
+      .subtask-table {
+        width: 940px; 
+        min-width: 100%; 
+        border-collapse: collapse;
+      }
+      
+      .subtask-table th,
+      .subtask-table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      .subtask-table th:last-child {
+        width: 250px;
+      }
+      #tab-completed .filter-section{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        padding:0;
+    }
+  
+    /* Hàng 1 : Lọc nhân viên */
+    #tab-completed .completed-filter-wrapper{
+        display:flex;
+        align-items:center;
+        gap:6px;
+        width:100%;
+        flex-wrap:wrap;
+    }
+    #filterInputCompleted{
+        flex:1 1 auto;
+        min-width:140px;
+        width:100%;
+    }
+    #selectedFiltersCompleted{position:static;margin-top:4px;width:100%;}
+  
+    /* Hàng 2 : Hiển thị */
+    #tab-completed .hien-thi-so-trang-completed{
+        width:100%;
+        display:flex;
+        align-items:center;
+        gap:6px;
+    }
+    #tab-completed .hien-thi{
+        margin:0;
+        width:auto;
+    }
+    #tasksPerPageCompleted{
+        flex:0 0 90px;
+        max-width:90px;
+        width:90px;
+        margin:0;
+    }
+  
+    /* Gỡ rule “block 100%” đã áp cho tất cả label/select trước đó */
+    #tab-completed .hien-thi,
+    #tasksPerPageCompleted{
+        display:inline-block;
+    }
+    .loc-nhan-vien {
+        width: 33% !important;
+    }
+    .subtask-table th:nth-child(2), .subtask-table th:nth-child(3) {
+        width: 250px;
+    }
+    .subtask-table th:nth-child(5) {
+        width: 280px;
+    }
+    .subtask-table th:nth-child(4) {
+      width: 110px;
+    }
+    .section-title {
+        font-size: 1.15rem !important;
+    }
+  }
+  
+  /* ---------- Điện thoại nhỏ ≤ 480 px ---------- */
+  @media (max-width:480px){
+    .container-body     {width:100%; padding:0;}
+    .tab-btn            {padding:8px 12px; font-size:.85rem;}
+    /* Thu gọn text‑area và date‑input */
+    input[type=date]    {font-size:.8rem;}
+    .progress-grid.header {
+        font-weight: 700;
+        font-size: 0.8rem;
+    }
+  }
+  
