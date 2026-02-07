@@ -27,11 +27,11 @@
         <p style="color:green;">{{ $flashMsg }}</p>
     @endif
 
-    @if($forgotCheckout)
+    <!-- @if($forgotCheckout)
         <p style="color: red; font-weight: bold;">
             Hôm qua bạn quên Checkout, báo ngay với quản lý để chấm công bù!
         </p>
-    @endif
+    @endif -->
 
     @if($isCheckedIn)
         <p>Nhớ Check-Out trước khi ra về nha!</p>

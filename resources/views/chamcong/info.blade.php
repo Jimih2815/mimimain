@@ -103,7 +103,7 @@
     <div class="summary-grid">
         <div class="summary-card">
             <div class="summary-label">Tổng giờ làm việc</div>
-            <div class="summary-value" id="totalHoursValue">{{ round($actualHoursThisMonth, 2) }} giờ</div>
+            <div class="summary-value" id="totalHoursValue">{{ $actualHoursText }}</div>
         </div>
         <div class="summary-card">
             <div class="summary-label">Lương hiện tại</div>
@@ -181,18 +181,26 @@
                 </div>
 
                 <label for="compCheckIn">Giờ check-in</label>
-                <div class="input-icon">
+                <div class="input-icon time-picker">
                     <i class="fa-regular fa-clock" aria-hidden="true"></i>
-                    <input type="time" id="compCheckIn" name="comp_check_in" value="{{ old('comp_check_in') }}" step="60">
+                    <input type="text" id="compCheckIn" name="comp_check_in" value="{{ old('comp_check_in') }}"
+                           inputmode="numeric" autocomplete="off" placeholder="HH:MM"
+                           pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$" step="60">
+                    <button type="button" class="time-toggle" aria-label="Chọn giờ" aria-expanded="false" aria-controls="compCheckInPopover"></button>
+                    <div class="time-popover" id="compCheckInPopover" aria-hidden="true"></div>
                 </div>
 
                 <div class="comp-row">
                     <div class="comp-field">
                         <label for="compCheckOut">Giờ check-out</label>
-                        <div class="input-icon">
-                            <i class="fa-regular fa-clock" aria-hidden="true"></i>
-                            <input type="time" id="compCheckOut" name="comp_check_out" value="{{ old('comp_check_out') }}" step="60">
-                        </div>
+                    <div class="input-icon time-picker">
+                        <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                        <input type="text" id="compCheckOut" name="comp_check_out" value="{{ old('comp_check_out') }}"
+                               inputmode="numeric" autocomplete="off" placeholder="HH:MM"
+                               pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$" step="60">
+                        <button type="button" class="time-toggle" aria-label="Chọn giờ" aria-expanded="false" aria-controls="compCheckOutPopover"></button>
+                        <div class="time-popover" id="compCheckOutPopover" aria-hidden="true"></div>
+                    </div>
                     </div>
                     <div class="comp-field">
                         <label for="compTotal">Tổng giờ</label>
@@ -219,6 +227,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let compDateInput = null;
     let compCalendarToggle = null;
     let compCalendarPopover = null;
+    const timePickers = [];
 
     if (passBtn && passwordModal) {
         passBtn.addEventListener("click", function() { passwordModal.classList.add("show"); });
@@ -245,6 +254,16 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
+    document.addEventListener("pointerdown", function(event) {
+        if (!timePickers.length) return;
+        timePickers.forEach(function(tp) {
+            if (!tp.popover.classList.contains('is-open')) return;
+            const wrapper = tp.wrapper || tp.input.parentElement;
+            if (wrapper && wrapper.contains(event.target)) return;
+            tp.close();
+            if (tp.state) tp.state.ignoreNextOpen = true;
+        });
+    }, true);
 
     const compCheckIn = document.getElementById("compCheckIn");
     const compCheckOut = document.getElementById("compCheckOut");
@@ -270,15 +289,191 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         const diff = outMins - inMins;
         if (diff <= 0) {
-            compTotal.value = '0';
+            compTotal.value = '0 giờ 0 phút';
             return;
         }
-        compTotal.value = (diff / 60).toFixed(2);
+        const hours = Math.floor(diff / 60);
+        const minutes = diff % 60;
+        compTotal.value = `${hours} giờ ${minutes} phút`;
     }
 
     if (compCheckIn) compCheckIn.addEventListener("input", updateCompTotal);
     if (compCheckOut) compCheckOut.addEventListener("input", updateCompTotal);
     updateCompTotal();
+
+    function setupTimePicker(inputId, popoverId) {
+        const input = document.getElementById(inputId);
+        const popover = document.getElementById(popoverId);
+        if (!input || !popover) return;
+        const toggle = input.parentElement ? input.parentElement.querySelector('.time-toggle') : null;
+        const stepSeconds = parseInt(input.getAttribute('step') || '60', 10);
+        const stepMinutes = Math.max(1, Math.round(stepSeconds / 60));
+        let selectedHour = null;
+        let selectedMinute = null;
+        const tpState = { ignoreNextOpen: false };
+
+        function buildOptions() {
+            if (popover.dataset.built) return;
+            const hoursCol = document.createElement('div');
+            hoursCol.className = 'time-col time-hours';
+            const minsCol = document.createElement('div');
+            minsCol.className = 'time-col time-mins';
+
+            for (let h = 0; h < 24; h += 1) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'time-option time-option-hour';
+                btn.dataset.hour = String(h);
+                btn.textContent = String(h).padStart(2, '0');
+                hoursCol.appendChild(btn);
+            }
+            for (let m = 0; m < 60; m += stepMinutes) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'time-option time-option-minute';
+                btn.dataset.minute = String(m);
+                btn.textContent = String(m).padStart(2, '0');
+                minsCol.appendChild(btn);
+            }
+
+            popover.appendChild(hoursCol);
+            popover.appendChild(minsCol);
+            popover.dataset.built = '1';
+        }
+
+        function parseValue(val) {
+            const m = /^(\d{2}):(\d{2})$/.exec((val || '').trim());
+            if (!m) return null;
+            const h = parseInt(m[1], 10);
+            const mm = parseInt(m[2], 10);
+            if (Number.isNaN(h) || Number.isNaN(mm)) return null;
+            return { h, m: mm };
+        }
+
+        function syncSelection() {
+            const parsed = parseValue(input.value);
+            if (parsed) {
+                selectedHour = parsed.h;
+                selectedMinute = parsed.m;
+            }
+            popover.querySelectorAll('.time-option-hour').forEach(function(opt) {
+                if (selectedHour !== null && parseInt(opt.dataset.hour || '', 10) === selectedHour) {
+                    opt.classList.add('is-selected');
+                } else {
+                    opt.classList.remove('is-selected');
+                }
+            });
+            popover.querySelectorAll('.time-option-minute').forEach(function(opt) {
+                if (selectedMinute !== null && parseInt(opt.dataset.minute || '', 10) === selectedMinute) {
+                    opt.classList.add('is-selected');
+                } else {
+                    opt.classList.remove('is-selected');
+                }
+            });
+        }
+
+        function ensureSelectedDefaults() {
+            if (selectedHour === null || selectedMinute === null) {
+                const parsed = parseValue(input.value);
+                if (parsed) {
+                    if (selectedHour === null) selectedHour = parsed.h;
+                    if (selectedMinute === null) selectedMinute = parsed.m;
+                }
+            }
+            if (selectedHour === null) selectedHour = 0;
+            if (selectedMinute === null) selectedMinute = 0;
+        }
+
+        function updateInputValue() {
+            ensureSelectedDefaults();
+            const val = `${String(selectedHour).padStart(2, '0')}:${String(selectedMinute).padStart(2, '0')}`;
+            if (input.value !== val) {
+                input.value = val;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+
+        function openPopover() {
+            buildOptions();
+            popover.classList.add('is-open');
+            popover.setAttribute('aria-hidden', 'false');
+            if (toggle) toggle.setAttribute('aria-expanded', 'true');
+            syncSelection();
+            const selectedHourEl = popover.querySelector('.time-option-hour.is-selected');
+            const selectedMinEl = popover.querySelector('.time-option-minute.is-selected');
+            if (selectedHourEl) selectedHourEl.scrollIntoView({ block: 'center' });
+            if (selectedMinEl) selectedMinEl.scrollIntoView({ block: 'center' });
+        }
+
+        function closePopover() {
+            popover.classList.remove('is-open');
+            popover.setAttribute('aria-hidden', 'true');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+        }
+
+        popover.addEventListener('click', function(e) {
+            const btn = e.target.closest('.time-option');
+            if (!btn) return;
+            if (btn.dataset.hour !== undefined) {
+                selectedHour = parseInt(btn.dataset.hour, 10);
+            }
+            if (btn.dataset.minute !== undefined) {
+                selectedMinute = parseInt(btn.dataset.minute, 10);
+            }
+            updateInputValue();
+            syncSelection();
+        });
+
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (popover.classList.contains('is-open')) {
+                closePopover();
+                return;
+            }
+            if (tpState.ignoreNextOpen) {
+                tpState.ignoreNextOpen = false;
+                return;
+            }
+            openPopover();
+        });
+        input.addEventListener('input', syncSelection);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowDown' || e.key === 'Enter') {
+                e.preventDefault();
+                openPopover();
+                return;
+            }
+            if (e.key === 'Escape') {
+                closePopover();
+                input.blur();
+            }
+        });
+
+        if (toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (popover.classList.contains('is-open')) {
+                    closePopover();
+                } else {
+                    openPopover();
+                    input.focus();
+                }
+            });
+        }
+
+        timePickers.push({
+            input: input,
+            popover: popover,
+            toggle: toggle,
+            wrapper: input.parentElement,
+            close: closePopover,
+            state: tpState,
+        });
+    }
+
+    setupTimePicker('compCheckIn', 'compCheckInPopover');
+    setupTimePicker('compCheckOut', 'compCheckOutPopover');
 
     compDateInput = document.getElementById("compDate");
     compCalendarToggle = document.getElementById("compCalendarToggle");
@@ -421,6 +616,22 @@ document.addEventListener("DOMContentLoaded", function() {
         (days || []).forEach(d => { map[d.day] = d.status; });
         return map;
     }
+    function formatHoursTextFromDecimal(val) {
+        if (typeof val !== 'number' || Number.isNaN(val)) return '';
+        const totalMins = Math.round(val * 60);
+        const hours = Math.floor(totalMins / 60);
+        const minutes = totalMins % 60;
+        return `${hours} giờ ${minutes} phút`;
+    }
+    function resolveActualHoursText(data) {
+        if (data && typeof data.actualHoursText === 'string' && data.actualHoursText.trim() !== '') {
+            return data.actualHoursText;
+        }
+        if (data && typeof data.actualHours === 'number') {
+            return formatHoursTextFromDecimal(data.actualHours);
+        }
+        return '';
+    }
 
     const monthNames = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
     let calendarData = buildCalendarMap(@json($calendarDays ?? []));
@@ -515,8 +726,9 @@ document.addEventListener("DOMContentLoaded", function() {
             if (Array.isArray(data.calendar)) {
                 calendarData = buildCalendarMap(data.calendar);
             }
-            if (totalHoursEl && typeof data.actualHours !== 'undefined') {
-                totalHoursEl.textContent = `${data.actualHours} giờ`;
+            const hoursText = resolveActualHoursText(data);
+            if (totalHoursEl && hoursText) {
+                totalHoursEl.textContent = hoursText;
             }
             if (currentSalaryEl && typeof data.currentSalary !== 'undefined') {
                 currentSalaryEl.textContent = `${data.currentSalary} VNĐ`;
@@ -554,8 +766,9 @@ document.addEventListener("DOMContentLoaded", function() {
             if (Array.isArray(data.calendar)) {
                 calendarData = buildCalendarMap(data.calendar);
             }
-            if (totalHoursEl && typeof data.actualHours !== 'undefined') {
-                totalHoursEl.textContent = `${data.actualHours} giờ`;
+            const hoursText = resolveActualHoursText(data);
+            if (totalHoursEl && hoursText) {
+                totalHoursEl.textContent = hoursText;
             }
             if (currentSalaryEl && typeof data.currentSalary !== 'undefined') {
                 currentSalaryEl.textContent = `${data.currentSalary} VNĐ`;
@@ -594,8 +807,9 @@ document.addEventListener("DOMContentLoaded", function() {
             if (Array.isArray(data.calendar)) {
                 calendarData = buildCalendarMap(data.calendar);
             }
-            if (totalHoursEl && typeof data.actualHours !== 'undefined') {
-                totalHoursEl.textContent = `${data.actualHours} giờ`;
+            const hoursText = resolveActualHoursText(data);
+            if (totalHoursEl && hoursText) {
+                totalHoursEl.textContent = hoursText;
             }
             if (currentSalaryEl && typeof data.currentSalary !== 'undefined') {
                 currentSalaryEl.textContent = `${data.currentSalary} VNĐ`;

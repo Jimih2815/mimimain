@@ -530,6 +530,88 @@ button:hover {
     background: #f8f9fa;
     text-align: center;
 }
+.time-picker {
+    position: relative;
+}
+.time-picker input {
+    padding-right: 36px;
+}
+.time-toggle {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #4ab3af;
+}
+.time-toggle::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    margin-left: auto;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #4ab3af;
+}
+.time-popover {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    background: #fff;
+    border: 1px solid #4ab3af;
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    overflow: hidden;
+    padding: 0 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+    z-index: 20;
+}
+.time-popover.is-open {
+    max-height: 260px;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    padding: 8px;
+}
+.time-col {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid rgba(74, 179, 175, 0.35);
+    border-radius: 8px;
+}
+.time-option {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #1f3b4d;
+}
+.time-option:hover,
+.time-option:focus {
+    background: rgba(74, 179, 175, 0.12);
+}
+.time-option.is-selected {
+    background: #4ab3af;
+    color: #fff;
+    font-weight: 600;
+}
 
 @media (max-width: 520px) {
     .action-row {
@@ -559,6 +641,11 @@ button:hover {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
+}
+#compModal input:focus {
+    border-color: #4ab3af;
+    box-shadow: 0 0 0 2px rgba(74, 179, 175, 0.2);
+    outline: none;
 }
 .sheet-content .input-icon input {
     padding-left: 34px;

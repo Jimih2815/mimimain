@@ -99,6 +99,9 @@ class InfoController extends Controller
             ->value('total_mins');
         $totalMins = (int) ($totalMins ?? 0);
         $actualHoursThisMonth = $totalMins / 60.0;
+        $hoursPart = intdiv($totalMins, 60);
+        $minutesPart = $totalMins % 60;
+        $actualHoursText = $hoursPart . ' giờ ' . $minutesPart . ' phút';
 
         $user = ChamCongUser::find($userId);
         $currentSalary = 0;
@@ -138,6 +141,7 @@ class InfoController extends Controller
                 'rowsPerPage' => $rowsPerPage,
                 'month' => $selectedMonth,
                 'actualHours' => round($actualHoursThisMonth, 2),
+                'actualHoursText' => $actualHoursText,
                 'currentSalary' => number_format($currentSalary),
                 'calendar' => $calendarDays,
             ]);
@@ -157,6 +161,7 @@ class InfoController extends Controller
             'selectedMonth' => $selectedMonth,
             'calendarDays' => $calendarDays,
             'actualHoursThisMonth' => $actualHoursThisMonth,
+            'actualHoursText' => $actualHoursText,
             'currentSalary' => $currentSalary,
             'passMsg' => $passMsg,
             'compMsg' => $compMsg,
