@@ -8,6 +8,9 @@
 
 # Dependencies (NEVER commit)
 vendor/
+# Keep frontend vendor assets under resources/chamcong/vendor
+!resources/chamcong/vendor/
+!resources/chamcong/vendor/**
 node_modules/
 
 # Laravel runtime storage (NEVER commit)
