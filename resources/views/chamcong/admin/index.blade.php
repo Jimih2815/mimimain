@@ -15,7 +15,11 @@
 <body>
 @include('chamcong.partials.admin_navbar')
 @if(session('chamcong_flash_msg'))
-    {!! session('chamcong_flash_msg') !!}
+    <div id="flashOverlay" class="flash-overlay">
+        <div id="flashPopup" class="flash-popup">
+            {!! session('chamcong_flash_msg') !!}
+        </div>
+    </div>
 @endif
 
 <h1>Quản lý Nhân viên</h1>
@@ -575,11 +579,26 @@ window.addEventListener('load', function(){
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.getElementById('flashOverlay');
+  var popup = document.getElementById('flashPopup');
+  if (!overlay || !popup) return;
+  var hidden = false;
+  function hideFlash() {
+    if (hidden) return;
+    hidden = true;
+    overlay.classList.add('flash-hide');
+    setTimeout(function(){ if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 300);
+  }
+  overlay.addEventListener('click', function(e){
+    if (!popup.contains(e.target)) hideFlash();
+  });
+  setTimeout(hideFlash, 3000);
+});
 </script>
 </body>
 </html>
-
-
 
 
 
