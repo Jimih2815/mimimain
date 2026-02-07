@@ -362,7 +362,7 @@ button,
 .daterangepicker.cc-admin.show-calendar {
     display: grid !important;
     grid-template-columns: var(--drp-cal-width) var(--drp-cal-width);
-    column-gap: var(--drp-gap);
+
     row-gap: 8px;
     align-items: start;
 }
@@ -404,7 +404,7 @@ button,
     align-items: center;
 }
 .daterangepicker.cc-admin .calendar-table th {
-    color: #666;
+    color: black;
     font-weight: 600;
     font-size: 11px;
     padding: 4px 3px;
