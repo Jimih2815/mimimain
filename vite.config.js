@@ -22,6 +22,7 @@ export default defineConfig({
         'resources/chamcong/admin.css',
         'resources/chamcong/giao_viec.css',
         'resources/chamcong/vendor.js',
+        'resources/chamcong/logo.png',
       ],
       refresh: true, // tự reload khi blade/js thay đổi
     }),
