@@ -331,15 +331,19 @@ button,
     margin-top: 1rem; /* kho?ng cï¿½ch trï¿½n */
   }
 
-/* Daterangepicker - style gi?ng calendar-popover (info) + animation */
-.daterangepicker {
+/* Daterangepicker - admin scoped to avoid global table styles */
+.daterangepicker.cc-admin {
+    --drp-cal-width: 220px;
+    --drp-gap: 8px;
+    --drp-wrap-width: calc(var(--drp-cal-width) + var(--drp-cal-width) + var(--drp-gap));
     border: 1px solid #4ab3af !important;
     border-radius: 10px !important;
     box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
     background: #fff !important;
-    padding: 10px !important;
+    padding: 8px !important;
     font-family: 'Baloo 2', sans-serif;
-    display: block !important;
+    width: var(--drp-wrap-width) !important;
+    max-width: calc(100vw - 24px);
     opacity: 0;
     transform: translateY(-8px);
     visibility: hidden;
@@ -348,53 +352,135 @@ button,
     will-change: opacity, transform;
     z-index: 2000;
 }
-.daterangepicker.cc-open {
+.daterangepicker.cc-admin.cc-open {
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
     pointer-events: auto;
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
 }
-.daterangepicker .calendar-table {
+.daterangepicker.cc-admin.show-calendar {
+    display: grid !important;
+    grid-template-columns: var(--drp-cal-width) var(--drp-cal-width);
+    column-gap: var(--drp-gap);
+    row-gap: 8px;
+    align-items: start;
+}
+.daterangepicker.cc-admin .drp-calendar {
+    display: block;
+    width: var(--drp-cal-width);
+    float: none;
+    margin: 0 !important;
+    display: flex;
+}
+.daterangepicker.cc-admin .drp-calendar.left {
+    grid-column: 1;
+}
+.daterangepicker.cc-admin .drp-calendar.right {
+    grid-column: 2;
+}
+.daterangepicker.cc-admin table {
+    width: auto;
+    border-collapse: collapse;
+    margin: 0;
+}
+.daterangepicker.cc-admin table,
+.daterangepicker.cc-admin th,
+.daterangepicker.cc-admin td {
+    border: 0;
+}
+.daterangepicker.cc-admin th,
+.daterangepicker.cc-admin td {
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+.daterangepicker.cc-admin .calendar-table {
     border: 0;
     background: transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.daterangepicker .calendar-table th {
+.daterangepicker.cc-admin .calendar-table th {
     color: #666;
     font-weight: 600;
-    font-size: 12px;
-    padding: 6px 4px;
+    font-size: 11px;
+    padding: 4px 3px;
 }
-.daterangepicker .calendar-table td {
-    width: 28px;
-    height: 28px;
-    line-height: 28px;
+.daterangepicker.cc-admin .calendar-table th.prev,
+.daterangepicker.cc-admin .calendar-table th.next {
+    cursor: pointer;
+}
+.daterangepicker.cc-admin .calendar-table th.prev span,
+.daterangepicker.cc-admin .calendar-table th.next span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 16px;
+    color: #4ab3af;
+}
+.daterangepicker.cc-admin .calendar-table th.prev span::before {
+    content: "‹";
+}
+.daterangepicker.cc-admin .calendar-table th.next span::before {
+    content: "›";
+}
+.daterangepicker.cc-admin .calendar-table td {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 11px;
 }
-.daterangepicker td.available:hover,
-.daterangepicker td.in-range {
+.daterangepicker.cc-admin td.available:hover,
+.daterangepicker.cc-admin td.in-range {
     background: rgba(74, 179, 175, 0.18);
 }
-.daterangepicker td.active,
-.daterangepicker td.active:hover {
+.daterangepicker.cc-admin td.active,
+.daterangepicker.cc-admin td.active:hover {
     background: #4ab3af !important;
     color: #fff;
 }
-.daterangepicker .drp-buttons {
+.daterangepicker.cc-admin .drp-buttons {
     border-top: 1px solid #e1efee;
     padding-top: 8px;
+    padding-right: 1rem;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+    margin: 0 !important;
+    grid-column: 1 / -1;
 }
-.daterangepicker .drp-buttons .btn {
+.daterangepicker.cc-admin .ranges,
+.daterangepicker.cc-admin .calendar-table {
+    margin: 0 !important;
+}
+.daterangepicker.cc-admin .drp-buttons .btn {
     border-radius: 6px;
     padding: 8px 12px !important;
     font-size: 12px;
     line-height: 1;
 }
-.daterangepicker .drp-buttons .applyBtn {
+.daterangepicker.cc-admin .drp-buttons .applyBtn {
     background: #4ab3af !important;
     border: 1px solid #4ab3af !important;
     color: #fff;
+}
+.daterangepicker.cc-admin .ranges {
+    grid-column: 1 / -1;
+}
+.daterangepicker.cc-admin .drp-selected {
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Calendar popover (same as info page) */

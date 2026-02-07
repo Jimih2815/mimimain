@@ -552,10 +552,14 @@ window.addEventListener('load', function(){
     $('#end_date').val(end.format('YYYY-MM-DD'));
     applyFilters(1);
   });
+  var drpInstance = $('#daterange').data('daterangepicker');
+  if (drpInstance && drpInstance.container) {
+    drpInstance.container.addClass('cc-admin');
+  }
 
   $('#daterange').on('show.daterangepicker', function(ev, picker) {
     if (picker && picker.container) {
-      picker.container.addClass('cc-open');
+      picker.container.addClass('cc-open cc-admin');
     }
     setTimeout(function(){
       if (!picker.container.find('.btn-today').length) {
@@ -599,7 +603,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
 
 
 
