@@ -316,6 +316,16 @@ button,
     border-radius: 5px;
 }
 
+/* Modul4 filter: green border + pill radius */
+#modul4FilterForm select,
+#modul4FilterForm input#daterange {
+    border: 1px solid #4ab3af;
+    border-radius: 50px;
+}
+#modul4FilterForm select[name="filter_user_id"] {
+    width: 7.1rem;
+}
+
 /* Detail page filters: green border/text + pill radius */
 #detailFilterForm select,
 #detailFilterForm input#daterange {
@@ -785,8 +795,52 @@ button,
   }
   
 }
-/* ===== RESPONSIVE CHO ï¿½I?N THO?I (=768px) ===== */
-@media only screen and (max-width: 768px) {
+/* ===== TABLET (Giữ giao diện như desktop) ===== */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+    table {
+        display: table;
+        overflow-x: visible;
+        white-space: normal;
+    }
+    .container {
+        padding: 20px !important;
+    }
+    table, th, td {
+        font-size: 16px;
+    }
+    table input {
+        width: 80%;
+    }
+    #modul3 table {
+        table-layout: auto;
+    }
+    #modul3 table th,
+    #modul3 table td {
+        word-wrap: normal;
+        width: auto;
+    }
+    #modul4 .filter-row {
+        flex-wrap: nowrap;
+        gap: 10px;
+        font-size: 1rem;
+    }
+    #modul4 .filter-row select {
+        flex: 0 0 auto;
+        min-width: auto;
+        width: auto;
+    }
+    #modul4 .filter-row input#daterange {
+        flex: 0 0 auto;
+        min-width: auto;
+        width: 200px !important;
+    }
+    .form-add-employee button,
+    .form-add-attendance button {
+        margin-bottom: 0;
+    }
+}
+/* ===== RESPONSIVE CHO ï¿½I?N THO?I (<=767px) ===== */
+@media only screen and (max-width: 767px) {
     /* --- Modul1: Thï¿½m nhï¿½n viï¿½n --- */
     .form-add-employee table,
     .form-add-employee thead,
