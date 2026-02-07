@@ -298,6 +298,7 @@ Route::prefix('chamcong_lavarel')->name('chamcong.')->group(function () {
         Route::post('/qr', [ChamCongAttendanceController::class, 'handleQr'])->name('qr.handle');
         Route::get('/info', [ChamCongInfoController::class, 'index'])->name('info');
         Route::post('/info/password', [ChamCongInfoController::class, 'changePassword'])->name('info.password');
+        Route::post('/info/comp-request', [ChamCongInfoController::class, 'submitCompRequest'])->name('info.comp-request');
         Route::get('/tasks', [ChamCongUserTaskController::class, 'index'])->name('tasks');
         Route::post('/tasks/complete', [ChamCongUserTaskController::class, 'completeSubtask'])->name('tasks.complete');
     });
@@ -313,6 +314,8 @@ Route::prefix('chamcong_lavarel/admin')->name('chamcong.admin.')->middleware('ad
     Route::post('/attendance/update', [ChamCongAdminController::class, 'updateAttendance'])->name('attendance.update');
     Route::post('/attendance/delete-day', [ChamCongAdminController::class, 'deleteDayAttendance'])->name('attendance.delete-day');
     Route::post('/attendance/update-earliest-latest', [ChamCongAdminController::class, 'updateEarliestLatest'])->name('attendance.update-earliest-latest');
+    Route::post('/attendance-requests/approve', [ChamCongAdminController::class, 'approveAttendanceRequest'])->name('attendance-requests.approve');
+    Route::post('/attendance-requests/reject', [ChamCongAdminController::class, 'rejectAttendanceRequest'])->name('attendance-requests.reject');
     Route::post('/salary/calculate', [ChamCongAdminController::class, 'calculateSalary'])->name('salary.calculate');
 
     Route::get('/detail', [ChamCongDetailController::class, 'index'])->name('detail');
@@ -323,4 +326,3 @@ Route::prefix('chamcong_lavarel/admin')->name('chamcong.admin.')->middleware('ad
     Route::post('/tasks/delete', [TaskAdminController::class, 'delete'])->name('tasks.delete');
     Route::post('/tasks/delete-progress', [TaskAdminController::class, 'deleteProgress'])->name('tasks.delete-progress');
 });
-

@@ -281,6 +281,51 @@
             </table>
             <button type="submit">Thêm</button>
         </form>
+        <div class="proposal-section">
+            <h3>Đề xuất của nhân viên</h3>
+            @if($compRequests->isEmpty())
+                <p class="proposal-empty">Chưa có đề xuất.</p>
+            @else
+                <table class="proposal-table">
+                    <tr>
+                        <th>Nhân viên</th>
+                        <th>Ngày</th>
+                        <th>Giờ check-in</th>
+                        <th>Giờ check-out</th>
+                        <th>Tổng giờ</th>
+                        <th>Hành động</th>
+                    </tr>
+                    @foreach($compRequests as $req)
+                        @php
+                            $reqDate = $req->work_date ?? '';
+                            $reqDmy = $reqDate ? implode('/', array_reverse(explode('-', $reqDate))) : '';
+                            $reqIn = $req->check_in ? substr(explode(' ', $req->check_in)[1] ?? '', 0, 5) : '';
+                            $reqOut = $req->check_out ? substr(explode(' ', $req->check_out)[1] ?? '', 0, 5) : '';
+                            $reqHours = isset($req->total_minutes) ? round(((int) $req->total_minutes) / 60, 2) : '';
+                        @endphp
+                        <tr>
+                            <td>{{ $req->username }}</td>
+                            <td>{{ $reqDmy }}</td>
+                            <td>{{ $reqIn }}</td>
+                            <td>{{ $reqOut }}</td>
+                            <td>{{ $reqHours }}</td>
+                            <td class="proposal-actions">
+                                <form method="POST" action="{{ route('chamcong.admin.attendance-requests.approve') }}" onsubmit="return confirm('Phê duyệt đề xuất này?');">
+                                    @csrf
+                                    <input type="hidden" name="request_id" value="{{ $req->id }}">
+                                    <button type="submit" class="btn-approve">Phê duyệt</button>
+                                </form>
+                                <form method="POST" action="{{ route('chamcong.admin.attendance-requests.reject') }}" onsubmit="return confirm('Từ chối đề xuất này?');">
+                                    @csrf
+                                    <input type="hidden" name="request_id" value="{{ $req->id }}">
+                                    <button type="submit" class="btn-reject">Từ chối</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+        </div>
     </div>
 </div>
 

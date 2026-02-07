@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+ï»¿@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 @font-face {
     font-family: 'Baloo 2';
@@ -24,7 +24,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Chi?u cao full màn hình */
+    height: 100vh; /* Chi?u cao full mï¿½n hï¿½nh */
     padding: 0;
     position: relative;
 }
@@ -43,7 +43,7 @@ body {
     max-width: 220px;
 }
 
-/* Container chính */
+/* Container chï¿½nh */
 .container {
     background: #ecf0f1;
     padding: 20px;
@@ -203,7 +203,7 @@ select:focus {
     box-shadow: 0 0 0 2px rgba(74, 179, 175, 0.2);
 }
 
-/* Tiêu d? */
+/* Tiï¿½u d? */
 h2, h3, h4 {
     text-align: center;
     margin-bottom: 15px;
@@ -215,7 +215,7 @@ h2, h3, h4 {
     margin-bottom: 1.5rem;
 }
 
-/* B?ng l?ch s? ch?m công */
+/* B?ng l?ch s? ch?m cï¿½ng */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -240,7 +240,7 @@ td {
     background: #f8f9fa;
 }
 
-/* Nút b?m */
+/* Nï¿½t b?m */
 .toggle-password-btn, button {
     width: 100%;
     padding: 10px;
@@ -283,7 +283,7 @@ button:hover {
 
 /* Popup modal */
 .modal {
-    display: none; /* Ch? hi?n th? khi du?c kích ho?t */
+    display: none; /* Ch? hi?n th? khi du?c kï¿½ch ho?t */
     position: fixed;
     z-index: 9999;
     left: 0;
@@ -318,7 +318,7 @@ button:hover {
     opacity: 0.8;
 }
 
-/* Nút dóng popup */
+/* Nï¿½t dï¿½ng popup */
 .close {
     position: absolute;
     top: 10px;
@@ -326,7 +326,7 @@ button:hover {
     font-size: 24px;
     cursor: pointer;
 }
-/* Nút Xác nh?n */
+/* Nï¿½t Xï¿½c nh?n */
 .modal-content button {
     width: 100%;
     padding: 10px;
@@ -335,7 +335,7 @@ button:hover {
     font-size: 16px;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -343,23 +343,23 @@ button:hover {
 .modal-content input {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px; /* T?o kho?ng cách gi?a các tru?ng */
+    margin-bottom: 15px; /* T?o kho?ng cï¿½ch gi?a cï¿½c tru?ng */
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
 }
-/* Can ch?nh nhãn (label) */
+/* Can ch?nh nhï¿½n (label) */
 .modal-content label {
     font-weight: bold;
     margin-bottom: 5px;
-    width: 100%; /* Ð?m b?o label và input cùng hàng */
+    width: 100%; /* ï¿½?m b?o label vï¿½ input cï¿½ng hï¿½ng */
     text-align: left;
 }
 /* Can ch?nh form trong popup */
 .modal-content form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Can trái nhãn */
+    align-items: flex-start; /* Can trï¿½i nhï¿½n */
 }
 /* Khi modal m?, hi?u ?ng tru?t xu?ng */
 .modal.show .modal-content {
@@ -367,7 +367,7 @@ button:hover {
     opacity: 1;
 }
 
-/* Nút dóng modal */
+/* Nï¿½t dï¿½ng modal */
 .close {
     position: absolute;
     top: 10px;
@@ -376,19 +376,19 @@ button:hover {
     cursor: pointer;
 }
 
-/* Nút d?i m?t kh?u */
+/* Nï¿½t d?i m?t kh?u */
 .open-password-modal {
     width: 100%;
     padding: 10px;
     font-size: 16px;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     cursor: pointer;
     background-color: #4ab3af;
     color: white;
     transition: 0.3s;
-    margin-top: 15px;
+
 }
 
 .open-password-modal:hover {
@@ -396,7 +396,7 @@ button:hover {
 }
 
 
-/* Làm n?i b?t t?ng gi? làm vi?c */
+/* Lï¿½m n?i b?t t?ng gi? lï¿½m vi?c */
 .total-hours {
     font-size: 20px;
     font-weight: 500;
@@ -408,7 +408,7 @@ button:hover {
     margin: 0;
 }
 
-/* Làm n?i b?t luong hi?n t?i */
+/* Lï¿½m n?i b?t luong hi?n t?i */
 .current-salary {
     font-size: 20px;
     font-weight: 500;
@@ -423,12 +423,12 @@ button:hover {
 
 
 
-/* ?? STYLE CHO NÚT PHÂN TRANG */
+/* ?? STYLE CHO Nï¿½T PHï¿½N TRANG */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px; /* Kho?ng cách gi?a các nút */
+    gap: 5px; /* Kho?ng cï¿½ch gi?a cï¿½c nï¿½t */
     margin-top: 15px;
 }
 
@@ -467,3 +467,158 @@ button:hover {
 
 
 
+
+/* Action buttons row */
+.action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+.action-row button {
+    width: 100%;
+}
+.open-comp-modal {
+    background-color: #d1a029;
+        border-radius: 50px;
+}
+
+/* Sheet modal for compensation request */
+.sheet-modal {
+    align-items: flex-end;
+    padding: 0 12px 12px;
+}
+.sheet-content {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+.sheet-modal.show .sheet-content {
+    transform: translateY(0);
+}
+
+/* Form fields with icons */
+.input-icon {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.input-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4ab3af;
+    font-size: 14px;
+}
+.input-icon input {
+    padding-left: 34px;
+}
+
+.comp-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+}
+.comp-field input[readonly] {
+    background: #f8f9fa;
+    text-align: center;
+}
+
+@media (max-width: 520px) {
+    .action-row {
+        grid-template-columns: 1fr;
+    }
+    .comp-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sheet modal form fields */
+.sheet-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.sheet-content label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: left;
+}
+.sheet-content input {
+    width: 100%;
+    padding: 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.sheet-content .input-icon input {
+    padding-left: 34px;
+}
+.sheet-content button {
+    width: 100%;
+    border-radius: 50px;
+    /* margin-top: 1rem; */
+}
+
+/* Action row: 2 columns 50% */
+.action-row {
+    display: flex;
+    gap: 10px;
+}
+.action-row .action-item {
+    width: 50%;
+}
+.action-row .action-item button {
+    width: 100%;
+}
+
+.sheet-modal {
+    display: flex;
+}
+
+/* Compensation calendar popover */
+.comp-calendar-wrap {
+    position: relative;
+    width: 100%;
+}
+.comp-calendar-popover {
+    top: 2.6rem;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 320px;
+}
+.comp-calendar-popover .cal-day {
+    cursor: pointer;
+}
+.comp-calendar-popover .cal-day.selected {
+    background: #4ab3af;
+    color: #fff;
+}
+.comp-date-field {
+    position: relative;
+}
+.comp-calendar-toggle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.comp-calendar-toggle {
+    padding: 0;
+    border-radius: 0;
+    font-size: 0;
+}

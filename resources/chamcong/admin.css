@@ -826,3 +826,31 @@ button,
 
 
 
+
+/* Proposal table */
+.proposal-section {
+    margin-top: 20px;
+}
+.proposal-table th {
+    background-color: #4ab3af;
+    color: #fff;
+}
+.proposal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+.proposal-actions form {
+    margin: 0;
+}
+.btn-approve {
+    background-color: #3f9426;
+}
+.btn-reject {
+    background-color: #b83232;
+}
+.proposal-empty {
+    color: #666;
+    text-align: center;
+    margin: 8px 0;
+}

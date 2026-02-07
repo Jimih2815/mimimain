@@ -4,10 +4,12 @@ namespace App\Http\Controllers\ChamCong;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChamCong\Attendance;
+use App\Models\ChamCong\AttendanceRequest;
 use App\Models\ChamCong\ChamCongUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class InfoController extends Controller
 {
@@ -142,6 +144,8 @@ class InfoController extends Controller
         }
 
         $passMsg = $request->session()->pull('chamcong_pass_msg');
+        $compMsg = $request->session()->pull('chamcong_comp_msg');
+        $compMsgType = $request->session()->pull('chamcong_comp_msg_type', '');
 
         return view('chamcong.info', [
             'username' => $username,
@@ -155,7 +159,94 @@ class InfoController extends Controller
             'actualHoursThisMonth' => $actualHoursThisMonth,
             'currentSalary' => $currentSalary,
             'passMsg' => $passMsg,
+            'compMsg' => $compMsg,
+            'compMsgType' => $compMsgType,
         ]);
+    }
+
+    public function submitCompRequest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'comp_date' => ['required', 'date'],
+            'comp_check_in' => ['nullable', 'date_format:H:i'],
+            'comp_check_out' => ['nullable', 'date_format:H:i'],
+        ], [
+            'comp_date.required' => 'Vui lòng chọn ngày.',
+            'comp_date.date' => 'Ngày không hợp lệ.',
+            'comp_check_in.date_format' => 'Giờ check-in không hợp lệ.',
+            'comp_check_out.date_format' => 'Giờ check-out không hợp lệ.',
+        ]);
+
+        if ($validator->fails()) {
+            $request->session()->put('chamcong_comp_msg', $validator->errors()->first());
+            $request->session()->put('chamcong_comp_msg_type', 'error');
+            return redirect()->route('chamcong.info')->withInput();
+        }
+
+        $userId = (int) $request->session()->get('chamcong_user_id');
+        if ($userId <= 0) {
+            return redirect()->route('chamcong.login');
+        }
+
+        $tz = config('chamcong.timezone', 'Asia/Ho_Chi_Minh');
+        $workDate = $request->input('comp_date');
+        $inTime = trim((string) $request->input('comp_check_in', ''));
+        $outTime = trim((string) $request->input('comp_check_out', ''));
+        $inTime = $inTime !== '' ? $inTime : null;
+        $outTime = $outTime !== '' ? $outTime : null;
+
+        if ($inTime === null && $outTime === null) {
+            $request->session()->put('chamcong_comp_msg', 'Vui lòng nhập ít nhất giờ check-in hoặc check-out.');
+            $request->session()->put('chamcong_comp_msg_type', 'error');
+            return redirect()->route('chamcong.info')->withInput();
+        }
+
+        $checkIn = null;
+        $checkOut = null;
+        if ($inTime !== null) {
+            try {
+                $checkIn = Carbon::createFromFormat('Y-m-d H:i', $workDate . ' ' . $inTime, $tz);
+            } catch (\Throwable $e) {
+                $request->session()->put('chamcong_comp_msg', 'Dữ liệu thời gian không hợp lệ.');
+                $request->session()->put('chamcong_comp_msg_type', 'error');
+                return redirect()->route('chamcong.info')->withInput();
+            }
+        }
+        if ($outTime !== null) {
+            try {
+                $checkOut = Carbon::createFromFormat('Y-m-d H:i', $workDate . ' ' . $outTime, $tz);
+            } catch (\Throwable $e) {
+                $request->session()->put('chamcong_comp_msg', 'Dữ liệu thời gian không hợp lệ.');
+                $request->session()->put('chamcong_comp_msg_type', 'error');
+                return redirect()->route('chamcong.info')->withInput();
+            }
+        }
+
+        if ($checkIn && $checkOut && $checkOut->lessThanOrEqualTo($checkIn)) {
+            $request->session()->put('chamcong_comp_msg', 'Giờ check-out phải sau giờ check-in.');
+            $request->session()->put('chamcong_comp_msg_type', 'error');
+            return redirect()->route('chamcong.info')->withInput();
+        }
+
+        $totalMinutes = null;
+        if ($checkIn && $checkOut) {
+            $totalMinutes = $checkIn->diffInMinutes($checkOut);
+        }
+
+        AttendanceRequest::create([
+            'user_id' => $userId,
+            'work_date' => $workDate,
+            'check_in' => $checkIn ? $checkIn->format('Y-m-d H:i:s') : null,
+            'check_out' => $checkOut ? $checkOut->format('Y-m-d H:i:s') : null,
+            'total_minutes' => $totalMinutes,
+            'status' => 'pending',
+            'created_at' => Carbon::now($tz)->format('Y-m-d H:i:s'),
+        ]);
+
+        $request->session()->put('chamcong_comp_msg', 'Đã gửi đề xuất chấm công bù.');
+        $request->session()->put('chamcong_comp_msg_type', 'success');
+
+        return redirect()->route('chamcong.info');
     }
 
     public function changePassword(Request $request)

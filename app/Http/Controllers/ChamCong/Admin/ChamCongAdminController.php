@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ChamCong\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChamCong\Attendance;
+use App\Models\ChamCong\AttendanceRequest;
 use App\Models\ChamCong\ChamCongUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -143,6 +144,14 @@ class ChamCongAdminController extends Controller
             $calcYear = (int) $request->session()->pull('chamcong_calc_year', 0);
         }
 
+        $compRequests = DB::connection('chamcong')
+            ->table('attendance_requests as ar')
+            ->join('users as u', 'ar.user_id', '=', 'u.id')
+            ->select('ar.*', 'u.username')
+            ->where('ar.status', 'pending')
+            ->orderByDesc('ar.id')
+            ->get();
+
         return view('chamcong.admin.index', [
             'users' => $users,
             'workingMap' => $workingMap,
@@ -159,6 +168,7 @@ class ChamCongAdminController extends Controller
             'calcMonth' => $calcMonth,
             'calcYear' => $calcYear,
             'activeTab' => $activeTab,
+            'compRequests' => $compRequests,
         ]);
     }
 
@@ -289,6 +299,95 @@ class ChamCongAdminController extends Controller
 
         $request->session()->flash('chamcong_flash_msg', "<p style='color:green;'>Đã thêm chấm công cho user {$userId} vào ngày {$theDate}</p>");
         return redirect()->route('chamcong.admin.dashboard');
+    }
+
+    public function approveAttendanceRequest(Request $request)
+    {
+        $request->validate([
+            'request_id' => ['required', 'integer'],
+        ]);
+
+        $reqId = (int) $request->input('request_id');
+        $req = AttendanceRequest::where('id', $reqId)->first();
+        if (!$req || $req->status !== 'pending') {
+            $request->session()->flash('chamcong_flash_msg', "<p style='color:red;'>Đề xuất không tồn tại hoặc đã được xử lý.</p>");
+            return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
+        }
+
+        $existing = Attendance::where('user_id', $req->user_id)
+            ->whereDate('check_in', $req->work_date)
+            ->selectRaw('MIN(check_in) as earliest_in, MAX(check_out) as latest_out')
+            ->first();
+
+        $finalIn = $req->check_in ?: ($existing->earliest_in ?? null);
+        $finalOut = $req->check_out ?: ($existing->latest_out ?? null);
+
+        if (!$finalIn) {
+            $request->session()->flash('chamcong_flash_msg', "<p style='color:red;'>Không thể phê duyệt: thiếu giờ check-in.</p>");
+            return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
+        }
+
+        if ($finalOut) {
+            try {
+                $inDt = Carbon::parse($finalIn);
+                $outDt = Carbon::parse($finalOut);
+                if ($outDt->lessThanOrEqualTo($inDt)) {
+                    $request->session()->flash('chamcong_flash_msg', "<p style='color:red;'>Giờ check-out phải sau giờ check-in.</p>");
+                    return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
+                }
+            } catch (\Throwable $e) {
+                $request->session()->flash('chamcong_flash_msg', "<p style='color:red;'>Dữ liệu thời gian không hợp lệ.</p>");
+                return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
+            }
+        }
+
+        $finalMinutes = null;
+        if ($finalOut) {
+            $finalMinutes = Carbon::parse($finalIn)->diffInMinutes(Carbon::parse($finalOut));
+        }
+
+        DB::connection('chamcong')->transaction(function () use ($req, $finalIn, $finalOut, $finalMinutes) {
+            Attendance::where('user_id', $req->user_id)
+                ->whereDate('check_in', $req->work_date)
+                ->delete();
+
+            Attendance::create([
+                'user_id' => $req->user_id,
+                'check_in' => $finalIn,
+                'check_out' => $finalOut,
+            ]);
+
+            AttendanceRequest::where('id', $req->id)->update([
+                'status' => 'approved',
+                'check_in' => $finalIn,
+                'check_out' => $finalOut,
+                'total_minutes' => $finalMinutes,
+            ]);
+        });
+
+        $request->session()->flash('chamcong_flash_msg', "<p style='color:green;'>Đã phê duyệt đề xuất chấm công bù.</p>");
+        return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
+    }
+
+    public function rejectAttendanceRequest(Request $request)
+    {
+        $request->validate([
+            'request_id' => ['required', 'integer'],
+        ]);
+
+        $reqId = (int) $request->input('request_id');
+        $req = AttendanceRequest::where('id', $reqId)->first();
+        if (!$req || $req->status !== 'pending') {
+            $request->session()->flash('chamcong_flash_msg', "<p style='color:red;'>Đề xuất không tồn tại hoặc đã được xử lý.</p>");
+            return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
+        }
+
+        AttendanceRequest::where('id', $req->id)->update([
+            'status' => 'rejected',
+        ]);
+
+        $request->session()->flash('chamcong_flash_msg', "<p style='color:#b83232;'>Đã từ chối đề xuất chấm công bù.</p>");
+        return redirect()->route('chamcong.admin.dashboard', ['tab' => 'modul5']);
     }
 
     public function updateAttendance(Request $request)

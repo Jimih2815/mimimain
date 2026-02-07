@@ -3,3 +3,6 @@ php artisan migrate --path=database/migrations/2026_01_31_090000_create_home_ban
 
 php artisan migrate --path=database/migrations/2026_02_03_120000_add_phone_to_users_table.php
 php artisan migrate --path=database/migrations/2026_02_03_120500_create_password_reset_tokens_table.php
+
+
+php artisan migrate --path=database/migrations/2026_02_07_120000_create_attendance_requests_table.php

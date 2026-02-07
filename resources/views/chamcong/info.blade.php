@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -10,9 +10,10 @@
         th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
         .success { color: green; }
         .error { color: red; }
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
-        .modal.show { display: block; }
-        .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; width: 90%; max-width: 400px; border-radius: 5px; position: relative; }
+        .modal { position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s ease, visibility 0s linear 0.25s; }
+        .modal.show { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 0.25s ease; }
+        .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; width: 90%; max-width: 400px; border-radius: 5px; position: relative; transform: translateY(16px); opacity: 0; transition: transform 0.25s ease, opacity 0.25s ease; }
+        .modal.show .modal-content { transform: translateY(0); opacity: 1; }
         .close { position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 24px; }
         .container { max-width: 1200px; margin: auto; padding: 1rem; }
     </style>
@@ -110,11 +111,18 @@
         </p>
     </div>
 
-    <button class="open-password-modal">Đổi mật khẩu</button>
+    <div class="action-row">
+        <div class="action-item">
+            <button type="button" class="open-password-modal">Đổi mật khẩu</button>
+        </div>
+        <div class="action-item">
+            <button type="button" class="open-comp-modal">Chấm công bù</button>
+        </div>
+    </div>
 
     <div id="passwordModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close password-close">&times;</span>
             <h3>Đổi mật khẩu</h3>
 
             @if(!empty($passMsg))
@@ -139,29 +147,245 @@
         </div>
     </div>
 
-    
+    <div id="compModal" class="modal sheet-modal">
+        <div class="sheet-content">
+            <span class="close comp-close">&times;</span>
+            <h3>Chấm công bù</h3>
+
+            @if(!empty($compMsg))
+                <p class="{{ $compMsgType === 'error' ? 'error' : 'success' }}">
+                    {{ $compMsg }}
+                </p>
+            @endif
+
+            <form method="POST" action="{{ route('chamcong.info.comp-request') }}" id="compForm">
+                @csrf
+                <label for="compDate">Ngày</label>
+                <div class="comp-calendar-wrap">
+                    <div class="input-icon comp-date-field">
+                        <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                        <input type="date" id="compDate" name="comp_date" value="{{ old('comp_date') }}" required>
+                        <button type="button" class="comp-calendar-toggle" id="compCalendarToggle" aria-label="Lịch"></button>
+                    </div>
+                    <div class="calendar-popover comp-calendar-popover" id="compCalendarPopover" aria-hidden="true">
+                        <div class="calendar-header">
+                            <button type="button" class="cal-nav" id="compCalPrev" aria-label="Tháng trước" style="width: 0px; height: 0px;">‹</button>
+                            <div class="calendar-title" id="compCalendarTitle"></div>
+                            <button type="button" class="cal-nav" id="compCalNext" aria-label="Tháng sau" style="width: 0px; height: 0px;">›</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+                        </div>
+                        <div class="calendar-grid" id="compCalendarGrid"></div>
+                    </div>
+                </div>
+
+                <label for="compCheckIn">Giờ check-in</label>
+                <div class="input-icon">
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    <input type="time" id="compCheckIn" name="comp_check_in" value="{{ old('comp_check_in') }}" step="60">
+                </div>
+
+                <div class="comp-row">
+                    <div class="comp-field">
+                        <label for="compCheckOut">Giờ check-out</label>
+                        <div class="input-icon">
+                            <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                            <input type="time" id="compCheckOut" name="comp_check_out" value="{{ old('comp_check_out') }}" step="60">
+                        </div>
+                    </div>
+                    <div class="comp-field">
+                        <label for="compTotal">Tổng giờ</label>
+                        <input type="text" id="compTotal" readonly placeholder="0">
+                    </div>
+                </div>
+
+                <button style="margin-top: 1rem;" type="submit">Đề xuất</button>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const modal = document.getElementById("passwordModal");
-    const btn = document.querySelector(".open-password-modal");
-    const closeBtn = document.querySelector(".close");
+    const passwordModal = document.getElementById("passwordModal");
+    const passBtn = document.querySelector(".open-password-modal");
+    const passCloseBtn = document.querySelector(".password-close");
 
-    if (btn) {
-        btn.onclick = function() { modal.classList.add("show"); }
+    const compModal = document.getElementById("compModal");
+    const compBtn = document.querySelector(".open-comp-modal");
+    const compCloseBtn = document.querySelector(".comp-close");
+    let compDateInput = null;
+    let compCalendarToggle = null;
+    let compCalendarPopover = null;
+
+    if (passBtn && passwordModal) {
+        passBtn.addEventListener("click", function() { passwordModal.classList.add("show"); });
     }
-    if (closeBtn) {
-        closeBtn.onclick = function() { modal.classList.remove("show"); }
+    if (passCloseBtn && passwordModal) {
+        passCloseBtn.addEventListener("click", function() { passwordModal.classList.remove("show"); });
     }
-    window.onclick = function(event) {
-        if (event.target === modal) { modal.classList.remove("show"); }
+    if (compBtn && compModal) {
+        compBtn.addEventListener("click", function() { compModal.classList.add("show"); });
     }
+    if (compCloseBtn && compModal) {
+        compCloseBtn.addEventListener("click", function() { compModal.classList.remove("show"); });
+    }
+
+    window.addEventListener("click", function(event) {
+        if (passwordModal && event.target === passwordModal) { passwordModal.classList.remove("show"); }
+        if (compModal && event.target === compModal) { compModal.classList.remove("show"); }
+        if (compCalendarPopover && compCalendarPopover.classList.contains('is-open')) {
+            const inPopover = compCalendarPopover.contains(event.target);
+            const inToggle = compCalendarToggle && compCalendarToggle.contains(event.target);
+            const inInput = compDateInput && compDateInput.contains(event.target);
+            if (!inPopover && !inToggle && !inInput) {
+                compCalendarPopover.classList.remove('is-open');
+            }
+        }
+    });
+
+    const compCheckIn = document.getElementById("compCheckIn");
+    const compCheckOut = document.getElementById("compCheckOut");
+    const compTotal = document.getElementById("compTotal");
+
+    function parseTimeToMinutes(val) {
+        if (!val) return null;
+        const parts = val.split(':');
+        if (parts.length < 2) return null;
+        const h = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        if (Number.isNaN(h) || Number.isNaN(m)) return null;
+        return h * 60 + m;
+    }
+
+    function updateCompTotal() {
+        if (!compTotal) return;
+        const inMins = compCheckIn ? parseTimeToMinutes(compCheckIn.value) : null;
+        const outMins = compCheckOut ? parseTimeToMinutes(compCheckOut.value) : null;
+        if (inMins === null || outMins === null) {
+            compTotal.value = '';
+            return;
+        }
+        const diff = outMins - inMins;
+        if (diff <= 0) {
+            compTotal.value = '0';
+            return;
+        }
+        compTotal.value = (diff / 60).toFixed(2);
+    }
+
+    if (compCheckIn) compCheckIn.addEventListener("input", updateCompTotal);
+    if (compCheckOut) compCheckOut.addEventListener("input", updateCompTotal);
+    updateCompTotal();
+
+    compDateInput = document.getElementById("compDate");
+    compCalendarToggle = document.getElementById("compCalendarToggle");
+    compCalendarPopover = document.getElementById("compCalendarPopover");
+    const compCalendarGrid = document.getElementById("compCalendarGrid");
+    const compCalendarTitle = document.getElementById("compCalendarTitle");
+    const compCalPrev = document.getElementById("compCalPrev");
+    const compCalNext = document.getElementById("compCalNext");
+    const compMonthNames = ['Thang 1','Thang 2','Thang 3','Thang 4','Thang 5','Thang 6','Thang 7','Thang 8','Thang 9','Thang 10','Thang 11','Thang 12'];
+    let compYear = null;
+    let compMonth = null;
+
+    function parseCompDate(val) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(val || '');
+        if (!m) return null;
+        return { y: parseInt(m[1], 10), m: parseInt(m[2], 10) - 1, d: parseInt(m[3], 10) };
+    }
+
+    function syncCompCalendarFromInput() {
+        const parsed = parseCompDate(compDateInput ? compDateInput.value : '');
+        const now = new Date();
+        compYear = parsed ? parsed.y : now.getFullYear();
+        compMonth = parsed ? parsed.m : now.getMonth();
+    }
+
+    function renderCompCalendar() {
+        if (!compCalendarGrid || !compCalendarTitle || compYear === null || compMonth === null) return;
+        const selected = parseCompDate(compDateInput ? compDateInput.value : '');
+        compCalendarTitle.textContent = `${compMonthNames[compMonth]} ${compYear}`;
+        const firstDay = (new Date(compYear, compMonth, 1).getDay() + 6) % 7;
+        const daysInMonth = new Date(compYear, compMonth + 1, 0).getDate();
+        let html = '';
+        for (let i = 0; i < firstDay; i++) {
+            html += '<div class="cal-cell empty"></div>';
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+            const isSelected = selected && selected.y === compYear && selected.m === compMonth && selected.d === d;
+            html += `<div class="cal-cell"><span class="cal-day ${isSelected ? 'selected' : ''}" data-day="${d}">${d}</span></div>`;
+        }
+        compCalendarGrid.innerHTML = html;
+    }
+
+    function openCompCalendar() {
+        if (!compCalendarPopover) return;
+        syncCompCalendarFromInput();
+        renderCompCalendar();
+        compCalendarPopover.classList.add('is-open');
+    }
+
+    function closeCompCalendar() {
+        if (compCalendarPopover) compCalendarPopover.classList.remove('is-open');
+    }
+
+    if (compCalendarToggle) {
+        compCalendarToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (compCalendarPopover && compCalendarPopover.classList.contains('is-open')) {
+                closeCompCalendar();
+            } else {
+                openCompCalendar();
+            }
+        });
+    }
+    if (compCalPrev) {
+        compCalPrev.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (compMonth === null || compYear === null) syncCompCalendarFromInput();
+            compMonth -= 1;
+            if (compMonth < 0) { compMonth = 11; compYear -= 1; }
+            renderCompCalendar();
+        });
+    }
+    if (compCalNext) {
+        compCalNext.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (compMonth === null || compYear === null) syncCompCalendarFromInput();
+            compMonth += 1;
+            if (compMonth > 11) { compMonth = 0; compYear += 1; }
+            renderCompCalendar();
+        });
+    }
+    if (compCalendarGrid) {
+        compCalendarGrid.addEventListener('click', function(e) {
+            const dayEl = e.target.closest('.cal-day');
+            if (!dayEl || !dayEl.dataset.day) return;
+            const day = parseInt(dayEl.dataset.day, 10);
+            if (!day || compYear === null || compMonth === null) return;
+            const mm = String(compMonth + 1).padStart(2, '0');
+            const dd = String(day).padStart(2, '0');
+            if (compDateInput) compDateInput.value = `${compYear}-${mm}-${dd}`;
+            closeCompCalendar();
+        });
+    }
+    if (compDateInput) {
+        compDateInput.addEventListener('change', function() {
+            syncCompCalendarFromInput();
+            renderCompCalendar();
+        });
+    }
+
     @if(!empty($passMsg) && $passMsg !== "Đổi mật khẩu thành công!")
-        modal.classList.add("show");
+        if (passwordModal) passwordModal.classList.add("show");
+    @endif
+    @if(!empty($compMsg))
+        if (compModal) compModal.classList.add("show");
     @endif
 });
-
 document.addEventListener("DOMContentLoaded", function() {
     const paginationEl = document.getElementById('attendancePagination');
     const rowsEl = document.getElementById('attendanceRows');
@@ -427,4 +651,3 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 </body>
 </html>
-
