@@ -189,10 +189,10 @@ body {
 .table-controls select {
     padding: 4px 8px;
     border: 1px solid #4ab3af;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     background: #fff;
-    color: #4ab3af;
+    color: #1f3b4d;
 }
 select {
     border: 1px solid #4ab3af;
@@ -629,6 +629,7 @@ button:hover {
     align-items: flex-start;
 }
 .sheet-content label {
+    display: flex;
     font-weight: bold;
     margin-bottom: 5px;
     width: 100%;
