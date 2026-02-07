@@ -20,7 +20,7 @@
 </head>
 <body>
 <a href="{{ route('chamcong.dashboard') }}" class="logo-link">
-    <img src="{{ Vite::asset('resources/chamcong/logo.png') }}" alt="Logo Công Ty" class="company-logo">
+    <img src="{{ asset('image/mimi-logo.webp') }}" alt="Logo Công Ty" class="company-logo">
 </a>
 
 <div class="container">

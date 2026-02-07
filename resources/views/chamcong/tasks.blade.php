@@ -9,7 +9,7 @@
 <body>
 <div class="container-body">
 <a href="{{ route('chamcong.dashboard') }}" class="logo-link">
-    <img src="{{ Vite::asset('resources/chamcong/logo.png') }}" alt="Logo Công Ty" class="company-logo">
+    <img src="{{ asset('image/mimi-logo.webp') }}" alt="Logo Công Ty" class="company-logo">
 </a>
   <h1>Danh sách công việc của {{ session('chamcong_username') }}</h1>
 
