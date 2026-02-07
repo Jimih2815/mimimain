@@ -123,7 +123,7 @@
       </tr>
       <tr>
         <th style="text-align:right; background-color:#c82333; padding-right:0.5rem; color:white;">T&#7893;ng c&#7897;ng l&#432;&#417;ng:</th>
-        <td><input style="border: 0px solid #ccc; color: #c82333; font-weight:800;" type="text" id="finalInput" value="0"></td>
+        <td><input style="border: 0px solid #ccc; color: #c82333; font-weight:800;" type="text" id="finalInput" value="{{ $sumSalaryDisplay }}"></td>
       </tr>
     </table>
   </div>
@@ -478,12 +478,25 @@ function formatMoney(value) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 function unformatMoney(str) {
-  return str.replace(/[^\\d]/g, "");
+  return str.replace(/[^\d]/g, "");
+}
+function parseMoney(val) {
+  if (typeof val === 'number') return val;
+  if (val === null || typeof val === 'undefined') return 0;
+  var raw = unformatMoney(String(val));
+  return parseFloat(raw) || 0;
+}
+function formatInputValue(el) {
+  if (!el) return 0;
+  var raw = unformatMoney(el.value || '');
+  var num = parseFloat(raw) || 0;
+  el.value = formatMoney(num);
+  return num;
 }
 var detailTotalSalary = 0;
 
 function setDetailTotalSalary(val, formatted) {
-  detailTotalSalary = parseFloat(val) || 0;
+  detailTotalSalary = parseMoney(val);
   var totalSalaryEl = document.getElementById('totalSalary');
   if (totalSalaryEl) {
     totalSalaryEl.textContent = formatted || formatMoney(detailTotalSalary);
@@ -491,7 +504,7 @@ function setDetailTotalSalary(val, formatted) {
   var bonusEl = document.getElementById('bonusInput');
   var finalEl = document.getElementById('finalInput');
   if (bonusEl && finalEl) {
-    var bonusVal = parseFloat(unformatMoney(bonusEl.value)) || 0;
+    var bonusVal = parseMoney(bonusEl.value);
     finalEl.value = formatMoney(detailTotalSalary + bonusVal);
   }
 }
@@ -499,23 +512,20 @@ function setDetailTotalSalary(val, formatted) {
 document.addEventListener('DOMContentLoaded', function(){
   var tsEl = document.getElementById('totalSalary');
   var tsText = tsEl ? tsEl.textContent : '0';
-  tsText = unformatMoney(tsText);
-  setDetailTotalSalary(parseFloat(tsText) || 0);
+  setDetailTotalSalary(parseMoney(tsText) || 0);
 
   var bonusEl = document.getElementById('bonusInput');
   var finalEl = document.getElementById('finalInput');
   if (!bonusEl || !finalEl) return;
 
   bonusEl.addEventListener('input', function(){
-    var bonusRaw = unformatMoney(bonusEl.value);
-    var bonusVal = parseFloat(bonusRaw) || 0;
+    var bonusVal = formatInputValue(bonusEl);
     var total = detailTotalSalary + bonusVal; 
     finalEl.value = formatMoney(total);
   });
 
   finalEl.addEventListener('input', function(){
-    var finalRaw = unformatMoney(finalEl.value);
-    var finalVal = parseFloat(finalRaw) || 0;
+    var finalVal = formatInputValue(finalEl);
     var bonusVal = finalVal - detailTotalSalary;
     bonusEl.value = formatMoney(bonusVal);
   });

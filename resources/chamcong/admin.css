@@ -46,7 +46,6 @@ h1 {
 h2, h3 {
     margin-top: 15px;
     color: #1f3b4d;
-    border-bottom: 2px solid #1f3b4d;
     padding-bottom: 5px;
     margin-bottom: 15px;
 }
@@ -704,14 +703,23 @@ button,
   .tab-content {
     display: none;
   }
-  .tab-content.active {
+.tab-content.active {
     display: block;
   }
+
+/* Modul2: Danh sach nhan vien - wider columns + horizontal scroll */
+#modul2 {
+    overflow-x: auto;
+}
+#modul2 table {
+    width: max-content;
+    min-width: 1100px;
+}
   
 
 
-/* ===== RESPONSIVE CHO TABLE TRï¿½N IPAD ===== */
-@media only screen and (max-width: 1024px) {
+/* ===== RESPONSIVE CHO TABLE (<=767px) ===== */
+@media only screen and (max-width: 767px) {
     /* Thï¿½m cu?n ngang cho b?ng n?u chi?u r?ng mï¿½n hï¿½nh b? h?p */
     table {
         display: block;
@@ -796,7 +804,7 @@ button,
   
 }
 /* ===== TABLET (Giữ giao diện như desktop) ===== */
-@media only screen and (min-width: 769px) and (max-width: 1024px) {
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
     table {
         display: table;
         overflow-x: visible;
@@ -820,19 +828,53 @@ button,
         width: auto;
     }
     #modul4 .filter-row {
-        flex-wrap: nowrap;
-        gap: 10px;
-        font-size: 1rem;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+        font-size: 0.95rem;
     }
-    #modul4 .filter-row select {
+    #modul4 .filter-row label {
+        margin-left: 0 !important;
+        white-space: nowrap;
+    }
+    #modul4 .filter-row select,
+    #modul4 .filter-row input#daterange {
         flex: 0 0 auto;
         min-width: auto;
         width: auto;
     }
+    #modul4 .filter-row select[name="rows_per_page"] {
+        width: 4rem;
+    }
     #modul4 .filter-row input#daterange {
+        width: 180px !important;
+    }
+    #detailFilterForm {
+        flex-wrap: wrap;
+        gap: 8px 10px;
+        font-size: 0.95rem;
+    }
+    #detailFilterForm label {
+        margin-left: 0 !important;
+        white-space: normal;
+    }
+    #detailFilterForm select {
         flex: 0 0 auto;
         min-width: auto;
-        width: 200px !important;
+        width: auto;
+    }
+    #detailFilterForm select[name="filter_user_id"] {
+        width: 7.1rem;
+    }
+    #detailFilterForm select[name="rows_per_page"] {
+        width: 4rem;
+    }
+    #detailFilterForm input#daterange {
+        flex: 0 0 auto;
+        min-width: auto;
+        width: 180px !important;
+    }
+    #detailFilterForm .calendar-wrap {
+        flex: 0 0 auto;
     }
     .form-add-employee button,
     .form-add-attendance button {
