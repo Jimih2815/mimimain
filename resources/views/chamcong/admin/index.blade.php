@@ -221,12 +221,14 @@
             <input type="hidden" name="start_date" id="start_date" value="{{ $startDate }}">
             <input type="hidden" name="end_date" id="end_date" value="{{ $endDate }}">
 
-            <label>Số hàng/trang:</label>
-            <select name="rows_per_page">
-                <option value="10" {{ $rowsPerPage == 10 ? 'selected' : '' }}>10</option>
-                <option value="20" {{ $rowsPerPage == 20 ? 'selected' : '' }}>20</option>
-                <option value="30" {{ $rowsPerPage == 30 ? 'selected' : '' }}>30</option>
-            </select>
+            <div class="rows-per-page-group">
+                <label>Số hàng/trang:</label>
+                <select name="rows_per_page">
+                    <option value="10" {{ $rowsPerPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="20" {{ $rowsPerPage == 20 ? 'selected' : '' }}>20</option>
+                    <option value="30" {{ $rowsPerPage == 30 ? 'selected' : '' }}>30</option>
+                </select>
+            </div>
         </form>
 
         <table border="1" cellpadding="5" cellspacing="0">

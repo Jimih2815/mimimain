@@ -314,6 +314,9 @@ button,
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+.rows-per-page-group {
+    display: contents;
+}
 
 /* Modul4 filter: green border + pill radius */
 #modul4FilterForm select,
@@ -835,6 +838,14 @@ button,
     #modul4 .filter-row label {
         margin-left: 0 !important;
         white-space: nowrap;
+    }
+    #modul4 .rows-per-page-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    #modul4 .rows-per-page-group label {
+        margin: 0;
     }
     #modul4 .filter-row select,
     #modul4 .filter-row input#daterange {
