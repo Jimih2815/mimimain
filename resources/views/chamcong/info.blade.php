@@ -100,15 +100,15 @@
         @endfor
     </div>
 
-    <div class="summary">
-        <p class="total-hours">
-            <strong>Tổng giờ làm việc:  </strong>
-            <span id="totalHoursValue">{{ round($actualHoursThisMonth, 2) }} giờ</span>
-        </p>
-        <p class="current-salary">
-            <strong>Lương hiện tại:  </strong>
-            <span id="currentSalaryValue">{{ number_format($currentSalary) }} VNĐ</span>
-        </p>
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-label">Tổng giờ làm việc</div>
+            <div class="summary-value" id="totalHoursValue">{{ round($actualHoursThisMonth, 2) }} giờ</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">Lương hiện tại</div>
+            <div class="summary-value" id="currentSalaryValue">{{ number_format($currentSalary) }} VNĐ</div>
+        </div>
     </div>
 
     <div class="action-row">
