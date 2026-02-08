@@ -42,3 +42,61 @@
     }
   }
 }
+
+.home-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.home-popup-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.home-popup-box {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.home-popup-box img {
+  display: block;
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.home-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #fff;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.home-popup-close:hover {
+  background: transparent;
+}
+
+body.home-popup-open {
+  overflow: hidden;
+}

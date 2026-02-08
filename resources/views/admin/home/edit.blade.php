@@ -13,6 +13,33 @@
         enctype="multipart/form-data">
     @csrf
     <button class="btn btn-luu">Lưu thay đổi</button>
+    {{-- Popup image (Trang chủ) --}}
+    <h1 class="mt-4">Ảnh popup trang chủ</h1>
+    <div class="mb-3">
+      <label class="form-label">Tải ảnh popup (1 anh)</label>
+      <input type="file"
+             name="popup_image"
+             class="form-control full-width"
+             accept="image/*">
+      @error('popup_image')<div class="text-danger">{{ $message }}</div>@enderror
+    </div>
+    @if($home->popup_image)
+      <div class="mb-3">
+        <img src="{{ asset('storage/'.$home->popup_image) }}"
+             alt="Popup preview"
+             class="home-popup-preview">
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox"
+               name="popup_image_remove"
+               id="popup_image_remove"
+               class="form-check-input">
+        <label class="form-check-label" for="popup_image_remove">
+          Xóa ảnh popup hiện tại
+        </label>
+      </div>
+    @endif
+    <hr>
     {{-- A) Phần trước Banner --}}
     <h1 class="mt-4">Phần trước Banner</h1>
     <div class="mb-3">

@@ -85,6 +85,7 @@ class HomePageController extends Controller
             // — Banner (legacy single) & About —
             'banner_image'                        => 'nullable|image|max:4096',
             'banner_image_mobile'                 => 'nullable|image|max:4096',
+            'popup_image'                         => 'nullable|image|max:4096',
 
             // — Banner slider (multiple) —
             'banner_images_desktop'               => 'nullable|array',
@@ -109,6 +110,22 @@ class HomePageController extends Controller
                 $r->file('banner_image'),
                 'home'
             );
+        }
+
+        // Popup image (ưu tiên file upload, nếu không có thì có thể xóa)
+        if ($r->hasFile('popup_image')) {
+            if ($home->popup_image) {
+                Storage::disk('public')->delete($home->popup_image);
+            }
+            $data['popup_image'] = $this->uploadAsWebp(
+                $r->file('popup_image'),
+                'home/popup'
+            );
+        } elseif ($r->boolean('popup_image_remove')) {
+            if ($home->popup_image) {
+                Storage::disk('public')->delete($home->popup_image);
+            }
+            $data['popup_image'] = null;
         }
 
         

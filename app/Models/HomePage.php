@@ -26,6 +26,7 @@ class HomePage extends Model
         'intro_text',
         'intro_button_text',
         'intro_button_collection_id',
+        'popup_image',
     ];
 
     // Quan hệ nút chính giữa banner

@@ -4,6 +4,16 @@
 @section('title','Trang Chủ')
 
 @section('content')
+  @if($home->popup_image)
+    <div id="homePopup" class="home-popup-overlay" aria-hidden="true">
+      <div class="home-popup-box" role="dialog" aria-modal="true">
+        <button type="button" class="home-popup-close" aria-label="Dong">
+          <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+        </button>
+        <img src="{{ asset('storage/'.$home->popup_image) }}" alt="Popup">
+      </div>
+    </div>
+  @endif
   {{-- Phần trước banner --}}
     @if($home->pre_banner_title)
       <div class="text-center py-2 bg-light container-trang-chu-truoc-banner">
@@ -211,6 +221,37 @@
   
 @endsection
 
+@push('styles')
+<style>
+  .home-popup-box .home-popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+  }
+
+  .home-popup-box .home-popup-close i {
+    font-size: 1.5rem;
+    -webkit-text-stroke: 2px #b83232;
+    color: white;
+  }
+
+  .home-popup-box .home-popup-close:hover {
+    background: transparent;
+  }
+</style>
+@endpush
+
 @push('scripts')
 <script type="module">
   // 1) Import Swiper core và modules
@@ -258,6 +299,33 @@
         768: { slidesPerView: 3.33 },
         1024: { slidesPerView: 4 },
       },
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const popup = document.getElementById('homePopup');
+    if (!popup) return;
+
+    const closeBtn = popup.querySelector('.home-popup-close');
+    const closePopup = () => {
+      popup.classList.remove('is-open');
+      document.body.classList.remove('home-popup-open');
+    };
+
+    popup.classList.add('is-open');
+    document.body.classList.add('home-popup-open');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closePopup);
+    }
+
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) closePopup();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePopup();
     });
   });
 </script>

@@ -4,6 +4,16 @@
 @section('title','Trang Chủ Mobile')
 
 @section('content')
+  @if($home->popup_image)
+    <div id="homePopup" class="home-popup-overlay" aria-hidden="true">
+      <div class="home-popup-box" role="dialog" aria-modal="true">
+        <button type="button" class="home-popup-close" aria-label="Dong">
+          <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+        </button>
+        <img src="{{ asset('storage/'.$home->popup_image) }}" alt="Popup">
+      </div>
+    </div>
+  @endif
   {{-- 0) Pre-banner --}}
   @if($home->pre_banner_title)
     <div class="pre-banner text-center py-2 bg-light w-100">
@@ -172,6 +182,36 @@
   </div>
 @endsection
 
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const popup = document.getElementById('homePopup');
+    if (!popup) return;
+
+    const closeBtn = popup.querySelector('.home-popup-close');
+    const closePopup = () => {
+      popup.classList.remove('is-open');
+      document.body.classList.remove('home-popup-open');
+    };
+
+    popup.classList.add('is-open');
+    document.body.classList.add('home-popup-open');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closePopup);
+    }
+
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) closePopup();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePopup();
+    });
+  });
+</script>
+@endpush
+
 @push('styles')
 <style>
   /* === Banner full màn hình dọc (Mobile) === */
@@ -333,6 +373,63 @@
     font-size: 1.5rem;
     padding-bottom: 1rem;
   }
+
+  .home-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .home-popup-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .home-popup-box {
+    position: relative;
+    max-width: 92vw;
+    max-height: 90vh;
+  }
+
+  .home-popup-box img {
+    display: block;
+    max-width: 92vw;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .home-popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+  }
+
+  .home-popup-close:hover {
+    background: transparent;
+  }
+
+  body.home-popup-open {
+    overflow: hidden;
+  }
 </style>
 @endpush
-

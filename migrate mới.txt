@@ -6,3 +6,6 @@ php artisan migrate --path=database/migrations/2026_02_03_120500_create_password
 
 
 php artisan migrate --path=database/migrations/2026_02_07_120000_create_attendance_requests_table.php
+
+
+php artisan migrate --path=database/migrations/2026_02_08_000000_add_popup_image_to_home_pages_table.php

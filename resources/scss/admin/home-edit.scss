@@ -122,6 +122,14 @@
     .full-width {
         width: 100% !important;
     }
+    .home-popup-preview {
+        max-width: 420px;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 1px solid #eee;
+        display: block;
+    }
 
     .custom-checkbox {
         width: 1.25rem;

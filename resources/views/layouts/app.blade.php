@@ -40,6 +40,7 @@
       'resources/js/app.js',
     ])
   @endif
+  @stack('styles')
 </head>
 <body class="antialiased">
 
