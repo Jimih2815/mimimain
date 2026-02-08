@@ -307,6 +307,11 @@
     const popup = document.getElementById('homePopup');
     if (!popup) return;
 
+    const seenKey = 'home_popup_seen';
+    if (sessionStorage.getItem(seenKey) === '1') {
+      return;
+    }
+
     const closeBtn = popup.querySelector('.home-popup-close');
     const closePopup = () => {
       popup.classList.remove('is-open');
@@ -315,6 +320,7 @@
 
     popup.classList.add('is-open');
     document.body.classList.add('home-popup-open');
+    sessionStorage.setItem(seenKey, '1');
 
     if (closeBtn) {
       closeBtn.addEventListener('click', closePopup);
